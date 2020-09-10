@@ -19,14 +19,16 @@
       display: flex;
       flex-direction: column;
       .batch-button {
-        width: 90px;
-        height: 36px;
+        // prettier-ignore
+        width: 90PX;
+        // prettier-ignore
+        height: 36PX;
         border: none;
         border-radius: 4px;
         outline: none;
         line-height: 1;
         text-align: center;
-        font-size: @font12;
+        font-size: @font14;
         cursor: pointer;
         background: @backgroud;
         color: #fff;
@@ -232,6 +234,7 @@
               v-for="(item, index) in workColumn"
               :key="index"
               :prop="item.prop"
+              :fixed="item.fixed"
               :label="item.label"
               :width="item.width"
               :min-width="item.minWidth"
@@ -300,6 +303,7 @@ export default {
       workColumn: [
         {
           prop: "houseNo",
+          fixed: "left",
           label: "房屋信息",
           minWidth: "250",
           align: "left",
@@ -358,7 +362,7 @@ export default {
         {
           prop: "addTime",
           label: "挂牌时间",
-          minWidth: "80",
+          minWidth: "100",
           align: "right",
           sortable: true,
           formart: item => {
@@ -375,13 +379,14 @@ export default {
         {
           prop: "callNum",
           label: "30天电话回访",
-          minWidth: "110",
+          minWidth: "130",
           align: "right",
           sortable: true
         },
         {
           prop: "spotCheckNum",
           label: "抽检次数",
+          minWidth: "100",
           align: "right",
           sortable: true
         }

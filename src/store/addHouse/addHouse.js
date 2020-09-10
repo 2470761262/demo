@@ -98,8 +98,7 @@ export default {
   state: {
     isformDataNoCommit: false, //是否有些表单但是没有提交 false不提示 true 提示
     formData: getData(), // JSON.parse(JSON.stringify(formDataJson))
-    isAfresh: false, // 是否重新录入
-    undateDate: null // 重新验真请求保存数据
+    isAfresh: false // 是否重新录入
   },
   mutations: {
     updateIsformDataNoCommit(state, val) {
@@ -132,9 +131,6 @@ export default {
     },
     setIsfreshValMutation(state, val) {
       state.isAfresh = val;
-    },
-    setUndateDateMutation(state, val) {
-      state.updateDate = val;
     }
   },
   actions: {

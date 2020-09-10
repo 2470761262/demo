@@ -1070,8 +1070,7 @@ export default {
     // console.log("wxUploadFile", this.uploadFile);
   },
   beforeRouteLeave(to, from, next) {
-    console.log("离开了供给页面，不需要执行任何请求回调");
-    ``;
+    //console.log("离开了供给页面，不需要执行任何请求回调");
     this.isLeavePage = true;
     next();
   },
@@ -1085,11 +1084,11 @@ export default {
           this.$store.state.addHouse.formData.step2,
           this.formData
         );
-        console.log(
-          this.$store.state.addHouse.formData.step2,
-          this.formData,
-          " this.$store.state.addHouse.formData.step2"
-        );
+        // console.log(
+        //   this.$store.state.addHouse.formData.step2,
+        //   this.formData,
+        //   " this.$store.state.addHouse.formData.step2"
+        // );
         //判断当前是否有修改，如果有修改则length大于0
         let flag = Object.keys(deffData).length > 0 ? true : false;
         //判断store存储的是否与这次相同，相同则不commit
@@ -1167,19 +1166,19 @@ export default {
         });
     },
     contactSocket(user) {
-      console.log("用户【" + user + "】开始接入");
+      // console.log("用户【" + user + "】开始接入");
       this.socketApi.initWebSocket(
         this.$api.baseUrl().replace("http", ""),
         user
       );
       this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
-      console.log("用户【" + user + "】接入完毕");
+      // console.log("用户【" + user + "】接入完毕");
     },
     receiveMessage(r) {
       let that = this;
-      console.log(r, "录入房源页面之音频上传接收到了消息");
+      // console.log(r, "录入房源页面之音频上传接收到了消息");
       if (r.content.resourceType == "audio") {
-        console.log(r.content, "音频消息内容，准备插入草稿箱");
+        // console.log(r.content, "音频消息内容，准备插入草稿箱");
         that.uploadFileInfo(r.content.picUrl, function(data) {
           that.audioFile = data;
         });
@@ -1200,18 +1199,17 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          console.log("请求二维码成功");
+          // console.log("请求二维码成功");
           if (result.code == 200) {
             //that.qrCodeImg="data:image/png;base64,"+item.img;
             callback(result.data);
           } else {
-            console.log("h获取二维码结果：" + result.message);
+            // console.log("h获取二维码结果：" + result.message);
             alert(result.message);
           }
         })
         .catch(e => {
-          console.log("查询二维码失败");
-          console.log(e);
+          console.log(e, "查询二维码失败");
         })
         .finally(e => {
           that.isNextDisable = false;
@@ -1348,9 +1346,7 @@ export default {
         });
     },
     setAfreshData() {
-      //console.log(this.$store.state.addHouse.updateDate, "--------------============updateDate!!!")
-      //console.log(this.$store.state.addHouse.formData.step2, "--------------============step2!!!")
-      let afreshData = this.$store.state.addHouse.updateDate;
+      let afreshData = this.$store.state.addHouse.formData.step2;
       if (afreshData.middleSchoolUse === 0) {
         this.middleRadio = 0;
       } else if (afreshData.middleSchoolUse >= 1) {
@@ -1365,8 +1361,7 @@ export default {
       } else {
         this.primaryRadio = 0;
       }
-      //this.audioFile = this.$store.state.addHouse.formData.file.audioFile;
-      this.audioFile = afreshData.saleUploadAudios.length>0?afreshData.saleUploadAudios[0]:{};
+      this.audioFile = this.$store.state.addHouse.formData.file.audioFile;
     },
     getLoadData() {
       this.loading = true;
@@ -1516,7 +1511,7 @@ export default {
       let url = "/verifyHouse";
       if (Object.keys(this.deffData).length == 0 || !this.nextSaveButton) {
         //没有做出修改  或者 没有下一步保存的按钮权限
-        console.log("跳过保存，当前权限：", this.nextSaveButton);
+        // console.log("跳过保存，当前权限：", this.nextSaveButton);
         return true;
       }
       if (this.paramsObj.editUrl) {

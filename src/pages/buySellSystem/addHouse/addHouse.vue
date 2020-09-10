@@ -214,7 +214,6 @@ export default {
     let { method, id, paramsObj } = params;
 
     this.$store.commit("setIsfreshValMutation", false);
-    this.$store.commit("setUndateDateMutation", null);
     if (method == "afresh" && id) { // 重新录入
       this.$store.commit("updateId", id);
       this.$store.commit("setIsfreshValMutation", true);
@@ -346,12 +345,16 @@ export default {
       }
       this.butLoading = false;
       if (parmse && flag) {
-        // this.componentName = this.stepsList[
-        //   this.stepsActiveIndex
-        // ].componentName;
         this.$store.commit("updateIsformDataNoCommit", false);
-        // 取消跳转房源保存成功组件，直接请求保存数据
-        this.submit();
+        // 编辑房源跳转保存成功组件；录入取消跳转房源保存成功组件，直接请求保存数据
+        if (this.paramsObj.editUrl) {
+          this.stepsActiveIndex = 3;
+          this.componentName = this.stepsList[
+            this.stepsActiveIndex
+          ].componentName;
+        } else {
+          this.submit();
+        }
         return;
       }
       if (this.stepsActiveIndex < this.stepsList.length && flag) {
@@ -464,7 +467,6 @@ export default {
                 id: result.data,
               }
             });
-            this.stepsActiveIndex = 3;
           } else {
             this.$message.error(result.message);
           }
