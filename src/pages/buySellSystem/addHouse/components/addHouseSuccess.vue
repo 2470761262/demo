@@ -139,10 +139,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(["formData"])
+    ...mapState({
+      'formData': state => state.addHouse.formData
+    })
   },
-  created() {},
-  mounted() {
+  created() {
+    console.log(this.formData, "--------------------41111111111111111");
+    console.log(this.$store.state.addHouse.formData.file, "11111111122222222");
     if (
       util.sessionLocalStorageGet("editHouse") &&
       util.sessionLocalStorageGet("editHouse").paramsObj
@@ -151,6 +154,8 @@ export default {
     } else {
       this.getQr();
     }
+  },
+  mounted() {
     but.$on("submitVerify", () => {
       this.btnSubmitVerify = false;
     });
@@ -187,38 +192,38 @@ export default {
       //     that.loading = false;
       //   });
       let audioList = [];
-      if (this.$store.state.addHouse.formData.file.audioFile&&this.$store.state.addHouse.formData.file.audioFile.id) {
-        audioList.push(this.$store.state.addHouse.formData.file.audioFile.id);
+      if (this.formData.file.audioFile&&this.formData.file.audioFile.id) {
+        audioList.push(this.formData.file.audioFile.id);
       }
       let videoList = [];
-      if (this.$store.state.addHouse.formData.file.houseVideo&&this.$store.state.addHouse.formData.file.houseVideo.id) {
-        videoList.push(this.$store.state.addHouse.formData.file.houseVideo.id);
+      if (this.formData.file.houseVideo&&this.formData.file.houseVideo.id) {
+        videoList.push(this.formData.file.houseVideo.id);
       }
       let imageList = [];
-      for (let item of this.$store.state.addHouse.formData.file.outdoorImgList) {
+      for (let item of this.formData.file.outdoorImgList) {
         imageList.push(item.id);
       }
-      for (let item of this.$store.state.addHouse.formData.file.livingRoomImgList) {
+      for (let item of this.formData.file.livingRoomImgList) {
         imageList.push(item.id);
       }
-      for (let item of this.$store.state.addHouse.formData.file.bedroomImgList) {
+      for (let item of this.formData.file.bedroomImgList) {
         imageList.push(item.id);
       }
-      for (let item of this.$store.state.addHouse.formData.file.kitchenImgList) {
+      for (let item of this.formData.file.kitchenImgList) {
         imageList.push(item.id);
       }
-      for (let item of this.$store.state.addHouse.formData.file.toiletImgList) {
+      for (let item of this.formData.file.toiletImgList) {
         imageList.push(item.id);
       }
-      for (let item of this.$store.state.addHouse.formData.file.layoutImgList) {
+      for (let item of this.formData.file.layoutImgList) {
         imageList.push(item.id);
       }
       let params = {};
-      for(let item in this.$store.state.addHouse.formData.step1) {
-        params[item] = this.$store.state.addHouse.formData.step1[item];
+      for(let item in this.formData.step1) {
+        params[item] = this.formData.step1[item];
       }
-      for(let item in this.$store.state.addHouse.formData.step2) {
-        params[item] = this.$store.state.addHouse.formData.step2[item];
+      for(let item in this.formData.step2) {
+        params[item] = this.formData.step2[item];
       }
       params.imageList = imageList;
       params.audioList = audioList;

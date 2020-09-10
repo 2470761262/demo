@@ -467,11 +467,11 @@
         <div class="pro-content">
           <div class="pro-minddle">
             <div class="minddel-top">
-              <div class="per-name">{{ detail.Customers }}</div>
+              <div class="per-name">{{ detail.customerName }}</div>
               <div class="per-type">{{ detail.customerType }}</div>
             </div>
             <div class="minddel-foot">
-              {{ detail.Tel }}
+              {{ detail.tel }}
             </div>
           </div>
           <button
@@ -482,7 +482,7 @@
             一键拨号
           </button>
         </div>
-        <div class="down-content" v-if="isCheckSign == 1">
+        <div class="down-content" v-if="checkStatus == 1">
           <h3>验真倒计时</h3>
           <div class="down-box">
             <div class="down-box-item">{{ hoursTrans }}</div>
@@ -492,60 +492,60 @@
             <div class="down-box-item">{{ secondsTrans }}</div>
           </div>
         </div>
-        <div class="validate-type success" v-if="isCheckSign == 2">
+        <div class="validate-type success" v-if="checkStatus == 2">
           <div class="validate-type-title">
             验真成功
           </div>
           <div class="validate-type-tips">业主选择房源状态为 - 确认出售</div>
         </div>
-        <div class="validate-type error" v-if="isCheckSign == 3">
+        <div class="validate-type error" v-if="checkStatus == 3">
           <div class="validate-type-title">
             验真失败
           </div>
           <div class="validate-type-tips">
-            业主选择房源状态为 - {{ detail.failedResonStr }}
+            业主选择房源状态为 - {{ detail.failedReson }}
           </div>
         </div>
         <div class="house-content">
-          <h3 class="house-title">{{ detail.CommunityName | emptyRead }}</h3>
+          <h3 class="house-title">{{ detail.communityName | emptyRead }}</h3>
           <h4 class="buing-title">
-            {{ detail.BuildingName | emptyRead("栋") }}-{{ detail.RoomNo }}
+            {{ detail.buildingName | emptyRead("栋") }}-{{ detail.roomNo }}
           </h4>
           <div class="split-line"></div>
           <ul class="deteil-content">
             <li>
               <span>售价</span>
-              <span>{{ detail.Price | emptyRead("万") }}</span>
+              <span>{{ detail.price | emptyRead("万") }}</span>
             </li>
             <li>
               <span>单价</span>
-              <span>{{ detail.averagePrice | emptyRead("元/㎡") }}</span>
+              <span>{{ detail.unitPrice | emptyRead("元/㎡") }}</span>
             </li>
             <li>
               <span>面积</span>
-              <span>{{ detail.InArea | emptyRead("㎡") }}</span>
+              <span>{{ detail.area | emptyRead("㎡") }}</span>
             </li>
             <li>
               <span>户型</span>
-              <span>{{ detail.houseType | emptyRead }}</span>
+              <span>{{ detail.roomType | emptyRead }}</span>
             </li>
             <li>
               <span>装修</span>
-              <span>{{ detail.Decoration | emptyRead }}</span>
+              <span>{{ detail.decoration | emptyRead }}</span>
             </li>
             <li>
               <span>朝向</span>
-              <span>{{ detail.Face | emptyRead }}</span>
+              <span>{{ detail.orientation | emptyRead }}</span>
             </li>
             <li>
               <span>电梯</span>
               <span>{{
-                detail.Elevator | mapFilter("ISELEVATOR") | emptyRead
+                detail.elevator | mapFilter("ISELEVATOR") | emptyRead
               }}</span>
             </li>
             <li>
               <span>类型</span>
-              <span>{{ detail.buildtype | emptyRead }}</span>
+              <span>{{ detail.buildType | emptyRead }}</span>
             </li>
           </ul>
         </div>
@@ -559,13 +559,7 @@
  * @example: 转化电话号码
  */
 import util from "@/util/util";
-function phoneTransform(phone) {
-  if (!phone) return phone;
-  if (!phone.includes("*") && phone.length == 11) {
-    return `${phone.substr(0, 3)}****${phone.substr(7)}`;
-  }
-  return phone;
-}
+
 export default {
   filters: {
     mapFilter(value, ListName, resultValue = null) {
@@ -585,7 +579,7 @@ export default {
       hoursTrans: "00",
       minutesTrans: "00",
       secondsTrans: "00",
-      isCheckSign: -1,
+      checkStatus: -1,
       isCallLoading: false,
       timeID: null,
       noteSendTime: "",
@@ -695,15 +689,11 @@ export default {
     getDetail() {
       return this.$api
         .post({
-          url: `/validate/agent_house/getHouseDetail/${this.id}`
+          url: `/validate/agent_house/getHouseModeDetail/${this.id}`
         })
         .then(({ data }) => {
           if (data.code == 200) {
             this.detail = data.data;
-            if (this.detail.Tel) {
-              this.detail.Tel = phoneTransform(this.detail.Tel);
-            }
-
             this.getTime();
             console.log(this.detail, "this.detail");
             //expireTime
@@ -716,22 +706,22 @@ export default {
     getTime() {
       let endTime = new Date(this.detail.expireTime);
       let nowTime = new Date();
-      if (this.detail.checkSign != 1) {
+      if (this.detail.checkStatus != 1) {
         clearTimeout(this.timeID);
-        if (this.detail.checkSign == 2) {
-          this.isCheckSign = 2;
+        if (this.detail.checkStatus == 2) {
+          this.checkStatus = 2;
         }
-        if (this.detail.checkSign == 3 || this.detail.checkSign == 4) {
-          this.isCheckSign = 3;
+        if (this.detail.checkStatus == 3 || this.detail.checkStatus == 4) {
+          this.checkStatus = 3;
         }
         return;
       } else {
-        this.isCheckSign = 1;
+        this.checkStatus = 1;
       }
 
       let time = endTime - nowTime;
       if (time <= 0) {
-        this.isCheckSign = 3;
+        this.checkStatus = 3;
         //结束了
       } else {
         let days = Math.floor(time / 1000 / 60 / 60 / 24);
@@ -773,25 +763,15 @@ export default {
       let p = {};
       p["contactPhone" + cmd] = this.detail["Tel" + cmd];
       p["isLookPhone"] = true;
-      this.dailPhone(1, p);
+      this.dailPhone();
     },
     /**
      * @example: 一键拨号
      */
     oneTouchDialPhone() {
-      let phone = this.detail.agentPerTel;
-      if (!phone) {
-        this.$message({
-          message: "该经纪人号码为空"
-        });
-        return;
-      }
-      let p = {
-        contactPhone: phone
-      };
-      this.dailPhone(1, p);
+      this.dailPhone();
     },
-    dailPhone(contactPerType, phoneObj) {
+    dailPhone() {
       let that = this;
       this.isCallLoading = true;
       //console.log(that.houseDetails);
@@ -803,27 +783,19 @@ export default {
       })
         .then(() => {
           let oldParams = {
-            houseId: this.id,
+            draftId: this.id,
             houseType: 0,
-            housePrice: this.detail.Price,
-            houseArea: this.detail.InArea,
-            contactPerType: contactPerType, //电话联系人类型，0为经纪人，1为业主
-            remark: this.detail.Title
+            housePrice: this.detail.price,
+            houseArea: this.detail.area,
+            contactPerType: 1 //电话联系人类型，0为经纪人，1为业主
           };
           let dailParams = {};
-          Object.assign(dailParams, oldParams, phoneObj);
-          if (contactPerType == 0) {
-            //联系人类型如果是经纪人，才需要联系人id
-            dailParams.contactPerId = this.detail.AgentPer; //联系人id
-            dailParams.unitName = this.detail.agentPerDepartmentName;
-            dailParams.contactPerName = this.detail.agentPerName;
-          } else {
-            dailParams.unitName = this.detail.CommunityName; //联系人是业主，名称取小区名
-            dailParams.contactPerName = this.detail.Customers;
-          }
+          Object.assign(dailParams, oldParams);
+          dailParams.unitName = this.detail.communityName; //联系人是业主，名称取小区名
+          dailParams.contactPerName = this.detail.customerName;
           this.$api
             .post({
-              url: "/noticeManage/common/OneTouchDialPhone",
+              url: "/noticeManage/common/DraftOneTouchDialPhone",
               headers: { "Content-Type": "application/json;charset=UTF-8" },
               data: dailParams
             })

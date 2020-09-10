@@ -1348,6 +1348,8 @@ export default {
         });
     },
     setAfreshData() {
+      //console.log(this.$store.state.addHouse.updateDate, "--------------============updateDate!!!")
+      //console.log(this.$store.state.addHouse.formData.step2, "--------------============step2!!!")
       let afreshData = this.$store.state.addHouse.updateDate;
       if (afreshData.middleSchoolUse === 0) {
         this.middleRadio = 0;
@@ -1363,6 +1365,7 @@ export default {
       } else {
         this.primaryRadio = 0;
       }
+      //this.audioFile = this.$store.state.addHouse.formData.file.audioFile;
       this.audioFile = afreshData.saleUploadAudios.length>0?afreshData.saleUploadAudios[0]:{};
     },
     getLoadData() {
