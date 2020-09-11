@@ -802,7 +802,7 @@ import releaseHouse from "@/pages/buySellSystem/houseDetails/common/releaseHouse
 function phoneNuberConvert(number) {
   if (!number) return "";
   let pat = /(\d{3})\d*(\d{4})/;
-  let result = number.replace(pat, "$1****$2");
+  let result = number.replace(pat, "$1***$2");
   return result;
 }
 export default {
@@ -1646,19 +1646,19 @@ export default {
             // 保存后逻辑
             if (e.data.data == 0) {
               return true;
-            } else if (e.data.data == 1) {
-              this.$store.state.addHouse.isformDataNoCommit = false;
-              this.$router.push({
-                path: "/buySellSystem/validateHome",
-                query: {
-                  id: data.id
-                }
-              });
-            } else if (e.data.data == 2) {
+            } else if (e.data.data == -1) {
               // 修改号码失败
               this.$message.error("手机号修改失败，该房源已存在验真");
               this.formData.tel = this.validatePhoneNumber;
               return true;
+            } else {
+              this.$store.state.addHouse.isformDataNoCommit = false;
+              this.$router.push({
+                path: "/buySellSystem/validateHome",
+                query: {
+                  id: e.data.data
+                }
+              });
             }
           })
           .catch(e => {
