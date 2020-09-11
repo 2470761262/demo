@@ -504,11 +504,12 @@ export default {
         {
           value: 3,
           label: "验真失败"
-        },
-        {
-          value: 4,
-          label: "无效"
         }
+        // ,
+        // {
+        //   value: 4,
+        //   label: "无效"
+        // }
       ],
       tableData: [],
       pageJson: {
