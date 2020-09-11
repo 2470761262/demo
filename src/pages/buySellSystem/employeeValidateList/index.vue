@@ -624,12 +624,11 @@ export default {
      * @example: 验真结果提交
      */
     testSubmit() {
+      if (this.testExplain == "") {
+        this.$message.error('请输入详细说明');
+        return;
+      }
       this.testSubmitLoading = true;
-      console.log(
-        this.houseStatus,
-        this.testExplain,
-        "验真结果提交-------------"
-      );
       let url =
         "/verifyHouse/verify/employee?id=" +
         this.testRowId +
@@ -643,7 +642,6 @@ export default {
           headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
-          console.log(e.data, "======------");
           if (e.data.code == 200) {
             this.$message({
               message: e.data.message,
@@ -662,18 +660,12 @@ export default {
      * @example: 取消房源验证
      */
     testCancel() {
-      console.log(
-        this.houseStatus,
-        this.testExplain,
-        "取消房源验证-------------"
-      );
       this.testDialogVisible = false;
     },
     /**
      * @example: 一键拨号
      */
     handleCallClick(row) {
-      console.log(row, "-----------------");
       this.$api
         .post({
           url: "/noticeManage/common/verifyOneTouchDialPhone",
@@ -683,7 +675,6 @@ export default {
           }
         })
         .then(e => {
-          console.log(e, "-------=");
           if (e.data.code == 200) {
             this.$message({
               message: e.data.message,
@@ -699,7 +690,6 @@ export default {
      * @example: 房源验真
      */
     handleTestClick(row) {
-      console.log(row, "-------------");
       this.testRowId = row.id;
       this.testDialogVisible = true;
       this.houseStatus = 5;
@@ -719,7 +709,6 @@ export default {
           }
         })
         .then(e => {
-          console.log(e.data, "======------");
           if (e.data.code == 200) {
             this.recordStatus = e.data.data.houseState;
             this.recordIntroduction = e.data.data.remark;
@@ -908,7 +897,6 @@ export default {
      * @example: 搜索
      */
     query(currentPage = 1) {
-      console.log("---------------");
       this.pageJson.page = currentPage;
       this.loading = true;
       let params = { limit: this.pageJson.limit, page: currentPage };
@@ -931,7 +919,6 @@ export default {
         })
         .then(e => {
           let data = e.data;
-          console.log(data, "-----------=============");
           if (data.code == 200) {
             this.$refs.tableList.bodyWrapper.scrollTop = 0;
             this.pageJson.total = data.data.totalCount;
@@ -939,8 +926,7 @@ export default {
           }
         })
         .catch(e => {
-          console.log("查询锁定房源列表失败");
-          console.log(e);
+          console.log(e, "查询锁定房源列表失败");
         })
         .finally(() => {
           this.loading = false;
@@ -1287,7 +1273,8 @@ export default {
           border: none;
           // prettier-ignore
           border-radius: 4PX;
-          line-height: 48px;
+          // prettier-ignore
+          line-height: 48PX;
           font-size: @font16;
           color: #909399;
         }
