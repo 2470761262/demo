@@ -673,7 +673,7 @@ export default {
               return Promise.reject();
             } else {
               this.$message.success(data.message);
-              this.isCheckSign = 2;
+              this.checkStatus = 2;
               clearTimeout(this.timeID);
               util.openPage.call(this, {
                 name: "houseDetails",
