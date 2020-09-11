@@ -785,7 +785,7 @@ export default {
     },
     getDetail() {
       return this.$api
-        .post({
+        .get({
           url: `/validate/agent_house/getHouseModeDetail/${this.id}`
         })
         .then(({ data }) => {
