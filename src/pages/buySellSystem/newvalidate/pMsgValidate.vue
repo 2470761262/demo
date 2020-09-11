@@ -414,6 +414,45 @@
     margin-top: 9PX;
   }
 }
+/deep/.test-dialog {
+  .el-dialog {
+    // prettier-ignore
+    border-radius: 10PX;
+    .el-dialog__header {
+      // prettier-ignore
+      padding: 32PX 24PX 0;
+      .el-dialog__title {
+        font-size: @font24;
+        color: #303133;
+        font-weight: bolder;
+
+      }
+      .el-dialog__close {
+        font-size: @font24;
+        color: #606266;
+      }
+      .el-dialog__headerbtn {
+        // prettier-ignore
+        top: 30PX;
+        // prettier-ignore
+        right: 30PX;
+      }
+    }
+    .el-dialog__body {
+      // prettier-ignore
+      padding: 24PX;
+    }
+    .el-dialog__footer {
+      // prettier-ignore
+      padding: 0 24PX 29PX;
+    }
+  }
+  .title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #303133;
+  }
+}
 </style>
 <template>
   <div class="content">
@@ -457,10 +496,7 @@
           </div>
         </div>
         <div class="border-content is-bottom">
-          <img
-            src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/9/7/7c557a8b96e5468380b54ba403350754.png"
-            alt=""
-          />
+          <img src="https://img.0be.cn/pc/dxyz_lc.png" alt="" />
         </div>
       </div>
       <div class="content-right" v-loading="detailLoading">
@@ -551,6 +587,25 @@
         </div>
       </div>
     </section>
+    <!-- 房源记录弹窗 -->
+    <el-dialog
+      title="发送成功"
+      class="test-dialog"
+      width="556px"
+      :visible.sync="sendDialogVisible"
+    >
+      <div class="">
+        <p style="font-size: 18px;color: #606266;">房源验真验证码已自动发送给业主，请通过以下方案进行验真</p>
+        <div style="margin-top:28px;margin-right:20px;display: inline-block;">
+          <p class="title" style="margin-bottom: 16px">方案一：</p>
+          <img src="https://img.0be.cn/pc/dxyz_lc2.png" alt="" width="239px" height="170px"/>
+        </div>
+        <div style="margin-top:28px;display: inline-block;">
+          <p class="title" style="margin-bottom: 16px">方案二：</p>
+          <img src="https://img.0be.cn/pc/dxyz_lc3.png" lt="" width="239px" height="170px"/>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -576,6 +631,7 @@ export default {
       validateCall: ["", "", "", "", "", ""],
       detail: {},
       detailLoading: true,
+      sendDialogVisible: false,
       hoursTrans: "00",
       minutesTrans: "00",
       secondsTrans: "00",
@@ -617,9 +673,10 @@ export default {
         })
         .then(({ data }) => {
           if (data.code == 200) {
-            this.$message.success("短信下发成功");
+            // this.$message.success("短信下发成功");
             this.noteSendTime = data.data;
             this.noteShow = false;
+            this.sendDialogVisible = true;
             this.getNoteSentTime();
           } else {
             this.$message.warning("短信下发成功");
