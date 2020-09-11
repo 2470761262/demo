@@ -460,7 +460,7 @@
       <div class="content-head-left">
         <strong class="tips">
           短信验真
-          <span class="tips-text">待验真</span>
+          <span class="tips-text" v-if="checkStatus == 1">待验真</span>
         </strong>
         <small class="small-tips"
           >系统已自动发送，短信给验真的验真号码，请尽快联系业主获取验证码</small
