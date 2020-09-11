@@ -524,7 +524,7 @@
             </div>
             <img
               class="screenshots"
-              src="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2034740944,4251903193&fm=26&gp=0.jpg"
+              src="https://imgtest.0be.cn/FileUpload/PicFile_Agent2020/9/11/889f1b9c9c904933af4bbeed1a4ae519.png"
               alt=""
             />
           </div>
@@ -537,7 +537,7 @@
           <div class="qr-img-content">
             <img
               class="screenshots"
-              src="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2034740944,4251903193&fm=26&gp=0.jpg"
+              src="https://imgtest.0be.cn/FileUpload/PicFile_Agent2020/9/11/889f1b9c9c904933af4bbeed1a4ae519.png"
               alt=""
             />
             <div class="middle-tips is-bottom">
@@ -546,7 +546,7 @@
             </div>
             <img
               class="screenshots"
-              src="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2034740944,4251903193&fm=26&gp=0.jpg"
+              src="https://imgtest.0be.cn/FileUpload/PicFile_Agent2020/9/11/4132dd7a539b47fa96beec7072a42116.png"
               alt=""
             />
             <div class="middle-tips is-bottom">
@@ -555,7 +555,7 @@
             </div>
             <img
               class="screenshots"
-              src="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2034740944,4251903193&fm=26&gp=0.jpg"
+              src="https://imgtest.0be.cn/FileUpload/PicFile_Agent2020/9/11/f5470178230a484bb53a9d8c4a92451a.png"
               alt=""
             />
           </div>
