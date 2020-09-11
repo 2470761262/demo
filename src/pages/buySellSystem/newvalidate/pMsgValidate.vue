@@ -425,7 +425,6 @@
         font-size: @font24;
         color: #303133;
         font-weight: bolder;
-
       }
       .el-dialog__close {
         font-size: @font24;
@@ -595,14 +594,26 @@
       :visible.sync="sendDialogVisible"
     >
       <div class="">
-        <p style="font-size: 18px;color: #606266;">房源验真验证码已自动发送给业主，请通过以下方案进行验真</p>
+        <p style="font-size: 18px;color: #606266;">
+          房源验真验证码已自动发送给业主，请通过以下方案进行验真
+        </p>
         <div style="margin-top:28px;margin-right:20px;display: inline-block;">
           <p class="title" style="margin-bottom: 16px">方案一：</p>
-          <img src="https://img.0be.cn/pc/dxyz_lc2.png" alt="" width="239px" height="170px"/>
+          <img
+            src="https://img.0be.cn/pc/dxyz_lc2.png"
+            alt=""
+            width="239px"
+            height="170px"
+          />
         </div>
         <div style="margin-top:28px;display: inline-block;">
           <p class="title" style="margin-bottom: 16px">方案二：</p>
-          <img src="https://img.0be.cn/pc/dxyz_lc3.png" lt="" width="239px" height="170px"/>
+          <img
+            src="https://img.0be.cn/pc/dxyz_lc3.png"
+            lt=""
+            width="239px"
+            height="170px"
+          />
         </div>
       </div>
     </el-dialog>
@@ -624,6 +635,10 @@ export default {
   created() {
     this.id = this.$route.query.id;
     this.getDetail();
+    this.sendFlag = this.$route.query.sendFlag;
+    if (this.sendFlag) {
+      this.getMns();
+    }
   },
   data() {
     return {
@@ -745,7 +760,7 @@ export default {
     },
     getDetail() {
       return this.$api
-        .get({
+        .post({
           url: `/validate/agent_house/getHouseModeDetail/${this.id}`
         })
         .then(({ data }) => {

@@ -692,22 +692,23 @@ export default {
       this.$router.push({
         name: pageName,
         query: {
-          id: this.id
+          id: this.id,
+          sendFlag: true
         }
       });
-      if (pageName == "pMsgValidate") {
-        this.$api
-          .post({
-            url: `/verifyHouse/mode/mns`,
-            qs: true,
-            data: {
-              id: this.id
-            }
-          })
-          .then(({ data }) => {})
-          .finally(() => {});
-        this.sendNote();
-      }
+      // if (pageName == "pMsgValidate") {
+      //   this.$api
+      //     .post({
+      //       url: `/verifyHouse/mode/mns`,
+      //       qs: true,
+      //       data: {
+      //         id: this.id
+      //       }
+      //     })
+      //     .then(({ data }) => {})
+      //     .finally(() => {});
+      //   this.sendNote();
+      // }
     },
     /**
      * @example:发送短信

@@ -764,7 +764,8 @@ export default {
       this.$router.push({
         name: pageName,
         query: {
-          id: this.id
+          id: this.id,
+          sendFlag: true
         }
       });
     },
@@ -784,7 +785,7 @@ export default {
     },
     getDetail() {
       return this.$api
-        .get({
+        .post({
           url: `/validate/agent_house/getHouseModeDetail/${this.id}`
         })
         .then(({ data }) => {
