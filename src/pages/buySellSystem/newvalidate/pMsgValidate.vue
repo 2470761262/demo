@@ -482,6 +482,7 @@
                 type="text"
                 maxlength="1"
                 v-model="validateCall[index]"
+                @keydown.native.delete="delNumChange(index)"
               />
             </div>
             <button @click="getMns" v-if="noteShow">
@@ -724,6 +725,14 @@ export default {
           this.isValidateMns();
         }
       }
+    },
+    delNumChange(index) {
+      console.log(index);
+      this.$refs.validateCall.forEach((item, eindex) => {
+        if (eindex == parseInt(index) - 1) {
+          item.$el.querySelector(".el-input__inner").focus();
+        }
+      });
     },
     isValidateMns() {
       this.$message.info("处理中，请稍后...");
