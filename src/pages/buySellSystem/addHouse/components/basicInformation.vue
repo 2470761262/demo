@@ -389,7 +389,8 @@
           v-model="formData.tel1"
           data-vv-name="tel1"
           data-vv-as="电话号码"
-          v-validate="'phoneLen|phone'"
+          v-validate="isvalidateTel[1]?'phoneLen|phone':''"
+          @input="telInput('tel1')"
           data-anchor="添加房源业主手机号 => input"
         >
           <div slot="prepend" class="item-before">备用手机号</div>
@@ -422,13 +423,14 @@
             :data-vv-name="'tel' + item"
             :data-vv-as="'电话号码' + item"
             data-anchor="添加房源业主新增手机号 => input"
-            v-validate="{
+            @input="telInput('tel'+item)"
+            v-validate="isvalidateTel[item]?{
               phone: true,
               isSame: [
                 [formData.tel, ...addTel.map(tel => formData['tel' + tel])],
                 '手机号'
               ]
-            }"
+            }:{}"
           >
             <div slot="prepend" class="item-before">手机号{{ item }}</div>
             <div
@@ -935,6 +937,10 @@ export default {
       // this.addTel.push(1);
     }
     // this.getNextSaveButton();
+    // 编辑状态判断备用手机号是否需要验证
+    if (this.paramsObj.editUrl) {
+      this.isvalidateTel = [false, false, false, false]
+    }
   },
   destroyed() {
     window.removeEventListener("click", this.bodyClick);
@@ -943,6 +949,27 @@ export default {
     this.addHouseType = this.houseType;
   },
   methods: {
+    telInput(tel) {
+      // 编辑状态判断备用手机号是否需要验证
+      if (!this.paramsObj.editUrl) return;
+      let index = null;
+      switch(tel){
+        case "tel1":
+          index = 1;
+          break;
+        case "tel2":
+          index = 2;
+          break;
+        case "tel3":
+          index = 3;
+          break;
+      }
+      if (this.originTelObj[tel] != this.formData[tel]) {
+        this.isvalidateTel[index] = true;
+      } else {
+        this.isvalidateTel[index] = false;
+      }
+    },
     /**
      * 修改手机号码
      */
@@ -1539,6 +1566,12 @@ export default {
             step1.tel1 = phoneNuberConvert(step1.tel1);
             step1.tel2 = phoneNuberConvert(step1.tel2);
             step1.tel3 = phoneNuberConvert(step1.tel3);
+            // 保存原手机号
+            this.originTelObj = {
+              tel1: step1.tel1,
+              tel2: step1.tel2,
+              tel3: step1.tel3,
+            }
 
             this.$store
               .dispatch("InitFormData", {
@@ -1697,6 +1730,7 @@ export default {
   },
   data() {
     return {
+      isvalidateTel: [true, true, true, true], //是否验证备用号码
       validatePhoneNumber: "", // 旧号码
       validatePhoneInputEnable: !!this.paramsObj.editUrl,
       validateBtnFlag: true,
