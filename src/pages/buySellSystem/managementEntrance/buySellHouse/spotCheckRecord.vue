@@ -11,7 +11,7 @@
                 <el-input
                   v-model="conditions.houseNo"
                   placeholder="请输入房源编号"
-                  @change="query(1)"
+                  @input="query(1)"
                   class="anchor-point"
                   clearable
                   :data-anchor="'抽检记录搜索 房源编号:' + conditions.houseNo"

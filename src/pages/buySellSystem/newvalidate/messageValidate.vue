@@ -761,6 +761,18 @@ export default {
         });
     },
     openPage(pageName) {
+      if (pageName == "pMsgValidate") {
+        this.$api
+          .post({
+            url: `/verifyHouse/mode/mns`,
+            qs: true,
+            data: {
+              id: this.id
+            }
+          })
+          .then(({ data }) => {})
+          .finally(() => {});
+      }
       this.$router.push({
         name: pageName,
         query: {
