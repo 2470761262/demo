@@ -615,11 +615,12 @@ export default {
                 id: e.data.data
               }
             });
+          } else {
+            this.$message({
+              message: e.data.message,
+              type: type
+            });
           }
-          this.$message({
-            message: e.data.message,
-            type: type
-          });
         });
     },
     /**

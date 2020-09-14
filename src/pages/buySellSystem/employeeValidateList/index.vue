@@ -338,6 +338,15 @@
               </template>
             </el-table-column>
             <el-table-column
+              label="验真类型"
+              align="right"
+              show-overflow-tooltip
+            >
+              <template v-slot="scope">
+                <span>{{ scope.row.sourceStr }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
               min-width="200"
               prop="addTime"
               label="提交时间"
@@ -626,7 +635,7 @@ export default {
      */
     testSubmit() {
       if (this.testExplain == "") {
-        this.$message.error('请输入详细说明');
+        this.$message.error("请输入详细说明");
         return;
       }
       this.testSubmitLoading = true;

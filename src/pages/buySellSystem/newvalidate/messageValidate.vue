@@ -585,6 +585,54 @@
     font-size: @font18;
   }
 }
+.is-posi {
+  position: relative;
+  .border-content {
+    // prettier-ignore
+    padding-bottom: 58PX;
+    // prettier-ignore
+    padding-top: 26PX;
+    .border-content-title {
+      // prettier-ignore
+      padding-bottom: 41PX;
+      // prettier-ignore
+      line-height: 36PX;
+    }
+  }
+  .is-abso {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.93);
+    border-radius: 8px;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    // prettier-ignore
+    padding-top: 31PX;
+    box-sizing: border-box;
+    .minddel-order {
+      // prettier-ignore
+      margin-top: 20PX;
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+    .abso-title {
+      font-weight: bold;
+      color: #303133;
+      font-size: @font24;
+      // prettier-ignore
+      padding-bottom: 26PX;
+    }
+    button {
+      // prettier-ignore
+      margin-top: 28PX;
+    }
+  }
+}
 </style>
 <template>
   <div class="content">
@@ -611,9 +659,7 @@
           信息员验真
           <span class="tips-text">待验真</span>
         </strong>
-        <small class="small-tips"
-          >若信息员开始进行验真操作（拨打业主电话）即扣除鑫币酬劳</small
-        >
+        <small class="small-tips">验真请求已发至信息员，请耐心等待</small>
       </div>
       <div class="content-head-right">
         <div class="head-right-item">
@@ -630,15 +676,33 @@
     <section class="content-body">
       <div class="content-left">
         <!-- 温馨提示 -->
-        <div class="border-content">
-          <h3 class="border-content-title">温馨提示</h3>
-          <div class="border-foot-minddel">
-            <div class="minddel-order" data-order="1">
-              信息员开始验真验真，无论验真是否通过，支付的鑫币不予退还。
+        <div class="is-posi">
+          <div class="border-content">
+            <h3 class="border-content-title">
+              温馨提示，信息员正在验真中，请耐心等待
+            </h3>
+            <div class="border-foot-minddel">
+              <div class="minddel-order" data-order="1">
+                信息员填写验真结果后，无论是否验真成功，支付的鑫币不予退还。
+              </div>
+              <div class="minddel-order" data-order="2">
+                信息员仅在工作时间内进行验真，所以导致验真的进度较慢，可能会导致验真过期，请您谨慎使用。
+              </div>
             </div>
-            <div class="minddel-order" data-order="2">
-              信息员仅在工作时间内进行验真，所以导致验真的进度较慢，可能会导致验真过期，请您谨慎使用。
+          </div>
+          <div class="is-abso" v-if="isEmployee && detail.mode != 3">
+            <div class="abso-title">信息员验真须知</div>
+            <div class="border-foot-minddel">
+              <div class="minddel-order" data-order="1">
+                选择信息员验真方案，支付鑫币酬劳
+              </div>
+              <div class="minddel-order" data-order="2">
+                信息员联系业主，并填写沟通结果
+              </div>
             </div>
+            <button class="btn" @click="getEmployee">
+              选我验真
+            </button>
           </div>
         </div>
         <strong class="tips-wait">等不及了？不如换下面两种方式验真</strong>
@@ -836,12 +900,13 @@ export default {
   },
   created() {
     this.id = this.$route.query.id;
-    this.getEmployee();
+    // this.getEmployee();
     this.getXinConfig();
     this.getDetail();
   },
   data() {
     return {
+      isEmployee: true,
       navValidate: NAVVALIDATE,
       id: null,
       detail: {},
@@ -908,7 +973,9 @@ export default {
         .then(({ data }) => {
           console.log(data, "data");
         })
-        .finally(() => {});
+        .finally(() => {
+          this.isEmployee = false;
+        });
     },
     getDetail() {
       return this.$api

@@ -150,7 +150,9 @@
                   data-anchor="抽检记录跟单人 => select"
                   @click.native="log_socket.sendUserActionData"
                   v-model="agent.value"
-                  placeholder="请输入跟单人姓名"
+                  :placeholder="
+                    department.value == '' ? '请先选择门店' : '请输入跟单人姓名'
+                  "
                   clearable
                   filterable
                   @change="agentChange"
