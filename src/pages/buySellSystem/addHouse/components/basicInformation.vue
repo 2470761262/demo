@@ -15,6 +15,108 @@
     white-space: nowrap;
   }
 }
+.phone-tip {
+  display: inline-block;
+  margin-top: 8px;
+  margin-left: 70px;
+  padding: 10px;
+  background: #ea9d42;
+  // prettier-ignore
+  border-radius: 4PX;
+  line-height: 1;
+  color: #fff;
+  font-size: 18px;
+  i {
+    margin-right: 0.05rem;
+    vertical-align: top;
+    font-size: 22px;
+  }
+  span {
+    vertical-align: middle;
+  }
+}
+.vidate-feature {
+  padding: 10px;
+  background: #348261;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #fff !important;
+  &.vidate-feature-loading {
+    background: #ea9d42;
+  }
+}
+.modify-phone-box {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  .modify {
+    margin-left: 15px;
+    text-decoration: underline;
+    color: #098d55;
+  }
+  .modify-show {
+    display: flex;
+    align-items: center;
+    .btn1 {
+      margin-left: 15px;
+      text-decoration: underline;
+      color: #098d55;
+    }
+    .btn2 {
+      margin-left: 15px;
+      text-decoration: underline;
+      color: #a9a9a9;
+    }
+    .phone-show {
+      margin-left: 15px;
+      padding: 8px 15px;
+      background: #efefef;
+      border-radius: 4px;
+      box-shadow: 0 0 5px #a7a7a7;
+    }
+  }
+}
+/deep/.el-dialog__body {
+  padding: 0 15px 15px;
+  .modify-phone-dialog {
+    .top {
+      padding: 0 15px;
+      font-size: 14px;
+      color: #9a9898;
+    }
+    .column {
+      .title {
+        margin: 12px 0 5px;
+        font-weight: bold;
+        font-size: 14px;
+        color: #6f6f6f;
+      }
+      .content {
+        position: relative;
+        height: 60px;
+        background: #f2f2f2;
+        border-radius: 4px;
+        .text {
+          padding: 4px 8px;
+          line-height: 20px;
+          font-size: 12px;
+          color: #b3b3b3;
+        }
+        .btn {
+          position: absolute;
+          bottom: 5px;
+          right: 8px;
+          padding: 3px 5px;
+          background: #348261;
+          border-radius: 4px;
+          color: #fff;
+          font-size: 12px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
 </style>
 <template>
   <div
@@ -24,7 +126,7 @@
     v-scrollError="errorBags.items"
   >
     <div class="form-error-tips" id="addHouseType">
-      <div class="page-cell-item">
+      <div class="page-cell-item" style="display:none">
         <div class="item-before" data-before="*"></div>
         <el-radio-group
           class="input-group anchor-point"
@@ -39,16 +141,16 @@
             :disabled="disabled"
             >单套录入</el-radio
           >
-          <el-radio
+          <!-- <el-radio
             data-anchor="添加房源多套录入 => radio"
             class="anchor-point"
             label="morePushHouse"
             :disabled="disabled"
             >多套录入</el-radio
           >
-          <span class="multiple-input">即将下线</span>
+          <span class="multiple-input">即将下线</span> -->
         </el-radio-group>
-        <span class="addhouse-tips">(多套录入仅支持同一小区同一业主)</span>
+        <!-- <span class="addhouse-tips">(多套录入仅支持同一小区同一业主)</span> -->
       </div>
     </div>
     <!-- 楼盘名称 -->
@@ -152,8 +254,8 @@
               :key="item.value"
               :label="item.name"
               :value="item.value"
-              :disabled="item.disabled"
-            ></el-option>
+            ></el-option
+            ><!-- :disabled="item.disabled" -->
           </el-select>
         </div>
       </div>
@@ -226,7 +328,7 @@
         </div>
       </div>
     </div>
-    <!-- 电话号码 -->
+    <!-- 验真手机号 -->
     <div
       class="form-error-tips margin-bot_20"
       :class="{ 'after-tips': errorBags.has('tel') }"
@@ -234,6 +336,7 @@
     >
       <div class="page-cell-item select-nobor">
         <el-input
+          ref="validatePhoneRef"
           class="anchor-point"
           placeholder="默认拨打为第一个号码"
           v-model="formData.tel"
@@ -241,8 +344,57 @@
           data-vv-as="电话号码"
           v-validate="'required|phoneLen|phone'"
           data-anchor="添加房源业主手机号 => input"
+          :disabled="validatePhoneInputEnable"
+          clearable
         >
-          <div slot="prepend" class="item-before" data-before="*">手机号</div>
+          <div slot="prepend" class="item-before" data-before="*">
+            验真手机号
+          </div>
+          <div
+            slot="append"
+            class="item-after item-before-col anchor-point vidate-feature"
+            :class="{ 'vidate-feature-loading': validatePhoneLoading }"
+          >
+            {{ validatePhoneText }}
+          </div>
+        </el-input>
+        <div class="modify-phone-box" v-if="paramsObj.editUrl">
+          <span
+            class="modify"
+            v-show="validateModifyBtnFlag"
+            @click="modifyValidatePhone"
+            >修改验真号码</span
+          >
+          <div class="modify-show">
+            <span class="btn1" @click="modifyComfirm" v-if="validateCancelBtnFlag">确认修改</span>
+            <span class="btn2" @click="modifyCancel" v-if="validateCancelBtnFlag">取消</span>
+            <div class="phone-show" v-if="originPhoneShowFlag">旧号码：{{ validatePhoneNumber }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-tip margin-bot_20">
+      <i class="el-icon-warning-outline"></i>
+      <span>{{ validateTip }}</span>
+    </div>
+    <!-- 备用手机号 -->
+    <div
+      class="form-error-tips margin-bot_20"
+      :class="{ 'after-tips': errorBags.has('tel1') }"
+      :data-tips="errorBags.first('tel1')"
+    >
+      <div class="page-cell-item select-nobor">
+        <el-input
+          class="anchor-point"
+          placeholder="请输入业主电话号码"
+          v-model="formData.tel1"
+          data-vv-name="tel1"
+          data-vv-as="电话号码"
+          v-validate="isvalidateTel[1]?'phoneLen|phone':''"
+          @input="telInput('tel1')"
+          data-anchor="添加房源业主手机号 => input"
+        >
+          <div slot="prepend" class="item-before">备用手机号</div>
           <div
             slot="append"
             data-anchor="添加房源业主新增手机号 => click"
@@ -255,7 +407,7 @@
         </el-input>
       </div>
     </div>
-    <!-- 电话号码 for -->
+    <!-- 备用手机号 for -->
     <transition-group name="el">
       <div
         class="form-error-tips margin-bot_20"
@@ -272,13 +424,14 @@
             :data-vv-name="'tel' + item"
             :data-vv-as="'电话号码' + item"
             data-anchor="添加房源业主新增手机号 => input"
-            v-validate="{
+            @input="telInput('tel'+item)"
+            v-validate="isvalidateTel[item]?{
               phone: true,
               isSame: [
                 [formData.tel, ...addTel.map(tel => formData['tel' + tel])],
                 '手机号'
               ]
-            }"
+            }:{}"
           >
             <div slot="prepend" class="item-before">手机号{{ item }}</div>
             <div
@@ -287,7 +440,7 @@
               @click="removeTelToList(index, item)"
               class="item-after item-before-col anchor-point"
             >
-              <i class="el-icon-circle-plus-outline"></i>
+              <i class="el-icon-remove-outline"></i>
               <div>删除</div>
             </div>
           </el-input>
@@ -645,6 +798,16 @@ let updateFileMap = new Map([
 import util from "@/util/util";
 import but from "@/evenBus/but.js";
 import releaseHouse from "@/pages/buySellSystem/houseDetails/common/releaseHouse.js";
+/**
+ * 手机号码脱敏
+ * @param number
+ */
+function phoneNuberConvert(number) {
+  if (!number) return "";
+  let pat = /(\d{3})\d*(\d{4})/;
+  let result = number.replace(pat, "$1***$2");
+  return result;
+}
 export default {
   $_veeValidate: {
     validator: "new" // give me my own validator scope.
@@ -741,6 +904,10 @@ export default {
     if (this.getData) {
       this.getLoadData();
     }
+    // 重新验真情况请求数据
+    if (this.$store.state.addHouse.isAfresh) {
+      this.setAfreshData();
+    }
     window.addEventListener("click", this.bodyClick);
     if (this.$route.query.flag == "potentia") {
       this.getCommunityData(this.$route.query.comId);
@@ -770,8 +937,11 @@ export default {
       // this.formData.tel1 = this.$route.query.tel1;
       // this.addTel.push(1);
     }
-    console.log(this.$route.query.flag);
     // this.getNextSaveButton();
+    // 编辑状态判断备用手机号是否需要验证
+    if (this.paramsObj.editUrl) {
+      this.isvalidateTel = [false, false, false, false]
+    }
   },
   destroyed() {
     window.removeEventListener("click", this.bodyClick);
@@ -780,6 +950,66 @@ export default {
     this.addHouseType = this.houseType;
   },
   methods: {
+    telInput(tel) {
+      // 编辑状态判断备用手机号是否需要验证
+      if (!this.paramsObj.editUrl) return;
+      let index = null;
+      switch(tel){
+        case "tel1":
+          index = 1;
+          break;
+        case "tel2":
+          index = 2;
+          break;
+        case "tel3":
+          index = 3;
+          break;
+      }
+      if (this.originTelObj[tel] != this.formData[tel]) {
+        this.isvalidateTel[index] = true;
+      } else {
+        this.isvalidateTel[index] = false;
+      }
+    },
+    /**
+     * 修改手机号码
+     */
+    modifyValidatePhone() {
+      this.validateModifyBtnFlag = false;
+      this.validateCancelBtnFlag = true;
+      this.originPhoneShowFlag = true;
+      this.validatePhoneInputEnable = false;
+      this.validatePhoneNumber = this.formData.tel;
+      this.formData.tel = "";
+      this.$nextTick(() => {
+        this.$refs.validatePhoneRef.$el.querySelector(".el-input__inner").focus();
+      })
+    },
+    /**
+     * 确认修改
+     */
+    modifyComfirm() {
+      if (this.errorBags.has("tel")) {
+        this.$message.error("您输入的手机号码有误");
+        return;
+      }
+      this.validateCancelBtnFlag = false;
+      this.validatePhoneInputEnable = true;
+      this.validatePhoneLoading = true;
+      this.validatePhoneText = "号码待验真";
+      this.validateTip =
+        "您修改了验真号码，系统将在您编辑房源保存后，要求您进行房源验真";
+    },
+    /**
+     * 取消
+     */
+    modifyCancel() {
+      this.validateModifyBtnFlag = true;
+      this.validateCancelBtnFlag = false;
+      this.originPhoneShowFlag = false;
+      this.formData.tel = this.validatePhoneNumber;
+      this.validatePhoneInputEnable = true;
+    },
     /**
      * 解析转在售电话号码
      * @param value 接收的值
@@ -935,7 +1165,6 @@ export default {
     },
     //楼盘选择更改事件
     remoteCommunityNameChange(e) {
-      console.log(e);
       let findResultIndex = this.selectPageCommunit.list.findIndex(item => {
         return item.value == e;
       });
@@ -968,7 +1197,7 @@ export default {
     },
     //获取楼盘当前选中楼栋信息
     getCommunityData(id) {
-      this.$api.get({ url: `/draft-house/community/${id}` }).then(e => {
+      this.$api.get({ url: `/verifyHouse/community/${id}` }).then(e => {
         let data = e.data.data;
         if (e.data.code == 200) {
           this.formData.property = data.ownerProperty;
@@ -1038,7 +1267,7 @@ export default {
     },
     //获取楼栋当前选中楼栋信息
     getBuildingData(id) {
-      this.$api.get({ url: `/draft-house/building/${id}` }).then(e => {
+      this.$api.get({ url: `/verifyHouse/building/${id}` }).then(e => {
         let data = e.data.data;
         if (e.data.code == 200) {
           if (
@@ -1112,19 +1341,29 @@ export default {
     },
     //获取房间号数据
     getRoomData(id) {
-      this.$api.get({ url: `/draft-house/room/${id}` }).then(e => {
-        let data = e.data.data;
-        if (e.data.code == 200) {
-          this.formData.valuation = data.valuation;
-          this.formData.area = data.outArea;
-          this.formData.face = data.orientation;
-          this.formData.room = data.rooms || 0;
-          this.formData.hall = data.hall || 0;
-          this.formData.toilet = data.toilet || 0;
-          this.formData.balcony = data.balcony || 0;
-          this.formData.roomType = data.roomType;
-        }
-      });
+      // `/draft-house/room/${id}`
+      this.$api
+        .get({ url: `/verifyHouse/room/${id}` })
+        .then(e => {
+          let data = e.data.data;
+          if (e.data.code == 200) {
+            this.formData.valuation = data.valuation;
+            this.formData.area = data.outArea;
+            this.formData.face = data.orientation;
+            this.formData.room = data.rooms || 0;
+            this.formData.hall = data.hall || 0;
+            this.formData.toilet = data.toilet || 0;
+            this.formData.balcony = data.balcony || 0;
+            this.formData.roomType = data.roomType;
+          } else {
+            this.formData.roomId = "";
+            this.$message.error(e.data.message);
+          }
+        })
+        .catch(e => {
+          this.formData.roomId = "";
+        })
+        .finally(e => {});
     },
     removeTelToList(index, item) {
       this.addTel.splice(index, 1);
@@ -1132,7 +1371,7 @@ export default {
     },
     //添加电话号码123
     addTelToList() {
-      let defaultList = [1, 2, 3];
+      let defaultList = [2, 3];
       if (this.addTel.length < 3) {
         for (let index = 0; index < defaultList.length; index++) {
           if (!this.addTel.includes(defaultList[index])) {
@@ -1162,26 +1401,39 @@ export default {
           }
         });
     },
-    //获取
-    getLoadData() {
+    /**
+     * 重新验真情况设置数据
+     */
+    setAfreshData() {
       this.loading = true;
-      let url = `/draft-house/${this.$store.state.addHouse.formData.id}`;
-      if (this.paramsObj.getEditUrl) {
-        url =
-          this.paramsObj.getEditUrl + this.$store.state.addHouse.formData.id;
-      }
-      return this.$api
-        .get({
-          url: url
+      this.$api
+        .post({
+          url: `/verifyHouse/afreshVerifyInfo/${this.$store.state.addHouse.formData.id}`,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           if (e.data.code == 200) {
-            this.$store.commit("updateId", e.data.data.id);
-            this.$store.commit("updateHouseNo", e.data.data.houseNo); //更新房源编号
+            // 测试房间号是否能录入
+            this.$api
+              .get({ url: `/verifyHouse/room/${e.data.data.roomId}` })
+              .then(e => {
+                let data = e.data.data;
+                if (e.data.code != 200) {
+                  this.$router.go(-1);
+                  this.$message.error(e.data.message);
+                }
+              })
+              .catch(e => {
+                this.$router.go(-1);
+                this.formData.roomId = "";
+              })
+              .finally(e => {});
+
+            let afreshData = e.data.data;
             this.$store
               .dispatch("InitFormData", {
                 commitName: "updateStep1",
-                json: e.data.data
+                json: afreshData
               })
               .then(() => {
                 this.selectPageCommunit.list.push({
@@ -1198,8 +1450,159 @@ export default {
                   disabled: this.formData.disabled
                 });
               });
-            //添加tel 1 2 3
-            let tel = ["tel1", "tel2", "tel3"];
+            //添加tel 2 3
+            let tel = ["tel2", "tel3"];
+            tel.forEach((item, index) => {
+              if (util.isNotNull(e.data.data[item])) {
+                this.addTel.push(parseInt(item.replace(/[a-zA-Z]*/g, "")));
+              }
+            });
+
+            // 存储step2、音频、图片
+            this.$store.commit("updateFile", {
+              houseVideo:
+                afreshData.saleUploadVideos.length > 0
+                  ? afreshData.saleUploadVideos[0]
+                  : {}
+            });
+            let imgList = afreshData.saleUploadPics;
+            let listName = "",
+              outdoorImgList = [],
+              livingRoomImgList = [],
+              bedroomImgList = [],
+              kitchenImgList = [],
+              toiletImgList = [],
+              layoutImgList = [];
+            imgList.forEach(item => {
+              let type = item.picClass ? item.picClass : item.PicClass;
+              switch (type) {
+                case 1:
+                  listName = "outdoorImgList";
+                  outdoorImgList.push(item);
+                  break;
+                case 2:
+                  listName = "livingRoomImgList";
+                  livingRoomImgList.push(item);
+                  break;
+                case 3:
+                  listName = "bedroomImgList";
+                  bedroomImgList.push(item);
+                  break;
+                case 4:
+                  listName = "kitchenImgList";
+                  kitchenImgList.push(item);
+                  break;
+                case 5:
+                  listName = "toiletImgList";
+                  toiletImgList.push(item);
+                  break;
+                case 6:
+                  listName = "layoutImgList";
+                  layoutImgList.push(item);
+                  break;
+              }
+            });
+            this.$store.commit("updateFile", {
+              outdoorImgList: outdoorImgList
+            });
+            this.$store.commit("updateFile", {
+              livingRoomImgList: livingRoomImgList
+            });
+            this.$store.commit("updateFile", {
+              bedroomImgList: bedroomImgList
+            });
+            this.$store.commit("updateFile", {
+              kitchenImgList: kitchenImgList
+            });
+            this.$store.commit("updateFile", { toiletImgList: toiletImgList });
+            this.$store.commit("updateFile", { layoutImgList: layoutImgList });
+
+            //需要显示长的属性不能是null 如果是null则删除不覆盖store的默认值
+            let isNullforStr = [
+              "title",
+              "communityDesc",
+              "roomDesc",
+              "taxDesc",
+              "saleDesc"
+            ];
+            isNullforStr.forEach(item => {
+              if (afreshData[item] == null) {
+                delete afreshData[item];
+              }
+            });
+            if (afreshData.mortgageBank) {
+              afreshData.mortgageBank = parseInt(afreshData.mortgageBank);
+            }
+            if (afreshData.houseNow) {
+              afreshData.houseNow = parseInt(afreshData.houseNow);
+            }
+            this.$store.dispatch("InitFormData", {
+              commitName: "updateStep2",
+              json: afreshData
+            });
+            this.$store.commit("updateFile", {
+              audioFile:
+                afreshData.saleUploadAudios.length > 0
+                  ? afreshData.saleUploadAudios[0]
+                  : {}
+            });
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    //编辑获取数据
+    getLoadData() {
+      this.loading = true;
+      let url = `/verifyHouse/${this.$store.state.addHouse.formData.id}`;
+      if (this.paramsObj.getEditUrl) {
+        url =
+          this.paramsObj.getEditUrl + this.$store.state.addHouse.formData.id;
+      }
+      return this.$api
+        .get({
+          url: url
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$store.commit("updateId", e.data.data.id);
+            this.$store.commit("updateHouseNo", e.data.data.houseNo); //更新房源编号
+            // 返回手机号脱敏处理
+            let step1 = e.data.data;
+            step1.tel = phoneNuberConvert(step1.tel);
+            step1.tel1 = phoneNuberConvert(step1.tel1);
+            step1.tel2 = phoneNuberConvert(step1.tel2);
+            step1.tel3 = phoneNuberConvert(step1.tel3);
+            // 保存原手机号
+            this.originTelObj = {
+              tel1: step1.tel1,
+              tel2: step1.tel2,
+              tel3: step1.tel3,
+            }
+
+            this.$store
+              .dispatch("InitFormData", {
+                commitName: "updateStep1",
+                json: step1
+              })
+              .then(() => {
+                this.selectPageCommunit.list.push({
+                  value: this.formData.communityId,
+                  name: this.formData.communityName
+                });
+                this.selectPageeBuildingNo.list.push({
+                  value: this.formData.buildingId,
+                  name: this.formData.buildingNo
+                });
+                this.selectPageRoomNo.list.push({
+                  value: this.formData.roomId,
+                  name: this.formData.roomNo,
+                  disabled: this.formData.disabled
+                });
+              });
+            //添加tel 2 3
+            let tel = ["tel2", "tel3"];
             tel.forEach((item, index) => {
               if (util.isNotNull(e.data.data[item])) {
                 this.addTel.push(parseInt(item.replace(/[a-zA-Z]*/g, "")));
@@ -1221,14 +1624,14 @@ export default {
         ...that.deffData
       };
       let method = "post";
-      let url = "/draft-house";
+      let url = "/verifyHouse";
       if (that.$store.state.addHouse.formData.id != "") {
         data.id = that.$store.state.addHouse.formData.id;
         method = "put";
       }
       if (Object.keys(this.deffData).length == 0 || !this.nextSaveButton) {
         //没有做出修改 或者 没有下一步保存的按钮权限
-        console.log("跳过保存，当前权限：", this.nextSaveButton);
+        // console.log("跳过保存，当前权限：", this.nextSaveButton);
         return true;
       }
       if (this.paramsObj.editUrl) {
@@ -1260,32 +1663,54 @@ export default {
 
       data.price = this.formData.price;
       data.area = this.formData.area;
-      console.log(this.formData, "this.formData", this.deffData);
-      return this.$api[method]({
-        url: url,
-        data: data,
-        headers: { "Content-Type": "application/json;charset=UTF-8" }
-      })
-        .then(e => {
-          if (e.data.code == 200) {
-            if (this.paramsObj.editUrl) {
-              //更新成功,同步更新外网
-              data.houseNo = this.$store.state.addHouse.formData.houseNo;
-              releaseHouse.updateOutsideHouse(data);
-            }
-            //存入Vuex;
-            if (e.data.data != null) {
-              that.$store.commit("updateId", e.data.data);
-            }
-            that.$store.commit("updateStep1", that.deffData);
-            return true;
-          } else {
-            return false;
-          }
+      if (this.paramsObj.editUrl) {
+        // 编辑
+        return this.$api[method]({
+          url: url,
+          data: data,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
-        .catch(e => {
-          return false;
-        });
+          .then(e => {
+            if (e.data.code == 200) {
+              if (this.paramsObj.editUrl) {
+                //更新成功,同步更新外网
+                data.houseNo = this.$store.state.addHouse.formData.houseNo;
+                releaseHouse.updateOutsideHouse(data);
+              }
+              //存入Vuex;
+              // if (e.data.data != null) {
+              //   that.$store.commit("updateId", e.data.data);
+              // }
+              that.$store.commit("updateStep1", that.deffData);
+            }
+
+            // 保存后逻辑
+            if (e.data.data == 0) {
+              return true;
+            } else if (e.data.data == -1) {
+              // 修改号码失败
+              this.$message.error("手机号修改失败，该房源已存在验真");
+              this.formData.tel = this.validatePhoneNumber;
+              return true;
+            } else {
+              this.$store.state.addHouse.isformDataNoCommit = false;
+              this.$router.push({
+                path: "/buySellSystem/validateHome",
+                query: {
+                  id: e.data.data
+                }
+              });
+            }
+          })
+          .catch(e => {
+            return false;
+          });
+      } else {
+        // 录入
+        // 数据只保存到本地
+        that.$store.commit("updateStep1", that.deffData);
+        return true;
+      }
     }
     // getNextSaveButton() {
     //   let that = this;
@@ -1313,6 +1738,16 @@ export default {
   },
   data() {
     return {
+      isvalidateTel: [true, true, true, true], //是否验证备用号码
+      validatePhoneNumber: "", // 旧号码
+      validatePhoneInputEnable: !!this.paramsObj.editUrl,
+      validateModifyBtnFlag: true,
+      validateCancelBtnFlag: false,
+      validatePhoneLoading: false,
+      originPhoneShowFlag: false,
+      validatePhoneText: "验真专用",
+      validateTip:
+        "请填写正确的业主号码，并确认该号码可以正常接收短信且号码与微信同号",
       addHouseType: this.houseType,
       step: {},
       addTel: [],

@@ -121,6 +121,7 @@
 <script>
 import util from "@/util/util";
 import but from "@/evenBus/but.js";
+import {mapState} from "vuex";
 export default {
   name: "addHouseSuccess",
   data() {
@@ -137,8 +138,14 @@ export default {
       btnSubmitVerify: true
     };
   },
-  created() {},
-  mounted() {
+  computed: {
+    ...mapState({
+      'formData': state => state.addHouse.formData
+    })
+  },
+  created() {
+    console.log(this.formData, "--------------------41111111111111111");
+    console.log(this.$store.state.addHouse.formData.file, "11111111122222222");
     if (
       util.sessionLocalStorageGet("editHouse") &&
       util.sessionLocalStorageGet("editHouse").paramsObj
@@ -147,6 +154,8 @@ export default {
     } else {
       this.getQr();
     }
+  },
+  mounted() {
     but.$on("submitVerify", () => {
       this.btnSubmitVerify = false;
     });
@@ -157,31 +166,95 @@ export default {
       if (!that.btnSubmitVerify) {
         return;
       }
+      // this.$api
+      //   .post({
+      //     url: "/verifyHouse/invitationToVerify/addHouse",
+      //     data: {
+      //       id: that.$store.state.addHouse.formData.id
+      //     },
+      //     qs: true
+      //   })
+      //   .then(e => {
+      //     let result = e.data;
+      //     that.loading = false;
+      //     if (result.code == 200) {
+      //       that.loading = false;
+      //       that.url = result.data;
+      //     } else {
+      //       console.log("查询结果：" + result.message);
+      //       alert(result.message);
+      //       that.loading = false;
+      //     }
+      //   })
+      //   .catch(e => {
+      //     console.log("查询失败");
+      //     console.log(e);
+      //     that.loading = false;
+      //   });
+      let audioList = [];
+      if (this.formData.file.audioFile&&this.formData.file.audioFile.id) {
+        audioList.push(this.formData.file.audioFile.id);
+      }
+      let videoList = [];
+      if (this.formData.file.houseVideo&&this.formData.file.houseVideo.id) {
+        videoList.push(this.formData.file.houseVideo.id);
+      }
+      let imageList = [];
+      for (let item of this.formData.file.outdoorImgList) {
+        imageList.push(item.id);
+      }
+      for (let item of this.formData.file.livingRoomImgList) {
+        imageList.push(item.id);
+      }
+      for (let item of this.formData.file.bedroomImgList) {
+        imageList.push(item.id);
+      }
+      for (let item of this.formData.file.kitchenImgList) {
+        imageList.push(item.id);
+      }
+      for (let item of this.formData.file.toiletImgList) {
+        imageList.push(item.id);
+      }
+      for (let item of this.formData.file.layoutImgList) {
+        imageList.push(item.id);
+      }
+      let params = {};
+      for(let item in this.formData.step1) {
+        params[item] = this.formData.step1[item];
+      }
+      for(let item in this.formData.step2) {
+        params[item] = this.formData.step2[item];
+      }
+      params.imageList = imageList;
+      params.audioList = audioList;
+      params.videoList = videoList;
       this.$api
         .post({
-          url: "/verifyHouse/invitationToVerify/addHouse",
-          data: {
-            id: that.$store.state.addHouse.formData.id
-          },
-          qs: true
+          url: "/verifyHouse",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: params
         })
         .then(e => {
           let result = e.data;
-          that.loading = false;
           if (result.code == 200) {
-            that.loading = false;
-            that.url = result.data;
+            //that.url = result.data;
+            this.$router.push({
+              path: "/buySellSystem/validateHome",
+              query: {
+                id: result.data,
+              }
+            });
           } else {
             console.log("查询结果：" + result.message);
-            alert(result.message);
-            that.loading = false;
+            // alert(result.message);
           }
         })
         .catch(e => {
-          console.log("查询失败");
-          console.log(e);
+          console.log(e,"查询失败");
+        })
+        .finally(e => {
           that.loading = false;
-        });
+        })
     },
     navto() {
       this.$router.replace({ path: "/myHouse/myValidate" });

@@ -548,6 +548,10 @@ export default {
     if (that.getData) {
       that.promiseAllViodeoAndImg();
     }
+    // 重新验真情况设置数据
+    if (this.$store.state.addHouse.isAfresh) {
+      this.setAfreshData();
+    }
     that.currentIndex = 0;
     that.qrCodeImg = "";
 
@@ -588,16 +592,15 @@ export default {
     pa.webSocketUser = that.webSocketUser;
     that.getQrCode2(pa, function(data) {
       that.qrCodeImg = data.url;
-      console.log(that.qrCodeImg, "图片二维码地址");
+      // console.log(that.qrCodeImg, "图片二维码地址");
       that.getQrCodeForVedio(function(data) {
         that.qrCodeImgVedio = data;
-        console.log(that.qrCodeImgVedio, "视频二维码地址");
+        // console.log(that.qrCodeImgVedio, "视频二维码地址");
       });
     });
     // but.$on("wxUploadFile", () => {
     //   that.uploadFile = true;
     // });
-    console.log("isFromHouseTask", that.isFromHouseTask);
   },
   data() {
     return {
@@ -648,16 +651,16 @@ export default {
     },
     websocketOpen() {
       let that = this;
-      console.log("websocket连接成功!!!!");
+      // console.log("websocket连接成功!!!!");
       that.websockStatus = true;
     },
     receiveMessagePic(r) {
       let that = this;
-      console.log(r, "接收到了消息");
+      // console.log(r, "接收到了消息");
       if (r.content.resourceType == "vedio") {
-        console.log(r.content, "视频消息内容，准备插入草稿箱");
+        // console.log(r.content, "视频消息内容，准备插入草稿箱");
         if (that.houseVideo && that.houseVideo.url) {
-          console.log("仅可以上传一个视频,请先手动删除！");
+          // console.log("仅可以上传一个视频,请先手动删除！");
           this.$message.error("仅可以上传一个视频,请先手动删除！");
           return;
         }
@@ -669,8 +672,8 @@ export default {
 
         //找到消息是发送给哪个二维码的
         let name = temp.picContainer;
-        console.log(that[name], "找到了指定用户");
-        console.log(r.content.picUrl, "接受到消息的图片地址");
+        // console.log(that[name], "找到了指定用户");
+        // console.log(r.content.picUrl, "接受到消息的图片地址");
         that.uploadFileInfo(r.content.picClass, r.content.picUrl, function(
           data
         ) {
@@ -679,14 +682,14 @@ export default {
       }
     },
     contactSocket(user) {
-      console.log("用户【" + user + "】开始接入");
+      // console.log("用户【" + user + "】开始接入");
       this.socketApi.initWebSocket(
         this.$api.baseUrl().replace("http", ""),
         user,
         this.websocketOpen
       );
       this.socketApi.initReceiveMessageCallBack(this.receiveMessagePic);
-      console.log("用户【" + user + "】接入完毕");
+      // console.log("用户【" + user + "】接入完毕");
     },
     getQrCodeForVedio(callback) {
       let that = this;
@@ -713,13 +716,12 @@ export default {
           if (result.code == 200) {
             callback(result.data.url);
           } else {
-            console.log("h获取视频二维码结果：" + result.message);
+            // console.log("h获取视频二维码结果：" + result.message);
             alert(result.message);
           }
         })
         .catch(e => {
-          console.log("查询视频二维码失败");
-          console.log(e);
+          console.log(e, "查询视频二维码失败");
         });
     },
     getQrCode2(data, callback) {
@@ -735,21 +737,31 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          console.log("请求二维码成功");
           if (result.code == 200) {
             //that.qrCodeImg="data:image/png;base64,"+item.img;
             callback(result.data);
           } else {
-            console.log("h获取二维码结果：" + result.message);
             alert(result.message);
           }
         })
         .catch(e => {
-          console.log("查询二维码失败");
-          console.log(e);
+          console.log(e, "查询二维码失败");
         });
     },
     openVideo() {},
+    /**
+     * 重新验真情况设置数据
+     */
+    setAfreshData() {
+      let afreshData = this.$store.state.addHouse.formData.file;
+      this.houseVideo = afreshData.houseVideo;
+      this.outdoorImgList = afreshData.outdoorImgList;
+      this.livingRoomImgList = afreshData.livingRoomImgList;
+      this.bedroomImgList = afreshData.bedroomImgList;
+      this.kitchenImgList = afreshData.kitchenImgList;
+      this.toiletImgList = afreshData.toiletImgList;
+      this.layoutImgList = afreshData.layoutImgList;
+    },
     promiseAllViodeoAndImg() {
       this.loading = true;
       Promise.all([this.getLoadDataImg(), this.getLoadDataVideo()])
@@ -761,7 +773,7 @@ export default {
         });
     },
     getLoadDataVideo() {
-      let url = `/draft-house/videos/${this.$store.state.addHouse.formData.id}`;
+      let url = `/verifyHouse/videos/${this.$store.state.addHouse.formData.id}`;
       if (this.paramsObj.getVideoUrl) {
         url =
           this.paramsObj.getVideoUrl + this.$store.state.addHouse.formData.id;
@@ -793,7 +805,7 @@ export default {
     },
     //获取上传的图片
     getLoadDataImg() {
-      let url = `/draft-house/pictures/${this.$store.state.addHouse.formData.id}`;
+      let url = `/verifyHouse/pictures/${this.$store.state.addHouse.formData.id}`;
       if (this.paramsObj.getPicturesUrl) {
         url =
           this.paramsObj.getPicturesUrl +
@@ -872,7 +884,7 @@ export default {
     deleteImg(id, url, index, listName) {
       this.$api
         .delete({
-          url: `/draft-house/picture/${id}`,
+          url: `/verifyHouse/picture/${id}`,
           data: {
             url: url
           },
@@ -881,6 +893,9 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             this[listName].splice(index, 1);
+            this.$store.commit("updateFile", {
+              [listName]: this[listName]
+            });
           }
         });
     },
@@ -892,7 +907,7 @@ export default {
       }
       this.$api
         .delete({
-          url: `/draft-house/video/${item.id}`,
+          url: `/verifyHouse/video/${item.id}`,
           data: {
             url: item.url
           },
@@ -901,6 +916,9 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             this.houseVideo = {};
+            this.$store.commit("updateFile", {
+              houseVideo: this.houseVideo
+            });
             this.$refs.houseVideoList.value = null;
           }
         });
@@ -920,7 +938,7 @@ export default {
       }
       this.$api
         .post({
-          url: `/draft-house/${
+          url: `/verifyHouse/${
             picClass != undefined ? "pictureDraft" : "videoDraft"
           }`,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -962,7 +980,7 @@ export default {
       formData.append("file", uploader);
       this.$api
         .post({
-          url: `/draft-house/${picClass != undefined ? "picture" : "video"}`,
+          url: `/verifyHouse/${picClass != undefined ? "picture" : "video"}`,
           headers: { "Content-Type": "multipart/form-data" },
           data: formData
           // onUploadProgress: (progressEvent) => { //原生获取上传进度的事件
@@ -979,6 +997,10 @@ export default {
             } else {
               this[fileListName] = json.data.data;
             }
+
+            this.$store.commit("updateFile", {
+              [fileListName]: this[fileListName]
+            });
           }
         })
         .catch(e => {

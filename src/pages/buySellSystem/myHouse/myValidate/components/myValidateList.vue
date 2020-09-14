@@ -22,6 +22,7 @@
     text-align: center;
     .cell {
       white-space: nowrap;
+      color: #606266;
     }
   }
 }
@@ -64,11 +65,10 @@
   }
 }
 .operation-btn {
-  background: @backgroud;
-  color: #fff;
+  color: @backgroud;
   // prettier-ignore
-  margin-right: 10PX;
-  font-size: @font14;
+  margin-right: 24PX;
+  font-size: @font16;
   // prettier-ignore
   width: 66PX;
   // prettier-ignore
@@ -78,7 +78,7 @@
   border: none;
   cursor: pointer;
   &[disabled] {
-    background: @opacityBackground;
+    color: #909399;
     cursor: no-drop;
   }
   &:last-child {
@@ -93,6 +93,31 @@
 }
 .cus-box {
   display: flex;
+}
+.span_success,
+.span_danger,
+.span_warning {
+  display: inline-block;
+  // prettier-ignore
+  padding: 6PX 13PX;
+  border-radius: 2px;
+  line-height: 1;
+  text-align: center;
+  font-size: @font14;
+}
+.span_success {
+  background: #0da88b19;
+  color: #0da88b;
+}
+.span_danger {
+  background: #ef565619;
+  font-size: @font14;
+  color: #ef5656;
+}
+.span_warning {
+  background: #f6a42019;
+  font-size: @font14;
+  color: #f6a420;
 }
 </style>
 <template>
@@ -286,6 +311,16 @@ const dom = document;
 import util from "@/util/util";
 //验真电话弹框
 import telPop from "./telPop";
+let checkStatusStrMap = new Map([
+  ["待验真", "span_warning"],
+  ["验真成功", "span_success"],
+  ["验真失败", "span_danger"]
+]);
+let pageNameMap = new Map([
+  [1, "wxValidate"],
+  [2, "pMsgValidate"],
+  [3, "messageValidate"]
+]);
 export default {
   inject: ["form"],
   components: {
@@ -299,7 +334,6 @@ export default {
       showVeryfyDetail: false,
       steps: [
         { title: "业主验真", description: "" },
-        { title: "店长验真", description: "" },
         { title: "完成验真", description: "" }
       ],
       stepStatus: "",
@@ -322,54 +356,46 @@ export default {
       tableColumnField: [
         {
           prop: "communityName",
-          label: "楼盘名称"
+          label: "楼盘名称",
+          formart: item => {
+            return `${item.communityName}-${item.buildingName}-${item.roomNo}`;
+          }
         },
         {
-          prop: "phoneStatus",
-          label: "电话检索"
+          prop: "sourceStr",
+          label: "验真类型"
         },
         {
-          prop: "checkStatus",
-          label: "验真状态"
+          prop: "checkStatusStr",
+          label: "验真状态",
+          formart: item => {
+            let str = checkStatusStrMap.get(item.checkStatusStr);
+            return (
+              <span class={str}>{str ? item.checkStatusStr : "暂无"}</span>
+            );
+          }
         },
         {
           prop: "customerName",
           label: "业主姓名"
         },
         {
-          prop: "checkTelStatus",
-          label: "验真电话",
-          formart: row => {
-            return (
-              <div class="checkTel-type">
-                {row.checkTelStatus == "正常" ? (
-                  <span class="checkTel-type-success">
-                    {row.checkTelStatus}
-                  </span>
-                ) : (
-                  <span class="checkTel-type-error">{row.checkTelStatus}</span>
-                )}
-                <span
-                  class="el-icon-s-order icon"
-                  onClick={this.openCheckTelPop.bind(this, row)}
-                ></span>
-              </div>
-            );
-          }
+          prop: "modeStr",
+          label: "验真方式"
         },
         {
           prop: "addPerName",
           label: "录入人"
         },
-        {
-          prop: "addTime",
-          label: "录入时间",
-          order: "custom"
-        },
+        // {
+        //   prop: "addTime",
+        //   label: "录入时间",
+        //   order: "custom"
+        // },
         {
           label: "操作",
           formart: row => this.operation(row),
-          width: "380"
+          width: "272"
           //  fixed: "right"
         }
       ],
@@ -407,8 +433,8 @@ export default {
     operation(row) {
       let array = [
         {
-          name: "邀请验真",
-          isType: "待业主验真,待店长验真,草稿",
+          name: "进入验真",
+          isType: "待验真",
           methodName: "getVerifyImg"
         },
         {
@@ -416,38 +442,44 @@ export default {
           isType: "验真失败",
           methodName: "reVerify"
         },
-        {
-          name: "编辑",
-          isType: "待业主验真,待店长验真,已过期,验真失败,草稿",
-          methodName: "edit"
-        },
+        // {
+        //   name: "编辑",
+        //   isType: "待业主验真,待店长验真,已过期,验真失败,草稿",
+        //   methodName: "edit"
+        // },
         {
           name: "验真详情",
-          isType: "待业主验真,待店长验真,已过期,验真失败,验真成功",
+          isType: "待验真,验真失败,验真成功",
           methodName: "getResult"
         }
       ];
       return array
         .map(item => {
-          if (item.isType.includes(row.checkStatus)) {
+          if (item.isType.includes(row.checkStatusStr)) {
             item.disabled = false;
           } else {
             item.disabled = true;
           }
-          if (!this.showValidityBtn && item.name == "邀请验真") {
+          if (!this.showValidityBtn && item.name == "进入验真") {
+            item.disabled = true;
+          }
+          if (
+            item.name == "重新验真" &&
+            (parseInt(row.source) != 1 || parseInt(row.checkStatus) == 4)
+          ) {
             item.disabled = true;
           }
           return item;
         })
         .map(btnDataItem => {
           return (
-            <button
+            <span
               class="operation-btn"
               onClick={this[btnDataItem.methodName].bind(this, row)}
               disabled={btnDataItem.disabled}
             >
               {btnDataItem.name}
-            </button>
+            </span>
           );
         });
     },
@@ -475,40 +507,18 @@ export default {
       that.employeeDiff.show = false;
       //步骤设置
       that.stepsListNow = that.steps;
-      switch (row.checkStatus) {
-        case "待业主验真":
-          break;
-        case "待店长验真":
+      switch (row.checkStatusStr) {
+        case "待验真":
           that.stepNow = 1;
-          that.stepsListNow[0].description = "业主未验真";
-          break;
-        case "已过期":
-          that.stepNow = 2;
-          that.stepStatus = "wait";
-          that.stepsListNow[0].description = "业主未验真";
-          that.stepsListNow[1].description = "店长未验真";
+          //that.stepsListNow[0].description = "待业主验真";
           break;
         case "验真失败":
           that.stepNow = 2;
           that.stepStatus = "error";
-          if (row.checkEmployee) {
-            that.stepsListNow[1].description = "店长验真不通过";
-            that.getVerifyDiff(row.id, 0);
-          }
-          if (row.checkCustomer) {
-            that.stepsListNow[0].description = "业主验真不通过";
-            that.getVerifyDiff(row.id, 2);
-          }
           break;
         case "验真成功":
           that.stepNow = 2;
           that.stepStatus = "success";
-          if (row.checkEmployee) {
-            that.stepsListNow[1].description = "店长验真通过";
-          }
-          if (row.checkCustomer) {
-            that.stepsListNow[0].description = "业主验真通过";
-          }
           break;
       }
     },
@@ -557,13 +567,13 @@ export default {
     },
     reVerify(val) {
       this.$api
-        .get({
-          url: "/verifyHouse/check/" + val.id
+        .post({
+          url: "/verifyHouse/afreshVerify/" + val.id
         })
         .then(e => {
           if (e.data.code == 200) {
             this.$router.push({
-              path: "/buySellSystem/addHouse?method=edit&id=" + val.id
+              path: "/buySellSystem/addHouse?method=afresh&id=" + val.id
             });
           } else {
             this.$message.error(e.date.message);
@@ -609,22 +619,33 @@ export default {
     },
     getVerifyImg(row) {
       let trueId = row.id;
-      if (row.isMul != null && row.isMul !== 0) {
-        trueId = row.isMul;
-      }
-      console.log("trueId............" + trueId);
-      let params = { id: trueId };
       let that = this;
       that.loading = true;
       this.$api
         .get({
-          url: "/verifyHouse/check/" + row.id
+          url: "/verifyHouse/inviteVerify/" + row.id
         })
         .then(e => {
+          that.loading = false;
           if (e.data.code == 200) {
-            that.getImg(params);
+            let data = e.data.data;
+
+            if (data.mode) {
+              this.$router.push({
+                name: pageNameMap.get(parseInt(data.mode)),
+                query: {
+                  id: row.id
+                }
+              });
+            } else {
+              this.$router.push({
+                path: "/buySellSystem/validateHome",
+                query: {
+                  id: row.id
+                }
+              });
+            }
           } else {
-            that.loading = false;
             this.$message.error(e.date.message);
           }
         })
@@ -692,10 +713,12 @@ export default {
      * @example: 双击前往详情
      */
     navDetailt(item) {
-      util.openPage.call(this, {
-        name: "validateHouseDetails",
-        params: { houseId: item.id, dept: item.perDept }
-      });
+      if (item.checkStatus && parseInt(item.checkStatus) == 2) {
+        util.openPage.call(this, {
+          name: "houseDetails",
+          params: { houseId: item.houseId }
+        });
+      }
     },
     /**
      * @example: 远程排序
@@ -748,12 +771,6 @@ export default {
         page: this.pageJson.currentPage,
         limit: this.pageJson.pageSize
       });
-      if (params.checkStatusValue == "1") {
-        params.checkSubStatus = "0";
-      } else if (params.checkStatusValue == "4") {
-        params.checkStatusValue = "1";
-        params.checkSubStatus = "1";
-      }
       if (params.time && params.time.length == 2) {
         params.beginTime = params.time[0];
         params.endTime = params.time[1];

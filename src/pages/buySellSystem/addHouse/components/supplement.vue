@@ -1041,6 +1041,10 @@ export default {
           this.loading = false;
         });
     }
+    // 重新验真情况设置数据
+    if (this.$store.state.addHouse.isAfresh) {
+      this.setAfreshData();
+    }
     if (this.audioList != null && this.audioList.length > 0) {
       this.audioFile = this.audioList[0];
     }
@@ -1064,11 +1068,9 @@ export default {
     // });
     // console.log("nextSaveButton", this.nextSaveData);
     // console.log("wxUploadFile", this.uploadFile);
-    console.log("isFromHouseTask", that.isFromHouseTask);
   },
   beforeRouteLeave(to, from, next) {
-    console.log("离开了供给页面，不需要执行任何请求回调");
-    ``;
+    //console.log("离开了供给页面，不需要执行任何请求回调");
     this.isLeavePage = true;
     next();
   },
@@ -1082,11 +1084,11 @@ export default {
           this.$store.state.addHouse.formData.step2,
           this.formData
         );
-        console.log(
-          this.$store.state.addHouse.formData.step2,
-          this.formData,
-          " this.$store.state.addHouse.formData.step2"
-        );
+        // console.log(
+        //   this.$store.state.addHouse.formData.step2,
+        //   this.formData,
+        //   " this.$store.state.addHouse.formData.step2"
+        // );
         //判断当前是否有修改，如果有修改则length大于0
         let flag = Object.keys(deffData).length > 0 ? true : false;
         //判断store存储的是否与这次相同，相同则不commit
@@ -1147,7 +1149,7 @@ export default {
     removeAudio(id, url) {
       this.$api
         .delete({
-          url: `/draft-house/audio/${id}`,
+          url: `/verifyHouse/audio/${id}`,
           data: {
             url: url
           },
@@ -1157,23 +1159,26 @@ export default {
           if (e.data.code == 200) {
             this.audioFile = {};
             Object.assign(this.$data.audioPlay, this.$options.data().audioPlay);
+            this.$store.commit("updateFile", {
+              audioFile: this.audioFile
+            });
           }
         });
     },
     contactSocket(user) {
-      console.log("用户【" + user + "】开始接入");
+      // console.log("用户【" + user + "】开始接入");
       this.socketApi.initWebSocket(
         this.$api.baseUrl().replace("http", ""),
         user
       );
       this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
-      console.log("用户【" + user + "】接入完毕");
+      // console.log("用户【" + user + "】接入完毕");
     },
     receiveMessage(r) {
       let that = this;
-      console.log(r, "录入房源页面之音频上传接收到了消息");
+      // console.log(r, "录入房源页面之音频上传接收到了消息");
       if (r.content.resourceType == "audio") {
-        console.log(r.content, "音频消息内容，准备插入草稿箱");
+        // console.log(r.content, "音频消息内容，准备插入草稿箱");
         that.uploadFileInfo(r.content.picUrl, function(data) {
           that.audioFile = data;
         });
@@ -1194,18 +1199,17 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          console.log("请求二维码成功");
+          // console.log("请求二维码成功");
           if (result.code == 200) {
             //that.qrCodeImg="data:image/png;base64,"+item.img;
             callback(result.data);
           } else {
-            console.log("h获取二维码结果：" + result.message);
+            // console.log("h获取二维码结果：" + result.message);
             alert(result.message);
           }
         })
         .catch(e => {
-          console.log("查询二维码失败");
-          console.log(e);
+          console.log(e, "查询二维码失败");
         })
         .finally(e => {
           that.isNextDisable = false;
@@ -1224,7 +1228,7 @@ export default {
       formData.IpStr = url;
       this.$api
         .post({
-          url: `/draft-house/audioDraft`,
+          url: `/verifyHouse/audioDraft`,
           headers: { "Content-Type": "application/json" },
           data: formData
         })
@@ -1247,7 +1251,7 @@ export default {
     },
     //根据ID获取已经上传的音频
     getAudio() {
-      let url = `/draft-house/audios/${this.$store.state.addHouse.formData.id}`;
+      let url = `/verifyHouse/audios/${this.$store.state.addHouse.formData.id}`;
       if (this.paramsObj.getAudioUrl) {
         url =
           this.paramsObj.getAudioUrl + this.$store.state.addHouse.formData.id;
@@ -1319,13 +1323,16 @@ export default {
       formData.append("file", uploader);
       this.$api
         .post({
-          url: `/draft-house/audio`,
+          url: `/verifyHouse/audio`,
           headers: { "Content-Type": "multipart/form-data" },
           data: formData
         })
         .then(json => {
           if (json.data.code == 200) {
             this.audioFile = json.data.data;
+            this.$store.commit("updateFile", {
+              audioFile: this.audioFile
+            });
           }
         })
         .catch(e => {
@@ -1338,9 +1345,27 @@ export default {
           this.audioFileLoading = false;
         });
     },
+    setAfreshData() {
+      let afreshData = this.$store.state.addHouse.formData.step2;
+      if (afreshData.middleSchoolUse === 0) {
+        this.middleRadio = 0;
+      } else if (afreshData.middleSchoolUse >= 1) {
+        this.middleRadio = 1;
+      } else {
+        this.middleRadio = 0;
+      }
+      if (afreshData.primarySchoolUse === 0) {
+        this.primaryRadio = 0;
+      } else if (afreshData.primarySchoolUse >= 1) {
+        this.primaryRadio = 1;
+      } else {
+        this.primaryRadio = 0;
+      }
+      this.audioFile = this.$store.state.addHouse.formData.file.audioFile;
+    },
     getLoadData() {
       this.loading = true;
-      let url = `/draft-house/${this.$store.state.addHouse.formData.id}`;
+      let url = `/verifyHouse/${this.$store.state.addHouse.formData.id}`;
       if (this.paramsObj.getEditUrl) {
         url =
           this.paramsObj.getEditUrl + this.$store.state.addHouse.formData.id;
@@ -1386,7 +1411,6 @@ export default {
             } else {
               this.primaryRadio = 0;
             }
-            console.log(e.data.data, "e.data.data");
             this.$store.dispatch("InitFormData", {
               commitName: "updateStep2",
               json: e.data.data
@@ -1484,10 +1508,10 @@ export default {
         id: that.$store.state.addHouse.formData.id,
         ...that.deffData
       };
-      let url = "/draft-house";
+      let url = "/verifyHouse";
       if (Object.keys(this.deffData).length == 0 || !this.nextSaveButton) {
         //没有做出修改  或者 没有下一步保存的按钮权限
-        console.log("跳过保存，当前权限：", this.nextSaveButton);
+        // console.log("跳过保存，当前权限：", this.nextSaveButton);
         return true;
       }
       if (this.paramsObj.editUrl) {
@@ -1517,33 +1541,37 @@ export default {
           }
         });
       }
-      return this.$api
-        .put({
-          url: url,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: sendData
-        })
-        .then(e => {
-          console.log(e);
-          if (e.data.code == 200) {
-            if (this.paramsObj.editUrl) {
-              //更新成功,同步更新外网
-              sendData.houseNo = this.$store.state.addHouse.formData.houseNo;
-              releaseHouse.updateOutsideHouse(sendData);
+      if (this.paramsObj.editUrl) { // 编辑
+        return this.$api
+          .put({
+            url: url,
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            data: sendData
+          })
+          .then(e => {
+            if (e.data.code == 200) {
+              if (this.paramsObj.editUrl) {
+                //更新成功,同步更新外网
+                sendData.houseNo = this.$store.state.addHouse.formData.houseNo;
+                releaseHouse.updateOutsideHouse(sendData);
+              }
+              //存入Vuex;
+              that.$store.commit("updateStep2", that.deffData);
+              return true;
+            } else {
+              return false;
             }
-            //存入Vuex;
-            that.$store.commit("updateStep2", that.deffData);
-            return true;
-          } else {
+          })
+          .catch(() => {
             return false;
-          }
-        })
-        .catch(() => {
-          return false;
-        });
+          });
+      } else { // 录入
+        // 数据只保存到本地
+        that.$store.commit("updateStep2", that.deffData);
+        return true;
+      }
     },
     changeOnly() {
-      console.log("触发...");
       if (
         this.formData.isOwnerOnly === 1 &&
         this.formData.lastSale != null &&

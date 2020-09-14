@@ -152,6 +152,58 @@ export default [
       )
   },
   {
+    path: "/buySellSystem/validateHome",
+    name: "validateHome",
+    meta: {
+      title: "验真首页",
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "validateHome" */ "@/pages/buySellSystem/newvalidate/validateHome.vue"
+      )
+  },
+  {
+    path: "/buySellSystem/messageValidate",
+    name: "messageValidate",
+    meta: {
+      title: "信息员验真",
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "messageValidate" */ "@/pages/buySellSystem/newvalidate/messageValidate.vue"
+      )
+  },
+  {
+    path: "/buySellSystem/pMsgValidate",
+    name: "pMsgValidate",
+    meta: {
+      title: "短信验真",
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "pMsgValidate" */ "@/pages/buySellSystem/newvalidate/pMsgValidate.vue"
+      )
+  },
+  {
+    path: "/buySellSystem/wxValidate",
+    name: "wxValidate",
+    meta: {
+      title: "微信验真",
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "wxValidate" */ "@/pages/buySellSystem/newvalidate/wxValidate.vue"
+      )
+  },
+  {
     //我的房源
     path: "/buySellSystem/myHouse",
     redirect: "/myHouse/myRole",
@@ -454,6 +506,30 @@ export default [
           )
       },
       {
+        //抽检列表
+        path: "/managementEntrance/spotCheckList",
+        meta: {
+          title: "抽检列表",
+          isMapNav: true //不需要导航
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "spotCheckList" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/spotCheckList.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/spotCheckRecord",
+        meta: {
+          title: "抽检记录",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "spotCheckRecord" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/spotCheckRecord.vue"
+          )
+      },
+      {
         path: "/managementEntrance/customers",
         meta: {
           title: "客源",
@@ -490,6 +566,19 @@ export default [
           )
       }
     ]
+  },
+  {
+    // 信息员验真列表
+    path: "/buySellSystem/employeeValidateList",
+    meta: {
+      title: "信息员验真列表",
+      isMapNav: true,
+      isPad: true
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "employeeValidateList" */ "@/pages/buySellSystem/employeeValidateList/index.vue"
+      )
   },
   {
     path: "/report/addReport",

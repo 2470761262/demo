@@ -587,7 +587,7 @@ export default {
       }
       .el-form-item {
         // prettier-ignore
-        margin-bottom: 24PX;
+        margin-bottom: 16PX;
       }
       .el-range-input {
         text-align: left;

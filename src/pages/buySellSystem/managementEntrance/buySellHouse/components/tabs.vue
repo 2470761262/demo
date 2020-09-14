@@ -21,7 +21,9 @@ const IMPLANTLIST = [
   { title: "3天新增", url: "/managementEntrance/3day" },
   { title: "7天内被看房源", url: "/managementEntrance/7day" },
   { title: "锁定房源", url: "/managementEntrance/houseLockingList" },
-  { title: "审核列表", url: "/managementEntrance/houseExamineHouse" }
+  { title: "审核列表", url: "/managementEntrance/houseExamineHouse" },
+  { title: "抽检列表", url: "/managementEntrance/spotCheckList" },
+  { title: "抽检记录", url: "/managementEntrance/spotCheckRecord" }
 ];
 export default {
   props: {
@@ -56,6 +58,7 @@ export default {
       height: 30PX;
       // prettier-ignore
       padding: 0 16PX;
+      // prettier-ignore
       line-height: 30PX;
       color: #606266;
       cursor: pointer;

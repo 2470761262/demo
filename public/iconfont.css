@@ -1,23 +1,69 @@
 @font-face {
-  font-family: 'iconfont';  /* project id 1713842 */
-  src: url('//at.alicdn.com/t/font_1713842_23douuqgvzw.eot');
-  src: url('//at.alicdn.com/t/font_1713842_23douuqgvzw.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_1713842_23douuqgvzw.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_1713842_23douuqgvzw.woff') format('woff'),
-  url('//at.alicdn.com/t/font_1713842_23douuqgvzw.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_1713842_23douuqgvzw.svg#iconfont') format('svg');
-}
-  
-  .iconfont {
+    font-family: 'iconfont';  /* project id 1713842 */
+    src: url('//at.alicdn.com/t/font_1713842_fvi6so8jfoq.eot');
+    src: url('//at.alicdn.com/t/font_1713842_fvi6so8jfoq.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_1713842_fvi6so8jfoq.woff2') format('woff2'),
+    url('//at.alicdn.com/t/font_1713842_fvi6so8jfoq.woff') format('woff'),
+    url('//at.alicdn.com/t/font_1713842_fvi6so8jfoq.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_1713842_fvi6so8jfoq.svg#iconfont') format('svg');
+  }
+
+.iconfont {
     font-family: "iconfont" !important;
     font-size: 16px;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  .iconshengyi:before {
+  
+  .iconbianzu:before {
+    content: "\e661";
+  }
+  
+  .iconbianzu1:before {
+    content: "\e662";
+  }
+  
+  .iconbianzu11:before {
+    content: "\e663";
+  }
+  
+  .icondaoru:before {
+    content: "\e652";
+  }
+  
+  .iconmobanxiazai:before {
+    content: "\e74d";
+  }
+  
+  .iconhome:before {
+    content: "\e607";
+  }
+  
+  .iconaim:before {
+    content: "\e616";
+  }
+  
+  .iconshengyinbaidi:before {
     content: "\e624";
   }
+  
+  .iconcube-kehu:before {
+    content: "\e651";
+  }
+  
+  .iconkehu:before {
+    content: "\e611";
+  }
+  
+  .iconbofang:before {
+    content: "\e618";
+  }
+  
+  .iconbofang1:before {
+    content: "\e62a";
+  }
+  
   .icondaohang_wodefangyuan1:before {
     content: "\e650";
   }
@@ -38,19 +84,6 @@
     content: "\e64e";
   }
   
-  .iconcube-kehu:before {
-    content: "\e651";
-  }
-  .iconkehu:before {
-    content: "\e611";
-  }
-  .iconbofang:before {
-    content: "\e618";
-  }
-  .iconbofang1:before {
-    content: "\e62a";
-  }
-
   .iconxingzhuangjiehe1:before {
     content: "\e645";
   }
@@ -173,17 +206,5 @@
   
   .iconjubao:before {
     content: "\e62e";
-  }
-
-  .iconTemplateImport:before {
-    content: "\e652";
-  }
-
-  .iconTemplateDownload:before {
-    content: "\e74d";
-  }
-
-  .iconhome:before {
-    content: "\e607";
   }
   

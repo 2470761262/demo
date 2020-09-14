@@ -19,11 +19,12 @@ module.exports = {
     modules: false
   },
   parallel: require("os").cpus().length > 1,
-  lintOnSave: true,
+  //lintOnSave: true,
   chainWebpack: config => {
     config.resolve.alias.set("@", resolve("src"));
     config.plugins.delete("prefetch");
     config.plugins.delete("preload");
+    config.module.rules.delete("eslint");
     const types = ["vue-modules", "vue", "normal-modules", "normal"];
     types.forEach(type =>
       addStyleResource(config.module.rule("less").oneOf(type))

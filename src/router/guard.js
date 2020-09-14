@@ -39,6 +39,7 @@ export default router => {
           document.querySelector(".el-main").scrollTop
         );
       } else {
+        document.querySelector(".el-main").scrollTop = 0;
         util.sessionLocalStorageSet("scrollTop", 0);
       }
     }
