@@ -537,6 +537,32 @@
     font-size: @font18;
   }
 }
+.pop-title {
+  font-size: @font18;
+  color: #606266;
+  // prettier-ignore
+  padding-top: 28px;
+}
+.pop-col {
+  display: flex;
+  // prettier-ignore
+  margin: 0 -10PX;
+  .pop-col-item {
+    flex: 1;
+    // prettier-ignore
+    margin: 28PX 10PX 0;
+    .col-item-title {
+      font-size: @font16;
+      color: #303133;
+      font-weight: bold;
+      // prettier-ignore
+      padding-bottom: 16PX;
+    }
+    img {
+      width: 100%;
+    }
+  }
+}
 </style>
 <template>
   <div class="content">
@@ -719,6 +745,36 @@
         </div>
       </div>
     </el-dialog>
+
+    <fixedPopup
+      title="发送成功"
+      :visible.sync="fixedPopupFlag"
+      v-if="fixedPopupFlag && detail.mode != 2"
+      width="556px"
+      styleType="0"
+      :butJson="{ cancelBtnShow: false }"
+      @confirmEmit="confirmEmit"
+    >
+      <div class="pop-title">
+        房源验真验证码已自动发送给业主，请通过以下方案进行验真
+      </div>
+      <div class="pop-col">
+        <div class="pop-col-item">
+          <div class="col-item-title">方案1</div>
+          <img
+            src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/9/14/b0363f45ba30471ba755b2df3fb3c1ae.png"
+            alt=""
+          />
+        </div>
+        <div class="pop-col-item">
+          <div class="col-item-title">方案2</div>
+          <img
+            src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/9/14/b0363f45ba30471ba755b2df3fb3c1ae.png"
+            alt=""
+          />
+        </div>
+      </div>
+    </fixedPopup>
   </div>
 </template>
 
@@ -749,6 +805,7 @@ export default {
   },
   data() {
     return {
+      fixedPopupFlag: true,
       navValidate: NAVVALIDATE,
       id: null,
       validateCall: ["", "", "", "", "", ""],
@@ -768,6 +825,9 @@ export default {
     };
   },
   methods: {
+    confirmEmit() {
+      this.fixedPopupFlag = false;
+    },
     goValidatePage(pathName) {
       this.$router.replace({
         name: pathName,
