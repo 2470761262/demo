@@ -1,6 +1,8 @@
 <template>
   <!-- 房源系统-业务管理 -->
   <div class="container">
+    <breadcrumb></breadcrumb>
+    <nav-menu :navMenuIndex="0"></nav-menu>
     <div class="conditions-box">
       <div class="header-bottom">
         <div class="head-content-input">
@@ -297,8 +299,13 @@
   </div>
 </template>
 <script>
-import bus from "@/evenBus/but.js";
+import breadcrumb from "./components/entranceBreadcrumb.vue";
+import navMenu from "./components/entranceNavMenu.vue";
 export default {
+  components: {
+    breadcrumb,
+    navMenu
+  },
   data() {
     return {
       workLoading: false,
@@ -594,8 +601,6 @@ export default {
     };
   },
   created() {
-    // 切换管理入口nav
-    bus.$emit("switchEntranceNav", 0);
     this.getDefaultDate();
     this.getWorkData();
     this.getDevelopData();

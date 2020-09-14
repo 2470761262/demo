@@ -464,7 +464,6 @@
 <script>
 import breadcrumb from "./components/breadcrumb.vue";
 import util from "@/util/util";
-import bus from "@/evenBus/but.js";
 import validateAudio from "./components/validateAudio.vue";
 export default {
   components: {
@@ -541,8 +540,6 @@ export default {
     };
   },
   created() {
-    // 切换管理入口nav
-    bus.$emit("switchEntranceNav", 1);
     this.query();
     this.setConditionCol();
     window.addEventListener("resize", this.setConditionCol);

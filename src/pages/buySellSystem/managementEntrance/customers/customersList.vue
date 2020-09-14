@@ -21,6 +21,8 @@
 </style>
 <template>
   <div class="content">
+    <breadcrumb></breadcrumb>
+    <nav-menu :navMenuIndex="3"></nav-menu>
     <div class="half-content">
       <privateCutmomersPair></privateCutmomersPair>
     </div>
@@ -31,11 +33,12 @@
 </template>
 
 <script>
+import breadcrumb from "../components/entranceBreadcrumb.vue";
+import navMenu from "../components/entranceNavMenu.vue";
 import privateCutmomersPair from "./components/cutmomersPair";
 import privateCutmomersResultList from "./components/cutmomersResultList";
 import { TOKEN } from "@/util/constMap";
 import util from "@/util/util";
-import bus from "@/evenBus/but.js";
 export default {
   provide() {
     return {
@@ -43,6 +46,8 @@ export default {
     };
   },
   components: {
+    breadcrumb,
+    navMenu,
     privateCutmomersPair,
     privateCutmomersResultList
   },
@@ -72,10 +77,6 @@ export default {
         isTypeChange: 1
       }
     };
-  },
-  created() {
-    // 切换管理入口nav
-    bus.$emit("switchEntranceNav", 3);
   },
   mounted() {},
   methods: {}

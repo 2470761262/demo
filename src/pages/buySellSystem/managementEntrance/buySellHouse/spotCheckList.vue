@@ -3,10 +3,35 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  .change-content {
+    text-align: center;
+    margin-bottom: 4px;
+    margin-top: 10px;
+    color: @backgroud;
+    font-size: @font16;
+
+    span {
+      cursor: pointer;
+
+      .iconfont {
+        margin-left: 8px;
+        font-size: @font14;
+        transition: transform 0.3s;
+        transform: rotateZ(180deg);
+        display: inline-block;
+
+        &.rotate {
+          transform: rotateZ(0deg) !important;
+        }
+      }
+    }
+  }
   .main {
     flex: 1;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    // prettier-ignore
+    min-height: 700PX;
     // prettier-ignore
     margin-top: 16PX;
     // prettier-ignore
@@ -14,6 +39,9 @@
     background: #fff;
     border-radius: 8px;
     box-sizing: border-box;
+    .right {
+      height: 100%;
+    }
     /deep/.content {
       flex: 1;
       display: flex;
@@ -211,14 +239,35 @@
   }
 }
 </style>
+<style lang="less">
+.children-page {
+  height: 100%;
+}
+</style>
 <template>
   <!--买卖房源-抽检列表-->
   <div class="spot-check">
-    <tabs :navActiveIndex="5"></tabs>
-    <spot-check-head
-      @moreConditionChange="moreConditionChange"
-    ></spot-check-head>
+    <breadcrumb></breadcrumb>
+    <div class="page-half-top" v-show="panelChange">
+      <nav-menu :navMenuIndex="1"></nav-menu>
+      <tabs :navActiveIndex="5"></tabs>
+      <spot-check-head
+        @moreConditionChange="moreConditionChange"
+      ></spot-check-head>
+    </div>
+    <div class="change-content">
+      <span
+        @click="panelChangeBtn"
+        class="anchor-point"
+        data-anchor="首页展开选项/收起"
+        >展开选项/收起<i
+          class="iconfont iconxingzhuangjiehe1"
+          :class="{ rotate: panelChange }"
+        ></i
+      ></span>
+    </div>
     <div class="main">
+      <div class="right"></div>
       <div class="content">
         <button class="batch-button" @click="batchSpotCheck">批量抽检</button>
         <div class="table">
@@ -259,7 +308,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="condition.page"
-          :page-sizes="[5, 10, 15]"
+          :page-sizes="[20, 50, 100]"
           :page-size="condition.limit"
           layout="total, sizes, prev, pager, next, jumper"
           :total="pageJson.total"
@@ -276,17 +325,22 @@
 </template>
 
 <script>
+import breadcrumb from "../components/entranceBreadcrumb.vue";
+import navMenu from "../components/entranceNavMenu.vue";
 import tabs from "./components/tabs.vue";
 import spotCheckHead from "./components/validate/spotCheckHead.vue";
 import spotCheckPop from "./didlog/spotCheckPop.vue";
 export default {
   components: {
+    breadcrumb,
+    navMenu,
     tabs,
     spotCheckHead,
     spotCheckPop
   },
   data() {
     return {
+      panelChange: true, //折叠面板
       tableData: [],
       loading: false,
       pageJson: {
@@ -295,7 +349,7 @@ export default {
       }, //分页条数
       condition: {
         page: 1,
-        limit: 10,
+        limit: 100,
         sortColumn: "id",
         sortType: "DESC"
       }, //基础查询条件
@@ -396,10 +450,35 @@ export default {
       batchList: [] //批量添加的数组
     };
   },
+  beforeDestroy() {
+    document
+      .querySelector(".entrance-container")
+      .removeEventListener("scroll", this.elMainScroll);
+  },
   created() {
     this.getSpotChekList();
+    console.log("aaaaactive");
+    this.$nextTick(() => {
+      document
+        .querySelector(".entrance-container")
+        .addEventListener("scroll", this.elMainScroll);
+    });
   },
   methods: {
+    elMainScroll() {
+      const { clientHeight, scrollHeight, scrollTop } = document.querySelector(
+        ".entrance-container"
+      );
+      if (clientHeight + scrollTop >= scrollHeight) {
+        this.panelChange = false;
+      }
+    },
+    /**
+     * @example: 折叠面板
+     */
+    panelChangeBtn() {
+      this.panelChange = !this.panelChange;
+    },
     /**
      * @example:抽检确认时间
      */

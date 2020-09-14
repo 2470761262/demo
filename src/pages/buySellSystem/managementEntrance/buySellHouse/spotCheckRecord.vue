@@ -1,253 +1,268 @@
 <template>
   <!-- 买卖房源-抽检记录 -->
   <div class="examine-container">
-    <tabs :navActiveIndex="6"></tabs>
-    <div class="conditions">
-      <div class="conditions-box">
-        <el-row :gutter="32">
-          <el-form label-position="right" label-width="80px">
-            <el-col :span="colChunks[0]">
-              <el-form-item label="房源编号">
-                <el-input
-                  v-model="conditions.houseNo"
-                  placeholder="请输入房源编号"
-                  @input="query(1)"
-                  class="anchor-point"
-                  clearable
-                  :data-anchor="'抽检记录搜索 房源编号:' + conditions.houseNo"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="colChunks[1]">
-              <el-row :gutter="10">
-                <el-form-item label="房屋坐落">
-                  <el-col :span="8">
-                    <el-select
-                      class="anchor-point"
-                      popper-class="anchor-point"
-                      data-anchor="抽检记录楼盘 => select"
-                      @click.native="log_socket.sendUserActionData"
-                      v-model="buildOptData"
-                      placeholder="楼盘名称"
-                      clearable
-                      filterable
-                      remote
-                      @focus="remoteBuildInput"
-                      @change="remoteBuildChange"
-                      :remote-method="buildRemoteMethod"
-                      :loading="buildLoading"
-                      value-key="value"
-                    >
-                      <el-option
-                        class="anchor-point"
-                        :data-anchor="
-                          '抽检记录楼盘 => select => option:' + item.name
-                        "
-                        @click.native="log_socket.sendUserActionData"
-                        v-for="item in buildForList"
-                        :key="item.value"
-                        :label="item.name"
-                        :value="item"
-                      ></el-option>
-                    </el-select>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-select
-                      class="anchor-point"
-                      popper-class="anchor-point"
-                      data-anchor="抽检记录栋座 => select"
-                      @click.native="log_socket.sendUserActionData"
-                      v-model="towerOptData"
-                      placeholder="栋座号"
-                      clearable
-                      filterable
-                      remote
-                      :remote-method="queryRoomNo"
-                      @change="remoteRoomNoChange"
-                      :loading="towerLoading"
-                      value-key="value"
-                    >
-                      <el-option
-                        class="anchor-point"
-                        :data-anchor="
-                          '抽检记录栋座 => select => option:' + item.name
-                        "
-                        @click.native="log_socket.sendUserActionData"
-                        v-for="item in towerForList"
-                        :key="item.value"
-                        :label="item.name"
-                        :value="item"
-                      ></el-option>
-                    </el-select>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-select
-                      class="anchor-point"
-                      popper-class="anchor-point"
-                      data-anchor="抽检记录房号 => select"
-                      @click.native="log_socket.sendUserActionData"
-                      v-model="roomOptData"
-                      placeholder="房号"
-                      clearable
-                      filterable
-                      remote
-                      :remote-method="queryRoomData"
-                      @change="queryRoomDataChange"
-                      :loading="roomLoading"
-                      value-key="value"
-                    >
-                      <el-option
-                        class="anchor-point"
-                        :data-anchor="
-                          '抽检记录房号 => select => option:' + item.name
-                        "
-                        @click.native="log_socket.sendUserActionData"
-                        v-for="item in roomForList"
-                        :key="item.value"
-                        :label="item.name"
-                        :value="item"
-                      ></el-option>
-                    </el-select>
-                  </el-col>
+    <breadcrumb></breadcrumb>
+    <div class="page-half-top" v-show="panelChange">
+      <nav-menu :navMenuIndex="1"></nav-menu>
+      <tabs :navActiveIndex="6"></tabs>
+      <div class="conditions">
+        <div class="conditions-box">
+          <el-row :gutter="32">
+            <el-form label-position="right" label-width="80px">
+              <el-col :span="colChunks[0]">
+                <el-form-item label="房源编号">
+                  <el-input
+                    v-model="conditions.houseNo"
+                    placeholder="请输入房源编号"
+                    @input="query(1)"
+                    class="anchor-point"
+                    clearable
+                    :data-anchor="'抽检记录搜索 房源编号:' + conditions.houseNo"
+                  ></el-input>
                 </el-form-item>
-              </el-row>
-            </el-col>
-            <el-col :span="colChunks[2]">
-              <el-form-item label="所属门店">
-                <el-select
-                  class="width100 anchor-point"
-                  popper-class="anchor-point"
-                  data-anchor="抽检记录所属门店 => select"
-                  @click.native="log_socket.sendUserActionData"
-                  v-model="department.value"
-                  placeholder="请输入门店名称"
-                  clearable
-                  filterable
-                  @focus="departmentFocus"
-                  @change="departmentChange"
-                  :loading="department.loading"
-                  value-key="value"
-                >
-                  <el-option
-                    class="anchor-point"
-                    :data-anchor="
-                      '抽检记录所属门店 => select => option:' + item.depName
-                    "
+              </el-col>
+              <el-col :span="colChunks[1]">
+                <el-row :gutter="10">
+                  <el-form-item label="房屋坐落">
+                    <el-col :span="8">
+                      <el-select
+                        class="anchor-point"
+                        popper-class="anchor-point"
+                        data-anchor="抽检记录楼盘 => select"
+                        @click.native="log_socket.sendUserActionData"
+                        v-model="buildOptData"
+                        placeholder="楼盘名称"
+                        clearable
+                        filterable
+                        remote
+                        @focus="remoteBuildInput"
+                        @change="remoteBuildChange"
+                        :remote-method="buildRemoteMethod"
+                        :loading="buildLoading"
+                        value-key="value"
+                      >
+                        <el-option
+                          class="anchor-point"
+                          :data-anchor="
+                            '抽检记录楼盘 => select => option:' + item.name
+                          "
+                          @click.native="log_socket.sendUserActionData"
+                          v-for="item in buildForList"
+                          :key="item.value"
+                          :label="item.name"
+                          :value="item"
+                        ></el-option>
+                      </el-select>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-select
+                        class="anchor-point"
+                        popper-class="anchor-point"
+                        data-anchor="抽检记录栋座 => select"
+                        @click.native="log_socket.sendUserActionData"
+                        v-model="towerOptData"
+                        placeholder="栋座号"
+                        clearable
+                        filterable
+                        remote
+                        :remote-method="queryRoomNo"
+                        @change="remoteRoomNoChange"
+                        :loading="towerLoading"
+                        value-key="value"
+                      >
+                        <el-option
+                          class="anchor-point"
+                          :data-anchor="
+                            '抽检记录栋座 => select => option:' + item.name
+                          "
+                          @click.native="log_socket.sendUserActionData"
+                          v-for="item in towerForList"
+                          :key="item.value"
+                          :label="item.name"
+                          :value="item"
+                        ></el-option>
+                      </el-select>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-select
+                        class="anchor-point"
+                        popper-class="anchor-point"
+                        data-anchor="抽检记录房号 => select"
+                        @click.native="log_socket.sendUserActionData"
+                        v-model="roomOptData"
+                        placeholder="房号"
+                        clearable
+                        filterable
+                        remote
+                        :remote-method="queryRoomData"
+                        @change="queryRoomDataChange"
+                        :loading="roomLoading"
+                        value-key="value"
+                      >
+                        <el-option
+                          class="anchor-point"
+                          :data-anchor="
+                            '抽检记录房号 => select => option:' + item.name
+                          "
+                          @click.native="log_socket.sendUserActionData"
+                          v-for="item in roomForList"
+                          :key="item.value"
+                          :label="item.name"
+                          :value="item"
+                        ></el-option>
+                      </el-select>
+                    </el-col>
+                  </el-form-item>
+                </el-row>
+              </el-col>
+              <el-col :span="colChunks[2]">
+                <el-form-item label="所属门店">
+                  <el-select
+                    class="width100 anchor-point"
+                    popper-class="anchor-point"
+                    data-anchor="抽检记录所属门店 => select"
                     @click.native="log_socket.sendUserActionData"
-                    v-for="item in department.list"
-                    :key="item.depId"
-                    :label="item.depName"
-                    :value="item.depId"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="colChunks[3]">
-              <el-form-item label="跟单人">
-                <el-select
-                  class="width100 anchor-point"
-                  popper-class="anchor-point"
-                  data-anchor="抽检记录跟单人 => select"
-                  @click.native="log_socket.sendUserActionData"
-                  v-model="agent.value"
-                  :placeholder="
-                    department.value == '' ? '请先选择门店' : '请输入跟单人姓名'
-                  "
-                  clearable
-                  filterable
-                  @change="agentChange"
-                  :loading="agent.loading"
-                  value-key="value"
-                >
-                  <el-option
-                    class="anchor-point"
-                    :data-anchor="
-                      '抽检记录跟单人 => select => option:' + item.perName
-                    "
-                    @click.native="log_socket.sendUserActionData"
-                    v-for="item in agent.list"
-                    :key="item.accountId"
-                    :label="item.perName"
-                    :value="item.accountId"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="colChunks[4]">
-              <el-form-item label="当前状态">
-                <el-select
-                  class="width100 anchor-point"
-                  popper-class="anchor-point"
-                  data-anchor="抽检记录当前状态 => select"
-                  @click.native="log_socket.sendUserActionData"
-                  v-model="currentStatus"
-                  clearable
-                  @change="query(1)"
-                  placeholder="请选择"
-                >
-                  <el-option
-                    class="anchor-point"
-                    :data-anchor="
-                      '抽检记录当前状态 => select => option:' + item.label
-                    "
-                    @click.native="log_socket.sendUserActionData"
-                    v-for="item in currentStatusList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+                    v-model="department.value"
+                    placeholder="请输入门店名称"
+                    clearable
+                    filterable
+                    @focus="departmentFocus"
+                    @change="departmentChange"
+                    :loading="department.loading"
+                    value-key="value"
                   >
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="colChunks[5]">
-              <el-form-item label="抽检结果">
-                <el-select
-                  class="width100 anchor-point"
-                  popper-class="anchor-point"
-                  data-anchor="抽检记录抽检结果 => select"
-                  @click.native="log_socket.sendUserActionData"
-                  v-model="spotCheckResult"
-                  clearable
-                  @change="query(1)"
-                  placeholder="请选择"
-                >
-                  <el-option
-                    class="anchor-point"
-                    :data-anchor="
-                      '抽检记录抽检结果 => select => option:' + item.label
-                    "
+                    <el-option
+                      class="anchor-point"
+                      :data-anchor="
+                        '抽检记录所属门店 => select => option:' + item.depName
+                      "
+                      @click.native="log_socket.sendUserActionData"
+                      v-for="item in department.list"
+                      :key="item.depId"
+                      :label="item.depName"
+                      :value="item.depId"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="colChunks[3]">
+                <el-form-item label="跟单人">
+                  <el-select
+                    class="width100 anchor-point"
+                    popper-class="anchor-point"
+                    data-anchor="抽检记录跟单人 => select"
                     @click.native="log_socket.sendUserActionData"
-                    v-for="item in spotCheckResultList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+                    v-model="agent.value"
+                    :placeholder="
+                      department.value == '' ? '请先选择门店' : '请输入跟单人姓名'
+                    "
+                    clearable
+                    filterable
+                    @change="agentChange"
+                    :loading="agent.loading"
+                    value-key="value"
                   >
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="colChunks[6]" class="fr">
-              <div class="conditions-btn">
-                <div
-                  class="btn anchor-pointn"
-                  @click="reset"
-                  data-anchor="审核列表重置"
-                >
-                  重置
+                    <el-option
+                      class="anchor-point"
+                      :data-anchor="
+                        '抽检记录跟单人 => select => option:' + item.perName
+                      "
+                      @click.native="log_socket.sendUserActionData"
+                      v-for="item in agent.list"
+                      :key="item.accountId"
+                      :label="item.perName"
+                      :value="item.accountId"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="colChunks[4]">
+                <el-form-item label="当前状态">
+                  <el-select
+                    class="width100 anchor-point"
+                    popper-class="anchor-point"
+                    data-anchor="抽检记录当前状态 => select"
+                    @click.native="log_socket.sendUserActionData"
+                    v-model="currentStatus"
+                    clearable
+                    @change="query(1)"
+                    placeholder="请选择"
+                  >
+                    <el-option
+                      class="anchor-point"
+                      :data-anchor="
+                        '抽检记录当前状态 => select => option:' + item.label
+                      "
+                      @click.native="log_socket.sendUserActionData"
+                      v-for="item in currentStatusList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="colChunks[5]">
+                <el-form-item label="抽检结果">
+                  <el-select
+                    class="width100 anchor-point"
+                    popper-class="anchor-point"
+                    data-anchor="抽检记录抽检结果 => select"
+                    @click.native="log_socket.sendUserActionData"
+                    v-model="spotCheckResult"
+                    clearable
+                    @change="query(1)"
+                    placeholder="请选择"
+                  >
+                    <el-option
+                      class="anchor-point"
+                      :data-anchor="
+                        '抽检记录抽检结果 => select => option:' + item.label
+                      "
+                      @click.native="log_socket.sendUserActionData"
+                      v-for="item in spotCheckResultList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="colChunks[6]" class="fr">
+                <div class="conditions-btn">
+                  <div
+                    class="btn anchor-pointn"
+                    @click="reset"
+                    data-anchor="审核列表重置"
+                  >
+                    重置
+                  </div>
+                  <div
+                    class="btn active anchor-pointn"
+                    @click="query(1)"
+                    data-anchor="审核列表搜索"
+                  >
+                    搜索
+                  </div>
                 </div>
-                <div
-                  class="btn active anchor-pointn"
-                  @click="query(1)"
-                  data-anchor="审核列表搜索"
-                >
-                  搜索
-                </div>
-              </div>
-            </el-col>
-          </el-form>
-        </el-row>
+              </el-col>
+            </el-form>
+          </el-row>
+        </div>
       </div>
+    </div>
+    <div class="change-content">
+      <span
+        @click="panelChangeBtn"
+        class="anchor-point"
+        data-anchor="首页展开选项/收起"
+        >展开选项/收起<i
+          class="iconfont iconxingzhuangjiehe1"
+          :class="{ rotate: panelChange }"
+        ></i
+      ></span>
     </div>
     <div class="main">
       <div class="content">
@@ -441,15 +456,19 @@
   </div>
 </template>
 <script>
+import breadcrumb from "../components/entranceBreadcrumb.vue";
+import navMenu from "../components/entranceNavMenu.vue";
 import tabs from "./components/tabs.vue";
 import util from "@/util/util";
-import bus from "@/evenBus/but.js";
 export default {
   components: {
+    breadcrumb,
+    navMenu,
     tabs
   },
   data() {
     return {
+      panelChange: true, //折叠面板
       colChunks: [5, 9, 5, 5, 6, 6, 6], // 条件选项栅格布局
       loading: false,
       currentStatus: "",
@@ -648,16 +667,36 @@ export default {
     };
   },
   created() {
-    // 切换管理入口nav
-    bus.$emit("switchEntranceNav", 1);
     this.query();
     this.setConditionCol();
     window.addEventListener("resize", this.setConditionCol);
+    this.$nextTick(() => {
+      document
+        .querySelector(".entrance-container")
+        .addEventListener("scroll", this.elMainScroll);
+    });
   },
   beforeDestroy() {
+    document
+      .querySelector(".entrance-container")
+      .removeEventListener("scroll", this.elMainScroll);
     window.removeEventListener("resize", this.setConditionCol);
   },
   methods: {
+    elMainScroll() {
+      const { clientHeight, scrollHeight, scrollTop } = document.querySelector(
+        ".entrance-container"
+      );
+      if (clientHeight + scrollTop >= scrollHeight) {
+        this.panelChange = false;
+      }
+    },
+    /**
+     * @example: 折叠面板
+     */
+    panelChangeBtn() {
+      this.panelChange = !this.panelChange;
+    },
     /**
      * @example: 根据当前屏幕窗口宽度设置条件选项栅格布局
      */
@@ -960,6 +999,11 @@ export default {
   }
 };
 </script>
+<style lang="less">
+.children-page {
+  height: 100%;
+}
+</style>
 <style lang="less" scoped>
 @import url("~@/assets/publicLess/houseConditionsItem.less");
 .el-select-dropdown__item {
@@ -973,6 +1017,27 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1;
+  .change-content {
+    text-align: center;
+    margin-bottom: 4px;
+    margin-top: 10px;
+    color: @backgroud;
+    font-size: @font16;
+    span {
+      cursor: pointer;
+      .iconfont {
+        margin-left: 8px;
+        font-size: @font14;
+        transition: transform 0.3s;
+        transform: rotateZ(180deg);
+        display: inline-block;
+
+        &.rotate {
+          transform: rotateZ(0deg) !important;
+        }
+      }
+    }
+  }
   .conditions {
     // prettier-ignore
     padding: 0 24PX 20PX 24PX;
@@ -987,7 +1052,7 @@ export default {
     display: flex;
     flex-direction: row;
     // prettier-ignore
-    min-height: 300PX;
+    min-height: 700PX;
     // prettier-ignore
     margin-top: 16PX;
     // prettier-ignore

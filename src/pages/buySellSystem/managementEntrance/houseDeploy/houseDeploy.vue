@@ -12,15 +12,16 @@
 </style>
 <template>
   <div class="content">
+    <breadcrumb></breadcrumb>
     <house-deploy-pair />
     <house-deploy-list />
   </div>
 </template>
 
 <script>
+import breadcrumb from "../components/entranceBreadcrumb.vue";
 import houseDeployPair from "./houseDeployPair";
 import houseDeployList from "./houseDeployList";
-import bus from "@/evenBus/but.js";
 export default {
   provide() {
     return {
@@ -28,6 +29,7 @@ export default {
     };
   },
   components: {
+    breadcrumb,
     houseDeployPair,
     houseDeployList
   },
@@ -51,10 +53,6 @@ export default {
         sortType: "0"
       }
     };
-  },
-  created() {
-    // 切换管理入口nav
-    bus.$emit("switchEntranceNav", 1);
   }
 };
 </script>

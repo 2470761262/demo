@@ -1,6 +1,8 @@
 <template>
   <!-- 买卖房源-审核列表 -->
   <div class="examine-container">
+    <breadcrumb></breadcrumb>
+    <nav-menu :navMenuIndex="1"></nav-menu>
     <tabs :navActiveIndex="4"></tabs>
     <div class="conditions">
       <div class="conditions-box">
@@ -600,13 +602,16 @@ const defaultCheck = [
   { value: "4", label: "他司售" },
   { value: "2", label: "虚假实勘" }
 ];
+import breadcrumb from "../components/entranceBreadcrumb.vue";
+import navMenu from "../components/entranceNavMenu.vue";
 import tabs from "./components/tabs.vue";
 import util from "@/util/util";
 import ElImageViewer from "element-ui/packages/image/src/image-viewer";
 import { SMALLThumb } from "@/util/constMap";
-import bus from "@/evenBus/but.js";
 export default {
   components: {
+    breadcrumb,
+    navMenu,
     tabs,
     ElImageViewer
   },
@@ -881,8 +886,6 @@ export default {
     }
   },
   created() {
-    // 切换管理入口nav
-    bus.$emit("switchEntranceNav", 1);
     this.getTree();
     this.query();
   },
@@ -1401,6 +1404,11 @@ export default {
   }
 };
 </script>
+<style lang="less">
+.children-page {
+  height: 100%;
+}
+</style>
 <style lang="less" scoped>
 .el-select-dropdown__item {
   // prettier-ignore

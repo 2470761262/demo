@@ -18,6 +18,8 @@
 </style>
 <template>
   <div class="content">
+    <breadcrumb></breadcrumb>
+    <nav-menu :navMenuIndex="2"></nav-menu>
     <div class="tip-style">
       <img src="../../../../assets/images/zanwu.png" alt="暂无数据" />
       <div>暂无信息</div>
@@ -26,18 +28,18 @@
 </template>
 
 <script>
-import bus from "@/evenBus/but.js";
+import breadcrumb from "../components/entranceBreadcrumb.vue";
+import navMenu from "../components/entranceNavMenu.vue";
 export default {
   provide() {
     return {};
   },
-  components: {},
+  components: {
+    breadcrumb,
+    navMenu
+  },
   data() {
     return {};
-  },
-  created() {
-    // 切换管理入口nav
-    bus.$emit("switchEntranceNav", 2);
   }
 };
 </script>

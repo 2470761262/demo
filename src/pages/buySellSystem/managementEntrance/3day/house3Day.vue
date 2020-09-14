@@ -9,15 +9,16 @@
 </style>
 <template>
   <div class="content">
+    <breadcrumb></breadcrumb>
     <house3-day-pair />
     <house3-day-list />
   </div>
 </template>
 
 <script>
+import breadcrumb from "../components/entranceBreadcrumb.vue";
 import house3DayPair from "./house3DayPair";
 import house3DayList from "./house3DayList";
-import bus from "@/evenBus/but.js";
 export default {
   provide() {
     return {
@@ -25,6 +26,7 @@ export default {
     };
   },
   components: {
+    breadcrumb,
     house3DayPair,
     house3DayList
   },
@@ -49,10 +51,6 @@ export default {
         typeList: ["3"]
       }
     };
-  },
-  created() {
-    // 切换管理入口nav
-    bus.$emit("switchEntranceNav", 1);
   }
 };
 </script>
