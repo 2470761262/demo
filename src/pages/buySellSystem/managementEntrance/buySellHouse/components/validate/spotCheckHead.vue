@@ -1,5 +1,5 @@
 <style scoped lang="less">
-@import url('~@/assets/publicLess/houseConditionsItem.less');
+@import url("~@/assets/publicLess/houseConditionsItem.less");
 .conditions {
   // prettier-ignore
   padding: 0 24PX 20PX 24PX;
@@ -119,7 +119,9 @@
               <el-select
                 class="width100"
                 v-model="agent.value"
-                placeholder="跟单人"
+                :placeholder="
+                  department.value == null ? '请先选择门店' : '请输入跟单人姓名'
+                "
                 clearable
                 filterable
                 remote
@@ -139,7 +141,9 @@
           <el-col :span="colChunks[4]" class="fr">
             <div class="conditions-btn">
               <button class="btn" @click="rest">重置</button>
-              <button class="btn active" @click="moreConditionChange">查询</button>
+              <button class="btn active" @click="moreConditionChange">
+                查询
+              </button>
             </div>
           </el-col>
         </el-form>
@@ -190,10 +194,10 @@ export default {
   },
   created() {
     this.setConditionCol();
-    window.addEventListener('resize', this.setConditionCol);
+    window.addEventListener("resize", this.setConditionCol);
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.setConditionCol);
+    window.removeEventListener("resize", this.setConditionCol);
   },
   methods: {
     /**
