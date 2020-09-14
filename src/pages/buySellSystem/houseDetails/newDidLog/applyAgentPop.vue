@@ -101,10 +101,10 @@ export default {
             this.$emit("update:showFlag", false);
             this.$emit("applyAgent", e.data.data);
           }
-          this.$message({
-            message: e.data.message,
-            type: type
-          });
+          //   this.$message({
+          //     message: e.data.message,
+          //     type: type
+          //   });
         })
         .finally(e => {
           this.sumbitLoading = false;

@@ -336,6 +336,7 @@
     >
       <div class="page-cell-item select-nobor">
         <el-input
+          ref="validatePhoneRef"
           class="anchor-point"
           placeholder="默认拨打为第一个号码"
           v-model="formData.tel"
@@ -360,14 +361,14 @@
         <div class="modify-phone-box" v-if="paramsObj.editUrl">
           <span
             class="modify"
-            v-show="validateBtnFlag"
+            v-show="validateModifyBtnFlag"
             @click="modifyValidatePhone"
             >修改验真号码</span
           >
-          <div class="modify-show" v-show="!validateBtnFlag">
-            <span class="btn1" @click="modifyComfirm">确认修改</span>
-            <span class="btn2" @click="modifyCancel">取消</span>
-            <div class="phone-show">旧号码：{{ validatePhoneNumber }}</div>
+          <div class="modify-show">
+            <span class="btn1" @click="modifyComfirm" v-if="validateCancelBtnFlag">确认修改</span>
+            <span class="btn2" @click="modifyCancel" v-if="validateCancelBtnFlag">取消</span>
+            <div class="phone-show" v-if="originPhoneShowFlag">旧号码：{{ validatePhoneNumber }}</div>
           </div>
         </div>
       </div>
@@ -974,10 +975,15 @@ export default {
      * 修改手机号码
      */
     modifyValidatePhone() {
-      this.validateBtnFlag = false;
+      this.validateModifyBtnFlag = false;
+      this.validateCancelBtnFlag = true;
+      this.originPhoneShowFlag = true;
       this.validatePhoneInputEnable = false;
       this.validatePhoneNumber = this.formData.tel;
       this.formData.tel = "";
+      this.$nextTick(() => {
+        this.$refs.validatePhoneRef.$el.querySelector(".el-input__inner").focus();
+      })
     },
     /**
      * 确认修改
@@ -987,7 +993,7 @@ export default {
         this.$message.error("您输入的手机号码有误");
         return;
       }
-      this.validateBtnFlag = true;
+      this.validateCancelBtnFlag = false;
       this.validatePhoneInputEnable = true;
       this.validatePhoneLoading = true;
       this.validatePhoneText = "号码待验真";
@@ -998,7 +1004,9 @@ export default {
      * 取消
      */
     modifyCancel() {
-      this.validateBtnFlag = true;
+      this.validateModifyBtnFlag = true;
+      this.validateCancelBtnFlag = false;
+      this.originPhoneShowFlag = false;
       this.formData.tel = this.validatePhoneNumber;
       this.validatePhoneInputEnable = true;
     },
@@ -1733,8 +1741,10 @@ export default {
       isvalidateTel: [true, true, true, true], //是否验证备用号码
       validatePhoneNumber: "", // 旧号码
       validatePhoneInputEnable: !!this.paramsObj.editUrl,
-      validateBtnFlag: true,
+      validateModifyBtnFlag: true,
+      validateCancelBtnFlag: false,
       validatePhoneLoading: false,
+      originPhoneShowFlag: false,
       validatePhoneText: "验真专用",
       validateTip:
         "请填写正确的业主号码，并确认该号码可以正常接收短信且号码与微信同号",
