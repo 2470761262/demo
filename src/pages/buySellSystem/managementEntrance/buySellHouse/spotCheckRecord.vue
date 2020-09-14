@@ -387,7 +387,8 @@
                 <span
                   v-if="
                     scope.row.spotCheckResult == '业主验真过期' ||
-                      scope.row.spotCheckResult == '在售转为暂不售'
+                      scope.row.spotCheckResult == '在售转为暂不售' ||
+                      scope.row.spotCheckResult == '已售转入资源库'
                   "
                   class="span_danger"
                   >{{ scope.row.spotCheckResult }}</span
