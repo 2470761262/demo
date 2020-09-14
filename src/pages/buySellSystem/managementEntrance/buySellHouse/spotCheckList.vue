@@ -347,7 +347,7 @@ export default {
         {
           prop: "agentName",
           label: "跟单人",
-          minWidth: "60",
+          minWidth: "70",
           align: "right",
           sortable: true,
           formart: item => {
@@ -379,7 +379,7 @@ export default {
         {
           prop: "callNum",
           label: "30天电话回访",
-          minWidth: "100",
+          minWidth: "110",
           align: "right",
           sortable: true
         },

@@ -1545,6 +1545,7 @@ export default {
       overflow: hidden;
       .table {
         flex: 1;
+        display: flex;
         .caret-wrapper {
           // prettier-ignore
           width: 15PX;

@@ -245,6 +245,7 @@
       </div>
     </div>
     <div class="main">
+      <div class="right"></div>
       <div class="content">
         <div class="table">
           <el-table
@@ -935,7 +936,7 @@ export default {
   }
 };
 </script>
-<style lang="less" scoped>
+<style lang="less">
 .children-page {
   height: 100%;
 }
@@ -970,7 +971,7 @@ export default {
   .main {
     flex: 1;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     // prettier-ignore
     margin-top: 16PX;
     // prettier-ignore
@@ -978,14 +979,17 @@ export default {
     background: #fff;
     border-radius: 8px;
     box-sizing: border-box;
+    .right {
+      height: 100%;
+    }
     /deep/.content {
       flex: 1;
       display: flex;
       flex-direction: column;
+      width: 100%;
       .table {
         flex: 1;
-        // prettier-ignore
-        height: 150PX;
+        display: flex;
         .caret-wrapper {
           // prettier-ignore
           width: 15PX;
