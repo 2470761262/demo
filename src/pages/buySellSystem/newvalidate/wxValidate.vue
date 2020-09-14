@@ -1,15 +1,17 @@
 <style lang="less" scoped>
 .content {
-  // prettier-ignore
-  padding: 0 16PX;
   position: relative;
   .content-top {
+    // prettier-ignore
+    padding: 0 16PX;
     display: flex;
     position: relative;
     z-index: 1;
     align-items: center;
     .content-head-left {
       flex: 1;
+      // prettier-ignore
+      padding-left: 30PX;
       .tips {
         // prettier-ignore
         font-size: 36PX;
@@ -18,7 +20,7 @@
         z-index: 1;
         display: block;
         // prettier-ignore
-        padding: 34PX 0 24PX 16PX;
+        padding: 16PX 0 24PX 16PX;
         font-weight: bold;
         // prettier-ignore
         line-height: 36PX;
@@ -109,6 +111,8 @@
     background: linear-gradient(360deg, #2f837b 0%, #0a6458 100%);
   }
   .content-body {
+    // prettier-ignore
+    padding: 0 16PX;
     display: flex;
     position: relative;
     z-index: 1;
@@ -477,11 +481,120 @@
     }
   }
 }
+.nav-validate {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  // prettier-ignore
+  height: 50PX;
+  // prettier-ignore
+  line-height: 50PX;
+  // prettier-ignore
+  padding-left: 40PX;
+  border-bottom: 1px solid #fff;
+  justify-content: space-between;
+  .nav-content {
+    display: flex;
+    .nav-validate-item {
+      position: relative;
+      font-size: @font18;
+      color: #fff;
+      // prettier-ignore
+      margin-right: 70PX;
+      position: relative;
+      cursor: pointer;
+      &.active {
+        &::before {
+          content: "";
+          // prettier-ignore
+          height: 4PX;
+          // prettier-ignore
+          width: 56PX;
+          position: absolute;
+          // prettier-ignore
+          bottom: 5PX;
+          left: 50%;
+          transform: translateX(-50%);
+          background: #fff;
+          border-radius: 3px;
+        }
+      }
+      &:first-child {
+        // prettier-ignore
+        margin-right: 125PX;
+        &::after {
+          content: "";
+          display: block;
+          position: absolute;
+          top: 50%;
+          right: 0px;
+          transform: translate(100%, -50%);
+          background-image: url(https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/9/14/091e912255c64924ac40f32f59510990.png);
+          background-size: 100% 100%;
+          // prettier-ignore
+          width: 50PX;
+          // prettier-ignore
+          height: 24PX;
+          animation: loopImg 1s infinite alternate;
+        }
+        @keyframes loopImg {
+          0% {
+            right: 0;
+          }
+          100% {
+            // prettier-ignore
+            right: -6PX;
+          }
+        }
+      }
+    }
+  }
+  .nav-tips {
+    // prettier-ignore
+    margin-right: 16PX;
+    align-self: center;
+    // prettier-ignore
+    line-height: 38PX;
+    // prettier-ignore
+    padding: 0 31PX;
+    // prettier-ignore
+    height: 38PX;
+    background: #00473e;
+    color: #1dcebd;
+    font-size: @font18;
+  }
+}
+.top-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 </style>
 <template>
   <div class="content">
     <div class="tips-back"></div>
+    <div class="nav-validate">
+      <div class="nav-content">
+        <div
+          class="nav-validate-item"
+          v-for="(item, index) in navValidate"
+          :key="item.title"
+          :class="{ active: index == 0 }"
+          @click="goValidatePage(item.url)"
+        >
+          {{ item.title }}
+        </div>
+      </div>
+      <div class="nav-tips">
+        温馨提示：选中一个验真方案，也可以切换选择其他两种验真方式
+      </div>
+    </div>
     <div class="content-top">
+      <img
+        class="top-image"
+        src="https://img.0be.cn/minipro/recomand.svg"
+        alt=""
+      />
       <div class="content-head-left">
         <strong class="tips">
           微信验真
@@ -658,6 +771,11 @@
  */
 import util from "@/util/util";
 
+const NAVVALIDATE = [
+  { title: "微信验真", url: "wxValidate" },
+  { title: "短信验真", url: "pMsgValidate" },
+  { title: "信息员验真", url: "messageValidate" }
+];
 export default {
   filters: {
     mapFilter(value, ListName, resultValue = null) {
@@ -672,6 +790,7 @@ export default {
   },
   data() {
     return {
+      navValidate: NAVVALIDATE,
       id: null,
       wxImg: {
         url: "",
@@ -689,6 +808,14 @@ export default {
     };
   },
   methods: {
+    goValidatePage(pathName) {
+      this.$router.replace({
+        name: pathName,
+        query: {
+          id: this.id
+        }
+      });
+    },
     getXinConfig() {
       this.$api
         .get({
