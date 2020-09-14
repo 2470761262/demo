@@ -600,12 +600,27 @@ export default {
      * 申请跟单人
      */
     applyAgent(item) {
-      this.$router.push({
-        path: "/buySellSystem/validateHome",
-        query: {
-          id: item
-        }
-      });
+      this.$api
+        .post({
+          url: `/agentHouse/propertyCheck/apply/agent/${this.houseId}`,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          let type = "error";
+          if (e.data.code == 200) {
+            type = "success";
+            this.$router.push({
+              path: "/buySellSystem/validateHome",
+              query: {
+                id: e.data.data
+              }
+            });
+          }
+          this.$message({
+            message: e.data.message,
+            type: type
+          });
+        });
     },
     /**
      * 申请跟单人打开弹窗
@@ -619,7 +634,7 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            this.applyAgentFlag = true;
+            this.applyAgent(this.houseId);
           } else {
             this.$message(result.message);
           }
