@@ -514,7 +514,8 @@
             <div class="head-minddle">
               <div class="head-minddle-title">信息员验真</div>
               <div class="head-minddle-tips">
-                支付50鑫币酬劳，验真的事交给信息员来办
+                支付<span v-if="configXin[1]">{{ -configXin[1].score }}</span
+                >鑫币酬劳，验真的事交给信息员来办
               </div>
             </div>
             <button class="btn" @click="openPage('messageValidate')">
