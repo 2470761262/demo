@@ -902,7 +902,7 @@ export default {
       }
     },
     delNumChange(index) {
-      console.log(index);
+      console.log(index, this.$refs.validateCall, "----------");
       this.$refs.validateCall.forEach((item, eindex) => {
         if (eindex == parseInt(index) - 1) {
           item.$el.querySelector(".el-input__inner").focus();
@@ -940,6 +940,7 @@ export default {
         })
         .catch(() => {
           this.validateCall = ["", "", "", "", "", ""];
+          this.$refs.validateCall[0].$el.querySelector(".el-input__inner").focus();
         });
     },
     getDetail() {
