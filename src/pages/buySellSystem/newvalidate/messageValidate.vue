@@ -659,9 +659,7 @@
           信息员验真
           <span class="tips-text">待验真</span>
         </strong>
-        <small class="small-tips"
-          >若信息员开始进行验真操作（拨打业主电话）即扣除鑫币酬劳</small
-        >
+        <small class="small-tips">验真请求已发至信息员，请耐心等待</small>
       </div>
       <div class="content-head-right">
         <div class="head-right-item">
@@ -685,7 +683,7 @@
             </h3>
             <div class="border-foot-minddel">
               <div class="minddel-order" data-order="1">
-                信息员开始验真验真，无论验真是否通过，支付的鑫币不予退还。
+                信息员填写验真结果后，无论是否验真成功，支付的鑫币不予退还。
               </div>
               <div class="minddel-order" data-order="2">
                 信息员仅在工作时间内进行验真，所以导致验真的进度较慢，可能会导致验真过期，请您谨慎使用。
