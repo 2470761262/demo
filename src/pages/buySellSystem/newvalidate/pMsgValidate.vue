@@ -829,9 +829,9 @@ export default {
     this.id = this.$route.query.id;
     this.getDetail();
     this.sendFlag = this.$route.query.sendFlag;
-    if (this.sendFlag) {
-      this.getMns();
-    }
+    // if (this.sendFlag) {
+    //   this.getMns();
+    // }
     //接入聊天
     this.contactSocket("verify_send_mns_code:" + this.id);
   },
@@ -905,26 +905,28 @@ export default {
     },
     getMns() {
       this.validateCall = ["", "", "", "", "", ""];
-      this.$api
-        .post({
-          url: `/verifyHouse/mns/send`,
-          qs: true,
-          data: {
-            id: this.id
-          }
-        })
-        .then(({ data }) => {
-          if (data.code == 200) {
-            // this.$message.success("短信下发成功");
-            this.noteSendTime = data.data;
-            this.noteShow = false;
-            this.sendDialogVisible = true;
-            this.getNoteSentTime();
-          } else {
-            this.$message.warning("短信下发成功");
-          }
-        })
-        .finally(() => {});
+      if (this.detail.hasSendCode) {
+        this.$api
+          .post({
+            url: `/verifyHouse/mns/send`,
+            qs: true,
+            data: {
+              id: this.id
+            }
+          })
+          .then(({ data }) => {
+            if (data.code == 200) {
+              // this.$message.success("短信下发成功");
+              this.noteSendTime = data.data;
+              this.noteShow = false;
+              this.sendDialogVisible = true;
+              this.getNoteSentTime();
+            } else {
+              this.$message.warning("短信下发成功");
+            }
+          })
+          .finally(() => {});
+      }
     },
     isNumChange(index, value) {
       if (value != "") {
@@ -1005,6 +1007,7 @@ export default {
           if (data.code == 200) {
             this.detail = data.data;
             this.getTime();
+            this.getMns();
             console.log(this.detail, "this.detail");
             //expireTime
           }

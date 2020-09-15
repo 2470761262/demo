@@ -1181,6 +1181,10 @@ export default {
         // console.log(r.content, "音频消息内容，准备插入草稿箱");
         that.uploadFileInfo(r.content.picUrl, function(data) {
           that.audioFile = data;
+          console.log(that.audioFile, "扫码上传成功")
+          that.$store.commit("updateFile", {
+            audioFile: that.audioFile
+          });
         });
       }
     },
@@ -1263,6 +1267,9 @@ export default {
         .then(e => {
           if (e.data.code == 200 && e.data.data.length != 0) {
             this.audioFile = e.data.data[0];
+            if (!this.audioFile.url) {
+              this.audioFile.url = this.audioFile.IpStr;
+            }
           }
         });
     },
