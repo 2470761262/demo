@@ -779,7 +779,7 @@
         <div class="pop-col-item">
           <div class="col-item-title">方案1</div>
           <img
-            src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/9/14/b0363f45ba30471ba755b2df3fb3c1ae.png"
+            src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/9/15/e16f4f633cd445f284c1b14884a5f56d.png"
             alt=""
           />
         </div>
