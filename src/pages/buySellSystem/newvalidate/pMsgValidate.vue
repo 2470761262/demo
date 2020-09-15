@@ -832,6 +832,8 @@ export default {
     // if (this.sendFlag) {
     //   this.getMns();
     // }
+    //接入聊天
+    this.contactSocket("verify_send_mns_code:" + this.id);
   },
   data() {
     return {
