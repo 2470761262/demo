@@ -11,6 +11,9 @@
     overflow: auto;
     min-height: 400px;
   }
+  .scroll-tab::-webkit-scrollbar {
+    display: none;
+  }
 }
 </style>
 <template>
@@ -100,6 +103,7 @@ export default {
   },
   methods: {
     elMainScroll() {
+      console.log("111111111")
       const { clientHeight, scrollHeight, scrollTop } = document.querySelector(
         ".el-main"
       );

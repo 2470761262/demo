@@ -666,7 +666,14 @@
             验真失败
           </div>
           <div class="validate-type-tips">
-            业主选择房源状态为 - {{ detail.failedReson }}
+            业主选择房源状态为 -
+            {{
+              detail.failedReson == 1
+                ? "暂不考虑"
+                : detail.failedReson == 2
+                ? "已经出售"
+                : ""
+            }}
           </div>
         </div>
         <div class="house-content">

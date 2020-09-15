@@ -318,6 +318,9 @@ export default {
         this.dataCount = 0;
         this.apply();
       }
+    },
+    filterText(val) {
+      this.$refs.treeForm.filter(val);
     }
   },
   created() {
@@ -653,14 +656,18 @@ export default {
         });
       }
       let id = row.id;
-      if (row.cusId != null) id = row.cusId;
+
+      if (row.cusId != null) {
+        id = row.cusId;
+      }
+      console.log("--------", id);
       let routeUrl = this.$router.resolve({
         path: "/customers/customersDetail",
         query: { customerId: btoa(id) }
       });
 
       window.open(routeUrl.href, "_blank");
-      console.log("=======>", atob(row.cusId));
+      // console.log("=======>", atob(id));
       // this.$router.push({
       //   path: "/customers/customersDetail",
       //   query: { customerId: row.id }

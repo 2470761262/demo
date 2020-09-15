@@ -53,6 +53,7 @@
         z-index: 10;
       }
       .tab-image-content {
+        padding-left: 5px;
         height: 128px;
         display: flex;
         align-items: center;

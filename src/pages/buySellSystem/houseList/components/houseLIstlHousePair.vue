@@ -51,6 +51,7 @@
         z-index: 10;
       }
       .tab-image-content {
+        padding-left: 5px;
         height: 128px;
         display: flex;
         align-items: center;
@@ -411,7 +412,7 @@ export default {
       deep: true,
       immediate: true,
       handler: function(value, ordvalue) {
-        console.log("11111111111111")
+        console.log("11111111111111");
         this.getHouseData(JSON.parse(JSON.stringify(value))).then(() => {
           dom.querySelector(".scroll-tab").scrollTop = 0;
           this.$parent.ListeningScroll();

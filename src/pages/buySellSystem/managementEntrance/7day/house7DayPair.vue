@@ -4,8 +4,6 @@
   .content-warp {
     background: #fff;
     // prettier-ignore
-    border-radius:8PX;
-    // prettier-ignore
     padding: 0 24PX;
     .implant-nav {
       display: flex;
@@ -53,6 +51,7 @@
 </style>
 <template>
   <div class="content-child">
+    <nav-menu :navMenuIndex="1"></nav-menu>
     <tabs :navActiveIndex="2"></tabs>
     <div class="search-content">
       <!-- 楼盘 栋座 房间号 联级 -->
@@ -288,13 +287,17 @@
 </template>
 
 <script>
-import tabs from '../buySellHouse/components/tabs.vue';
+import navMenu from "../components/entranceNavMenu.vue";
+import tabs from "../buySellHouse/components/tabs.vue";
 //楼盘 楼栋 房间号 级联 mixins
 import cascadeHouse from "@/minxi/cascadeHouse";
 export default {
   inject: ["form"],
   mixins: [cascadeHouse],
-  components: { tabs },
+  components: {
+    navMenu,
+    tabs
+  },
   $_veeValidate: {
     validator: "new" // give me my own validator scope.
   },

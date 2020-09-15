@@ -67,7 +67,11 @@
           flex-shrink: 0;
         }
         .item-tips-message {
+          // prettier-ignore
+          width: 300PX;
+          display: inline;
           word-break: break-all;
+          word-wrap: break-word;
           text-align: justify;
           flex: 1;
           .item-file-content {

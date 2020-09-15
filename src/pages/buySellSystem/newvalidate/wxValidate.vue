@@ -601,7 +601,7 @@
           <span class="tips-text">待验真</span>
         </strong>
         <small class="small-tips"
-          >请尽快，按照下房方的操作提示，将房源转发给业主进行验真</small
+          >请尽快，按照下方的操作提示，将房源转发给业主进行验真</small
         >
       </div>
       <div class="content-head-right">
@@ -714,7 +714,14 @@
             验真失败
           </div>
           <div class="validate-type-tips">
-            业主选择房源状态为 - {{ detail.failedReson }}
+            业主选择房源状态为 -
+            {{
+              detail.failedReson == 1
+                ? "暂不考虑"
+                : detail.failedReson == 2
+                ? "已经出售"
+                : ""
+            }}
           </div>
         </div>
         <div class="house-content">

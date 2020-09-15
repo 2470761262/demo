@@ -1,6 +1,8 @@
 <template>
   <!-- 买卖房源-锁定房源 -->
   <div class="locking-container">
+    <breadcrumb></breadcrumb>
+    <nav-menu :navMenuIndex="1"></nav-menu>
     <tabs :navActiveIndex="3"></tabs>
     <div class="conditions">
       <div class="conditions-box">
@@ -205,11 +207,16 @@
   </div>
 </template>
 <script>
+import breadcrumb from "../components/entranceBreadcrumb.vue";
+import navMenu from "../components/entranceNavMenu.vue";
 import tabs from "./components/tabs.vue";
 import util from "@/util/util";
-import bus from "@/evenBus/but.js";
 export default {
-  components: { tabs },
+  components: {
+    breadcrumb,
+    navMenu,
+    tabs
+  },
   data() {
     return {
       showUnlockBtn: false,
@@ -291,8 +298,6 @@ export default {
     };
   },
   created() {
-    // 切换管理入口nav
-    bus.$emit("switchEntranceNav", 1);
     this.query();
   },
   methods: {
@@ -552,6 +557,11 @@ export default {
   }
 };
 </script>
+<style lang="less">
+.children-page {
+  height: 100%;
+}
+</style>
 <style lang="less" scoped>
 .el-select-dropdown__item {
   // prettier-ignore

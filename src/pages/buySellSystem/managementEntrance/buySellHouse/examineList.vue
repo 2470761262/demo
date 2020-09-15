@@ -1,6 +1,8 @@
 <template>
   <!-- 买卖房源-审核列表 -->
   <div class="examine-container">
+    <breadcrumb></breadcrumb>
+    <nav-menu :navMenuIndex="1"></nav-menu>
     <tabs :navActiveIndex="4"></tabs>
     <div class="conditions">
       <div class="conditions-box">
@@ -28,7 +30,9 @@
                     >
                       <el-option
                         class="anchor-point"
-                        :data-anchor="'审核列表楼盘 => select => option:' + item.name"
+                        :data-anchor="
+                          '审核列表楼盘 => select => option:' + item.name
+                        "
                         @click.native="log_socket.sendUserActionData"
                         v-for="item in buildForList"
                         :key="item.value"
@@ -55,7 +59,9 @@
                     >
                       <el-option
                         class="anchor-point"
-                        :data-anchor="'审核列表栋座 => select => option:' + item.name"
+                        :data-anchor="
+                          '审核列表栋座 => select => option:' + item.name
+                        "
                         @click.native="log_socket.sendUserActionData"
                         v-for="item in towerForList"
                         :key="item.value"
@@ -82,7 +88,9 @@
                     >
                       <el-option
                         class="anchor-point"
-                        :data-anchor="'审核列表房号 => select => option:' + item.name"
+                        :data-anchor="
+                          '审核列表房号 => select => option:' + item.name
+                        "
                         @click.native="log_socket.sendUserActionData"
                         v-for="item in roomForList"
                         :key="item.value"
@@ -107,7 +115,9 @@
                   @change="query(1)"
                   :default-time="['00:00:00', '23:59:59']"
                   class="anchor-point"
-                  :data-anchor="'审核列表搜索 提交时间:' + conditions.timeSelect"
+                  :data-anchor="
+                    '审核列表搜索 提交时间:' + conditions.timeSelect
+                  "
                 >
                 </el-date-picker>
               </el-form-item>
@@ -120,7 +130,7 @@
                   @change="query(1)"
                   class="anchor-point"
                   :data-anchor="'审核列表搜索 房源编号:' + conditions.houseNo"
-                  ></el-input>
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -138,7 +148,9 @@
                 >
                   <el-option
                     class="anchor-point"
-                    :data-anchor="'审核列表审核项目 => select => option:' + item.label"
+                    :data-anchor="
+                      '审核列表审核项目 => select => option:' + item.label
+                    "
                     @click.native="log_socket.sendUserActionData"
                     v-for="item in checkProjectList"
                     :key="item.value"
@@ -164,7 +176,9 @@
                 >
                   <el-option
                     class="anchor-point"
-                    :data-anchor="'审核列表审核类型 => select => option:' + item.label"
+                    :data-anchor="
+                      '审核列表审核类型 => select => option:' + item.label
+                    "
                     @click.native="log_socket.sendUserActionData"
                     v-for="item in typeList"
                     :key="item.value"
@@ -190,7 +204,9 @@
                 >
                   <el-option
                     class="anchor-point"
-                    :data-anchor="'审核列表审核状态 => select => option:' + item.label"
+                    :data-anchor="
+                      '审核列表审核状态 => select => option:' + item.label
+                    "
                     @click.native="log_socket.sendUserActionData"
                     v-for="item in stateList"
                     :key="item.value"
@@ -209,21 +225,23 @@
           class="btn anchor-pointn"
           @click="reset"
           data-anchor="审核列表重置"
-          >重置</button>
+        >
+          重置
+        </button>
         <button
           class="btn active anchor-pointn"
           @click="query(1)"
           data-anchor="审核列表搜索"
-        >搜索</button>
+        >
+          搜索
+        </button>
       </div>
     </div>
     <div class="main">
       <div class="right">
         <div class="right-panel">
           <div class="search">
-            <el-input
-              placeholder="输入关键字进行过滤"
-              v-model="filterText">
+            <el-input placeholder="输入关键字进行过滤" v-model="filterText">
               <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-input>
           </div>
@@ -260,44 +278,54 @@
               fixed="left"
               prop="communityName"
               label="楼盘名称"
-              width="166"
+              width="150"
               align="left"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+            >
             </el-table-column>
             <el-table-column
               prop="checkProject"
               label="审核项目"
-              min-width="150"
-              align="right">
+              min-width="80"
+              align="right"
+            >
             </el-table-column>
             <el-table-column
               prop="checkType"
               label="审核类型"
-              min-width="150"
-              align="right">
-            </el-table-column>
-            <el-table-column
-              label="附件"
               min-width="80"
               align="right"
             >
+            </el-table-column>
+            <el-table-column label="附件" min-width="40" align="right">
               <template v-slot="scope">
-                <span>{{scope.row.accessory==1?"有":"无"}}</span>
+                <span>{{ scope.row.accessory == 1 ? "有" : "无" }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="举报原因"
+              v-if="checkProject == '11'"
+              min-width="200"
+            >
+              <template v-slot="scope">
+                {{ scope.row.ownerMemo }}
               </template>
             </el-table-column>
             <el-table-column
               prop="checkAddPerName"
               label="提交人"
-              min-width="120"
-              align="right">
+              min-width="50"
+              align="right"
+            >
             </el-table-column>
             <el-table-column
               prop="checkAddTime"
               label="提交时间"
-              min-width="200"
+              min-width="100"
               align="right"
               :sortable="true"
-              :sort-orders="['ascending', 'descending']">
+              :sort-orders="['ascending', 'descending']"
+            >
             </el-table-column>
             <el-table-column label="操作" fixed="right" width="180">
               <template v-slot="scope">
@@ -306,7 +334,9 @@
                   type="text"
                   size="mini"
                   data-anchor="审核列表审核 => click"
-                  v-if="scope.row.tag == 0 && scope.row.checkProject == '房源转状态'"
+                  v-if="
+                    scope.row.tag == 0 && scope.row.checkProject == '房源转状态'
+                  "
                   @click="getTitle(scope.row)"
                   :disabled="btnDisabled.checkStatus"
                   >审核</el-button
@@ -316,7 +346,9 @@
                   type="text"
                   size="mini"
                   data-anchor="审核列表审核 => click"
-                  v-if="scope.row.tag == 0 && scope.row.checkProject != '房源转状态'"
+                  v-if="
+                    scope.row.tag == 0 && scope.row.checkProject != '房源转状态'
+                  "
                   @click="getTitle(scope.row)"
                   :disabled="btnDisabled.checkHouse"
                   >审核</el-button
@@ -351,13 +383,14 @@
           </el-table>
         </div>
         <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pageJson.page"
-        :page-sizes="[5, 10, 15, 20]"
-        :page-size="pageJson.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="pageJson.total">
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageJson.page"
+          :page-sizes="[5, 10, 15, 20]"
+          :page-size="pageJson.limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="pageJson.total"
+        >
         </el-pagination>
       </div>
     </div>
@@ -569,13 +602,16 @@ const defaultCheck = [
   { value: "4", label: "他司售" },
   { value: "2", label: "虚假实勘" }
 ];
-import tabs from './components/tabs.vue';
+import breadcrumb from "../components/entranceBreadcrumb.vue";
+import navMenu from "../components/entranceNavMenu.vue";
+import tabs from "./components/tabs.vue";
 import util from "@/util/util";
 import ElImageViewer from "element-ui/packages/image/src/image-viewer";
 import { SMALLThumb } from "@/util/constMap";
-import bus from "@/evenBus/but.js";
 export default {
   components: {
+    breadcrumb,
+    navMenu,
     tabs,
     ElImageViewer
   },
@@ -661,41 +697,56 @@ export default {
         total: 0,
         pageSum: 0
       },
-      data: [{
-        id: 1,
-        label: '一级 1',
-        children: [{
-          id: 4,
-          label: '二级 1-1',
-          children: [{
-            id: 9,
-            label: '三级 1-1-1'
-          }, {
-            id: 10,
-            label: '三级 1-1-2'
-          }]
-        }]
-      }, {
-        id: 2,
-        label: '一级 2',
-        children: [{
-          id: 5,
-          label: '二级 2-1'
-        }, {
-          id: 6,
-          label: '二级 2-2'
-        }]
-      }, {
-        id: 3,
-        label: '一级 3',
-        children: [{
-          id: 7,
-          label: '二级 3-1'
-        }, {
-          id: 8,
-          label: '二级 3-2'
-        }]
-      }],
+      data: [
+        {
+          id: 1,
+          label: "一级 1",
+          children: [
+            {
+              id: 4,
+              label: "二级 1-1",
+              children: [
+                {
+                  id: 9,
+                  label: "三级 1-1-1"
+                },
+                {
+                  id: 10,
+                  label: "三级 1-1-2"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          id: 2,
+          label: "一级 2",
+          children: [
+            {
+              id: 5,
+              label: "二级 2-1"
+            },
+            {
+              id: 6,
+              label: "二级 2-2"
+            }
+          ]
+        },
+        {
+          id: 3,
+          label: "一级 3",
+          children: [
+            {
+              id: 7,
+              label: "二级 3-1"
+            },
+            {
+              id: 8,
+              label: "二级 3-2"
+            }
+          ]
+        }
+      ],
       btnDisabled: {
         checkHouse: true,
         checkStatus: true
@@ -806,7 +857,7 @@ export default {
       showPopUp: false,
       checkStatus: 1,
       checkMemo: ""
-    }
+    };
   },
   computed: {
     showImgList() {
@@ -835,8 +886,6 @@ export default {
     }
   },
   created() {
-    // 切换管理入口nav
-    bus.$emit("switchEntranceNav", 1);
     this.getTree();
     this.query();
   },
@@ -847,9 +896,9 @@ export default {
     /**
      * @example: 作业数据排序变化触发事件
      */
-    changeWorkSort({column, prop, order}) {
+    changeWorkSort({ column, prop, order }) {
       this.sortColumn = prop;
-      this.sortType = order=="ascending" ? 0 : 1;
+      this.sortType = order == "ascending" ? 0 : 1;
       Object.assign(this.pageJson, this.$options.data().pageJson);
       this.query();
     },
@@ -893,7 +942,7 @@ export default {
         })
         .finally(e => {
           this.treeLoading = false;
-        })
+        });
     },
     handleCheckChange(data, checked, node) {
       let key = data.type;
@@ -941,25 +990,25 @@ export default {
     buildRemoteMethod(query) {
       this.buildLoading = true;
       this.$api
-      .get({
-        url: "/community/check",
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        token: false,
-        qs: true,
-        data: {
-          communityName: query,
-          page: 1,
-          limit: 50
-        }
-      })
-      .then(e => {
-        if (e.data.code == 200) {
-          this.buildForList = e.data.data.list;
-        }
-      })
-      .finally(() => {
-        this.buildLoading = false;
-      });
+        .get({
+          url: "/community/check",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            communityName: query,
+            page: 1,
+            limit: 50
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.buildForList = e.data.data.list;
+          }
+        })
+        .finally(() => {
+          this.buildLoading = false;
+        });
     },
     /**
      * @example: 楼盘选择更改触发事件
@@ -1073,15 +1122,19 @@ export default {
     /**
      * @example: 搜索
      */
-    query(currentPage=1) {
+    query(currentPage = 1) {
       this.pageJson.page = currentPage;
       this.loading = true;
       let params = { limit: this.pageJson.limit, page: currentPage };
       params.comId = this.conditions.comId;
       params.cbId = this.conditions.cbId;
       params.bhId = this.conditions.bhId;
-      params.beginTime = this.conditions.timeSelect?this.conditions.timeSelect[0]:undefined;
-      params.endTime = this.conditions.timeSelect?this.conditions.timeSelect[1]:undefined;
+      params.beginTime = this.conditions.timeSelect
+        ? this.conditions.timeSelect[0]
+        : undefined;
+      params.endTime = this.conditions.timeSelect
+        ? this.conditions.timeSelect[1]
+        : undefined;
       params.houseNo = this.conditions.houseNo;
 
       params.status = this.status;
@@ -1347,10 +1400,15 @@ export default {
             }
           }
         });
-    },
+    }
   }
-}
+};
 </script>
+<style lang="less">
+.children-page {
+  height: 100%;
+}
+</style>
 <style lang="less" scoped>
 .el-select-dropdown__item {
   // prettier-ignore
@@ -1460,8 +1518,8 @@ export default {
       height: 100%;
       // prettier-ignore
       margin-right: 16PX;
-      background: #F0F7F7;
-      .right-panel{
+      background: #f0f7f7;
+      .right-panel {
         flex: 1;
         display: flex;
         flex-direction: column;
@@ -1482,7 +1540,7 @@ export default {
           .el-input--prefix .el-input__inner {
             // prettier-ignore
             height: 36PX;
-            padding-left: 30PX;
+            padding-left: 30px;
             // prettier-ignore
             line-height: 36PX;
             border: none;
@@ -1491,7 +1549,7 @@ export default {
         }
         .scroll-tree {
           flex: 1;
-          background: #F0F7F7;
+          background: #f0f7f7;
           overflow: auto;
         }
         /deep/.el-tree {
@@ -1527,7 +1585,7 @@ export default {
               }
             }
           }
-          .el-tree-node>.el-tree-node__children {
+          .el-tree-node > .el-tree-node__children {
             overflow: inherit !important;
           }
         }
@@ -1561,7 +1619,7 @@ export default {
           }
         }
         .has-gutter:not(.is-group) {
-          background: #F0F5F4;
+          background: #f0f5f4;
           tr:nth-child(1) {
             th:nth-child(1) {
               .cell {
@@ -1605,7 +1663,7 @@ export default {
             // prettier-ignore
             height: 48PX;
             padding: 0;
-            background: #F0F5F4;
+            background: #f0f5f4;
             font-weight: normal;
             font-size: @font16;
             color: #303133;
@@ -1618,7 +1676,8 @@ export default {
           // prettier-ignore
           height: 64PX;
         }
-        .el-button--mini, .el-button--small {
+        .el-button--mini,
+        .el-button--small {
           // prettier-ignore
           min-width: 60PX;
           // prettier-ignore
@@ -1641,7 +1700,7 @@ export default {
         .btn-next .el-icon,
         .btn-prev .el-icon,
         button,
-        span:not([class*=suffix]) {
+        span:not([class*="suffix"]) {
           height: auto;
           line-height: 1;
           font-size: @font16;
@@ -1672,10 +1731,13 @@ export default {
           line-height: 1;
         }
       }
-      .el-table--border, .el-table--group {
+      .el-table--border,
+      .el-table--group {
         border: none;
       }
-      .el-table--border::after, .el-table--group::after, .el-table::before {
+      .el-table--border::after,
+      .el-table--group::after,
+      .el-table::before {
         background-color: transparent;
       }
       .el-table--border td {
@@ -1686,11 +1748,11 @@ export default {
           th:nth-child(2),
           th:nth-child(3),
           th:nth-child(4) {
-            border-bottom: 1px solid #C3DFD9;
+            border-bottom: 1px solid #c3dfd9;
             border-right: 1px solid #c3dfd9;
           }
           th:nth-child(5) {
-            border-bottom: 1px solid #C3DFD9;
+            border-bottom: 1px solid #c3dfd9;
           }
         }
         tr:nth-child(2) {
