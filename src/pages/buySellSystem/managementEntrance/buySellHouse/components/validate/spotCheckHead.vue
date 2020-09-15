@@ -140,10 +140,10 @@
           </el-col>
           <el-col :span="colChunks[4]" class="fr">
             <div class="conditions-btn">
-              <button class="btn" @click="rest">重置</button>
-              <button class="btn active" @click="moreConditionChange">
+              <div class="btn" @click="rest">重置</div>
+              <div class="btn active" @click="moreConditionChange">
                 查询
-              </button>
+              </div>
             </div>
           </el-col>
         </el-form>

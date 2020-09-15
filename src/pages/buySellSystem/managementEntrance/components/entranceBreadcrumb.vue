@@ -67,10 +67,6 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.entrance-container::-webkit-scrollbar {
-  /*width: 0;宽度为0隐藏*/
-  display: none;
-}
 .position {
   line-height: 1;
   font-size: @font12;
