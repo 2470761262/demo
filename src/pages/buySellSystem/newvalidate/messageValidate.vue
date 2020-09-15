@@ -40,6 +40,14 @@
           margin-left: 8PX;
           // prettier-ignore
           margin-top: 4PX;
+          &.error {
+            background: #fdeeee;
+            color: #ef5656;
+          }
+          &.sucess {
+            background: #e6f6f3;
+            color: #0da88b;
+          }
         }
       }
       .small-tips {
@@ -657,7 +665,9 @@
       <div class="content-head-left">
         <strong class="tips">
           信息员验真
-          <span class="tips-text" v-if="checkStatus == 1">待验真</span>
+          <span :class="['tips-text', statusClass]">{{
+            detail.checkStatusStr
+          }}</span>
         </strong>
         <small class="small-tips">验真请求已发至信息员，请耐心等待</small>
       </div>
@@ -666,7 +676,7 @@
           <div class="num">
             <span v-if="configXin[1]">{{ configXin[1].score }}</span>
           </div>
-          <div class="num-tips">通过奖励鑫币</div>
+          <div class="num-tips">支付鑫币酬劳</div>
         </div>
         <div class="head-right-item">
           <img src="https://img.0be.cn/minipro/bz9_3.svg" alt="" />
@@ -905,6 +915,18 @@ export default {
     this.getXinConfig();
     this.getDetail();
   },
+  computed: {
+    statusClass() {
+      switch (this.checkStatus) {
+        case 2:
+          return "sucess";
+        case 3:
+          return "error";
+        default:
+          return "";
+      }
+    }
+  },
   data() {
     return {
       isEmployee: true,
@@ -1015,6 +1037,7 @@ export default {
       let time = endTime - nowTime;
       if (time <= 0) {
         this.checkStatus = 3;
+        this.detail.checkStatusStr = "验真失败";
         //结束了
       } else {
         let days = Math.floor(time / 1000 / 60 / 60 / 24);
