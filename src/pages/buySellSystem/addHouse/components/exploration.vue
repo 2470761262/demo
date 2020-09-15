@@ -666,6 +666,9 @@ export default {
         }
         that.uploadFileInfo(undefined, r.content.picUrl, function(data) {
           that.houseVideo = data;
+          that.$store.commit("updateFile", {
+            houseVideo: that.houseVideo
+          });
         });
       } else {
         let temp = that.picParams[r.content.picClass];
@@ -674,10 +677,11 @@ export default {
         let name = temp.picContainer;
         // console.log(that[name], "找到了指定用户");
         // console.log(r.content.picUrl, "接受到消息的图片地址");
-        that.uploadFileInfo(r.content.picClass, r.content.picUrl, function(
-          data
-        ) {
+        that.uploadFileInfo(r.content.picClass, r.content.picUrl, function(data) {
           that[name].push(data);
+          that.$store.commit("updateFile", {
+            [name]: that[name]
+          });
         });
       }
     },

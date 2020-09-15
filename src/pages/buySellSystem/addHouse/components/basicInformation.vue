@@ -1641,12 +1641,12 @@ export default {
           if (item != "id") {
             if (item.indexOf("tel") != -1) {
               //日志隐藏手机号不显示真实号码
-              data.saleHouseUpdateRecordList.push({
-                houseId: that.$store.state.addHouse.formData.id,
-                updateFiled: updateFileMap.get(item),
-                oldValue: "***********",
-                newValue: "***********"
-              });
+              // data.saleHouseUpdateRecordList.push({
+              //   houseId: that.$store.state.addHouse.formData.id,
+              //   updateFiled: updateFileMap.get(item),
+              //   oldValue: "***********",
+              //   newValue: "***********"
+              // });
             } else {
               data.saleHouseUpdateRecordList.push({
                 houseId: that.$store.state.addHouse.formData.id,

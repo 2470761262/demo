@@ -868,9 +868,12 @@ export default {
       console.log("用户【" + user + "】接入完毕");
     },
     receiveMessagePic(r) {
-      this.$message.success("短信验真成功！");
+      this.$message.success("用户回复短信验证码，验真成功！");
+      clearTimeout(this.timeID);
       this.checkStatus = 2;
-      console.log(r, "接收到了消息");
+      this.detail.checkStatus = 2;
+      this.detail.checkStatusStr = "验真成功";
+      console.log(r,"用户回复短信验证码，验真成功");
     },
 
     confirmEmit() {
