@@ -588,6 +588,7 @@
         <strong class="tips">
           短信验真
           <span class="tips-text" v-if="checkStatus == 1">待验真</span>
+          <span class="tips-text" v-if="checkStatus == 2">验真成功</span>
         </strong>
         <small class="small-tips"
           >系统已自动发送，短信给验真的验真号码，请尽快联系业主获取验证码</small
@@ -809,6 +810,8 @@ export default {
     if (this.sendFlag) {
       this.getMns();
     }
+    //接入聊天
+    this.contactSocket("verify_send_mns_code:" + this.id);
   },
   data() {
     return {
@@ -832,6 +835,22 @@ export default {
     };
   },
   methods: {
+    contactSocket(user) {
+      console.log("用户【" + user + "】开始接入");
+      this.socketApi.initWebSocket(
+        this.$api.baseUrl().replace("http", ""),
+        user,
+        this.websocketOpen
+      );
+      this.socketApi.initReceiveMessageCallBack(this.receiveMessagePic);
+      console.log("用户【" + user + "】接入完毕");
+    },
+    receiveMessagePic(r) {
+      this.$message.success("短信验真成功！");
+      this.checkStatus = 2;
+      console.log(r, "接收到了消息");
+    },
+
     confirmEmit() {
       this.fixedPopupFlag = false;
     },
