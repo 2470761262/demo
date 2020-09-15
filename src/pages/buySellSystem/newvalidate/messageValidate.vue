@@ -186,6 +186,10 @@
   border-radius: 4px;
   font-size: @font14;
   cursor: pointer;
+  &[disabled] {
+    background: #999;
+    cursor: no-drop;
+  }
 }
 .border-content {
   background: #fff;
@@ -710,7 +714,11 @@
                 信息员联系业主，并填写沟通结果
               </div>
             </div>
-            <button class="btn" @click="getEmployee">
+            <button
+              class="btn"
+              @click="getEmployee"
+              :disabled="checkStatus != 1"
+            >
               选我验真
             </button>
           </div>
