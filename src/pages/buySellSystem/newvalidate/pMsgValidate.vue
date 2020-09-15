@@ -40,6 +40,14 @@
           margin-left: 8PX;
           // prettier-ignore
           margin-top: 4PX;
+          &.error {
+            background: #fdeeee;
+            color: #ef5656;
+          }
+          &.sucess {
+            background: #e6f6f3;
+            color: #0da88b;
+          }
         }
       }
       .small-tips {
@@ -587,8 +595,9 @@
       <div class="content-head-left">
         <strong class="tips">
           短信验真
-          <span class="tips-text" v-if="checkStatus == 1">待验真</span>
-          <span class="tips-text" v-if="checkStatus == 2">验真成功</span>
+          <span :class="['tips-text', statusClass]">{{
+            detail.checkStatusStr
+          }}</span>
         </strong>
         <small class="small-tips"
           >系统已自动发送，短信给验真的验真号码，请尽快联系业主获取验证码</small
@@ -667,14 +676,15 @@
             验真失败
           </div>
           <div class="validate-type-tips">
-            业主选择房源状态为 -
+            <!-- 业主选择房源状态为 -
             {{
               detail.failedReson == 1
                 ? "暂不考虑"
                 : detail.failedReson == 2
                 ? "已经出售"
                 : ""
-            }}
+            }} -->
+            {{ detail.failedResonStr }}
           </div>
         </div>
         <div class="house-content">
@@ -770,7 +780,7 @@
         <div class="pop-col-item">
           <div class="col-item-title">方案1</div>
           <img
-            src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/9/14/b0363f45ba30471ba755b2df3fb3c1ae.png"
+            src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/9/15/e16f4f633cd445f284c1b14884a5f56d.png"
             alt=""
           />
         </div>
@@ -801,6 +811,18 @@ export default {
   filters: {
     mapFilter(value, ListName, resultValue = null) {
       return util.countMapFilter(value, ListName, resultValue);
+    }
+  },
+  computed: {
+    statusClass() {
+      switch (this.checkStatus) {
+        case 2:
+          return "sucess";
+        case 3:
+          return "error";
+        default:
+          return "";
+      }
     }
   },
   created() {
@@ -1007,6 +1029,7 @@ export default {
       let time = endTime - nowTime;
       if (time <= 0) {
         this.checkStatus = 3;
+        this.detail.checkStatusStr = "验真失败";
         //结束了
       } else {
         let days = Math.floor(time / 1000 / 60 / 60 / 24);

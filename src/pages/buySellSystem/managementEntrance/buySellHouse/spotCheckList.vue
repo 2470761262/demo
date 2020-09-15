@@ -451,13 +451,14 @@ export default {
     };
   },
   beforeDestroy() {
-    document
-      .querySelector(".entrance-container")
-      .removeEventListener("scroll", this.elMainScroll);
+    if (document.querySelector(".entrance-container")) {
+      document
+        .querySelector(".entrance-container")
+        .removeEventListener("scroll", this.elMainScroll);
+    }
   },
   created() {
     this.getSpotChekList();
-    console.log("aaaaactive");
     this.$nextTick(() => {
       document
         .querySelector(".entrance-container")
