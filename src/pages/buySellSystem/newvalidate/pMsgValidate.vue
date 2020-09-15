@@ -607,7 +607,7 @@
     <section class="content-body">
       <div class="content-left">
         <!-- 请输入6位验证码，进行验真 -->
-        <div class="border-content">
+        <div class="border-content" v-if="checkStatus == 1">
           <h3 class="border-content-title">请输入6位验证码，进行验真</h3>
           <div class="flex-min">
             <div class="input-content">
