@@ -42,6 +42,14 @@
           margin-left: 8PX;
           // prettier-ignore
           margin-top: 4PX;
+          &.error {
+            background: #fdeeee;
+            color: #ef5656;
+          }
+          &.sucess {
+            background: #e6f6f3;
+            color: #0da88b;
+          }
         }
       }
       .small-tips {
@@ -598,7 +606,9 @@
       <div class="content-head-left">
         <strong class="tips">
           微信验真
-          <span class="tips-text">待验真</span>
+          <span :class="['tips-text', statusClass]">{{
+            detail.checkStatusStr
+          }}</span>
         </strong>
         <small class="small-tips"
           >请尽快，按照下方的操作提示，将房源转发给业主进行验真</small
@@ -714,14 +724,15 @@
             验真失败
           </div>
           <div class="validate-type-tips">
-            业主选择房源状态为 -
+            <!-- 业主选择房源状态为 -
             {{
               detail.failedReson == 1
                 ? "暂不考虑"
                 : detail.failedReson == 2
                 ? "已经出售"
                 : ""
-            }}
+            }} -->
+            {{ detail.failedResonStr }}
           </div>
         </div>
         <div class="house-content">
@@ -787,6 +798,18 @@ export default {
   filters: {
     mapFilter(value, ListName, resultValue = null) {
       return util.countMapFilter(value, ListName, resultValue);
+    }
+  },
+  computed: {
+    statusClass() {
+      switch (this.checkStatus) {
+        case 2:
+          return "sucess";
+        case 3:
+          return "error";
+        default:
+          return "";
+      }
     }
   },
   created() {
@@ -884,6 +907,7 @@ export default {
       let time = endTime - nowTime;
       if (time <= 0) {
         this.checkStatus = 3;
+        this.detail.checkStatusStr = "验真失败";
         //结束了
       } else {
         let days = Math.floor(time / 1000 / 60 / 60 / 24);

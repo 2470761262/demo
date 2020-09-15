@@ -677,9 +677,11 @@ export default {
     });
   },
   beforeDestroy() {
-    document
-      .querySelector(".entrance-container")
-      .removeEventListener("scroll", this.elMainScroll);
+    if (document.querySelector(".entrance-container")) {
+      document
+        .querySelector(".entrance-container")
+        .removeEventListener("scroll", this.elMainScroll);
+    }
     window.removeEventListener("resize", this.setConditionCol);
   },
   methods: {

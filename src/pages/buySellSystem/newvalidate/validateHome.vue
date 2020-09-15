@@ -589,7 +589,8 @@
             验真失败
           </div>
           <div class="validate-type-tips">
-            业主选择房源状态为 - {{ detail.failedReson }}
+            <!-- 业主选择房源状态为 - {{ detail.failedReson }} -->
+            {{ detail.failedResonStr }}
           </div>
         </div>
         <div class="house-content">
