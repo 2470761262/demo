@@ -715,7 +715,7 @@
       </div>
     </section>
     <!-- 房源记录弹窗 -->
-    <el-dialog
+    <!-- <el-dialog
       title="发送成功"
       class="test-dialog"
       width="556px"
@@ -744,7 +744,7 @@
           />
         </div>
       </div>
-    </el-dialog>
+    </el-dialog> -->
 
     <fixedPopup
       title="发送成功"
@@ -940,7 +940,9 @@ export default {
         })
         .catch(() => {
           this.validateCall = ["", "", "", "", "", ""];
-          this.$refs.validateCall[0].$el.querySelector(".el-input__inner").focus();
+          this.$refs.validateCall[0].$el
+            .querySelector(".el-input__inner")
+            .focus();
         });
     },
     getDetail() {
