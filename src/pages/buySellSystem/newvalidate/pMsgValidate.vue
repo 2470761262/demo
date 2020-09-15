@@ -981,6 +981,7 @@ export default {
             } else {
               this.$message.success(data.message);
               this.checkStatus = 2;
+              this.detail.checkStatusStr = "验真成功";
               clearTimeout(this.timeID);
               util.openPage.call(this, {
                 name: "houseDetails",
