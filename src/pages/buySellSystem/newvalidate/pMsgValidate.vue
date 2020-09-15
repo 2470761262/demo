@@ -873,7 +873,7 @@ export default {
       this.checkStatus = 2;
       this.detail.checkStatus = 2;
       this.detail.checkStatusStr = "验真成功";
-      console.log(r,"用户回复短信验证码，验真成功");
+      console.log(r, "用户回复短信验证码，验真成功");
     },
 
     confirmEmit() {
@@ -981,6 +981,7 @@ export default {
             } else {
               this.$message.success(data.message);
               this.checkStatus = 2;
+              this.detail.checkStatusStr = "验真成功";
               clearTimeout(this.timeID);
               util.openPage.call(this, {
                 name: "houseDetails",
