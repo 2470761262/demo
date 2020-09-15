@@ -601,7 +601,7 @@
           <span class="tips-text">待验真</span>
         </strong>
         <small class="small-tips"
-          >请尽快，按照下房方的操作提示，将房源转发给业主进行验真</small
+          >请尽快，按照下方的操作提示，将房源转发给业主进行验真</small
         >
       </div>
       <div class="content-head-right">
