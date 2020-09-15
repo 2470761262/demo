@@ -462,7 +462,7 @@
             </div>
             <div class="border-foot-right">
               <div class="num">
-                <span v-if="configXin[0]">+{{ configXin[0].score }}</span>
+                <span>{{ wxConfig.value | wxConfigFilter }}</span>
               </div>
               <div class="num-tips">通过奖励鑫币</div>
             </div>
@@ -514,7 +514,7 @@
             <div class="head-minddle">
               <div class="head-minddle-title">信息员验真</div>
               <div class="head-minddle-tips">
-                支付<span v-if="configXin[1]">{{ -configXin[1].score }}</span
+                支付<span>{{ messageConfig.value | emptyRead }}</span
                 >鑫币酬劳，验真的事交给信息员来办
               </div>
             </div>
@@ -536,7 +536,7 @@
             </div>
             <div class="border-foot-right subtract">
               <div class="num">
-                <span v-if="configXin[1]">{{ configXin[1].score }}</span>
+                <span>{{ messageConfig.value | emptyRead }}</span>
               </div>
               <div class="num-tips">支付鑫币酬劳</div>
             </div>
@@ -657,6 +657,9 @@ export default {
   filters: {
     mapFilter(value, ListName, resultValue = null) {
       return util.countMapFilter(value, ListName, resultValue);
+    },
+    wxConfigFilter(value) {
+      return value ? "+" + value : "暂无";
     }
   },
   created() {
@@ -675,7 +678,13 @@ export default {
       checkStatus: -1,
       isCallLoading: false,
       timeID: null,
-      configXin: []
+      configXin: [],
+      wxConfig: {
+        value: ""
+      },
+      messageConfig: {
+        value: ""
+      }
     };
   },
   methods: {
@@ -686,7 +695,16 @@ export default {
         })
         .then(({ data }) => {
           if (data.code == 200) {
-            this.configXin = data.data;
+            let map = new Map([
+              ["VERIFY_SALE_HOUSE", "wxConfig"],
+              ["INFORMATOR_VERIFY", "messageConfig"]
+            ]);
+            data.data.forEach(item => {
+              let key = map.get(item.apiName);
+              if (key) {
+                this[key].value = item.score;
+              }
+            });
           }
         });
     },
