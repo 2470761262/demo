@@ -456,6 +456,10 @@
             :url="item"
           >
           </validate-audio>
+          <div class="ts" v-if="recordCheckTime">
+            <span>验真时间：</span>
+            <span>{{recordCheckTime}}</span>
+          </div>
         </div>
       </div>
     </el-dialog>
@@ -536,7 +540,8 @@ export default {
       testExplain: "", // 房源验真说明
       recordStatus: "", // 房源记录房源状态
       recordIntroduction: "", // 房源记录详细说明
-      voiceList: []
+      voiceList: [],
+      recordCheckTime: "" // 验真时间
     };
   },
   created() {
@@ -706,6 +711,10 @@ export default {
      * @example: 验真记录
      */
     handleRecordClick(row) {
+      this.recordStatus = "";
+      this.recordIntroduction = "";
+      this.voiceList = [];
+      this.recordCheckTime = "";
       this.recordDialogVisible = true;
       this.$api
         .post({
@@ -720,6 +729,7 @@ export default {
             this.recordStatus = e.data.data.houseState;
             this.recordIntroduction = e.data.data.remark;
             this.voiceList = e.data.data.voiceList;
+            this.recordCheckTime = e.data.data.checkTime;
           } else {
             this.$message.error(e.data.message);
           }
@@ -1344,7 +1354,7 @@ export default {
         // prettier-ignore
         margin-top: 16PX;
         // prettier-ignore
-        padding: 10PX 14PX 21PX;
+        padding: 10PX 14PX 15PX;
         background: #f8f8f8;
         // prettier-ignore
         border-radius: 4PX;
@@ -1354,6 +1364,13 @@ export default {
           line-height: 1.5;
           font-size: @font16;
           color: #606166;
+        }
+        .ts {
+          // prettier-ignore
+          margin-top: 10PX;
+          line-height: 1.5;
+          font-size: @font14;
+          color: #a7a7a7;
         }
       }
     }

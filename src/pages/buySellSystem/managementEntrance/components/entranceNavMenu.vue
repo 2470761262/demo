@@ -28,11 +28,6 @@ export default {
       navList: ["业务管理", "买卖房源", "租赁房源", "客源", "人员管理"]
     };
   },
-  watch: {
-    $route(newValue) {
-      this.breadcrumbSet(newValue.matched);
-    }
-  },
   methods: {
     changeNav(index) {
       // this.navMenuIndex = index;
@@ -68,10 +63,6 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.entrance-container::-webkit-scrollbar {
-  /*width: 0;宽度为0隐藏*/
-  display: none;
-}
 .header {
   // prettier-ignore
   margin-top: 12PX;

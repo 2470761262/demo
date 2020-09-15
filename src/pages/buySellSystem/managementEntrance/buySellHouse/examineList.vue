@@ -8,7 +8,7 @@
       <div class="conditions-box">
         <el-row :gutter="32">
           <el-form label-position="right" label-width="80px">
-            <el-col :span="12">
+            <el-col :span="colChunks[0]">
               <el-row :gutter="10">
                 <el-form-item label="楼盘">
                   <el-col :span="8">
@@ -102,7 +102,7 @@
                 </el-form-item>
               </el-row>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="colChunks[1]">
               <el-form-item label="提交时间">
                 <el-date-picker
                   prefix-icon="prefix-icon"
@@ -114,7 +114,7 @@
                   value-format="yyyy-MM-dd"
                   @change="query(1)"
                   :default-time="['00:00:00', '23:59:59']"
-                  class="anchor-point"
+                  class="width100 anchor-point"
                   :data-anchor="
                     '审核列表搜索 提交时间:' + conditions.timeSelect
                   "
@@ -122,18 +122,18 @@
                 </el-date-picker>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="colChunks[2]">
               <el-form-item label="房源编号">
                 <el-input
                   v-model="conditions.houseNo"
                   placeholder="请输入房源编号"
                   @change="query(1)"
-                  class="anchor-point"
+                  class="width100 anchor-point"
                   :data-anchor="'审核列表搜索 房源编号:' + conditions.houseNo"
                 ></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="colChunks[3]">
               <el-form-item label="审核项目">
                 <el-select
                   class="width100 anchor-point"
@@ -161,7 +161,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="colChunks[4]">
               <el-form-item label="审核类型">
                 <el-select
                   class="width100 anchor-point"
@@ -189,7 +189,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="colChunks[5]">
               <el-form-item label="审核状态">
                 <el-select
                   class="width100 anchor-point"
@@ -217,24 +217,26 @@
                 </el-select>
               </el-form-item>
             </el-col>
+            <el-col :span="colChunks[6]" class="fr">
+              <div class="conditions-btn">
+                <div
+                  class="btn anchor-pointn"
+                  @click="reset"
+                  data-anchor="审核列表重置"
+                >
+                  重置
+                </div>
+                <div
+                  class="btn active anchor-pointn"
+                  @click="query(1)"
+                  data-anchor="审核列表搜索"
+                >
+                  搜索
+                </div>
+              </div>
+            </el-col>
           </el-form>
         </el-row>
-      </div>
-      <div class="conditions-btn">
-        <button
-          class="btn anchor-pointn"
-          @click="reset"
-          data-anchor="审核列表重置"
-        >
-          重置
-        </button>
-        <button
-          class="btn active anchor-pointn"
-          @click="query(1)"
-          data-anchor="审核列表搜索"
-        >
-          搜索
-        </button>
       </div>
     </div>
     <div class="main">
@@ -617,6 +619,7 @@ export default {
   },
   data() {
     return {
+      colChunks: [5, 9, 5, 5, 6, 6, 6], // 条件选项栅格布局
       filterText: "",
       treeData: [], //结构树
       treeLoading: false,
@@ -888,11 +891,26 @@ export default {
   created() {
     this.getTree();
     this.query();
+    this.setConditionCol();
+    window.addEventListener("resize", this.setConditionCol);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.setConditionCol);
   },
   mounted() {
     this.resetAccessory = util.deepCopy(this.accessoryFile);
   },
   methods: {
+    /**
+     * @example: 根据当前屏幕窗口宽度设置条件选项栅格布局
+     */
+    setConditionCol() {
+      if (document.body.offsetWidth >= 1440) {
+        this.colChunks = [9, 5, 5, 5, 6, 6, 5];
+      } else {
+        this.colChunks = [10, 7, 7, 8, 8, 8, 8];
+      }
+    },
     /**
      * @example: 作业数据排序变化触发事件
      */
@@ -1410,6 +1428,7 @@ export default {
 }
 </style>
 <style lang="less" scoped>
+@import url("~@/assets/publicLess/houseConditionsItem.less");
 .el-select-dropdown__item {
   // prettier-ignore
   height: 40PX;
@@ -1429,74 +1448,6 @@ export default {
     border-bottom-left-radius: 8PX;
     // prettier-ignore
     border-bottom-right-radius: 8PX;
-    /deep/.conditions-box {
-      .el-form-item__label {
-        // prettier-ignore
-        line-height: 36PX;
-        font-weight: bold;
-        font-size: @font14;
-        color: #303133;
-      }
-      .el-input__inner {
-        // prettier-ignore
-        height: 36PX;
-        font-size: @font14;
-      }
-      .el-form-item {
-        // prettier-ignore
-        margin-bottom: 16PX;
-      }
-      .el-range-input {
-        text-align: left;
-        // prettier-ignore
-        text-indent: 5PX;
-        font-size: @font14;
-      }
-      .prefix-icon {
-        width: 0;
-      }
-      .el-date-editor {
-        width: 100%;
-        .el-range-separator {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: auto;
-          padding: 0;
-          line-height: 1;
-          text-indent: 0;
-          font-size: @font14;
-        }
-      }
-      .width100 {
-        width: 100%;
-      }
-    }
-    .conditions-btn {
-      display: flex;
-      justify-content: flex-end;
-      .btn {
-        // prettier-ignore
-        width: 90PX;
-        // prettier-ignore
-        height: 36PX;
-        border: none;
-        border-radius: 4px;
-        background: #fff;
-        outline: none;
-        line-height: 1;
-        text-align: center;
-        font-size: @font12;
-        color: @backgroud;
-        cursor: pointer;
-        &.active {
-          // prettier-ignore
-          margin-left: 9PX;
-          background: @backgroud;
-          color: #fff;
-        }
-      }
-    }
   }
   .main {
     flex: 1;

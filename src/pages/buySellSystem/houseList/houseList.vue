@@ -103,7 +103,6 @@ export default {
   },
   methods: {
     elMainScroll() {
-      console.log("111111111")
       const { clientHeight, scrollHeight, scrollTop } = document.querySelector(
         ".el-main"
       );
