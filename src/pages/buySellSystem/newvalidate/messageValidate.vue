@@ -657,7 +657,7 @@
       <div class="content-head-left">
         <strong class="tips">
           信息员验真
-          <span class="tips-text">待验真</span>
+          <span class="tips-text" v-if="checkStatus == 1">待验真</span>
         </strong>
         <small class="small-tips">验真请求已发至信息员，请耐心等待</small>
       </div>
@@ -830,7 +830,8 @@
             验真失败
           </div>
           <div class="validate-type-tips">
-            业主选择房源状态为 - {{ detail.failedReson }}
+            <!-- 业主选择房源状态为 - {{ detail.failedReson }} -->
+            {{ detail.failedResonStr }}
           </div>
         </div>
         <div class="house-content">
