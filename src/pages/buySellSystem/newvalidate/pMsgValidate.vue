@@ -40,6 +40,14 @@
           margin-left: 8PX;
           // prettier-ignore
           margin-top: 4PX;
+          &.error {
+            background: #fdeeee;
+            color: #ef5656;
+          }
+          &.sucess {
+            background: #e6f6f3;
+            color: #0da88b;
+          }
         }
       }
       .small-tips {
@@ -587,7 +595,9 @@
       <div class="content-head-left">
         <strong class="tips">
           短信验真
-          <span class="tips-text" v-if="checkStatus == 1">待验真</span>
+          <span :class="['tips-text', statusClass]">{{
+            detail.checkStatusStr
+          }}</span>
         </strong>
         <small class="small-tips"
           >系统已自动发送，短信给验真的验真号码，请尽快联系业主获取验证码</small
@@ -802,6 +812,18 @@ export default {
       return util.countMapFilter(value, ListName, resultValue);
     }
   },
+  computed: {
+    statusClass() {
+      switch (this.checkStatus) {
+        case 2:
+          return "sucess";
+        case 3:
+          return "error";
+        default:
+          return "";
+      }
+    }
+  },
   created() {
     this.id = this.$route.query.id;
     this.getDetail();
@@ -988,6 +1010,7 @@ export default {
       let time = endTime - nowTime;
       if (time <= 0) {
         this.checkStatus = 3;
+        this.detail.checkStatusStr = "验真失败";
         //结束了
       } else {
         let days = Math.floor(time / 1000 / 60 / 60 / 24);
