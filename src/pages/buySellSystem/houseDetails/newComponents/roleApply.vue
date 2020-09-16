@@ -383,6 +383,9 @@
         :visible.sync="entrustPopFlag"
       ></entrustPop>
     </div>
+    <investigator-apply-Pop
+      :dialogInvestigatorVisible.sync="dialogInvestigatorVisible"
+    ></investigator-apply-Pop>
   </div>
 </template>
 
@@ -402,7 +405,9 @@ export default {
     //委托人
     entrustPop: () => import("../newDidLog/entrustPop"),
     //选填信息
-    applyAgentPop: () => import("../newDidLog/applyAgentPop")
+    applyAgentPop: () => import("../newDidLog/applyAgentPop"),
+    // 申请实勘人
+    investigatorApplyPop: () => import("../newDidLog/investigatorApplyPop")
   },
   data() {
     return {
@@ -418,7 +423,8 @@ export default {
       middleRadio: 0, //中学占用级
       primaryRadio: 0, //小学占用年级
       showFollow: true, //是否显示组件的跟进
-      audioList: [] //音频文件
+      audioList: [], //音频文件
+      dialogInvestigatorVisible: false
     };
   },
   computed: {
@@ -580,8 +586,9 @@ export default {
           ];
         }
         if (!result) {
-          this[typeName] = type;
-          this[popName] = true;
+          // this[typeName] = type;
+          // this[popName] = true;
+          this.dialogInvestigatorVisible = true;
         }
       } else {
         let result = await houseCheck.isChecking(

@@ -412,7 +412,6 @@ export default {
       deep: true,
       immediate: true,
       handler: function(value, ordvalue) {
-        console.log("11111111111111");
         this.getHouseData(JSON.parse(JSON.stringify(value))).then(() => {
           dom.querySelector(".scroll-tab").scrollTop = 0;
           this.$parent.ListeningScroll();
@@ -429,7 +428,7 @@ export default {
     bus.$on("modifyTableColumn", type => {
       this.typeActiveIndex = type;
       switch (type) {
-        case 2:
+        case 3:
           this.tableColumnField = this.dealHouseTableColumn;
           break;
         default:
@@ -516,7 +515,7 @@ export default {
      * @example: 双击前往详情
      */
     navDetailt(item) {
-      if (this.typeActiveIndex == 2) return;
+      if (this.typeActiveIndex == 3) return;
       util.openPage.call(this, {
         name: "houseDetails",
         params: { houseId: item.id, dept: item.perDept }
@@ -606,7 +605,7 @@ export default {
       });
       let param;
       switch (this.typeActiveIndex) {
-        case 2:
+        case 3:
           param = {
             url: "/mateHouse/getMateHouse/tradeHouseIndex",
             headers: { "Content-Type": "application/json;charset=UTF-8" },

@@ -29,6 +29,19 @@
     // &:last-child {
     //   border-bottom: none;
     // }
+    .iconhot {
+      // prettier-ignore
+      margin-left: -16PX;
+      // prettier-ignore
+      font-size: 16PX;
+      color: red;
+    }
+    .el-icon-question {
+      color: #327257;
+      &:hover {
+        color: #fff;
+      }
+    }
   }
 }
 </style>
@@ -100,6 +113,12 @@
       @click="cancelOutsideHouse"
     >
       取消发布
+    </button>
+    <button
+      class="btn-item"
+      style="order:5"
+    >
+      <i class="iconfont iconhot"></i>发布58<i class="el-icon-question"></i>
     </button>
     <button
       class="btn-item"
