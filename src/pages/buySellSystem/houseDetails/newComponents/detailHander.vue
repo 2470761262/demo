@@ -42,10 +42,23 @@
         align-items: center;
         cursor: pointer;
         // prettier-ignore
-        width: 110PX;
+        min-width: 110PX;
         box-sizing: border-box;
         margin-right: 20px;
         outline: none;
+        .logo58 {
+          // prettier-ignore
+          width: 25PX;
+          // prettier-ignore
+          height: 25PX;
+          margin-left: 13px;
+          margin-right: 6px;
+          background: url('../../../../assets/images/logo_58.png') center no-repeat;
+          background-size: 100%;
+        }
+        .nowrap {
+          white-space: nowrap;
+        }
         &:last-child {
           margin-right: 0;
         }
@@ -125,6 +138,10 @@
         </div>
       </div>
       <div class="content-header-right">
+        <button @click="nodePop">
+          <i class="logo58"></i>
+          <span class="nowrap">加入我的58资源库</span>
+        </button>
         <button @click="nodePop">
           <i class="iconyinxiang iconfont "></i>
           <span>添加印象</span>
