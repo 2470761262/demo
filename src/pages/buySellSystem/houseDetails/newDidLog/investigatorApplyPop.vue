@@ -183,6 +183,7 @@ export default {
         border-radius: 4PX;
         // prettier-ignore
         line-height: 34PX;
+        font-size: @font12;
         .btn {
           // prettier-ignore
           height: 30PX;
@@ -194,6 +195,7 @@ export default {
           border-radius: 4PX;
           // prettier-ignore
           line-height: 30PX;
+          font-size: @font12;
           cursor: pointer;
         }
       }

@@ -111,6 +111,11 @@ const TYPELIST = [
     label: "我的对赌",
     value: 3,
     name: "myBet"
+  },
+  {
+    label: "VR拍摄",
+    value: 4,
+    name: "vrShooting"
   }
 ];
 export default {

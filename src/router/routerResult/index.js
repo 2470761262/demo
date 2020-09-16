@@ -271,6 +271,20 @@ export default [
           import(
             /* webpackChunkName: "myBet" */ "@/pages/buySellSystem/myHouse/myBet/myBet.vue"
           )
+      },
+      {
+        // VR拍摄
+        path: "/myHouse/vrShooting",
+        name: "vrShooting",
+        meta: {
+          title: "VR拍摄",
+          keepAlive: true,
+          isPad: true
+        },
+        component: () => 
+          import(
+            /* webpackChunkName: "vrShooting" */ "@/pages/buySellSystem/myHouse/vrShooting/vrShooting.vue"
+          )
       }
     ]
   },
