@@ -281,7 +281,7 @@ export default [
           keepAlive: true,
           isPad: true
         },
-        component: () => 
+        component: () =>
           import(
             /* webpackChunkName: "vrShooting" */ "@/pages/buySellSystem/myHouse/vrShooting/vrShooting.vue"
           )
@@ -1565,6 +1565,19 @@ export default [
     component: () =>
       import(
         /* webpackChunkName: "takeLook" */ "@/pages/customersSystem/customersDetail/takeLook.vue"
+      )
+  },
+  {
+    path: "/buySellSystem/dictContrast",
+    name: "dictContrast",
+    meta: {
+      title: "小区对标",
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "messageValidate" */ "@/pages/buySellSystem/dictContrast/list.vue"
       )
   }
 ];

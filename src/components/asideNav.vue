@@ -19,12 +19,18 @@
         <span>新买卖系统</span>
       </template>
       <el-menu-item index="/buySellSystem/houseList">房源管理</el-menu-item>
-      <el-menu-item index="/buySellSystem/addFloorList">补充楼盘审核</el-menu-item>
+      <el-menu-item index="/buySellSystem/addFloorList"
+        >补充楼盘审核</el-menu-item
+      >
       <el-menu-item index="/report/reportConfList">报表统计</el-menu-item>
-      <el-menu-item index="/buySellSystem/resourceManageList">资源库管理</el-menu-item>
+      <el-menu-item index="/buySellSystem/resourceManageList"
+        >资源库管理</el-menu-item
+      >
       <el-menu-item index="/report/reportConfList">数据看板</el-menu-item>
       <el-menu-item index="/managementEntrance/business">管理入口</el-menu-item>
-      <el-menu-item index="/buySellSystem/employeeValidateList">信息员验真列表</el-menu-item>
+      <el-menu-item index="/buySellSystem/employeeValidateList"
+        >信息员验真列表</el-menu-item
+      >
     </el-submenu>
     <el-submenu index="2">
       <template slot="title">
@@ -72,6 +78,13 @@
         >公客详情</el-menu-item
       >
       <el-menu-item index="/customers/takeLook">添加带看</el-menu-item>
+    </el-submenu>
+    <el-submenu index="111">
+      <template slot="title">
+        <i class="el-icon-location"></i>
+        <span>新物业楼盘</span>
+      </template>
+      <el-menu-item index="/buySellSystem/dictContrast">小区对标</el-menu-item>
     </el-submenu>
     <el-submenu
       :index="item.id + ''"
