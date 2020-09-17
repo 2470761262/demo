@@ -17,7 +17,7 @@
 
   /deep/.tab-cell-item {
     // prettier-ignore
-    height: 50PX;
+    height: 67PX;
     font-size: @font16;
     text-align: center;
     .cell {
@@ -65,10 +65,10 @@
   }
 }
 .operation-btn {
-  color: @backgroud;
+  background: @backgroud;
+  color: #fff;
   // prettier-ignore
   margin-right: 24PX;
-  font-size: @font16;
   // prettier-ignore
   width: 66PX;
   // prettier-ignore
@@ -76,9 +76,10 @@
   border-radius: 4px;
   outline: none;
   border: none;
+  font-size: var(--font--14);
   cursor: pointer;
   &[disabled] {
-    color: #909399;
+    background: #AAAAAA;
     cursor: no-drop;
   }
   &:last-child {
@@ -96,7 +97,8 @@
 }
 .span_success,
 .span_danger,
-.span_warning {
+.span_warning,
+.span_info {
   display: inline-block;
   // prettier-ignore
   padding: 6PX 13PX;
@@ -118,6 +120,11 @@
   background: #f6a42019;
   font-size: @font14;
   color: #f6a420;
+}
+.span_info {
+  background: #e4e4e4;
+  font-size: @font14;
+  color: #909399;
 }
 </style>
 <template>
@@ -157,199 +164,18 @@
       >
       </el-pagination>
     </div>
-    <fixed-popup
-      title="验真详情"
-      v-if="showVeryfyDetail"
-      :visible.sync="showVeryfyDetail"
-      width="30%"
-    >
-      <el-card class="box-card">
-        <div slot="header" class="clearfix">
-          <span>步骤</span>
-        </div>
-        <el-steps :active="stepNow" align-center :process-status="stepStatus">
-          <el-step
-            :title="item.title"
-            :description="item.description"
-            :key="item.index"
-            v-for="item in stepsListNow"
-          ></el-step>
-        </el-steps>
-      </el-card>
-      <el-card
-        v-if="employeeDiff.show"
-        class="box-card"
-        style="line-height:30px"
-      >
-        <div slot="header" class="clearfix">
-          <span>店长异议</span>
-        </div>
-        <div>
-          <div class="tag-group">
-            <el-tag
-              size="small"
-              type="danger"
-              v-for="item in employeeDiff.spanList"
-              :key="item.index"
-              >{{ diffList[item] }}</el-tag
-            >
-          </div>
-          <div>{{ employeeDiff.remark }}</div>
-        </div>
-      </el-card>
-      <el-card
-        v-if="customerDiff.show"
-        class="box-card"
-        style="line-height:30px"
-      >
-        <div slot="header" class="clearfix">
-          <span>客户异议</span>
-        </div>
-        <div>
-          <div class="tag-group">
-            <el-tag
-              size="small"
-              type="danger"
-              v-for="item in customerDiff.spanList"
-              :key="item.index"
-              >{{ diffList[item] }}</el-tag
-            >
-          </div>
-          <div>{{ customerDiff.remark }}</div>
-        </div>
-      </el-card>
-      <el-card class="box-card" style="line-height:30px">
-        <div slot="header" class="clearfix">
-          <span>房源详情</span>
-        </div>
-        <div>
-          <span class="font-small-title">小区：</span>
-          <span class="font-middle-title">{{
-            nowRow.communityName +
-              "-" +
-              nowRow.buildingName +
-              "-" +
-              nowRow.roomNo
-          }}</span>
-        </div>
-        <div class="div-line">
-          <div class="span-width">
-            <span class="font-small-title">售价：</span>
-            <span>{{ nowRow.price }}万元</span>
-          </div>
-          <div class="span-width">
-            <span class="font-small-title">均价：</span>
-            <span>{{ nowRow.unitPrice }}元/㎡</span>
-          </div>
-        </div>
-        <div class="div-line">
-          <div class="span-width">
-            <span class="font-small-title">面积：</span>
-            <span>{{ nowRow.inArea || 0 }}/㎡</span>
-          </div>
-          <div class="span-width">
-            <span class="font-small-title">户型：</span>
-            <span>{{
-              (nowRow.rooms || 0) +
-                "室" +
-                (nowRow.hall || 0) +
-                "厅" +
-                (nowRow.toilet || 0) +
-                "卫"
-            }}</span>
-          </div>
-        </div>
-        <div class="div-line">
-          <div class="span-width">
-            <span class="font-small-title">朝向：</span>
-            <span>{{ nowRow.face }}</span>
-          </div>
-          <div class="span-width">
-            <span class="font-small-title">装修：</span>
-            <span>{{ nowRow.decoration }}</span>
-          </div>
-        </div>
-      </el-card>
-      <el-card class="box-card">
-        <div slot="header" class="clearfix">
-          <span>业主信息</span>
-        </div>
-        <div class="cus-box">
-          <img
-            width="55px"
-            height="55px"
-            :src="
-              nowRow.headImg == null
-                ? 'https://lsxjytestimgs.oss-cn-shenzhen.aliyuncs.com/FileUpload/default.jpg'
-                : nowRow.headImg
-            "
-          />
-          <div style="margin-left:20px">
-            <span class="font-small-title">{{ nowRow.customerName }}</span>
-            <el-tag type="warning" size="mini">vip</el-tag>
-            <div>
-              <span>{{ nowRow.tel }}</span>
-            </div>
-          </div>
-        </div>
-      </el-card>
-    </fixed-popup>
-    <tel-pop
-      title=""
-      :visible.sync="telPopFlag"
-      width="auto"
-      :type-class="telPopFlagTypeClass"
-      v-if="telPopFlag"
-      :data="rowData"
-    >
-    </tel-pop>
   </div>
 </template>
 <script>
 const dom = document;
-
 import util from "@/util/util";
-//验真电话弹框
-import telPop from "./telPop";
-let checkStatusStrMap = new Map([
-  ["待验真", "span_warning"],
-  ["验真成功", "span_success"],
-  ["验真失败", "span_danger"]
-]);
-let pageNameMap = new Map([
-  [1, "wxValidate"],
-  [2, "pMsgValidate"],
-  [3, "messageValidate"]
-]);
+import { division } from '../../../../../util/accurateComputeUtil';
 export default {
   inject: ["form"],
-  components: {
-    telPop
-  },
+  components: { },
   data() {
     return {
-      telPopFlag: false,
-      telPopFlagTypeClass: "info",
       rowData: {}, //行数据
-      showVeryfyDetail: false,
-      steps: [
-        { title: "业主验真", description: "" },
-        { title: "完成验真", description: "" }
-      ],
-      stepStatus: "",
-      stepsListNow: [],
-      nowRow: {},
-      stepNow: 0,
-      customerDiff: {
-        spanList: [],
-        remark: "",
-        show: false
-      },
-      employeeDiff: {
-        spanList: [],
-        remark: "",
-        show: false
-      },
       showValidityBtn: false, //验真按钮
       loading: true,
       renderList: [],
@@ -358,40 +184,51 @@ export default {
           prop: "communityName",
           label: "楼盘名称",
           formart: item => {
-            return `${item.communityName}-${item.buildingName}-${item.roomNo}`;
-          }
-        },
-        {
-          prop: "sourceStr",
-          label: "验真类型"
-        },
-        {
-          prop: "checkStatusStr",
-          label: "验真状态",
-          formart: item => {
-            let str = checkStatusStrMap.get(item.checkStatusStr);
             return (
-              <span class={str}>{str ? item.checkStatusStr : "暂无"}</span>
+              <div class="tab-com-item">
+                <div class="tab-house-title">{item.houseNo}</div>
+                <div class="tab-houseno">{item.communityName}-{item.buildingName}-{item.roomNo}</div>
+              </div>
             );
           }
         },
         {
-          prop: "customerName",
-          label: "业主姓名"
+          prop: "",
+          label: "售价"
         },
         {
-          prop: "modeStr",
-          label: "验真方式"
+          prop: "",
+          label: "面积"
+        },
+        {
+          prop: "",
+          label: "户型"
         },
         {
           prop: "addPerName",
-          label: "录入人"
+          label: "申请人"
         },
-        // {
-        //   prop: "addTime",
-        //   label: "录入时间",
-        //   order: "custom"
-        // },
+        {
+          prop: "addTime",
+          label: "申请时间"
+        },
+        {
+          prop: "",
+          label: "申请结果",
+          formart: row => {
+            let result;
+            if (row.addTime) {
+              result = (<span class="span_warning">拍摄中</span>);
+            } else if (row.applyResult == 1) {
+              result = (<span class="span_success">拍摄完成</span>);
+            } else if (row.applyResult == 2)  {
+              result = (<span class="span_danger">已取消</span>);
+            } else if (row.applyResult == 3)  {
+              result = (<span class="span_info">已失败</span>);
+            }
+            return result;
+          }
+        },
         {
           label: "操作",
           formart: row => this.operation(row),
@@ -420,12 +257,6 @@ export default {
     }
   },
   methods: {
-    accesssoryTabClick(tab, event) {
-      let key = parseInt(tab.index) + 1;
-      this.bigAccessoryFile.forEach(item => {
-        item.data = this.accessoryFile[key][item.key];
-      });
-    },
     /**
      * @example: 操作按钮
      * @param {type}
@@ -433,225 +264,62 @@ export default {
     operation(row) {
       let array = [
         {
-          name: "进入验真",
-          isType: "待验真",
-          methodName: "getVerifyImg"
+          name: "取消申请",
+          isType: "",
+          methodName: "cancelApply",
+          disabled: false
         },
         {
-          name: "重新验真",
-          isType: "验真失败",
-          methodName: "reVerify"
-        },
-        // {
-        //   name: "编辑",
-        //   isType: "待业主验真,待店长验真,已过期,验真失败,草稿",
-        //   methodName: "edit"
-        // },
-        {
-          name: "验真详情",
-          isType: "待验真,验真失败,验真成功",
-          methodName: "getResult"
+          name: "查看视频",
+          isType: "",
+          methodName: "showVideo",
+          disabled: false
         }
       ];
       return array
         .map(item => {
-          if (item.isType.includes(row.checkStatusStr)) {
-            item.disabled = false;
-          } else {
-            item.disabled = true;
-          }
-          if (!this.showValidityBtn && item.name == "进入验真") {
-            item.disabled = true;
-          }
-          if (
-            item.name == "重新验真" &&
-            (parseInt(row.source) != 1 || parseInt(row.checkStatus) == 4)
-          ) {
-            item.disabled = true;
-          }
           return item;
         })
         .map(btnDataItem => {
           return (
-            <span
+            <button
               class="operation-btn"
               onClick={this[btnDataItem.methodName].bind(this, row)}
               disabled={btnDataItem.disabled}
             >
               {btnDataItem.name}
-            </span>
+            </button>
           );
         });
     },
     /**
-     *  展开验证电话弹框
+     *  取消申请
      */
-    openCheckTelPop(row) {
-      this.telPopFlagTypeClass = "error";
-      if (row.checkTelStatus == "正常") {
-        this.telPopFlagTypeClass = "info";
-      }
-      this.rowData = row;
-      this.telPopFlag = true;
-    },
-    getResult(row) {
-      let that = this;
-      that.showVeryfyDetail = true;
-      that.nowRow = row;
-      //初始化
-      that.customerDiff.spanList = [];
-      that.customerDiff.remark = "";
-      that.customerDiff.show = false;
-      that.employeeDiff.spanList = [];
-      that.employeeDiff.remark = "";
-      that.employeeDiff.show = false;
-      //步骤设置
-      that.stepsListNow = that.steps;
-      switch (row.checkStatusStr) {
-        case "待验真":
-          that.stepNow = 1;
-          //that.stepsListNow[0].description = "待业主验真";
-          break;
-        case "验真失败":
-          that.stepNow = 2;
-          that.stepStatus = "error";
-          break;
-        case "验真成功":
-          that.stepNow = 2;
-          that.stepStatus = "success";
-          break;
-      }
-    },
-    getVerifyDiff(id, perType) {
-      this.$api
-        .get({
-          url: "/verifyHouse/diffrent/" + id,
-          data: {
-            perType: perType
-          }
-        })
-        .then(e => {
-          let that = this;
-          let res = e.data;
-          if (perType == 2) {
-            that.customerDiff.spanList = JSON.parse(res.data.dissentType);
-            that.customerDiff.remark = res.data.remark;
-            that.customerDiff.show = true;
-          } else {
-            that.employeeDiff.spanList = JSON.parse(res.data.dissentType);
-            that.employeeDiff.remark = res.data.remark;
-            that.employeeDiff.show = true;
-          }
-          console.log(that.employeeDiff.show);
-        })
-        .catch(e => {
-          console.log("查询失败");
-          console.log(e);
+    cancelApply(row) {
+      console.log(row, "取消申请----------");
+      this.$confirm('是否取消申请?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '取消成功!'
+          });
+          // this.$message.error('取消失败!');
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消操作'
+          });          
         });
     },
-    edit(val) {
-      this.$api
-        .get({
-          url: "/verifyHouse/check/" + val.id
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            this.$router.push({
-              path: "/buySellSystem/addHouse?method=edit&id=" + val.id
-            });
-          } else {
-            this.$message.error(e.date.message);
-          }
-        })
-        .catch(e => {});
-    },
-    reVerify(val) {
-      this.$api
-        .post({
-          url: "/verifyHouse/afreshVerify/" + val.id
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            this.$router.push({
-              path: "/buySellSystem/addHouse?method=afresh&id=" + val.id
-            });
-          } else {
-            this.$message.error(e.date.message);
-          }
-        })
-        .catch(e => {});
-    },
-    getImg(params) {
-      this.$api
-        .post({
-          url: "/verifyHouse/invitationToVerify/verifyList",
-          data: params,
-          qs: true
-        })
-        .then(e => {
-          console.log(e.data);
-          let result = e.data;
-          this.loading = false;
-          if (result.code == 200) {
-            console.log(result.message);
-            console.log(result.data);
-            this.$alert(
-              '<img class="invitationToVerify" src="' +
-                result.data +
-                '"></img>',
-              "业主邀请二维码",
-              {
-                dangerouslyUseHTMLString: true
-              }
-            );
-            this.loading = false;
-          } else {
-            console.log("查询结果：" + result.message);
-            alert(result.message);
-            this.loading = false;
-          }
-        })
-        .catch(e => {
-          console.log("查询失败");
-          console.log(e);
-          this.loading = false;
-        });
-    },
-    getVerifyImg(row) {
-      let trueId = row.id;
-      let that = this;
-      that.loading = true;
-      this.$api
-        .get({
-          url: "/verifyHouse/inviteVerify/" + row.id
-        })
-        .then(e => {
-          that.loading = false;
-          if (e.data.code == 200) {
-            let data = e.data.data;
-
-            if (data.mode) {
-              this.$router.push({
-                name: pageNameMap.get(parseInt(data.mode)),
-                query: {
-                  id: row.id
-                }
-              });
-            } else {
-              this.$router.push({
-                path: "/buySellSystem/validateHome",
-                query: {
-                  id: row.id
-                }
-              });
-            }
-          } else {
-            this.$message.error(e.date.message);
-          }
-        })
-        .catch(e => {
-          that.loading = false;
-        });
+    /**
+     *  查看视频
+     */
+    showVideo(row) {
+      console.log(row, "查看视频----------");
+      // window.open("https://www.baidu.com", "_blank");
     },
     //解决索引只排序当前页的问题,增加函数自定义索引序号
     sortDevName(str1, str2) {
