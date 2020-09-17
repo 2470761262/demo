@@ -1615,7 +1615,10 @@
         ></span>
       </div>
     </div>
-    <div class="tab-filter-radio" v-show="typeActiveIndex !== 3 && typeActiveIndex !== 1">
+    <div
+      class="tab-filter-radio"
+      v-show="typeActiveIndex !== 3 && typeActiveIndex !== 1"
+    >
       <label class="filter-radio-item anchor-point" data-anchor="首页选项 钥匙">
         <input
           type="checkbox"
@@ -1643,7 +1646,10 @@
         />
         <span>实勘</span>
       </label>
-      <label class="filter-radio-item anchor-point" data-anchor="首页选项 VR房源">
+      <label
+        class="filter-radio-item anchor-point"
+        data-anchor="首页选项 VR房源"
+      >
         <input
           type="checkbox"
           true-value="1"

@@ -1,7 +1,8 @@
 <template>
   <!-- 申请实勘人弹窗 -->
   <div>
-    <el-dialog title="加入我的58房源库"
+    <el-dialog
+      title="加入我的58房源库"
       :visible.sync="visible"
       @close="close"
       :show="dialogVisible"
@@ -89,29 +90,29 @@ export default {
       houseDetail: "",
       ownerMentality: "",
       serveIntroduction: ""
-    }
+    };
   },
   watch: {
-    dialogVisible () {
+    dialogVisible() {
       this.visible = this.dialogVisible;
     }
   },
   methods: {
     close() {
-      this.$emit('update:dialogVisible', false)
+      this.$emit("update:dialogVisible", false);
     },
     cancel() {
-      this.$emit('update:dialogVisible', false)
+      this.$emit("update:dialogVisible", false);
     },
     confirm() {
       if (this.houseTitle.length == 0) {
-        this.$message.error('请输入房源标题！');
+        this.$message.error("请输入房源标题！");
         return;
       }
       // this.$emit('update:dialogVisible', false)
     }
   }
-}
+};
 </script>
 <style lang="less" scoped>
 /deep/.el-dialog {
@@ -151,19 +152,19 @@ export default {
     padding: 5PX 10PX;
     // prettier-ignore
     margin: 0 auto 18PX;
-    background: #F2F2F2;
+    background: #f2f2f2;
     // prettier-ignore
     border-radius: 10PX;
     .el-icon-warning {
       // prettier-ignore
       margin-right: 5PX;
-      color: #EDA236;
+      color: #eda236;
       font-size: @font18;
     }
     .text {
       line-height: 1.5;
       font-size: @font12;
-      color: #EDA236;
+      color: #eda236;
     }
   }
   .column {

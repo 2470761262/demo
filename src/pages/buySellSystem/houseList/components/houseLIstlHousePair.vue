@@ -367,7 +367,7 @@ export default {
                 <div>{item.price}万</div>
                 <div>{item.unitPrice}元/平</div>
               </div>
-            )
+            );
           }
         },
         {
@@ -405,7 +405,7 @@ export default {
                 <div>{item.brokerName}</div>
                 <div>----</div>
               </div>
-            )
+            );
           }
         },
         {
@@ -413,8 +413,13 @@ export default {
           order: false,
           formart: item => {
             return (
-              <button class="off-shelf-btn" onClick={this.offShelfHouse.bind(this, item)}>下架房源</button>
-            )
+              <button
+                class="off-shelf-btn"
+                onClick={this.offShelfHouse.bind(this, item)}
+              >
+                下架房源
+              </button>
+            );
           }
         }
       ],
