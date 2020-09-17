@@ -54,6 +54,10 @@
 }
 .no-center {
   text-align: left;
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  padding-right: 10px;
 }
 </style>
 
@@ -141,18 +145,26 @@
             :label="item.label"
             :width="item.width"
             :key="item.prop"
+            :formatter="item.formart"
           ></el-table-column>
         </template>
-        <el-table-column label="操作" fixed="right" min-width="180">
+        <el-table-column label="操作" fixed="right" min-width="190">
           <template v-slot="scope">
             <div class="no-center">
               <el-button
                 type="primary"
                 size="mini"
-                @click="distributeEvent(item.methodName, scope.row.accountId)"
+                @click="
+                  distributeEvent(
+                    item.methodName,
+                    scope.row.accountId,
+                    item.openFlag
+                  )
+                "
                 v-for="(item, index) in getOpeBtns(
                   scope.row.del,
-                  scope.row.isLocked
+                  scope.row.isLocked,
+                  scope.row.isBindWuBa
                 )"
                 :key="index"
                 >{{ item.name }}</el-button
@@ -184,17 +196,22 @@
         <el-button type="primary" @click="delAccount()">确 定</el-button>
       </span>
     </el-dialog>
+    <!--58绑定弹窗-->
+    <bindBroker58Pop :openFlag.sync="bindBrokerFlag" :accountId="brokerId">
+    </bindBroker58Pop>
   </div>
 </template>
 
 <script>
 import listPage from "@/components/listPage";
 import getToken from "@/minxi/getUrlToken";
+import bindBroker58Pop from "./didLog/bindBroker58Pop";
 export default {
   mixins: [getToken],
 
   components: {
-    listPage
+    listPage,
+    bindBroker58Pop
   },
 
   data() {
@@ -227,6 +244,13 @@ export default {
         { prop: "roleName", label: "岗位", width: "150px" },
         { prop: "del", label: "状态", width: "80px" },
         { prop: "isLocked", label: "情况", width: "80px" },
+        {
+          prop: "isBindWuBa",
+          label: "58账号绑定",
+          width: "80px",
+          formart: item =>
+            item.isBindWuBa == null || !item.isBindWuBa ? "未绑定" : "已绑定"
+        },
         { prop: "loginDatetime", label: "最近登录时间", width: "180px" }
       ],
       tableData: [],
@@ -239,7 +263,9 @@ export default {
       checkedId: null,
       checkedType: null,
       id: 0,
-      treeLoading: true
+      treeLoading: true,
+      bindBrokerFlag: false,
+      brokerId: -1
     };
   },
   mounted() {
@@ -380,9 +406,8 @@ export default {
       // this.$router.push({ path: "/sys/editemployee", query: { id: row.id } });
       //this.employeeEntity = row;
     },
-    distributeEvent(e, id) {
-      this[e](id);
-      console.log(id);
+    distributeEvent(e, id, openFlag) {
+      this[e](id, openFlag);
     },
     lockEmployee(id) {
       let that = this;
@@ -464,41 +489,67 @@ export default {
           });
         });
     },
-    getOpeBtns(del, locked) {
+    getOpeBtns(del, locked, isBindWuBa) {
+      isBindWuBa = isBindWuBa == null ? false : isBindWuBa;
       let array = [
         {
           name: "编辑",
           delFilter: ["在职"],
           lockFilter: ["正常"],
+          isBindWuBaFilter: null,
           methodName: "editEmployee"
         },
         {
           name: "离职",
           delFilter: ["在职", "离职待审核"],
           lockFilter: ["正常"],
+          isBindWuBaFilter: null,
           methodName: "delEmployee"
         },
         {
           name: "复职",
           delFilter: ["离职", "离职待审核"],
           lockFilter: ["正常", "锁定"],
+          isBindWuBaFilter: null,
           methodName: "resumeEmployee"
         },
         {
           name: "锁定",
           delFilter: ["在职"],
           lockFilter: ["正常"],
+          isBindWuBaFilter: null,
           methodName: "lockEmployee"
         },
         {
           name: "解锁",
           delFilter: ["在职", "离职", "离职待审核"],
           lockFilter: ["锁定"],
+          isBindWuBaFilter: null,
           methodName: "unLockEmployee"
+        },
+        {
+          name: "绑定58",
+          delFilter: ["在职"],
+          lockFilter: ["正常"],
+          isBindWuBaFilter: [false],
+          methodName: "openPop",
+          openFlag: "bindBrokerFlag"
+        },
+        {
+          name: "解绑58",
+          delFilter: ["在职"],
+          lockFilter: ["正常"],
+          isBindWuBaFilter: [true],
+          methodName: "openPop",
+          openFlag: ""
         }
       ];
       var newArr = array.filter(
-        item => item.delFilter.includes(del) && item.lockFilter.includes(locked)
+        item =>
+          item.delFilter.includes(del) &&
+          item.lockFilter.includes(locked) &&
+          (item.isBindWuBaFilter == null ||
+            item.isBindWuBaFilter.includes(isBindWuBa))
       );
       return newArr;
     },
@@ -589,6 +640,10 @@ export default {
         this.checkedType = null;
         this.queryEmployeeDatas(1);
       }
+    },
+    openPop(accountId, flag) {
+      this.brokerId = accountId;
+      this[flag] = !this[flag];
     }
   }
 };

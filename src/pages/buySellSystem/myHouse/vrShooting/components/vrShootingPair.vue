@@ -46,7 +46,7 @@
           filterable
           remote
           popper-class="options-myhouse-custom-item anchor-point"
-          data-anchor="我的房源楼盘 => select"
+          data-anchor="VR拍摄楼盘 => select"
           @click.native="log_socket.sendUserActionData"
           @focus="remoteBuildInput"
           @change="remoteBuildChange"
@@ -57,7 +57,7 @@
           <el-option
             v-for="item in buildForList"
             class="anchor-point"
-            :data-anchor="'我的房源列表楼盘 => select => option:' + item.name"
+            :data-anchor="'VR拍摄楼盘 => select => option:' + item.name"
             @click.native="log_socket.sendUserActionData"
             :key="item.value"
             :label="item.name"
@@ -73,7 +73,7 @@
           filterable
           class="input-content  anchor-point"
           popper-class="options-myhouse-custom-item anchor-point"
-          data-anchor="我的房源栋座 => select"
+          data-anchor="VR拍摄栋座 => select"
           @click.native="log_socket.sendUserActionData"
           value-key="value"
           remote
@@ -84,7 +84,7 @@
           <el-option
             v-for="item in towerForList"
             class="anchor-point"
-            :data-anchor="'我的房源列表栋座 => select => option:' + item.name"
+            :data-anchor="'VR拍摄栋座 => select => option:' + item.name"
             @click.native="log_socket.sendUserActionData"
             :key="item.value"
             :label="item.name"
@@ -100,7 +100,7 @@
           filterable
           popper-class="options-myhouse-custom-item anchor-point"
           class="input-content  anchor-point"
-          data-anchor="我的房源房号 => select"
+          data-anchor="VR拍摄房号 => select"
           @click.native="log_socket.sendUserActionData"
           remote
           :remote-method="queryRoomData"
@@ -111,7 +111,7 @@
           <el-option
             v-for="item in roomForList"
             class="anchor-point"
-            :data-anchor="'我的房源列表房号 => select => option:' + item.name"
+            :data-anchor="'VR拍摄房号 => select => option:' + item.name"
             @click.native="log_socket.sendUserActionData"
             :key="item.value"
             :label="item.name"
@@ -122,33 +122,19 @@
       </div>
     </div>
 
-    <!-- 业主 -->
+    <!-- 申请人 -->
     <div class="search-item">
-      <div class="search-item-title ">业主姓名</div>
+      <div class="search-item-title ">申请人</div>
       <div class="search-item-body">
         <el-input
           clearable
           v-model="cusName"
           maxlength="5"
-          class="input-text "
-          placeholder="业主姓名"
+          class="input-text anchor-point"
+          :data-anchor="'VR拍摄列表搜索 申请人:' + cusName"
+          placeholder="请输入申请人姓名"
           oninput="value = value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g, '')"
           @blur="handleInputBlur('cusName', 'customerName')"
-        ></el-input>
-      </div>
-    </div>
-    <!-- 电话 -->
-    <div class="search-item">
-      <div class="search-item-title ">业主电话</div>
-      <div class="search-item-body">
-        <el-input
-          v-number
-          clearable
-          maxlength="11"
-          v-model="cusPhone"
-          class="input-text"
-          placeholder="业主电话"
-          @blur="handleInputBlur('cusPhone', 'tel')"
         ></el-input>
       </div>
     </div>
@@ -159,7 +145,7 @@
         <el-select
           class="anchor-point"
           popper-class="anchor-point"
-          data-anchor="我的验真所属门店 => select"
+          data-anchor="VR拍摄所属门店 => select"
           @click.native="log_socket.sendUserActionData"
           v-model="form.storeId"
           placeholder="请输入门店名称"
@@ -172,7 +158,7 @@
           <el-option
             class="anchor-point"
             :data-anchor="
-              '我的验真所属门店 => select => option:' + item.depName
+              'VR拍摄所属门店 => select => option:' + item.depName
             "
             @click.native="log_socket.sendUserActionData"
             v-for="item in department.list"
@@ -183,17 +169,20 @@
         </el-select>
       </div>
     </div>
-    <!-- 验真状态 -->
+    <!-- 申请结果 -->
     <div class="search-item">
-      <div class="search-item-title ">验真状态</div>
+      <div class="search-item-title ">申请结果</div>
       <div class="search-item-body">
         <el-select
           clearable
+          data-anchor="VR拍摄申请结果 => select"
+          @click.native="log_socket.sendUserActionData"
           v-model="form.checkStatus"
           popper-class="options-myhouse-custom-item anchor-point"
         >
           <el-option
             class="anchor-point"
+            :data-anchor="'VR拍摄申请结果 => select => option:' + item.title"
             v-for="item in searchTabList"
             :key="item.title"
             :label="item.title"
@@ -202,48 +191,9 @@
         </el-select>
       </div>
     </div>
-    <!-- 验真类型 -->
+    <!-- 申请时间 -->
     <div class="search-item">
-      <div class="search-item-title ">验真类型</div>
-      <div class="search-item-body">
-        <el-select
-          clearable
-          v-model="form.source"
-          popper-class="options-myhouse-custom-item anchor-point"
-        >
-          <el-option
-            class="anchor-point"
-            v-for="item in validateTypeList"
-            :key="item.title"
-            :label="item.title"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </div>
-    </div>
-    <!-- 验真方式 -->
-    <div class="search-item">
-      <div class="search-item-title ">验真方式</div>
-      <div class="search-item-body">
-        <el-select
-          clearable
-          v-model="form.mode"
-          popper-class="options-myhouse-custom-item anchor-point"
-        >
-          <el-option
-            class="anchor-point"
-            v-for="item in validateWayList"
-            :key="item.title"
-            :label="item.title"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </div>
-    </div>
-
-    <!-- 录入时间 -->
-    <div class="search-item">
-      <div class="search-item-title ">录入时间</div>
+      <div class="search-item-title ">申请时间</div>
       <div class="search-item-body">
         <el-date-picker
           v-model="form.time"
@@ -252,6 +202,8 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           :default-time="['00:00:00', '23:59:59']"
+          class="anchor-point"
+          :data-anchor="'VR拍摄 申请时间:' + form.time"
         >
         </el-date-picker>
       </div>
@@ -260,8 +212,16 @@
     <div class="search-item span-flex">
       <div class="search-item-body">
         <div class="btn-content">
-          <span @click="resetLoad">重置</span>
-          <button @click="validateFrom">搜索</button>
+          <span
+            class="anchor-pointn"
+            data-anchor="VR拍摄列表重置"
+            @click="resetLoad"
+          >重置</span>
+          <button
+            class="anchor-pointn"
+            data-anchor="VR拍摄列表搜索"
+            @click="validateFrom"
+          >搜索</button>
         </div>
       </div>
     </div>
@@ -280,32 +240,15 @@ const SEARCHTABLIST = [
   { title: "验真失败", value: "3" }
   // { title: "已过期", value: "4" } //checkSubStatus:1
 ];
-// 验真类型
-const VALIDATETYPELIST = [
-  { title: "全部", value: "" },
-  { title: "录入验真", value: "1" },
-  { title: "抽检验真", value: "2" },
-  { title: "修改号码验真", value: "3" },
-  { title: "库存验真", value: "4" }
-];
-// 验真方式
-const VALIDATEWAYLIST = [
-  { title: "全部", value: "" },
-  { title: "微信验真", value: "1" },
-  { title: "短信验真", value: "2" },
-  { title: "信息员验真", value: "3" }
-];
+
 export default {
   inject: ["form"],
   mixins: [cascadeHouse],
   data() {
     return {
-      validateWayList: VALIDATEWAYLIST,
-      validateTypeList: VALIDATETYPELIST,
       searchTabList: SEARCHTABLIST,
       checkStatusValue: this.form.checkStatusValue, //验真状态
       cusName: "", //业主姓名
-      cusPhone: "", //业主号码
       department: {
         loading: false,
         list: []
@@ -391,7 +334,6 @@ export default {
     },
     validateFrom() {
       this.form.customerName = this.cusName;
-      this.form.tel = this.cusPhone;
       this.form.random = new Date().getTime();
     }
   }

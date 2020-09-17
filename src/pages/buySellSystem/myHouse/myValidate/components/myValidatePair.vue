@@ -46,7 +46,7 @@
           filterable
           remote
           popper-class="options-myhouse-custom-item anchor-point"
-          data-anchor="我的房源楼盘 => select"
+          data-anchor="我的验真楼盘 => select"
           @click.native="log_socket.sendUserActionData"
           @focus="remoteBuildInput"
           @change="remoteBuildChange"
@@ -57,7 +57,7 @@
           <el-option
             v-for="item in buildForList"
             class="anchor-point"
-            :data-anchor="'我的房源列表楼盘 => select => option:' + item.name"
+            :data-anchor="'我的验真列表楼盘 => select => option:' + item.name"
             @click.native="log_socket.sendUserActionData"
             :key="item.value"
             :label="item.name"
@@ -73,7 +73,7 @@
           filterable
           class="input-content  anchor-point"
           popper-class="options-myhouse-custom-item anchor-point"
-          data-anchor="我的房源栋座 => select"
+          data-anchor="我的验真栋座 => select"
           @click.native="log_socket.sendUserActionData"
           value-key="value"
           remote
@@ -84,7 +84,7 @@
           <el-option
             v-for="item in towerForList"
             class="anchor-point"
-            :data-anchor="'我的房源列表栋座 => select => option:' + item.name"
+            :data-anchor="'我的验真列表栋座 => select => option:' + item.name"
             @click.native="log_socket.sendUserActionData"
             :key="item.value"
             :label="item.name"
@@ -100,7 +100,7 @@
           filterable
           popper-class="options-myhouse-custom-item anchor-point"
           class="input-content  anchor-point"
-          data-anchor="我的房源房号 => select"
+          data-anchor="我的验真房号 => select"
           @click.native="log_socket.sendUserActionData"
           remote
           :remote-method="queryRoomData"
@@ -111,7 +111,7 @@
           <el-option
             v-for="item in roomForList"
             class="anchor-point"
-            :data-anchor="'我的房源列表房号 => select => option:' + item.name"
+            :data-anchor="'我的验真列表房号 => select => option:' + item.name"
             @click.native="log_socket.sendUserActionData"
             :key="item.value"
             :label="item.name"
@@ -127,10 +127,11 @@
       <div class="search-item-title ">业主姓名</div>
       <div class="search-item-body">
         <el-input
+          class="input-text anchor-point"
+          :data-anchor="'我的验真列表搜索 业主姓名:' + cusName"
           clearable
           v-model="cusName"
           maxlength="5"
-          class="input-text "
           placeholder="业主姓名"
           oninput="value = value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g, '')"
           @blur="handleInputBlur('cusName', 'customerName')"
@@ -142,11 +143,12 @@
       <div class="search-item-title ">业主电话</div>
       <div class="search-item-body">
         <el-input
+          class="input-text anchor-point"
+          :data-anchor="'我的验真列表搜索 业主电话:' + cusPhone"
           v-number
           clearable
           maxlength="11"
           v-model="cusPhone"
-          class="input-text"
           placeholder="业主电话"
           @blur="handleInputBlur('cusPhone', 'tel')"
         ></el-input>
@@ -188,12 +190,15 @@
       <div class="search-item-title ">验真状态</div>
       <div class="search-item-body">
         <el-select
+          data-anchor="我的验真验真状态 => select"
+          @click.native="log_socket.sendUserActionData"
           clearable
           v-model="form.checkStatus"
           popper-class="options-myhouse-custom-item anchor-point"
         >
           <el-option
             class="anchor-point"
+            :data-anchor="'我的验真验真状态 => select => option:' + item.title"
             v-for="item in searchTabList"
             :key="item.title"
             :label="item.title"
@@ -207,12 +212,15 @@
       <div class="search-item-title ">验真类型</div>
       <div class="search-item-body">
         <el-select
+          data-anchor="我的验真验真类型 => select"
+          @click.native="log_socket.sendUserActionData"
           clearable
           v-model="form.source"
           popper-class="options-myhouse-custom-item anchor-point"
         >
           <el-option
             class="anchor-point"
+            :data-anchor="'我的验真验真类型 => select => option:' + item.title"
             v-for="item in validateTypeList"
             :key="item.title"
             :label="item.title"
@@ -226,12 +234,15 @@
       <div class="search-item-title ">验真方式</div>
       <div class="search-item-body">
         <el-select
+          data-anchor="我的验真验真方式 => select"
+          @click.native="log_socket.sendUserActionData"
           clearable
           v-model="form.mode"
           popper-class="options-myhouse-custom-item anchor-point"
         >
           <el-option
             class="anchor-point"
+            :data-anchor="'我的验真验真方式 => select => option:' + item.title"
             v-for="item in validateWayList"
             :key="item.title"
             :label="item.title"
@@ -252,6 +263,8 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           :default-time="['00:00:00', '23:59:59']"
+          class="anchor-point"
+          :data-anchor="'我的验真 录入时间:' + form.time"
         >
         </el-date-picker>
       </div>
@@ -260,8 +273,16 @@
     <div class="search-item span-flex">
       <div class="search-item-body">
         <div class="btn-content">
-          <span @click="resetLoad">重置</span>
-          <button @click="validateFrom">搜索</button>
+          <span
+            class="anchor-pointn"
+            data-anchor="我的验真列表重置"
+            @click="resetLoad"
+          >重置</span>
+          <button
+            class="anchor-pointn"
+            data-anchor="我的验真列表搜索"
+           @click="validateFrom"
+          >搜索</button>
         </div>
       </div>
     </div>
