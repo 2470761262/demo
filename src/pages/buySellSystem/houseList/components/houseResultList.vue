@@ -1615,7 +1615,7 @@
         ></span>
       </div>
     </div>
-    <div class="tab-filter-radio" v-show="typeActiveIndex !== 3">
+    <div class="tab-filter-radio" v-show="typeActiveIndex !== 3 && typeActiveIndex !== 1">
       <label class="filter-radio-item anchor-point" data-anchor="首页选项 钥匙">
         <input
           type="checkbox"
@@ -1896,7 +1896,7 @@ export default {
     changeNavTypeIndex(index) {
       this.typeActiveIndex = index;
       bus.$emit("modifyTableColumn", index);
-      if (index == 1 || index == 2 || index == 5) {
+      if (index == 2 || index == 5) {
         this.navToPageBtn({ private: false });
         return;
       } else if (index == 3) {
