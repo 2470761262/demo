@@ -138,9 +138,9 @@
         </div>
       </div>
       <div class="content-header-right">
-        <button @click="nodePop">
+        <button @click="joinOtherResource">
           <i class="logo58"></i>
-          <span class="nowrap">加入我的58资源库</span>
+          <span class="nowrap">加入我的58房源库</span>
         </button>
         <button @click="nodePop">
           <i class="iconyinxiang iconfont "></i>
@@ -179,7 +179,10 @@
       typeClass="error"
       title="!举报"
     ></report>
-    <!-- 关注 -->
+    <!-- 加入58房源库提示弹窗 -->
+    <join-resource-pop
+      :dialogVisible.sync="dialogJoinResourceVisible"
+    ></join-resource-pop>
   </div>
 </template>
 
@@ -205,12 +208,14 @@ export default {
   },
   components: {
     //举报弹出层
-    report: () => import("../newDidLog/report")
+    report: () => import("../newDidLog/report"),
     //关注弹出层
     // attention: () => import("../newDidLog/attention")
+    joinResourcePop: () => import("../newDidLog/joinResourcePop")
   },
   data() {
     return {
+      dialogJoinResourceVisible: false,
       reportFlag: false, //举报弹框开关
       attentionFlag: false, //关注弹框开关
       isCollect: false,
@@ -223,6 +228,13 @@ export default {
     this.getisCollect();
   },
   methods: {
+    /**
+     * @example: 加入我的58资源库
+     */
+    joinOtherResource() {
+      console.log(this.dialogJoinResourceVisible,"---------------");
+      this.dialogJoinResourceVisible = true;
+    },
     handleCopy(data) {
       let oInput = document.createElement("input");
       oInput.value = data;
@@ -238,7 +250,6 @@ export default {
     /**
      * @example: 显示楼栋号
      */
-
     getShowBuliding() {
       this.$api
         .get({

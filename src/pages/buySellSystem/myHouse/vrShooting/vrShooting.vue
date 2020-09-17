@@ -44,7 +44,6 @@ export default {
         bhId: "",
         cbId: "",
         checkStatus: "", // 验真状态
-        source: "", // 验真类型
         mode: "", // 验真方式
         storeId: "", // 所属门店
         comId: "",
