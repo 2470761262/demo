@@ -10,6 +10,9 @@
     /deep/.el-input {
       width: auto;
     }
+    div {
+      margin-right: 10px;
+    }
   }
 }
 .page-content {
@@ -57,7 +60,63 @@
   display: flex;
   flex-wrap: wrap;
   flex: 1;
-  padding-right: 10px;
+  align-items: center;
+  .operate-btn {
+    // prettier-ignore
+    min-width: 76PX;
+    // prettier-ignore
+    height: 28PX;
+    padding: 0;
+    // prettier-ignore
+    margin: 5PX 10PX 5PX 0;
+    // prettier-ignore
+    line-height: 28PX;
+    font-size: @font14;
+    &:nth-child(even) {
+      // prettier-ignore
+      margin-right: 0 !important;
+    }
+  }
+}
+/deep/.el-dialog {
+  // prettier-ignore
+  border-radius: 8PX;
+  .el-dialog__header {
+    position: relative;
+    // prettier-ignore
+    padding: 15PX;
+    text-align: center;
+    .el-dialog__title {
+      line-height: 1;
+      font-size: @font16;
+      font-weight: bold;
+    }
+    .el-dialog__headerbtn {
+      top: 50%;
+      transform: translateY(-50%);
+      .el-icon-close {
+        font-size: @font22;
+      }
+    }
+  }
+  .el-dialog__body {
+    // prettier-ignore
+    padding: 0 20PX 20PX;
+  }
+  .unbunding-container {
+    .btn-box {
+      display: flex;
+      justify-content: center;
+      // prettier-ignore
+      margin-top: 15PX;
+      .btn {
+        &.confirm {
+          background: @backgroud;
+          color: #fff;
+        }
+      }
+    }
+  }
 }
 </style>
 
@@ -148,10 +207,11 @@
             :formatter="item.formart"
           ></el-table-column>
         </template>
-        <el-table-column label="操作" fixed="right" min-width="190">
+        <el-table-column label="操作" fixed="right" min-width="186">
           <template v-slot="scope">
             <div class="no-center">
               <el-button
+                class="operate-btn"
                 type="primary"
                 size="mini"
                 @click="
@@ -199,6 +259,31 @@
     <!--58绑定弹窗-->
     <bindBroker58Pop :openFlag.sync="bindBrokerFlag" :accountId="brokerId">
     </bindBroker58Pop>
+    <!-- 解绑弹窗 -->
+    <el-dialog
+      title="解绑确认"
+      :visible.sync="unbundingDialogVisible"
+      @close="closeUnbundingDialog"
+      width="266px"
+      top="35vh"
+    >
+      <div class="unbunding-container">
+        <div class="content">
+          您是否要解绑该经纪人的58账号？确认后，经纪人将无法使用鑫伽系统将房源发布至58房源、安居客及赶集网！
+        </div>
+        <div class="btn-box">
+          <el-button class="btn cancel" @click="cancelUnbunding"
+            >取消</el-button
+          >
+          <el-button
+            class="btn confirm"
+            @click="confirmUnbunding"
+            :loading="unbundingLoading"
+            >确认解绑</el-button
+          >
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -216,6 +301,8 @@ export default {
 
   data() {
     return {
+      unbundingLoading: false,
+      unbundingDialogVisible: false,
       sidebarFlag: false,
       loading: false, //控制表格加载动画提示
       queryData: {
@@ -299,6 +386,24 @@ export default {
     this.queryEmployeeDatas(1);
   },
   methods: {
+    /**
+     * 关闭解绑窗口
+     */
+    closeUnbundingDialog() {
+      this.unbundingDialogVisible = false;
+    },
+    /**
+     * 确认解绑
+     */
+    confirmUnbunding() {
+      this.unbundingDialogVisible = false;
+    },
+    /**
+     * 取消解绑
+     */
+    cancelUnbunding() {
+      this.unbundingDialogVisible = false;
+    },
     queryEmployeeByParams() {
       this.queryEmployeeDatas(1);
     },
@@ -534,6 +639,7 @@ export default {
           isBindWuBaFilter: [false],
           methodName: "openPop",
           openFlag: "bindBrokerFlag"
+          //openFlag: "unbundingDialogVisible"
         },
         {
           name: "解绑58",
