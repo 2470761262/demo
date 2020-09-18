@@ -333,21 +333,34 @@
                 <el-button
                   class="operate-btn"
                   @click="handleCallClick(scope.row)"
-                  type="primary"
+                  :type="scope.row.contrast != -1 ? 'info' : 'primary'"
                   :disabled="scope.row.contrast != -1"
                   >58对标</el-button
                 >
                 <el-button
                   class="operate-btn"
                   @click="handleSynchro(scope.row)"
-                  :type="scope.row.panshiCommunityId ? 'info' : 'primary'"
+                  :type="
+                    scope.row.panshiCommunityId != null ? 'info' : 'primary'
+                  "
                   :disabled="scope.row.panshiCommunityId != null"
                   >关系同步</el-button
                 >
                 <el-button
                   class="operate-btn"
                   @click="handleBenchmark(scope.row)"
-                  type="primary"
+                  :type="
+                    scope.row.contrast != -1 &&
+                    scope.row.contrast != 3 &&
+                    scope.row.contrast != 5
+                      ? 'info'
+                      : 'primary'
+                  "
+                  :disabled="
+                    scope.row.contrast != -1 &&
+                      scope.row.contrast != 3 &&
+                      scope.row.contrast != 5
+                  "
                   >手工对标</el-button
                 >
               </template>
@@ -418,12 +431,32 @@ const BENCHMARKINGSTATUSLIST = [
     value: null
   },
   {
-    label: "未对标",
+    label: "未申请对标",
+    value: -1
+  },
+  {
+    label: "已申请未对标",
     value: 0
   },
   {
-    label: "已对标",
+    label: "机器对标成功",
     value: 1
+  },
+  {
+    label: "机器失败等待人工处理",
+    value: 2
+  },
+  {
+    label: "对标失败",
+    value: 3
+  },
+  {
+    label: "人工对标成",
+    value: 4
+  },
+  {
+    label: "暂停对标",
+    value: 5
   }
 ];
 const RELATIONSTATUSLIST = [
