@@ -372,34 +372,35 @@
       class="relation-dialog"
       title="手工对标"
       :visible.sync="dialogTableVisible"
+      width="800px"
     >
       <el-table :data="gridData" height="300px">
         <el-table-column
           property="communityId"
           label="磐石小区"
-          width="100"
+          min-width="100"
         ></el-table-column>
         <el-table-column
           property="communityName"
           label="磐石小区名称"
-          width="120"
+          min-width="120"
         ></el-table-column>
         <el-table-column
           property="address"
           label="磐石小区详细地址"
-          width="150"
+          min-width="150"
         ></el-table-column>
         <el-table-column
           property="mianShangquanName"
           label="主商圈名称"
-          width="120"
+          min-width="120"
         ></el-table-column>
         <el-table-column
           property="mainShangquanDistrictName"
           label="主商圈区域名称"
-          width="120"
+          min-width="120"
         ></el-table-column>
-        <el-table-column label="操作" width="60">
+        <el-table-column label="操作" fixed="right" width="70">
           <template v-slot="scope">
             <el-button
               type="primary"
