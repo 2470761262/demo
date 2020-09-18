@@ -280,9 +280,7 @@
               show-overflow-tooltip
             >
               <template v-slot="scope">
-                <span>{{
-                  scope.row.isContrast == false ? "未对标" : "已对标"
-                }}</span>
+                <span>{{ scope.row.contrastStr }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -335,8 +333,8 @@
                 <el-button
                   class="operate-btn"
                   @click="handleCallClick(scope.row)"
-                  :type="scope.row.isContrast ? 'info' : 'primary'"
-                  :disabled="scope.row.isContrast != false"
+                  type="primary"
+                  :disabled="scope.row.contrast != -1"
                   >58对标</el-button
                 >
                 <el-button
