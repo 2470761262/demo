@@ -7,7 +7,7 @@
           <el-form label-position="right" label-width="100px">
             <el-col :span="colChunks[0]">
               <el-row :gutter="10">
-                <el-form-item label="房屋坐落">
+                <el-form-item label="楼盘名称">
                   <el-col :span="8">
                     <el-select
                       class="anchor-point"
@@ -32,64 +32,6 @@
                         "
                         @click.native="log_socket.sendUserActionData"
                         v-for="item in buildForList"
-                        :key="item.value"
-                        :label="item.name"
-                        :value="item"
-                      ></el-option>
-                    </el-select>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-select
-                      class="anchor-point"
-                      popper-class="anchor-point"
-                      data-anchor="小区对标栋座 => select"
-                      @click.native="log_socket.sendUserActionData"
-                      v-model="towerOptData"
-                      placeholder="栋座号"
-                      clearable
-                      filterable
-                      remote
-                      :remote-method="queryRoomNo"
-                      @change="remoteRoomNoChange"
-                      :loading="towerLoading"
-                      value-key="value"
-                    >
-                      <el-option
-                        class="anchor-point"
-                        :data-anchor="
-                          '小区对标栋座 => select => option:' + item.name
-                        "
-                        @click.native="log_socket.sendUserActionData"
-                        v-for="item in towerForList"
-                        :key="item.value"
-                        :label="item.name"
-                        :value="item"
-                      ></el-option>
-                    </el-select>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-select
-                      class="anchor-point"
-                      popper-class="anchor-point"
-                      data-anchor="小区对标房号 => select"
-                      @click.native="log_socket.sendUserActionData"
-                      v-model="roomOptData"
-                      placeholder="房号"
-                      clearable
-                      filterable
-                      remote
-                      :remote-method="queryRoomData"
-                      @change="queryRoomDataChange"
-                      :loading="roomLoading"
-                      value-key="value"
-                    >
-                      <el-option
-                        class="anchor-point"
-                        :data-anchor="
-                          '小区对标房号 => select => option:' + item.name
-                        "
-                        @click.native="log_socket.sendUserActionData"
-                        v-for="item in roomForList"
                         :key="item.value"
                         :label="item.name"
                         :value="item"
