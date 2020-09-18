@@ -27,47 +27,23 @@
 }
 .investigator-container {
   .tip {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
     // prettier-ignore
-    width: 340PX;
-    // prettier-ignore
-    padding: 5PX 10PX;
-    // prettier-ignore
-    margin: 0 auto 18PX;
-    background: #f2f2f2;
+    margin: 0 0 10PX;
     // prettier-ignore
     border-radius: 10PX;
-    .el-icon-warning {
-      // prettier-ignore
-      margin-right: 5PX;
-      color: #eda236;
-      font-size: @font18;
-    }
-    .text {
-      line-height: 1.5;
-      font-size: @font12;
-      color: red;
-    }
+    line-height: 1.5;
+    font-size: @font12;
+    color: #ff8585;
   }
   .column {
+    // prettier-ignore
+    margin-bottom: 15PX;
     .step {
       // prettier-ignore
       margin: 10PX 0;
-      .circle {
-        display: inline-block;
-        // prettier-ignore
-        width: 20PX;
-        // prettier-ignore
-        height: 20PX;
-        margin-right: 10px;
-        background: @backgroud;
-        border-radius: 100%;
-        // prettier-ignore
-        line-height: 20PX;
-        text-align: center;
-        color: #fff;
+      .red {
+        font-size: @font14;
+        color: #ff8585;
       }
       .title {
         font-size: @font14;
@@ -75,43 +51,37 @@
     }
     .content {
       // prettier-ignore
-      padding: 8PX 10PX 15PX;
+      margin: 8PX 0 0;
       // prettier-ignore
       border-radius: 4PX;
       .text {
         line-height: 1.6;
         font-size: @font12;
       }
-      .bottom {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    }
+  }
+  .question-box {
+    display: flex;
+    flex-direction: row;
+    // prettier-ignore
+    margin-bottom: 8PX;
+    &:nth-child(even) {
+      // prettier-ignore
+      margin-bottom: 15PX;
+    }
+    .dd {
+      font-size: @font14;
+    }
+    .dt {
+      flex: 1;
+      line-height: 1.6;
+      font-size: @font14;
+      &.block {
         // prettier-ignore
-        height: 34PX;
-        // prettier-ignore
-        padding: 0 2PX 0 10PX;
-        // prettier-ignore
-        margin-top: 8PX;
-        background: #fff;
+        padding: 5PX;
+        background: #eaeaea;
         // prettier-ignore
         border-radius: 4PX;
-        // prettier-ignore
-        line-height: 34PX;
-        font-size: @font12;
-        .btn {
-          // prettier-ignore
-          height: 30PX;
-          // prettier-ignore
-          padding: 0 5PX;
-          background: @backgroud;
-          color: #fff;
-          // prettier-ignore
-          border-radius: 4PX;
-          // prettier-ignore
-          line-height: 30PX;
-          font-size: @font12;
-          cursor: pointer;
-        }
       }
     }
   }
@@ -145,16 +115,15 @@
       @close="close"
       :show="openFlag"
       width="430px"
-      height="530px"
+      top="25vh"
     >
       <div class="investigator-container">
         <div class="tip">
-          <span class="text"
-            >绑定账号后,可以直接将房源发布到58房产、安居客等</span
-          >
+          绑定账号后,可以直接将房源发布到58房产、安居客等
         </div>
         <div class="column">
           <div class="step">
+            <span class="red">*</span>
             <span class="title">58三网账号</span>
           </div>
           <div
@@ -171,6 +140,26 @@
               ></el-input>
             </div>
           </div>
+        </div>
+        <div class="question-box">
+          <span class="dd">Q：</span>
+          <p class="dt">绑定账号后能干嘛？</p>
+        </div>
+        <div class="question-box">
+          <span class="dd">A：</span>
+          <p class="dt block">
+            绑定后，经纪人能在鑫伽系统直接将房源发布至58经纪人房源库，无需登录58重新录入
+          </p>
+        </div>
+        <div class="question-box">
+          <span class="dd">Q：</span>
+          <p class="dt">我能支付将房源发布到58的外网吗？</p>
+        </div>
+        <div class="question-box">
+          <span class="dd">A：</span>
+          <p class="dt block">
+            房源发布后，房源存在于58房源库，经纪人需登录后，点击发布外网展示，才能发布
+          </p>
         </div>
         <div class="btn-box">
           <el-button class="btn cancel" @click="cancel">取消</el-button>
