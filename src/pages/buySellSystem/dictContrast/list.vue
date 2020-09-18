@@ -3,23 +3,181 @@
   <div class="container">
     <div class="conditions">
       <div class="conditions-box">
-        <el-row :gutter="32">
-          <el-form label-position="right" label-width="80px">
-            <el-col class="fr">
+        <el-row :gutter="22">
+          <el-form label-position="right" label-width="100px">
+            <el-col :span="colChunks[0]">
+              <el-row :gutter="10">
+                <el-form-item label="房屋坐落">
+                  <el-col :span="8">
+                    <el-select
+                      class="anchor-point"
+                      popper-class="anchor-point"
+                      data-anchor="小区对标楼盘 => select"
+                      @click.native="log_socket.sendUserActionData"
+                      v-model="buildOptData"
+                      placeholder="楼盘名称"
+                      clearable
+                      filterable
+                      remote
+                      @focus="remoteBuildInput"
+                      @change="remoteBuildChange"
+                      :remote-method="buildRemoteMethod"
+                      :loading="buildLoading"
+                      value-key="value"
+                    >
+                      <el-option
+                        class="anchor-point"
+                        :data-anchor="
+                          '小区对标楼盘 => select => option:' + item.name
+                        "
+                        @click.native="log_socket.sendUserActionData"
+                        v-for="item in buildForList"
+                        :key="item.value"
+                        :label="item.name"
+                        :value="item"
+                      ></el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-select
+                      class="anchor-point"
+                      popper-class="anchor-point"
+                      data-anchor="小区对标栋座 => select"
+                      @click.native="log_socket.sendUserActionData"
+                      v-model="towerOptData"
+                      placeholder="栋座号"
+                      clearable
+                      filterable
+                      remote
+                      :remote-method="queryRoomNo"
+                      @change="remoteRoomNoChange"
+                      :loading="towerLoading"
+                      value-key="value"
+                    >
+                      <el-option
+                        class="anchor-point"
+                        :data-anchor="
+                          '小区对标栋座 => select => option:' + item.name
+                        "
+                        @click.native="log_socket.sendUserActionData"
+                        v-for="item in towerForList"
+                        :key="item.value"
+                        :label="item.name"
+                        :value="item"
+                      ></el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-select
+                      class="anchor-point"
+                      popper-class="anchor-point"
+                      data-anchor="小区对标房号 => select"
+                      @click.native="log_socket.sendUserActionData"
+                      v-model="roomOptData"
+                      placeholder="房号"
+                      clearable
+                      filterable
+                      remote
+                      :remote-method="queryRoomData"
+                      @change="queryRoomDataChange"
+                      :loading="roomLoading"
+                      value-key="value"
+                    >
+                      <el-option
+                        class="anchor-point"
+                        :data-anchor="
+                          '小区对标房号 => select => option:' + item.name
+                        "
+                        @click.native="log_socket.sendUserActionData"
+                        v-for="item in roomForList"
+                        :key="item.value"
+                        :label="item.name"
+                        :value="item"
+                      ></el-option>
+                    </el-select>
+                  </el-col>
+                </el-form-item>
+              </el-row>
+            </el-col>
+            <el-col :span="colChunks[1]">
+              <el-form-item label="58对标情况">
+                <el-select
+                  class="width100 anchor-point"
+                  popper-class="anchor-point"
+                  data-anchor="小区对标列表58对标情况 => select"
+                  @click.native="log_socket.sendUserActionData"
+                  filterable
+                  v-model="benchmarkingStatus"
+                  clearable
+                  @change="query(1)"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    class="anchor-point"
+                    :data-anchor="
+                      '小区对标列表58对标情况 => select => option:' + item.label
+                    "
+                    @click.native="log_socket.sendUserActionData"
+                    v-for="item in benchmarkingStatusList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="colChunks[2]">
+              <el-form-item label="关系同步情况">
+                <el-select
+                  class="width100 anchor-point"
+                  popper-class="anchor-point"
+                  data-anchor="小区对标列表关系同步情况 => select"
+                  @click.native="log_socket.sendUserActionData"
+                  filterable
+                  v-model="relationStatus"
+                  clearable
+                  @change="query(1)"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    class="anchor-point"
+                    :data-anchor="
+                      '小区对标列表关系同步情况 => select => option:' +
+                        item.label
+                    "
+                    @click.native="log_socket.sendUserActionData"
+                    v-for="item in relationStatusList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="colChunks[3]" class="fr">
               <div class="conditions-btn">
                 <div
                   class="btn anchor-pointn"
                   @click="reset"
-                  data-anchor="重置"
+                  data-anchor="信息员验真列表重置"
                 >
                   重置
                 </div>
                 <div
                   class="btn active anchor-pointn"
                   @click="query(1)"
-                  data-anchor="搜索"
+                  data-anchor="信息员验真列表搜索"
                 >
-                  搜索
+                  查询
+                </div>
+                <div
+                  class="btn active anchor-pointn"
+                  @click="batchBenchmarking"
+                  data-anchor="信息员验真列表搜索"
+                >
+                  批量对标
                 </div>
               </div>
             </el-col>
@@ -37,12 +195,14 @@
             height="100%"
             v-loading="loading"
             ref="tableList"
+            @selection-change="handleSelectionChange"
           >
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column
               fixed="left"
               label="楼盘名称"
               align="left"
+              min-width="166"
               show-overflow-tooltip
             >
               <template v-slot="scope">
@@ -57,6 +217,7 @@
               prop="checkStatus"
               label="所在城市"
               align="right"
+              min-width="130"
               show-overflow-tooltip
             >
               <template v-slot="scope">
@@ -66,6 +227,7 @@
             <el-table-column
               label="所在区/县"
               align="right"
+              min-width="130"
               show-overflow-tooltip
             >
               <template v-slot="scope">
@@ -75,6 +237,7 @@
             <el-table-column
               label="58对标情况"
               align="right"
+              min-width="130"
               show-overflow-tooltip
             >
               <template v-slot="scope">
@@ -86,6 +249,7 @@
             <el-table-column
               label="磐石小区ID"
               align="right"
+              min-width="130"
               show-overflow-tooltip
             >
               <template v-slot="scope">
@@ -95,6 +259,7 @@
             <el-table-column
               label="磐石小区名称"
               align="right"
+              min-width="140"
               show-overflow-tooltip
             >
               <template v-slot="scope">
@@ -104,6 +269,7 @@
             <el-table-column
               label="磐石小区地址"
               align="right"
+              min-width="140"
               show-overflow-tooltip
             >
               <template v-slot="scope">
@@ -113,25 +279,31 @@
             <el-table-column
               label="磐石小区所属区域"
               align="right"
+              min-width="150"
               show-overflow-tooltip
             >
               <template v-slot="scope">
                 <span>{{ scope.row.shangquanDistrictName }}</span>
               </template>
             </el-table-column>
-            <el-table-column fixed="right" label="操作" align="right">
+            <el-table-column
+              fixed="right"
+              label="操作"
+              align="right"
+              width="170"
+            >
               <template v-slot="scope">
                 <el-button
+                  class="operate-btn"
                   @click="handleCallClick(scope.row)"
-                  type="text"
-                  size="small"
+                  :type="scope.row.isContrast ? 'info' : 'primary'"
                   :disabled="scope.row.isContrast != false"
                   >58对标</el-button
                 >
                 <el-button
+                  class="operate-btn"
                   @click="handleSynchro(scope.row)"
-                  type="text"
-                  size="small"
+                  :type="scope.row.panshiCommunityId ? 'info' : 'primary'"
                   :disabled="scope.row.panshiCommunityId != null"
                   >关系同步</el-button
                 >
@@ -154,11 +326,59 @@
   </div>
 </template>
 <script>
+const BENCHMARKINGSTATUSLIST = [
+  {
+    label: "全部",
+    value: null
+  },
+  {
+    label: "未对标",
+    value: 0
+  },
+  {
+    label: "已对标",
+    value: 1
+  }
+];
+const RELATIONSTATUSLIST = [
+  {
+    label: "全部",
+    value: null
+  },
+  {
+    label: "已同步",
+    value: 1
+  },
+  {
+    label: "未同步",
+    value: 0
+  }
+];
 import util from "@/util/util";
 export default {
   components: {},
   data() {
     return {
+      colChunks: [9, 5, 5, 5], // 条件选项栅格布局
+      benchmarkingStatus: null,
+      benchmarkingStatusList: BENCHMARKINGSTATUSLIST,
+      relationStatus: null,
+      relationStatusList: RELATIONSTATUSLIST,
+      batchList: [], //批量勾选的数组
+      conditions: {
+        comId: "",
+        cbId: "",
+        bhId: ""
+      },
+      buildLoading: false, //楼盘select loading
+      buildOptData: {}, //当前楼盘选择数据
+      buildForList: [], //楼盘select数据
+      towerLoading: false, //栋座select loading
+      towerOptData: {}, //栋座选中数据
+      towerForList: [], //栋座select数据
+      roomLoading: false, //房间号select loading
+      roomOptData: {}, //房间号选中数据
+      roomForList: [], //房间号select数据
       loading: false,
       tableData: [],
       pageJson: {
@@ -173,8 +393,40 @@ export default {
   },
   created() {
     this.query();
+    this.setConditionCol();
+    window.addEventListener("resize", this.setConditionCol);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.setConditionCol);
   },
   methods: {
+    /**
+     * @example: 根据当前屏幕窗口宽度设置条件选项栅格布局
+     */
+    setConditionCol() {
+      if (document.body.offsetWidth >= 1440) {
+        this.colChunks = [9, 5, 5, 5];
+      } else {
+        this.colChunks = [10, 7, 7, 8];
+      }
+    },
+    /**
+     * @example: 批量对标
+     */
+    batchBenchmarking() {
+      console.log(this.batchList);
+    },
+    /**
+     * @example: 多选框选择改变事件
+     */
+    handleSelectionChange(item) {
+      item.forEach(element => {
+        if (!this.batchList.includes(element.id)) {
+          this.batchList.push(element.id);
+        }
+      });
+      console.log(this.batchList, "----------");
+    },
     /**
      * @example: 改变每页请求数据数量
      * @param {val} 请求数
@@ -218,17 +470,132 @@ export default {
       this.queryRoomNo();
     },
     /**
+     * @example: 楼盘激活第一时获取数据
+     */
+    remoteBuildInput() {
+      // this.buildForList.length === 0 && this.buildRemoteMethod();
+      this.buildRemoteMethod();
+    },
+    /**
+     * @example: 远程获取楼盘信息
+     */
+    buildRemoteMethod(query) {
+      this.buildLoading = true;
+      this.$api
+        .get({
+          url: "/community/information/verify",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            communityName: query,
+            page: 1,
+            limit: 50
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.buildForList = e.data.data.list;
+          }
+        })
+        .finally(() => {
+          this.buildLoading = false;
+        });
+    },
+    /**
+     * @example: 获取栋座远程数据
+     * @param {String} name 栋座名称
+     */
+    queryRoomNo(name) {
+      this.towerLoading = true;
+      this.$api
+        .get({
+          url: "/mateHouse/queryComBuilding",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            comBuildingName: name == undefined ? "" : name.trim(),
+            comId: this.conditions.comId,
+            page: 1,
+            limit: 100
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.towerForList = e.data.data.list;
+          }
+        })
+        .finally(() => {
+          this.towerLoading = false;
+        });
+    },
+    /**
+     * @example: 楼栋选择更改触发事件
+     * @param {Obejct} item 当前选中对象
+     */
+    remoteRoomNoChange(item) {
+      const { name = undefined, value = undefined } = item;
+
+      //如果删除或者手动删除传入空字符串将会把楼栋数据清理为空字符串
+      this.conditions.cbId = value ? value : "";
+
+      //清理房间号数据
+      this.conditions.bhId = "";
+      this.roomOptData = {};
+      this.roomForList = [];
+
+      this.query();
+      //获取房间号数据
+      this.queryRoomData();
+    },
+    /**
+     * @example: 远程获取房间号信息
+     * @param {String} e 输入搜索的文本
+     */
+    queryRoomData(e) {
+      this.$api
+        .get({
+          url: "/mateHouse/queryBuildIngHouses",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            comId: this.conditions.comId,
+            cbId: this.conditions.cbId,
+            page: 1,
+            limit: 500,
+            roomNo: e == undefined ? "" : e.trim()
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.roomForList = e.data.data.list;
+          }
+        })
+        .finally(() => {
+          this.towerLoading = false;
+        });
+    },
+    /**
+     * @example:房间号修改选中触发事件
+     * @param {Ojbect} item 选中时选中的数据
+     */
+    queryRoomDataChange(item) {
+      const { name = undefined, value = undefined } = item;
+
+      this.conditions.bhId = value ? value : "";
+      this.query();
+    },
+    /**
      * @example: 查询条件重置
      */
     reset() {
       //Object.assign(this.$data, this.$options.data());
       Object.assign(this.$data.conditions, this.$options.data().conditions);
-      Object.assign(this.$data.department, this.$options.data().department);
-      Object.assign(this.$data.agent, this.$options.data().agent);
       this.buildOptData = {};
       this.towerOptData = {};
       this.roomOptData = {};
-      this.validateStatus = "";
       this.query();
     },
     /**
@@ -732,5 +1099,19 @@ export default {
       }
     }
   }
+}
+.operate-btn {
+  // prettier-ignore
+  height: 30PX;
+  // prettier-ignore
+  padding: 0 10PX;
+  border: none;
+  // prettier-ignore
+  border-radius: 4PX;
+  outline: none;
+  // prettier-ignore
+  line-height: 30PX;
+  text-align: center;
+  font-size: @font12;
 }
 </style>
