@@ -3,35 +3,120 @@
   <div class="container">
     <div class="conditions">
       <div class="conditions-box">
-        <el-row :gutter="22">
+        <el-row :gutter="32">
           <el-form label-position="right" label-width="100px">
             <el-col :span="colChunks[0]">
               <el-row :gutter="10">
                 <el-form-item label="楼盘名称">
+                  <el-select
+                    class="width100 anchor-point"
+                    popper-class="anchor-point"
+                    data-anchor="小区对标楼盘 => select"
+                    @click.native="log_socket.sendUserActionData"
+                    v-model="buildOptData"
+                    placeholder="楼盘名称"
+                    clearable
+                    filterable
+                    remote
+                    @focus="remoteBuildInput"
+                    @change="remoteBuildChange"
+                    :remote-method="buildRemoteMethod"
+                    :loading="buildLoading"
+                    value-key="value"
+                  >
+                    <el-option
+                      class="anchor-point"
+                      :data-anchor="
+                        '小区对标楼盘 => select => option:' + item.name
+                      "
+                      @click.native="log_socket.sendUserActionData"
+                      v-for="item in buildForList"
+                      :key="item.value"
+                      :label="item.name"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-row>
+            </el-col>
+            <el-col :span="colChunks[1]">
+              <el-row :gutter="10">
+                <el-form-item label="楼盘地区">
                   <el-col :span="8">
                     <el-select
                       class="anchor-point"
                       popper-class="anchor-point"
-                      data-anchor="小区对标楼盘 => select"
+                      data-anchor="小区对标省 => select"
                       @click.native="log_socket.sendUserActionData"
-                      v-model="buildOptData"
-                      placeholder="楼盘名称"
+                      v-model="province"
+                      placeholder="选择省"
                       clearable
                       filterable
                       remote
-                      @focus="remoteBuildInput"
-                      @change="remoteBuildChange"
-                      :remote-method="buildRemoteMethod"
-                      :loading="buildLoading"
+                      :loading="provinceLoading"
                       value-key="value"
                     >
                       <el-option
                         class="anchor-point"
                         :data-anchor="
-                          '小区对标楼盘 => select => option:' + item.name
+                          '小区对标省 => select => option:' + item.name
                         "
                         @click.native="log_socket.sendUserActionData"
-                        v-for="item in buildForList"
+                        v-for="item in provinceList"
+                        :key="item.value"
+                        :label="item.name"
+                        :value="item"
+                      ></el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-select
+                      class="anchor-point"
+                      popper-class="anchor-point"
+                      data-anchor="小区对标市 => select"
+                      @click.native="log_socket.sendUserActionData"
+                      v-model="city"
+                      placeholder="选择市"
+                      clearable
+                      filterable
+                      remote
+                      :loading="cityLoading"
+                      value-key="value"
+                    >
+                      <el-option
+                        class="anchor-point"
+                        :data-anchor="
+                          '小区对标市 => select => option:' + item.name
+                        "
+                        @click.native="log_socket.sendUserActionData"
+                        v-for="item in cityList"
+                        :key="item.value"
+                        :label="item.name"
+                        :value="item"
+                      ></el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-select
+                      class="anchor-point"
+                      popper-class="anchor-point"
+                      data-anchor="小区对标区/县 => select"
+                      @click.native="log_socket.sendUserActionData"
+                      v-model="county"
+                      placeholder="选择区/县"
+                      clearable
+                      filterable
+                      remote
+                      :loading="countyLoading"
+                      value-key="value"
+                    >
+                      <el-option
+                        class="anchor-point"
+                        :data-anchor="
+                          '小区对标区/县 => select => option:' + item.name
+                        "
+                        @click.native="log_socket.sendUserActionData"
+                        v-for="item in countyList"
                         :key="item.value"
                         :label="item.name"
                         :value="item"
@@ -41,7 +126,7 @@
                 </el-form-item>
               </el-row>
             </el-col>
-            <el-col :span="colChunks[1]">
+            <el-col :span="colChunks[2]">
               <el-form-item label="58对标情况">
                 <el-select
                   class="width100 anchor-point"
@@ -69,7 +154,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="colChunks[2]">
+            <el-col :span="colChunks[3]">
               <el-form-item label="关系同步情况">
                 <el-select
                   class="width100 anchor-point"
@@ -98,28 +183,21 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="colChunks[3]" class="fr">
+            <el-col :span="colChunks[4]" class="fr">
               <div class="conditions-btn">
                 <div
                   class="btn anchor-pointn"
                   @click="reset"
-                  data-anchor="信息员验真列表重置"
+                  data-anchor="小区对标列表重置"
                 >
                   重置
                 </div>
                 <div
                   class="btn active anchor-pointn"
                   @click="query(1)"
-                  data-anchor="信息员验真列表搜索"
+                  data-anchor="小区对标列表搜索"
                 >
                   查询
-                </div>
-                <div
-                  class="btn active anchor-pointn"
-                  @click="batchBenchmarking"
-                  data-anchor="信息员验真列表搜索"
-                >
-                  批量对标
                 </div>
               </div>
             </el-col>
@@ -130,7 +208,22 @@
     <div class="main">
       <div class="right"></div>
       <div class="content">
-        <!-- <button class="batch-button" @click="batchSpotCheck">批量对标</button> -->
+        <div class="btn-box">
+          <button
+            class="batch-button anchor-pointn"
+            @click="batchBenchmarking"
+            data-anchor="小区对标列表批量对标"
+          >
+            批量对标
+          </button>
+          <button
+            class="batch-button anchor-pointn"
+            @click="batchRelation"
+            data-anchor="小区对标列表批量关系同步"
+          >
+            批量关系同步
+          </button>
+        </div>
         <div class="table">
           <el-table
             :data="tableData"
@@ -139,7 +232,11 @@
             ref="tableList"
             @selection-change="handleSelectionChange"
           >
-            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column
+              type="selection"
+              width="55"
+              align="center"
+            ></el-table-column>
             <el-table-column
               fixed="left"
               label="楼盘名称"
@@ -232,7 +329,7 @@
               fixed="right"
               label="操作"
               align="right"
-              width="170"
+              width="250"
             >
               <template v-slot="scope">
                 <el-button
@@ -248,6 +345,12 @@
                   :type="scope.row.panshiCommunityId ? 'info' : 'primary'"
                   :disabled="scope.row.panshiCommunityId != null"
                   >关系同步</el-button
+                >
+                <el-button
+                  class="operate-btn"
+                  @click="handleBenchmark(scope.row)"
+                  type="primary"
+                  >手工对标</el-button
                 >
               </template>
             </el-table-column>
@@ -265,6 +368,49 @@
         </el-pagination>
       </div>
     </div>
+    <el-dialog
+      class="relation-dialog"
+      title="手工对标"
+      :visible.sync="dialogTableVisible"
+    >
+      <el-table :data="gridData" height="300px">
+        <el-table-column
+          property="communityId"
+          label="磐石小区"
+          width="100"
+        ></el-table-column>
+        <el-table-column
+          property="communityName"
+          label="磐石小区名称"
+          width="120"
+        ></el-table-column>
+        <el-table-column
+          property="address"
+          label="磐石小区详细地址"
+          width="150"
+        ></el-table-column>
+        <el-table-column
+          property="mianShangquanName"
+          label="主商圈名称"
+          width="120"
+        ></el-table-column>
+        <el-table-column
+          property="mainShangquanDistrictName"
+          label="主商圈区域名称"
+          width="120"
+        ></el-table-column>
+        <el-table-column label="操作" width="60">
+          <template v-slot="scope">
+            <el-button
+              type="primary"
+              class="relation-dialog-btn"
+              @click="dialogBenchmark(scope.row)"
+              >对标</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -301,7 +447,9 @@ export default {
   components: {},
   data() {
     return {
-      colChunks: [9, 5, 5, 5], // 条件选项栅格布局
+      colChunks: [5, 9, 5, 5, 6], // 条件选项栅格布局
+      dialogTableVisible: false,
+      gridData: [],
       benchmarkingStatus: null,
       benchmarkingStatusList: BENCHMARKINGSTATUSLIST,
       relationStatus: null,
@@ -321,6 +469,15 @@ export default {
       roomLoading: false, //房间号select loading
       roomOptData: {}, //房间号选中数据
       roomForList: [], //房间号select数据
+      province: {},
+      provinceList: [],
+      provinceLoading: false,
+      city: {},
+      cityList: [],
+      cityLoading: false,
+      county: {},
+      countyList: [],
+      countyLoading: false,
       loading: false,
       tableData: [],
       pageJson: {
@@ -347,15 +504,21 @@ export default {
      */
     setConditionCol() {
       if (document.body.offsetWidth >= 1440) {
-        this.colChunks = [9, 5, 5, 5];
+        this.colChunks = [5, 9, 5, 5, 6];
       } else {
-        this.colChunks = [10, 7, 7, 8];
+        this.colChunks = [7, 10, 7, 8, 8];
       }
     },
     /**
      * @example: 批量对标
      */
     batchBenchmarking() {
+      console.log(this.batchList);
+    },
+    /**
+     * @example: 批量关系同步
+     */
+    batchRelation() {
       console.log(this.batchList);
     },
     /**
@@ -614,6 +777,64 @@ export default {
           }
         })
         .finally(() => {});
+    },
+    /**
+     * @example: 手工对标按钮
+     */
+    handleBenchmark(row) {
+      this.dialogTableVisible = true;
+      this.gridData = [
+        {
+          id: 1,
+          communityId: "哈哈哈哈"
+        },
+        {
+          id: 1,
+          communityId: "哈哈哈哈"
+        },
+        {
+          id: 1,
+          communityId: "哈哈哈哈"
+        },
+        {
+          id: 1,
+          communityId: "哈哈哈哈"
+        },
+        {
+          id: 1,
+          communityId: "哈哈哈哈"
+        },
+        {
+          id: 1,
+          communityId: "哈哈哈哈"
+        },
+        {
+          id: 1,
+          communityId: "哈哈哈哈"
+        },
+        {
+          id: 1,
+          communityId: "哈哈哈哈"
+        },
+        {
+          id: 1,
+          communityId: "哈哈哈哈"
+        },
+        {
+          id: 1,
+          communityId: "哈哈哈哈"
+        },
+        {
+          id: 1,
+          communityId: "哈哈哈哈"
+        }
+      ];
+    },
+    /**
+     * @example: 手工对标弹窗表格操作按钮
+     */
+    dialogBenchmark(row) {
+      console.log(row, "-----------");
     }
   }
 };
@@ -669,6 +890,23 @@ export default {
       display: flex;
       flex-direction: column;
       width: 100%;
+      .batch-button {
+        // prettier-ignore
+        height: 36PX;
+        // prettier-ignore
+        padding: 0 10PX;
+        // prettier-ignore
+        margin: 0 10PX 10PX 0;
+        border: none;
+        border-radius: 4px;
+        outline: none;
+        line-height: 1;
+        text-align: center;
+        font-size: @font14;
+        cursor: pointer;
+        background: @backgroud;
+        color: #fff;
+      }
       .table {
         flex: 1;
         display: flex;
@@ -702,6 +940,10 @@ export default {
               }
             }
           }
+        }
+        .el-checkbox__inner {
+          width: 18px;
+          height: 18px;
         }
         .el-table__body-wrapper {
           tr {
@@ -1055,5 +1297,29 @@ export default {
   line-height: 30PX;
   text-align: center;
   font-size: @font12;
+}
+/deep/.relation-dialog {
+  .el-dialog__title {
+    font-size: @font18;
+    font-weight: bold;
+  }
+  .el-dialog__body {
+    // prettier-ignore
+    padding-top: 10PX;
+    .relation-dialog-btn {
+      // prettier-ignore
+      height: 28PX;
+      // prettier-ignore
+      padding: 0 10PX;
+      border: none;
+      // prettier-ignore
+      border-radius: 4PX;
+      outline: none;
+      // prettier-ignore
+      line-height: 28PX;
+      text-align: center;
+      font-size: @font12;
+    }
+  }
 }
 </style>
