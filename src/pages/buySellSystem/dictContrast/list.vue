@@ -586,7 +586,7 @@ export default {
               message: e.data.message,
               type: "success"
             });
-            this.query(this.currentPage);
+            this.query(this.pageJson.page);
           } else {
             this.$message.error(e.data.message);
           }
@@ -608,7 +608,7 @@ export default {
               message: e.data.message,
               type: "success"
             });
-            this.query(this.currentPage);
+            this.query(this.pageJson.page);
           } else {
             this.$message.error(e.data.message);
           }
