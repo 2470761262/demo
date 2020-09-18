@@ -42,7 +42,6 @@
             <el-table-column
               fixed="left"
               label="楼盘名称"
-              width="230"
               align="left"
               show-overflow-tooltip
             >
@@ -55,7 +54,6 @@
               </template>
             </el-table-column>
             <el-table-column
-              min-width="130"
               prop="checkStatus"
               label="所在城市"
               align="right"
@@ -86,11 +84,42 @@
               </template>
             </el-table-column>
             <el-table-column
-              fixed="right"
-              label="操作"
+              label="磐石小区ID"
               align="right"
-              width="300"
+              show-overflow-tooltip
             >
+              <template v-slot="scope">
+                <span>{{ scope.row.panshiCommunityId }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="磐石小区名称"
+              align="right"
+              show-overflow-tooltip
+            >
+              <template v-slot="scope">
+                <span>{{ scope.row.displayName }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="磐石小区地址"
+              align="right"
+              show-overflow-tooltip
+            >
+              <template v-slot="scope">
+                <span>{{ scope.row.communityAddress }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="磐石小区所属区域"
+              align="right"
+              show-overflow-tooltip
+            >
+              <template v-slot="scope">
+                <span>{{ scope.row.shangquanDistrictName }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column fixed="right" label="操作" align="right">
               <template v-slot="scope">
                 <el-button
                   @click="handleCallClick(scope.row)"
@@ -98,6 +127,13 @@
                   size="small"
                   :disabled="scope.row.isContrast != false"
                   >58对标</el-button
+                >
+                <el-button
+                  @click="handleSynchro(scope.row)"
+                  type="text"
+                  size="small"
+                  :disabled="scope.row.panshiCommunityId != null"
+                  >关系同步</el-button
                 >
               </template>
             </el-table-column>
@@ -241,6 +277,29 @@ export default {
               message: e.data.message,
               type: "success"
             });
+            this.query(this.currentPage);
+          } else {
+            this.$message.error(e.data.message);
+          }
+        })
+        .finally(() => {});
+    },
+    handleSynchro(row) {
+      this.$api
+        .post({
+          url: "/community/contrast/synchro",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            id: row.id
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$message({
+              message: e.data.message,
+              type: "success"
+            });
+            this.query(this.currentPage);
           } else {
             this.$message.error(e.data.message);
           }
