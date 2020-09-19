@@ -396,7 +396,29 @@ export default {
      * 确认解绑
      */
     confirmUnbunding() {
-      this.unbundingDialogVisible = false;
+      this.unbundingLoading = true;
+      this.$api
+        .post({
+          url: `/employee/unBindBroker58`,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            accountId: this.brokerId
+          }
+        })
+        .then(e => {
+          let type = "error";
+          if (e.data.code == 200) {
+            type = "sucesss";
+            this.unbundingDialogVisible = false;
+          }
+          this.$message({
+            message: e.data.message,
+            type: type
+          });
+        })
+        .finally(e => {
+          this.unbundingLoading = false;
+        });
     },
     /**
      * 取消解绑
@@ -639,7 +661,6 @@ export default {
           isBindWuBaFilter: [false],
           methodName: "openPop",
           openFlag: "bindBrokerFlag"
-          //openFlag: "unbundingDialogVisible"
         },
         {
           name: "解绑58",
@@ -647,7 +668,7 @@ export default {
           lockFilter: ["正常"],
           isBindWuBaFilter: [true],
           methodName: "openPop",
-          openFlag: ""
+          openFlag: "unbundingDialogVisible"
         }
       ];
       var newArr = array.filter(
