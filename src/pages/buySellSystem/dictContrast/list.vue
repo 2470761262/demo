@@ -236,6 +236,7 @@
               type="selection"
               width="55"
               align="center"
+              :selectable="isChooise"
             ></el-table-column>
             <el-table-column
               fixed="left"
@@ -546,12 +547,80 @@ export default {
      */
     batchBenchmarking() {
       console.log(this.batchList);
+      if (this.batchList.length == 0) {
+        this.$message({
+          message: "请选择楼盘",
+          type: "error"
+        });
+        return;
+      }
+      this.$message({
+        message: "对标中，请稍后...",
+        type: "info"
+      });
+      this.loading = true;
+      this.$api
+        .post({
+          url: "/community/contrast/batch/handle",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            ids: this.batchList
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$message({
+              message: e.data.message,
+              type: "success"
+            });
+            this.query(this.pageJson.page);
+          } else {
+            this.$message.error(e.data.message);
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     /**
      * @example: 批量关系同步
      */
     batchRelation() {
       console.log(this.batchList);
+      if (this.batchList.length == 0) {
+        this.$message({
+          message: "请选择楼盘",
+          type: "error"
+        });
+        return;
+      }
+      this.$message({
+        message: "同步中，请稍后...",
+        type: "info"
+      });
+      this.loading = true;
+      this.$api
+        .post({
+          url: "/community/contrast/batch/synchro",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            ids: this.batchList
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$message({
+              message: e.data.message,
+              type: "success"
+            });
+            this.query(this.pageJson.page);
+          } else {
+            this.$message.error(e.data.message);
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     /**
      * @example: 多选框选择改变事件
@@ -563,6 +632,12 @@ export default {
         }
       });
       console.log(this.batchList, "----------");
+    },
+    isChooise(row, index) {
+      if (row.panshiCommunityId != null) {
+        return false;
+      }
+      return true;
     },
     /**
      * @example: 改变每页请求数据数量
