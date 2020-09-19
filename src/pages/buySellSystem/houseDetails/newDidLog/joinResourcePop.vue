@@ -20,8 +20,10 @@
             <span class="btn">换一个</span>
           </div>
           <el-input
-            v-model="houseTitle"
+            v-model="selfPublishInfo.houseTitle"
             placeholder="请输入房源标题"
+            maxlength="30"
+            :validate-event="true"
             clearable
           ></el-input>
         </div>
@@ -32,10 +34,10 @@
           </div>
           <el-input
             type="textarea"
-            v-model="houseDetail"
+            v-model="selfPublishInfo.houseDetail"
             placeholder="请输入房源详情"
             resize="none"
-            maxlength="50"
+            maxlength="300"
             show-word-limit
           ></el-input>
         </div>
@@ -46,10 +48,10 @@
           </div>
           <el-input
             type="textarea"
-            v-model="ownerMentality"
+            v-model="selfPublishInfo.ownerMentality"
             placeholder="请输入业主心态"
             resize="none"
-            maxlength="50"
+            maxlength="300"
             show-word-limit
           ></el-input>
         </div>
@@ -60,16 +62,18 @@
           </div>
           <el-input
             type="textarea"
-            v-model="serveIntroduction"
+            v-model="selfPublishInfo.serveIntroduction"
             placeholder="请输入服务介绍"
             resize="none"
-            maxlength="50"
+            maxlength="300"
             show-word-limit
           ></el-input>
         </div>
         <div class="btn-box">
           <el-button class="btn cancel" @click="cancel">取消</el-button>
-          <el-button class="btn confirm" @click="confirm">确定加入</el-button>
+          <el-button class="btn confirm" @click="confirm" :loading="joinLoading"
+            >确定加入</el-button
+          >
         </div>
       </div>
     </el-dialog>
@@ -81,20 +85,35 @@ export default {
     dialogVisible: {
       type: Boolean,
       default: false
+    },
+    publishInfo: {
+      type: Object,
+      default: () => {
+        return {
+          houseTitle: "",
+          houseDetail: "",
+          ownerMentality: "",
+          serveIntroduction: ""
+        };
+      }
     }
   },
   data() {
     return {
       visible: this.dialogVisible,
-      houseTitle: "",
-      houseDetail: "",
-      ownerMentality: "",
-      serveIntroduction: ""
+      joinLoading: false,
+      selfPublishInfo: this.publishInfo
     };
   },
   watch: {
     dialogVisible() {
       this.visible = this.dialogVisible;
+    },
+    publishInfo: {
+      deep: true,
+      handler(val) {
+        this.selfPublishInfo = val;
+      }
     }
   },
   methods: {
@@ -105,11 +124,47 @@ export default {
       this.$emit("update:dialogVisible", false);
     },
     confirm() {
-      if (this.houseTitle.length == 0) {
-        this.$message.error("请输入房源标题！");
+      if (this.selfPublishInfo.houseTitle.length < 10) {
+        this.$message.error("房源标题必须在10-30字之间");
         return;
       }
-      // this.$emit('update:dialogVisible', false)
+      if (this.selfPublishInfo.houseDetail.length < 20) {
+        this.$message.error("房源详情必须在20-300字之间");
+        return;
+      }
+      if (this.selfPublishInfo.ownerMentality.length < 20) {
+        this.$message.error("业主心态必须在20-300字之间");
+        return;
+      }
+      if (this.selfPublishInfo.serveIntroduction.length < 20) {
+        this.$message.error("服务介绍必须在20-300字之间");
+        return;
+      }
+      this.joinLoading = true;
+      this.$api
+        .post({
+          url: "/agent_house/releaseWuBa",
+          data: {
+            houseId: this.selfPublishInfo.houseId,
+            title: this.selfPublishInfo.houseTitle,
+            houseDetails: this.selfPublishInfo.houseDetail,
+            ownersMentality: this.selfPublishInfo.ownerMentality,
+            serviceIntroduction: this.selfPublishInfo.serveIntroduction
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$message({
+              message: "加入成功",
+              type: "success"
+            });
+            // this.$emit('update:dialogVisible', false)
+          }
+        })
+        .finally(() => {
+          this.joinLoading = false;
+        });
     }
   }
 };

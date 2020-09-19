@@ -67,6 +67,11 @@
         </div>
       </div>
     </section>
+    <!-- 加入58房源库提示弹窗 -->
+    <join-resource-pop
+      :dialogVisible.sync="dialogJoinResourceVisible"
+      :publishInfo="publishInfo"
+    ></join-resource-pop>
   </div>
 </template>
 <script>
@@ -96,6 +101,8 @@ import detailBtnGroup from "./newComponents/detailBtnGroup";
 import betHouse from "./newComponents/betHouse";
 //日志tab
 import logTabContent from "./newComponents/logTabContent";
+//加入58房源库提示弹窗
+import joinResourcePop from "./newDidLog/joinResourcePop";
 import util from "@/util/util";
 import { mapActions, mapMutations, mapState } from "vuex";
 import { REMARK } from "@/util/constMap";
@@ -113,7 +120,8 @@ export default {
     historyTrajectory,
     detailBtnGroup,
     betHouse,
-    logTabContent
+    logTabContent,
+    joinResourcePop
   },
   computed: {
     ...mapState({
@@ -122,6 +130,7 @@ export default {
   },
   created() {
     this.setHouseID(this.$route.params.houseId);
+    this.publishInfo.houseId = this.$route.params.houseId;
     Promise.all([this.getHouseDetail(), this.getAgentRules()])
       .then(e => {
         this.addBrowseHouseLog(e[0]);
@@ -135,7 +144,15 @@ export default {
   },
   data() {
     return {
-      loading: true
+      loading: true,
+      dialogJoinResourceVisible: false,
+      publishInfo: {
+        houseId: "",
+        houseTitle: "",
+        houseDetail: "",
+        ownerMentality: "",
+        serveIntroduction: ""
+      }
     };
   },
   methods: {
@@ -156,6 +173,7 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
+            this.publishInfo.houseTitle = result.data.Title;
             if (
               result.data.remark != null &&
               result.data.remark.indexOf("$") != -1
@@ -166,15 +184,18 @@ export default {
                 switch (Arry2[0]) {
                   case "小区介绍":
                     result.data.communityPresentation = Arry2[1];
+                    this.publishInfo.houseDetail = Arry2[1];
                     break;
                   case "户型介绍":
                     result.data.houseTypePresentation = Arry2[1];
+                    this.publishInfo.ownerMentality = Arry2[1];
                     break;
                   case "税费解析":
                     result.data.taxParsing = Arry2[1];
                     break;
                   case "核心卖点":
                     result.data.coreSellingPoint = Arry2[1];
+                    this.publishInfo.serveIntroduction = Arry2[1];
                     break;
                 }
                 if (result.data.applyAgentVo != null) {

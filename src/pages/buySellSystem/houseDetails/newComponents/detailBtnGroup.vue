@@ -114,10 +114,7 @@
     >
       取消发布
     </button>
-    <button
-      class="btn-item"
-      style="order:5"
-    >
+    <button class="btn-item" style="order:5" @click="joinOtherResource">
       <i class="iconfont iconhot"></i>发布58<i class="el-icon-question"></i>
     </button>
     <button
@@ -305,6 +302,12 @@ export default {
   methods: {
     ...mapMutations(["setParam"]),
     ...mapActions(["commitHouseData"]),
+    /**
+     * @example: 发布58
+     */
+    joinOtherResource() {
+      this.$parent.dialogJoinResourceVisible = true;
+    },
     getEditAuthority(authorityUnderName, houseDatails) {
       if (!authorityUnderName) return;
       return (

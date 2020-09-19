@@ -53,7 +53,8 @@
           height: 25PX;
           margin-left: 13px;
           margin-right: 6px;
-          background: url('../../../../assets/images/logo_58.png') center no-repeat;
+          background: url("../../../../assets/images/logo_58.png") center
+            no-repeat;
           background-size: 100%;
         }
         .nowrap {
@@ -179,10 +180,6 @@
       typeClass="error"
       title="!举报"
     ></report>
-    <!-- 加入58房源库提示弹窗 -->
-    <join-resource-pop
-      :dialogVisible.sync="dialogJoinResourceVisible"
-    ></join-resource-pop>
   </div>
 </template>
 
@@ -208,14 +205,12 @@ export default {
   },
   components: {
     //举报弹出层
-    report: () => import("../newDidLog/report"),
+    report: () => import("../newDidLog/report")
     //关注弹出层
     // attention: () => import("../newDidLog/attention")
-    joinResourcePop: () => import("../newDidLog/joinResourcePop")
   },
   data() {
     return {
-      dialogJoinResourceVisible: false,
       reportFlag: false, //举报弹框开关
       attentionFlag: false, //关注弹框开关
       isCollect: false,
@@ -232,8 +227,7 @@ export default {
      * @example: 加入我的58资源库
      */
     joinOtherResource() {
-      console.log(this.dialogJoinResourceVisible,"---------------");
-      this.dialogJoinResourceVisible = true;
+      this.$parent.dialogJoinResourceVisible = true;
     },
     handleCopy(data) {
       let oInput = document.createElement("input");
