@@ -114,7 +114,12 @@
     >
       取消发布
     </button>
-    <button class="btn-item" style="order:5" @click="joinOtherResource">
+    <button
+      class="btn-item"
+      style="order:5"
+      @click="joinOtherResource"
+      v-if="publishBtnType == 1"
+    >
       <i class="iconfont iconhot"></i>发布58<i class="el-icon-question"></i>
     </button>
     <button
@@ -217,6 +222,12 @@ export default {
     cancelTask: () => import("../newDidLog/cancelTask"),
     interviewPop: () => import("../newDidLog/interviewPop"),
     sharePop: () => import("../newDidLog/sharePop")
+  },
+  props: {
+    publishBtnType: {
+      type: Number,
+      default: 0
+    }
   },
   computed: {
     ...mapState({

@@ -139,9 +139,13 @@
         </div>
       </div>
       <div class="content-header-right">
-        <button @click="joinOtherResource">
+        <button @click="joinOtherResource" v-if="publishBtnType == 1">
           <i class="logo58"></i>
           <span class="nowrap">加入我的58房源库</span>
+        </button>
+        <button @click="joinOtherResource" v-if="publishBtnType == 2">
+          <i class="logo58"></i>
+          <span class="nowrap">从我的58房源库下架</span>
         </button>
         <button @click="nodePop">
           <i class="iconyinxiang iconfont "></i>
@@ -188,6 +192,12 @@ import { mapState } from "vuex";
 //房源审核
 import houseCheck from "../common/houseCheck";
 export default {
+  props: {
+    publishBtnType: {
+      type: Number,
+      default: 0
+    }
+  },
   computed: {
     ...mapState({
       houseData: state => state.houseDateil.houseData,

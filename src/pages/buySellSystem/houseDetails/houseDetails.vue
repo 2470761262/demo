@@ -45,7 +45,7 @@
     </div> -->
     <section class="content-flex" v-if="!loading">
       <div class="content-flex-left">
-        <detail-hander />
+        <detail-hander :publishBtnType="publishBtnType"></detail-hander>
         <div class="content-detail-flex">
           <loop-content />
           <house-message />
@@ -63,7 +63,8 @@
           <logTabContent />
         </div>
         <div class="right-btn-group">
-          <detailBtnGroup />
+          <!-- <detailBtnGroup ref="detailBtnGroup" /> -->
+          <detail-btn-group :publishBtnType="publishBtnType"></detail-btn-group>
         </div>
       </div>
     </section>
@@ -152,7 +153,8 @@ export default {
         houseDetail: "",
         ownerMentality: "",
         serveIntroduction: ""
-      }
+      },
+      publishBtnType: 0 // 0:不显示发布按钮；1：显示发布按钮；2：显示下架按钮
     };
   },
   methods: {
@@ -174,6 +176,10 @@ export default {
           let result = e.data;
           if (result.code == 200) {
             this.publishInfo.houseTitle = result.data.Title;
+            console.log(result, "----------------");
+            if (result.data.plate == 0) {
+              this.getPublishBtnType();
+            }
             if (
               result.data.remark != null &&
               result.data.remark.indexOf("$") != -1
@@ -309,6 +315,21 @@ export default {
           }
         })
         .catch(e => {});
+    },
+    /**
+     * @example: 获取发布58按钮权限
+     */
+    getPublishBtnType() {
+      // this.$api
+      //   .get({
+      //     url: "/agent_house/detailsFunction"
+      //   })
+      //   .then(e => {
+      //     if (e.data.code == 200) {
+      //       let data = e.data;
+      //     }
+      //   });
+      this.publishBtnType = 1;
     }
   }
 };
