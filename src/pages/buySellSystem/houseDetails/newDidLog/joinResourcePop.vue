@@ -155,12 +155,12 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
-            this.$message({
-              message: "加入成功",
-              type: "success"
-            });
+              console.log("www");
             // this.$emit('update:dialogVisible', false)
           }
+            this.$message({
+              message: e.data.message,
+            });
         })
         .finally(() => {
           this.joinLoading = false;
