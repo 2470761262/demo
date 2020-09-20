@@ -47,7 +47,6 @@
                       class="anchor-point"
                       popper-class="anchor-point"
                       data-anchor="小区对标省 => select"
-                      @click.native="log_socket.sendUserActionData"
                       v-model="province"
                       placeholder="选择省"
                       clearable
@@ -61,11 +60,10 @@
                         :data-anchor="
                           '小区对标省 => select => option:' + item.name
                         "
-                        @click.native="log_socket.sendUserActionData"
                         v-for="item in provinceList"
-                        :key="item.value"
+                        :key="item.id"
                         :label="item.name"
-                        :value="item"
+                        :value="item.id"
                       ></el-option>
                     </el-select>
                   </el-col>
@@ -82,6 +80,7 @@
                       remote
                       :loading="cityLoading"
                       value-key="value"
+                      @change="getCounty"
                     >
                       <el-option
                         class="anchor-point"
@@ -90,9 +89,9 @@
                         "
                         @click.native="log_socket.sendUserActionData"
                         v-for="item in cityList"
-                        :key="item.value"
+                        :key="item.id"
                         :label="item.name"
-                        :value="item"
+                        :value="item.id"
                       ></el-option>
                     </el-select>
                   </el-col>
@@ -109,6 +108,7 @@
                       remote
                       :loading="countyLoading"
                       value-key="value"
+                      @change="query(1)"
                     >
                       <el-option
                         class="anchor-point"
@@ -117,9 +117,9 @@
                         "
                         @click.native="log_socket.sendUserActionData"
                         v-for="item in countyList"
-                        :key="item.value"
+                        :key="item.id"
                         :label="item.name"
-                        :value="item"
+                        :value="item.id"
                       ></el-option>
                     </el-select>
                   </el-col>
@@ -155,7 +155,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="colChunks[3]">
-              <el-form-item label="关系同步情况">
+              <el-form-item label="关系同步情况" v-if="false">
                 <el-select
                   class="width100 anchor-point"
                   popper-class="anchor-point"
@@ -350,18 +350,7 @@
                 <el-button
                   class="operate-btn"
                   @click="handleBenchmark(scope.row)"
-                  :type="
-                    scope.row.contrast != -1 &&
-                    scope.row.contrast != 3 &&
-                    scope.row.contrast != 5
-                      ? 'info'
-                      : 'primary'
-                  "
-                  :disabled="
-                    scope.row.contrast != -1 &&
-                      scope.row.contrast != 3 &&
-                      scope.row.contrast != 5
-                  "
+                  type="primary"
                   >手工对标</el-button
                 >
               </template>
@@ -389,7 +378,7 @@
       <el-table :data="gridData" height="300px">
         <el-table-column
           property="communityId"
-          label="磐石小区"
+          label="磐石小区ID"
           min-width="100"
         ></el-table-column>
         <el-table-column
@@ -453,12 +442,16 @@ const BENCHMARKINGSTATUSLIST = [
     value: 3
   },
   {
-    label: "人工对标成",
+    label: "人工对标成功",
     value: 4
   },
   {
     label: "暂停对标",
     value: 5
+  },
+  {
+    label: "手工对标",
+    value: 6
   }
 ];
 const RELATIONSTATUSLIST = [
@@ -502,13 +495,13 @@ export default {
       roomLoading: false, //房间号select loading
       roomOptData: {}, //房间号选中数据
       roomForList: [], //房间号select数据
-      province: {},
+      province: 350000,
       provinceList: [],
       provinceLoading: false,
-      city: {},
+      city: null,
       cityList: [],
       cityLoading: false,
-      county: {},
+      county: null,
       countyList: [],
       countyLoading: false,
       loading: false,
@@ -520,13 +513,16 @@ export default {
         pageSum: 0
       },
       sortColumn: "id", //排序字段
-      sortType: 1 //排序类型
+      sortType: 1, //排序类型
+      handleId: null
     };
   },
   created() {
     this.query();
     this.setConditionCol();
     window.addEventListener("resize", this.setConditionCol);
+    this.getPro();
+    this.getCity();
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.setConditionCol);
@@ -695,7 +691,7 @@ export default {
       this.buildLoading = true;
       this.$api
         .get({
-          url: "/community/information/verify",
+          url: "/community/contrast/comm/search",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false,
           qs: true,
@@ -817,6 +813,19 @@ export default {
       this.pageJson.page = currentPage;
       this.loading = true;
       let params = { limit: this.pageJson.limit, page: currentPage };
+      console.log("this.buildOptData", this.buildOptData);
+      if (this.buildOptData != null) {
+        params.comId = this.buildOptData.value;
+      }
+      if (this.city != null) {
+        params.city = this.city;
+      }
+      if (this.county != null) {
+        params.county = this.county;
+      }
+      if (this.benchmarkingStatus != null) {
+        params.contrast = this.benchmarkingStatus;
+      }
       this.$api
         .post({
           headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -847,7 +856,8 @@ export default {
             id: row.id,
             name: row.name,
             cityName: row.cityName,
-            countyName: row.countyName
+            countyName: row.countyName,
+            idFor58: row.idFor58
           }
         })
         .then(e => {
@@ -869,7 +879,8 @@ export default {
           url: "/community/contrast/synchro",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
-            id: row.id
+            id: row.id,
+            idFor58: row.idFor58
           }
         })
         .then(e => {
@@ -889,59 +900,132 @@ export default {
      * @example: 手工对标按钮
      */
     handleBenchmark(row) {
-      this.dialogTableVisible = true;
-      this.gridData = [
-        {
-          id: 1,
-          communityId: "哈哈哈哈"
-        },
-        {
-          id: 1,
-          communityId: "哈哈哈哈"
-        },
-        {
-          id: 1,
-          communityId: "哈哈哈哈"
-        },
-        {
-          id: 1,
-          communityId: "哈哈哈哈"
-        },
-        {
-          id: 1,
-          communityId: "哈哈哈哈"
-        },
-        {
-          id: 1,
-          communityId: "哈哈哈哈"
-        },
-        {
-          id: 1,
-          communityId: "哈哈哈哈"
-        },
-        {
-          id: 1,
-          communityId: "哈哈哈哈"
-        },
-        {
-          id: 1,
-          communityId: "哈哈哈哈"
-        },
-        {
-          id: 1,
-          communityId: "哈哈哈哈"
-        },
-        {
-          id: 1,
-          communityId: "哈哈哈哈"
-        }
-      ];
+      this.$message({
+        message: "对标查询中...",
+        type: "info"
+      });
+      let params = { name: row.name, idFor58: row.idFor58 };
+      this.handleId = row.id;
+      this.$api
+        .post({
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          url: "/community/contrast/search",
+          data: params
+        })
+        .then(e => {
+          let data = e.data;
+          if (data.code == 200) {
+            this.gridData = data.data;
+            this.dialogTableVisible = true;
+          } else {
+            this.$message({
+              message: e.data.message,
+              type: "error"
+            });
+          }
+        })
+        .catch(e => {
+          console.log(e, "查询锁定房源列表失败");
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     /**
      * @example: 手工对标弹窗表格操作按钮
      */
     dialogBenchmark(row) {
-      console.log(row, "-----------");
+      this.$api
+        .post({
+          url: "/community/contrast/handmade",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            id: this.handleId,
+            communityId: row.communityId,
+            communityName: row.communityName,
+            address: row.address,
+            mianShangquanName: row.mianShangquanName,
+            mainShangquanDistrictName: row.mainShangquanDistrictName
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$message({
+              message: e.data.message,
+              type: "success"
+            });
+            this.dialogTableVisible = true;
+            this.query(this.pageJson.page);
+          } else {
+            this.$message.error(e.data.message);
+          }
+        })
+        .finally(() => {});
+    },
+    getPro() {
+      this.$api
+        .get({
+          url: "/community/contrast/region",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            level: 1,
+            pid: 100000
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.provinceList = e.data.data;
+          }
+        })
+        .finally(() => {
+          this.buildLoading = false;
+        });
+    },
+    getCity() {
+      this.$api
+        .get({
+          url: "/community/contrast/region",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            level: 2,
+            pid: this.province
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.cityList = e.data.data;
+          }
+        })
+        .finally(() => {
+          this.buildLoading = false;
+        });
+    },
+    getCounty() {
+      this.query();
+      this.county = null;
+      this.$api
+        .get({
+          url: "/community/contrast/region",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            level: 3,
+            pid: this.city
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.countyList = e.data.data;
+          }
+        })
+        .finally(() => {
+          this.buildLoading = false;
+        });
     }
   }
 };
