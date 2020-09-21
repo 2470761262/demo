@@ -155,12 +155,15 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
-              console.log("www");
-            // this.$emit('update:dialogVisible', false)
-          }
             this.$message({
               message: e.data.message,
+              type: "success"
             });
+            this.$parent.publishBtnType = 2;
+            this.$emit("update:dialogVisible", false);
+          } else {
+            this.$message.error(e.data.message);
+          }
         })
         .finally(() => {
           this.joinLoading = false;

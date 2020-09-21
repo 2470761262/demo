@@ -120,7 +120,8 @@
       @click="joinOtherResource"
       v-if="publishBtnType == 1"
     >
-      <i class="iconfont iconhot"></i>发布58<i class="el-icon-question"></i>
+      <i class="iconfont iconhot"></i>发布58
+      <!-- <i class="el-icon-question"></i> -->
     </button>
     <button
       class="btn-item"
