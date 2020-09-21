@@ -315,9 +315,9 @@ export default {
     },
     //是否展示产权证号弹窗
     async certificateType() {
-      if (parseInt(this.houseData.certificateType) != 1) {
-        this.releasePopFlag = true;
-      } else {
+      // if (parseInt(this.houseData.certificateType) != 1) {
+      //   this.releasePopFlag = true;
+      // } else {
         let params = {
           houseId: this.houseId,
           houseType: 0
@@ -336,7 +336,7 @@ export default {
         } else {
           this.$message("操作失败");
         }
-      }
+      // }
     },
     /**
      * @example: 按鈕組点击事件 事件分发
