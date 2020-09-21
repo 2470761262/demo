@@ -320,19 +320,18 @@ export default {
      * @example: 获取发布58按钮权限
      */
     getPublishBtnType() {
-      // this.$api
-      //   .get({
-      //     url: `/agent_house/isReleaseWuBa/${this.houseId}`,
-      //     headers: {
-      //       "Content-Type": "application/json;charset=UTF-8"
-      //     }
-      //   })
-      //   .then(e => {
-      //     if (e.data.code == 200) {
-      //       this.publishBtnType = e.data.data ? 2 : 1;
-      //     }
-      //   });
-      this.publishBtnType = 1;
+      this.$api
+        .get({
+          url: `/agent_house/isReleaseWuBa/${this.houseId}`,
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.publishBtnType = e.data.data ? 2 : 1;
+          }
+        });
     }
   }
 };

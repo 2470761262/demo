@@ -556,22 +556,41 @@ export default {
      */
     offShelfHouse(row) {
       console.log(row, "下架房源-------------");
-      this.$api
-        .post({
-          url: `/agent_house/deleteUniteHouse`,
-          data: {
-            houseId: row.id,
-            houseNo: row.houseNo,
-            comId: row.comId
-          },
-          headers: {
-            "Content-Type": "application/json;charset=UTF-8"
-          }
+      this.$confirm("是否下架房源?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$api
+            .post({
+              url: `/agent_house/deleteUniteHouse`,
+              data: {
+                houseId: row.id,
+                houseNo: row.houseNo,
+                comId: row.comId
+              },
+              headers: {
+                "Content-Type": "application/json;charset=UTF-8"
+              }
+            })
+            .then(e => {
+              this.$message(e.data.message);
+              if (e.data.code == 200) {
+                this.getHouseData().then(() => {
+                  dom.querySelector(".scroll-tab").scrollTop = 0;
+                  this.$parent.ListeningScroll();
+                });
+              }
+            })
+            .catch(e => {});
         })
-        .then(e => {
-          this.$message(e.data.message);
-        })
-        .catch(e => {});
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消操作"
+          });
+        });
     },
     //解决索引只排序当前页的问题,增加函数自定义索引序号
     sortDevName(str1, str2) {

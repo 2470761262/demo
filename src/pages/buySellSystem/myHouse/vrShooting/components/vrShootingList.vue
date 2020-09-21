@@ -79,7 +79,7 @@
   font-size: var(--font--14);
   cursor: pointer;
   &[disabled] {
-    background: #AAAAAA;
+    background: #aaaaaa;
     cursor: no-drop;
   }
   &:last-child {
@@ -169,10 +169,10 @@
 <script>
 const dom = document;
 import util from "@/util/util";
-import { division } from '../../../../../util/accurateComputeUtil';
+import { division } from "../../../../../util/accurateComputeUtil";
 export default {
   inject: ["form"],
-  components: { },
+  components: {},
   data() {
     return {
       rowData: {}, //行数据
@@ -187,7 +187,9 @@ export default {
             return (
               <div class="tab-com-item">
                 <div class="tab-house-title">{item.houseNo}</div>
-                <div class="tab-houseno">{item.communityName}-{item.buildingName}-{item.roomNo}</div>
+                <div class="tab-houseno">
+                  {item.communityName}-{item.buildingName}-{item.roomNo}
+                </div>
               </div>
             );
           }
@@ -218,13 +220,13 @@ export default {
           formart: row => {
             let result;
             if (row.addTime) {
-              result = (<span class="span_warning">拍摄中</span>);
+              result = <span class="span_warning">拍摄中</span>;
             } else if (row.applyResult == 1) {
-              result = (<span class="span_success">拍摄完成</span>);
-            } else if (row.applyResult == 2)  {
-              result = (<span class="span_danger">已取消</span>);
-            } else if (row.applyResult == 3)  {
-              result = (<span class="span_info">已失败</span>);
+              result = <span class="span_success">拍摄完成</span>;
+            } else if (row.applyResult == 2) {
+              result = <span class="span_danger">已取消</span>;
+            } else if (row.applyResult == 3) {
+              result = <span class="span_info">已失败</span>;
             }
             return result;
           }
@@ -297,21 +299,23 @@ export default {
      */
     cancelApply(row) {
       console.log(row, "取消申请----------");
-      this.$confirm('是否取消申请?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
+      this.$confirm("是否取消申请?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
           this.$message({
-            type: 'success',
-            message: '取消成功!'
+            type: "success",
+            message: "取消成功!"
           });
           // this.$message.error('取消失败!');
-        }).catch(() => {
+        })
+        .catch(() => {
           this.$message({
-            type: 'info',
-            message: '取消操作'
-          });          
+            type: "info",
+            message: "取消操作"
+          });
         });
     },
     /**

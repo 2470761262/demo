@@ -243,30 +243,43 @@ export default {
      * @example: 下架58房源库
      */
     deleteUnitedHouse() {
-      this.$api
-        .post({
-          url: `/agent_house/deleteUniteHouse`,
-          data: {
-            houseId: this.houseId,
-            houseNo: this.houseData.HouseNo,
-            comId: this.houseData.Comid
-          },
-          headers: {
-            "Content-Type": "application/json;charset=UTF-8"
-          }
+      this.$confirm("是否下架58房源库?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$api
+            .post({
+              url: `/agent_house/deleteUniteHouse`,
+              data: {
+                houseId: this.houseId,
+                houseNo: this.houseData.HouseNo,
+                comId: this.houseData.Comid
+              },
+              headers: {
+                "Content-Type": "application/json;charset=UTF-8"
+              }
+            })
+            .then(e => {
+              if (e.data.code == 200) {
+                this.$parent.publishBtnType = 1;
+                this.$message({
+                  message: e.data.message,
+                  type: "success"
+                });
+              } else {
+                this.$message.error(e.data.message);
+              }
+            })
+            .catch(e => {});
         })
-        .then(e => {
-          if (e.data.code == 200) {
-            this.$parent.publishBtnType = 1;
-            this.$message({
-              message: e.data.message,
-              type: "success"
-            });
-          } else {
-            this.$message.error(e.data.message);
-          }
-        })
-        .catch(e => {});
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消操作"
+          });
+        });
     },
     handleCopy(data) {
       let oInput = document.createElement("input");
