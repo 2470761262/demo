@@ -560,9 +560,9 @@ export default {
         .post({
           url: `/agent_house/deleteUniteHouse`,
           data: {
-            houseId: row.houseId,
-            houseNo: row.HouseNo,
-            comId: row.Comid
+            houseId: row.id,
+            houseNo: row.houseNo,
+            comId: row.comId
           },
           headers: {
             "Content-Type": "application/json;charset=UTF-8"
