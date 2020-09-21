@@ -385,12 +385,6 @@ export default {
           formart: item => item.seenNumRecent || "0"
         },
         {
-          prop: "saleReson",
-          label: "出售原因",
-          order: false,
-          formart: item => item.saleReson || "暂无"
-        },
-        {
           prop: "addTime",
           label: "挂牌",
           order: true
@@ -403,7 +397,7 @@ export default {
             return (
               <div>
                 <div>{item.brokerName}</div>
-                <div>----</div>
+                <div>{item.deptName}</div>
               </div>
             );
           }
@@ -726,6 +720,13 @@ export default {
       });
       let param;
       switch (this.typeActiveIndex) {
+        case 1:
+          param = {
+            url: "/mateHouse/getMateHouse/wuBaHouseIndex",
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            data: restuleParms
+          };
+          break;
         case 3:
           param = {
             url: "/mateHouse/getMateHouse/tradeHouseIndex",
@@ -733,6 +734,7 @@ export default {
             data: restuleParms
           };
           break;
+
         default:
           param = {
             url: "/mateHouse/getMateHouse/soleAllHouseIndex",
