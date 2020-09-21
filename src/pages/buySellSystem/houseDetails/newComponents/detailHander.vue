@@ -139,11 +139,11 @@
         </div>
       </div>
       <div class="content-header-right">
-        <button @click="joinOtherResource" v-if="publishBtnType==1">
+        <button @click="joinOtherResource" v-if="publishBtnType == 1">
           <i class="logo58"></i>
           <span class="nowrap">加入我的58房源库</span>
         </button>
-        <button @click="deleteUnitedHouse" v-if="publishBtnType==2">
+        <button @click="deleteUnitedHouse" v-if="publishBtnType == 2">
           <i class="logo58"></i>
           <span class="nowrap">从我的58房源库下架</span>
         </button>
@@ -242,21 +242,29 @@ export default {
     /**
      * @example: 下架58房源库
      */
-    deleteUnitedHouse(){
-          this.$api
+    deleteUnitedHouse() {
+      this.$api
         .post({
           url: `/agent_house/deleteUniteHouse`,
           data: {
             houseId: this.houseId,
-            houseNo:this.houseData.HouseNo,
-            comId:this.houseData.Comid
+            houseNo: this.houseData.HouseNo,
+            comId: this.houseData.Comid
           },
           headers: {
             "Content-Type": "application/json;charset=UTF-8"
           }
         })
         .then(e => {
-         this.$message(e.data.message);
+          if (e.data.code == 200) {
+            this.$parent.publishBtnType = 1;
+            this.$message({
+              message: e.data.message,
+              type: "success"
+            });
+          } else {
+            this.$message.error(e.data.message);
+          }
         })
         .catch(e => {});
     },

@@ -322,11 +322,14 @@ export default {
     getPublishBtnType() {
       // this.$api
       //   .get({
-      //     url: "/agent_house/detailsFunction"
+      //     url: `/agent_house/isReleaseWuBa/${this.houseId}`,
+      //     headers: {
+      //       "Content-Type": "application/json;charset=UTF-8"
+      //     }
       //   })
       //   .then(e => {
       //     if (e.data.code == 200) {
-      //       let data = e.data;
+      //       this.publishBtnType = e.data.data ? 2 : 1;
       //     }
       //   });
       this.publishBtnType = 1;
