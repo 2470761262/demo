@@ -73,6 +73,7 @@
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
+          cursor: pointer;
           img {
             // prettier-ignore
             width: 60PX;
@@ -191,8 +192,8 @@
           ></el-image>
           <div
             class="vr-icon"
-            v-if="item.url"
-            @click="navigetoVrVideo(item.url)"
+            v-if="item.vrUrl"
+            @click="navigetoVrVideo(item.vrUrl)"
           >
             <img src="@/assets/images/houseList_vr.svg" alt="" />
           </div>
@@ -573,11 +574,10 @@ export default {
   },
   methods: {
     /**
-     * @example: 下架房源
+     * @example: 查看vr
      */
     navigetoVrVideo(url) {
-      console.log(url, "查看视频----------");
-      // window.open("https://www.baidu.com", "_blank");
+      window.open(url, "_blank");
     },
     /**
      * @example: 下架房源
