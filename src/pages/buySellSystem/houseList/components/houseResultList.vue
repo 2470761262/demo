@@ -1637,15 +1637,6 @@
         />
         <span>独家</span>
       </label>
-      <label class="filter-radio-item anchor-point" data-anchor="首页选项 实勘">
-        <input
-          type="checkbox"
-          true-value="1"
-          false-value=""
-          v-model="form.isReal"
-        />
-        <span>实勘</span>
-      </label>
       <label
         class="filter-radio-item anchor-point"
         data-anchor="首页选项 VR房源"
@@ -1654,9 +1645,18 @@
           type="checkbox"
           true-value="1"
           false-value=""
-          v-model="form.isElevator"
+          v-model="form.isReal"
         />
         <span>VR房源</span>
+      </label>
+      <label class="filter-radio-item anchor-point" data-anchor="首页选项 电梯">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isElevator"
+        />
+        <span>电梯</span>
       </label>
     </div>
   </div>

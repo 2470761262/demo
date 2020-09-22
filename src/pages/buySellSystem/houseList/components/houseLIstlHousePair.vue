@@ -51,6 +51,7 @@
         z-index: 10;
       }
       .tab-image-content {
+        position: relative;
         padding-left: 5px;
         height: 128px;
         display: flex;
@@ -63,6 +64,19 @@
           width: 130px;
           height: 90px;
           border-radius: 4px;
+        }
+        .vr-icon {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          img {
+            // prettier-ignore
+            width: 60PX;
+          }
         }
       }
     }
@@ -175,6 +189,13 @@
             @error="houseImageErorHandle(item)"
             scroll-container=".scroll-tab"
           ></el-image>
+          <div
+            class="vr-icon"
+            v-if="item.url"
+            @click="navigetoVrVideo(item.url)"
+          >
+            <img src="@/assets/images/houseList_vr.svg" alt="" />
+          </div>
         </div>
       </div>
       <el-table
@@ -551,6 +572,13 @@ export default {
     bus.$off("modifyTableColumn");
   },
   methods: {
+    /**
+     * @example: 下架房源
+     */
+    navigetoVrVideo(url) {
+      console.log(url, "查看视频----------");
+      // window.open("https://www.baidu.com", "_blank");
+    },
     /**
      * @example: 下架房源
      */
