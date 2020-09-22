@@ -428,6 +428,7 @@ export default {
             this.commitHouseData({
               isLocking: isLocking
             });
+            this.$router.go(0);
           }
         })
         .catch(e => {})
