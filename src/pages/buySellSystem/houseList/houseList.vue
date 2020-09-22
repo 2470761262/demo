@@ -97,7 +97,8 @@ export default {
         isElevator: "", //是否电梯
         isTopFloor: "", //是否是顶层
         isBet: "", //对赌
-        isClearPage: 0 // 重置页码开关
+        isClearPage: 0, // 重置页码开关
+        isVr: "" //是否vr
       }
     };
   },

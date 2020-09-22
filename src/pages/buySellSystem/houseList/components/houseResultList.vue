@@ -1645,7 +1645,7 @@
           type="checkbox"
           true-value="1"
           false-value=""
-          v-model="form.isReal"
+          v-model="form.isVr"
         />
         <span>VR房源</span>
       </label>
