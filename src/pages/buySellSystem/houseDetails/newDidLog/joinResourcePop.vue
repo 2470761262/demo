@@ -17,7 +17,7 @@
         <div class="column">
           <div class="head">
             <span class="title">房源标题</span>
-            <span class="btn">换一个</span>
+            <span class="btn" @click="changeText('houseTitle')">换一个</span>
           </div>
           <el-input
             v-model="selfPublishInfo.houseTitle"
@@ -30,7 +30,7 @@
         <div class="column">
           <div class="head">
             <span class="title">房源详情</span>
-            <span class="btn">换一个</span>
+            <span class="btn" @click="changeText('houseDetail')">换一个</span>
           </div>
           <el-input
             type="textarea"
@@ -44,7 +44,9 @@
         <div class="column">
           <div class="head">
             <span class="title">业主心态</span>
-            <span class="btn">换一个</span>
+            <span class="btn" @click="changeText('ownerMentality')"
+              >换一个</span
+            >
           </div>
           <el-input
             type="textarea"
@@ -58,7 +60,9 @@
         <div class="column">
           <div class="head">
             <span class="title">服务介绍</span>
-            <span class="btn">换一个</span>
+            <span class="btn" @click="changeText('serveIntroduction')"
+              >换一个</span
+            >
           </div>
           <el-input
             type="textarea"
@@ -116,12 +120,61 @@ export default {
       }
     }
   },
+  mounted() {
+    this.getDefaultDetail();
+  },
   methods: {
+    getDefaultDetail() {
+      this.$api
+        .post({
+          url: "",
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            //
+            var a = "分离焦compdany虑快结束了发独守title空房撒旦法阿detail萨德";
+            a = a
+              .replace("company", "111")
+              .replace("title", "222")
+              .replace("detail", "333");
+            console.log(a, "----------");
+          } else {
+            this.$message.error(e.data.message);
+          }
+        })
+        .catch(e => {});
+    },
     close() {
       this.$emit("update:dialogVisible", false);
     },
     cancel() {
       this.$emit("update:dialogVisible", false);
+    },
+    changeText(type) {
+      switch (type) {
+        case "houseTitle":
+          break;
+        case "houseDetail":
+          break;
+        case "ownerMentality":
+          break;
+        case "serveIntroduction":
+          break;
+      }
+      this.$api
+        .post({
+          url: "",
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            //this.houseTitle = data;
+          } else {
+            this.$message.error(e.data.message);
+          }
+        })
+        .catch(e => {});
     },
     confirm() {
       if (this.selfPublishInfo.houseTitle.length < 10) {

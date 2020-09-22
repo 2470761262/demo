@@ -134,7 +134,7 @@
           :data-anchor="'VR拍摄列表搜索 申请人:' + cusName"
           placeholder="请输入申请人姓名"
           oninput="value = value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g, '')"
-          @blur="handleInputBlur('cusName', 'customerName')"
+          @blur="handleInputBlur('cusName', 'applyPer')"
         ></el-input>
       </div>
     </div>
@@ -144,7 +144,7 @@
       <div class="search-item-body">
         <el-select
           class="anchor-point"
-          popper-class="anchor-point"
+          popper-class="options-myhouse-custom-item anchor-point"
           data-anchor="VR拍摄所属门店 => select"
           @click.native="log_socket.sendUserActionData"
           v-model="form.storeId"
@@ -157,14 +157,34 @@
         >
           <el-option
             class="anchor-point"
-            :data-anchor="
-              'VR拍摄所属门店 => select => option:' + item.depName
-            "
+            :data-anchor="'VR拍摄所属门店 => select => option:' + item.depName"
             @click.native="log_socket.sendUserActionData"
             v-for="item in department.list"
             :key="item.depId"
             :label="item.depName"
             :value="item.depId"
+          ></el-option>
+        </el-select>
+      </div>
+    </div>
+    <!-- 状态 -->
+    <div class="search-item">
+      <div class="search-item-title ">状态</div>
+      <div class="search-item-body">
+        <el-select
+          clearable
+          data-anchor="VR拍摄状态 => select"
+          @click.native="log_socket.sendUserActionData"
+          v-model="form.taskState"
+          popper-class="options-myhouse-custom-item anchor-point"
+        >
+          <el-option
+            class="anchor-point"
+            :data-anchor="'VR拍摄状态 => select => option:' + item.title"
+            v-for="item in statusList"
+            :key="item.title"
+            :label="item.title"
+            :value="item.value"
           ></el-option>
         </el-select>
       </div>
@@ -177,7 +197,7 @@
           clearable
           data-anchor="VR拍摄申请结果 => select"
           @click.native="log_socket.sendUserActionData"
-          v-model="form.checkStatus"
+          v-model="form.status"
           popper-class="options-myhouse-custom-item anchor-point"
         >
           <el-option
@@ -216,12 +236,15 @@
             class="anchor-pointn"
             data-anchor="VR拍摄列表重置"
             @click="resetLoad"
-          >重置</span>
+            >重置</span
+          >
           <button
             class="anchor-pointn"
             data-anchor="VR拍摄列表搜索"
             @click="validateFrom"
-          >搜索</button>
+          >
+            搜索
+          </button>
         </div>
       </div>
     </div>
@@ -232,13 +255,26 @@
 //楼盘 楼栋 房间号 级联 mixins
 import cascadeHouse from "@/minxi/cascadeHouse";
 
-// 验真状态
+// 状态
+const STATUSLIST = [
+  { title: "全部", value: "" },
+  { title: "等待拍摄", value: 9000 },
+  { title: "等待上传数据包", value: 10000 },
+  { title: "房源已上传", value: 20000 },
+  { title: "已经分配人员制作", value: 30000 },
+  { title: "处理中", value: 40000 },
+  { title: "客户审核中", value: 45000 },
+  { title: "已完成", value: 50000 },
+  { title: "已取消", value: 51000 },
+  { title: "制作失败", value: 52000 }
+];
+// 申请结果
 const SEARCHTABLIST = [
   { title: "全部", value: "" },
-  { title: "待验真", value: "1" }, //checkSubStatus:0
-  { title: "验真成功", value: "2" },
-  { title: "验真失败", value: "3" }
-  // { title: "已过期", value: "4" } //checkSubStatus:1
+  { title: "拍摄中", value: 0 },
+  { title: "拍摄完成", value: 1 },
+  { title: "已取消", value: 2 },
+  { title: "以失败", value: 3 }
 ];
 
 export default {
@@ -246,6 +282,7 @@ export default {
   mixins: [cascadeHouse],
   data() {
     return {
+      statusList: STATUSLIST,
       searchTabList: SEARCHTABLIST,
       checkStatusValue: this.form.checkStatusValue, //验真状态
       cusName: "", //业主姓名
@@ -288,7 +325,7 @@ export default {
       this.department.loading = true;
       this.$api
         .post({
-          url: "/myHouse/myVerifyList",
+          url: "/informator/verify/spotCheckRecordList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             selectType: "MORE_SELECT_SHOP"
@@ -333,8 +370,7 @@ export default {
       this.$message.error(message);
     },
     validateFrom() {
-      this.form.customerName = this.cusName;
-      this.form.random = new Date().getTime();
+      this.form.applyPer = this.cusName;
     }
   }
 };

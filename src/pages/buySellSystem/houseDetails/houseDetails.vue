@@ -175,8 +175,7 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            this.publishInfo.houseTitle = result.data.Title;
-            console.log(result, "----------------");
+            // this.publishInfo.houseTitle = result.data.Title;
             if (result.data.plate == 0) {
               this.getPublishBtnType();
             }
@@ -190,18 +189,24 @@ export default {
                 switch (Arry2[0]) {
                   case "小区介绍":
                     result.data.communityPresentation = Arry2[1];
-                    this.publishInfo.houseDetail = Arry2[1];
+                    this.publishInfo.houseDetail = this.publishInfo.houseDetail.concat(
+                      Arry2[1]
+                    );
                     break;
                   case "户型介绍":
                     result.data.houseTypePresentation = Arry2[1];
-                    this.publishInfo.ownerMentality = Arry2[1];
+                    this.publishInfo.houseDetail = this.publishInfo.houseDetail.concat(
+                      Arry2[1]
+                    );
                     break;
                   case "税费解析":
                     result.data.taxParsing = Arry2[1];
                     break;
                   case "核心卖点":
                     result.data.coreSellingPoint = Arry2[1];
-                    this.publishInfo.serveIntroduction = Arry2[1];
+                    this.publishInfo.houseDetail = this.publishInfo.houseDetail.concat(
+                      Arry2[1]
+                    );
                     break;
                 }
                 if (result.data.applyAgentVo != null) {

@@ -40,19 +40,17 @@ export default {
     return {
       //scrollTop: 0,
       form: {
-        random: "",
+        comId: "",
         bhId: "",
         cbId: "",
-        checkStatus: "", // 验真状态
-        mode: "", // 验真方式
         storeId: "", // 所属门店
-        comId: "",
-        customerName: "",
-        limit: 10,
+        applyPer: "", // 申请人
+        taskState: "", // 状态
+        status: "", // 申请结果
+        limit: 30,
         page: 1,
         sortColumn: "addTime",
         sortType: 1,
-        tel: "",
         time: []
         //beginTime: "",
         // endTime: ""

@@ -144,6 +144,7 @@
           :prop="item.prop"
           :label="item.label"
           :width="item.width"
+          :min-width="item.minWith"
           :sort-method="sortDevName"
           :sortable="item.order"
           :formatter="item.formart"
@@ -183,28 +184,38 @@ export default {
         {
           prop: "communityName",
           label: "楼盘名称",
+          minWith: 166,
           formart: item => {
             return (
               <div class="tab-com-item">
                 <div class="tab-house-title">{item.houseNo}</div>
                 <div class="tab-houseno">
-                  {item.communityName}-{item.buildingName}-{item.roomNo}
+                  {item.commName}-{item.buildName}-{item.roomNo}
                 </div>
               </div>
             );
           }
         },
         {
-          prop: "",
-          label: "售价"
+          prop: "price",
+          label: "售价",
+          formart: item => {
+            return <span>{item.price}万元</span>;
+          }
         },
         {
           prop: "",
-          label: "面积"
+          label: "面积",
+          formart: item => {
+            return <span>{item.area || 0}㎡</span>;
+          }
         },
         {
           prop: "",
-          label: "户型"
+          label: "户型",
+          formart: item => {
+            return <span>{item.roomType}</span>;
+          }
         },
         {
           prop: "addPerName",
@@ -212,21 +223,27 @@ export default {
         },
         {
           prop: "addTime",
-          label: "申请时间"
+          label: "申请时间",
+          minWith: 160
         },
         {
           prop: "",
           label: "申请结果",
           formart: row => {
             let result;
-            if (row.addTime) {
-              result = <span class="span_warning">拍摄中</span>;
-            } else if (row.applyResult == 1) {
-              result = <span class="span_success">拍摄完成</span>;
-            } else if (row.applyResult == 2) {
-              result = <span class="span_danger">已取消</span>;
-            } else if (row.applyResult == 3) {
-              result = <span class="span_info">已失败</span>;
+            switch (row.taskStateStr) {
+              case "拍摄中":
+                result = <span class="span_warning">拍摄中</span>;
+                break;
+              case "拍摄完成":
+                result = <span class="span_success">拍摄完成</span>;
+                break;
+              case "已取消":
+                result = <span class="span_danger">已取消</span>;
+                break;
+              case "已失败":
+                result = <span class="span_info">已失败</span>;
+                break;
             }
             return result;
           }
@@ -234,7 +251,7 @@ export default {
         {
           label: "操作",
           formart: row => this.operation(row),
-          width: "272"
+          width: 180
           //  fixed: "right"
         }
       ],
@@ -280,6 +297,13 @@ export default {
       ];
       return array
         .map(item => {
+          console.log(item, "--------------");
+          if (row.taskState != 9000 && item.name == "取消申请") {
+            item.disabled = true;
+          }
+          if (row.taskState != 20000 && item.name == "查看视频") {
+            item.disabled = true;
+          }
           return item;
         })
         .map(btnDataItem => {
@@ -305,11 +329,29 @@ export default {
         type: "warning"
       })
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "取消成功!"
-          });
-          // this.$message.error('取消失败!');
+          this.$api
+            .get({
+              url: "/agentHouse/property/realowner/cancel/apply",
+              data: {
+                id: row.id
+              },
+              headers: { "Content-Type": "application/json;charset=UTF-8" }
+            })
+            .then(e => {
+              if (e.data.code == 200) {
+                this.$message({
+                  type: "success",
+                  message: "取消成功!"
+                });
+                this.getHouseData().then(() => {
+                  dom.querySelector(".scroll-tab").scrollTop = 0;
+                  //  this.$parent.ListeningScroll();
+                });
+              } else {
+                this.$message.error(e.data.message);
+              }
+            })
+            .catch(e => {});
         })
         .catch(() => {
           this.$message({
@@ -323,7 +365,7 @@ export default {
      */
     showVideo(row) {
       console.log(row, "查看视频----------");
-      // window.open("https://www.baidu.com", "_blank");
+      window.open(row.vrUrl, "_blank");
     },
     //解决索引只排序当前页的问题,增加函数自定义索引序号
     sortDevName(str1, str2) {
@@ -385,12 +427,12 @@ export default {
      * @example: 双击前往详情
      */
     navDetailt(item) {
-      if (item.checkStatus && parseInt(item.checkStatus) == 2) {
-        util.openPage.call(this, {
-          name: "houseDetails",
-          params: { houseId: item.houseId }
-        });
-      }
+      // if (item.checkStatus && parseInt(item.checkStatus) == 2) {
+      //   util.openPage.call(this, {
+      //     name: "houseDetails",
+      //     params: { houseId: item.houseId }
+      //   });
+      // }
     },
     /**
      * @example: 远程排序
@@ -444,32 +486,22 @@ export default {
         limit: this.pageJson.pageSize
       });
       if (params.time && params.time.length == 2) {
-        params.beginTime = params.time[0];
+        params.startTime = params.time[0];
         params.endTime = params.time[1];
       }
-      delete params.random;
       delete params.time;
       return this.$api
         .post({
-          url: "/myHouse/myVerifyList",
+          url: "/myHouse/vr/apply",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: params
         })
         .then(e => {
           let data = e.data;
           if (data.code == 200) {
-            this.renderList = data.data.houseList.list;
-            this.pageJson.total = data.data.houseList.totalPage;
-            this.pageJson.dataCount = data.data.houseList.totalCount;
-
-            let btnList = data.data.btnList;
-            if (btnList && btnList.length > 0) {
-              btnList.forEach(btn => {
-                if (btn.rName == "邀请验真") {
-                  this.showValidityBtn = true;
-                }
-              });
-            }
+            this.renderList = data.data.list;
+            this.pageJson.total = data.data.totalPage;
+            this.pageJson.dataCount = data.data.totalCount;
           }
         })
         .finally(() => {
