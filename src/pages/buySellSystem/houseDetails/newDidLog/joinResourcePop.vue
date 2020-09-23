@@ -6,8 +6,8 @@
       :visible.sync="visible"
       @close="close"
       :show="dialogVisible"
-      width="430px"
-      height="530px"
+      width="500px"
+      :closeOnClickModal="false"
     >
       <div class="investigator-container">
         <div class="tip">
@@ -36,7 +36,8 @@
             type="textarea"
             v-model="selfPublishInfo.houseDetail"
             placeholder="请输入房源详情"
-            resize="none"
+            resize="vertical"
+            autosize
             maxlength="300"
             show-word-limit
           ></el-input>
@@ -52,7 +53,8 @@
             type="textarea"
             v-model="selfPublishInfo.ownerMentality"
             placeholder="请输入业主心态"
-            resize="none"
+            resize="vertical"
+            autosize
             maxlength="300"
             show-word-limit
           ></el-input>
@@ -68,7 +70,8 @@
             type="textarea"
             v-model="selfPublishInfo.serveIntroduction"
             placeholder="请输入服务介绍"
-            resize="none"
+            resize="vertical"
+            autosize
             maxlength="300"
             show-word-limit
           ></el-input>
@@ -274,6 +277,9 @@ export default {
   }
   .el-dialog__body {
     // prettier-ignore
+    // max-height: 600PX;
+    // overflow: auto;
+    // prettier-ignore
     padding: 0 30PX 30PX;
   }
 }
@@ -325,11 +331,14 @@ export default {
         line-height: 1;
         font-size: @font12;
         color: #fff;
+        cursor: pointer;
       }
     }
     textarea {
       // prettier-ignore
-      height: 65PX;
+      min-height: 65PX !important;
+      // prettier-ignore
+      max-height: 120PX;
     }
   }
   .btn-box {
