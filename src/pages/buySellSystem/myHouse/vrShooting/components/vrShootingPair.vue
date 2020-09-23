@@ -325,7 +325,7 @@ export default {
       this.department.loading = true;
       this.$api
         .post({
-          url: "/informator/verify/spotCheckRecordList",
+          url: "/myHouse/vrApplyStoreList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             selectType: "MORE_SELECT_SHOP"
