@@ -170,7 +170,6 @@
 <script>
 const dom = document;
 import util from "@/util/util";
-import { division } from "../../../../../util/accurateComputeUtil";
 export default {
   inject: ["form"],
   components: {},
@@ -219,30 +218,40 @@ export default {
         },
         {
           prop: "addPerName",
-          label: "申请人"
+          label: "申请人",
+          formart: item => {
+            return (
+              <div class="tab-com-item">
+                <div class="tab-house-title">{item.addPerName}</div>
+                <div class="tab-houseno">{item.addPerStore}</div>
+              </div>
+            );
+          }
         },
         {
           prop: "addTime",
           label: "申请时间",
-          minWith: 160
+          minWith: 160,
+          order: true
         },
         {
           prop: "",
           label: "申请结果",
+          order: true,
           formart: row => {
             let result;
-            switch (row.taskStateStr) {
-              case "拍摄中":
-                result = <span class="span_warning">拍摄中</span>;
+            switch (row.status) {
+              case 0:
+                result = <span class="span_warning">{row.statusStr}</span>;
                 break;
-              case "拍摄完成":
-                result = <span class="span_success">拍摄完成</span>;
+              case 1:
+                result = <span class="span_success">{row.statusStr}</span>;
                 break;
-              case "已取消":
-                result = <span class="span_danger">已取消</span>;
+              case 2:
+                result = <span class="span_danger">{row.statusStr}</span>;
                 break;
-              case "已失败":
-                result = <span class="span_info">已失败</span>;
+              case 3:
+                result = <span class="span_info">{row.statusStr}</span>;
                 break;
             }
             return result;
@@ -297,7 +306,6 @@ export default {
       ];
       return array
         .map(item => {
-          console.log(item, "--------------");
           if (row.taskState != 9000 && item.name == "取消申请") {
             item.disabled = true;
           }
@@ -322,7 +330,6 @@ export default {
      *  取消申请
      */
     cancelApply(row) {
-      console.log(row, "取消申请----------");
       this.$confirm("是否取消申请?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -364,7 +371,6 @@ export default {
      *  查看视频
      */
     showVideo(row) {
-      console.log(row, "查看视频----------");
       window.open(row.vrUrl, "_blank");
     },
     //解决索引只排序当前页的问题,增加函数自定义索引序号

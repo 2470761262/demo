@@ -97,7 +97,11 @@ export default {
           houseTitle: "",
           houseDetail: "",
           ownerMentality: "",
-          serveIntroduction: ""
+          serveIntroduction: "",
+          communityName: "",
+          middleSchool: "",
+          price: "",
+          averagePrice: ""
         };
       }
     }
@@ -106,7 +110,11 @@ export default {
     return {
       visible: this.dialogVisible,
       joinLoading: false,
-      selfPublishInfo: this.publishInfo
+      selfPublishInfo: this.publishInfo,
+      houseTitleId: null,
+      houseDetailId: null,
+      ownerMentalityId: null,
+      serveIntroductionId: null
     };
   },
   watch: {
@@ -126,19 +134,19 @@ export default {
   methods: {
     getDefaultDetail() {
       this.$api
-        .post({
-          url: "",
+        .get({
+          url: "/releaseWuBaTemplate/list",
           headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
-          if (e.data.code == 200) {
-            //
-            var a = "分离焦compdany虑快结束了发独守title空房撒旦法阿detail萨德";
-            a = a
-              .replace("company", "111")
-              .replace("title", "222")
-              .replace("detail", "333");
-            console.log(a, "----------");
+          let data = e.data;
+          if (data.code == 200) {
+            this.selfPublishInfo.houseTitle = data.data[0].details;
+            this.selfPublishInfo.ownerMentality = data.data[1].details;
+            this.selfPublishInfo.serveIntroduction = data.data[2].details;
+            this.houseTitleId = data.data[0].id;
+            this.ownerMentalityId = data.data[1].id;
+            this.serveIntroductionId = data.data[2].id;
           } else {
             this.$message.error(e.data.message);
           }
@@ -151,25 +159,42 @@ export default {
     cancel() {
       this.$emit("update:dialogVisible", false);
     },
-    changeText(type) {
-      switch (type) {
+    changeText(title) {
+      let type;
+      let field = title + "Id";
+      let id = this[field];
+      switch (title) {
         case "houseTitle":
+          type = 0;
           break;
         case "houseDetail":
+          type = 1;
           break;
         case "ownerMentality":
+          type = 2;
           break;
         case "serveIntroduction":
+          type = 3;
           break;
       }
       this.$api
         .post({
-          url: "",
+          url: "/releaseWuBaTemplate/random",
+          data: {
+            id: id || 0,
+            type: type
+          },
           headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           if (e.data.code == 200) {
-            //this.houseTitle = data;
+            let content = e.data.data.details
+              .replace("communityName", this.selfPublishInfo.communityName)
+              .replace("middleSchool", this.selfPublishInfo.middleSchool)
+              .replace("price", this.selfPublishInfo.price)
+              .replace("averagePrice", this.selfPublishInfo.averagePrice);
+            this.selfPublishInfo[title] = content;
+            this[field] = e.data.data.id;
           } else {
             this.$message.error(e.data.message);
           }

@@ -121,23 +121,6 @@
         </el-select>
       </div>
     </div>
-
-    <!-- 申请人 -->
-    <div class="search-item">
-      <div class="search-item-title ">申请人</div>
-      <div class="search-item-body">
-        <el-input
-          clearable
-          v-model="cusName"
-          maxlength="5"
-          class="input-text anchor-point"
-          :data-anchor="'VR拍摄列表搜索 申请人:' + cusName"
-          placeholder="请输入申请人姓名"
-          oninput="value = value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g, '')"
-          @blur="handleInputBlur('cusName', 'applyPer')"
-        ></el-input>
-      </div>
-    </div>
     <!-- 所属门店 -->
     <div class="search-item">
       <div class="search-item-title ">所属门店</div>
@@ -152,6 +135,7 @@
           clearable
           filterable
           @focus="departmentFocus"
+          @change="departmentChange"
           :loading="department.loading"
           value-key="value"
         >
@@ -163,6 +147,38 @@
             :key="item.depId"
             :label="item.depName"
             :value="item.depId"
+          ></el-option>
+        </el-select>
+      </div>
+    </div>
+
+    <!-- 申请人 -->
+    <div class="search-item">
+      <div class="search-item-title ">申请人</div>
+      <div class="search-item-body">
+        <el-select
+          class="width100 anchor-point"
+          popper-class="options-myhouse-custom-item anchor-point"
+          data-anchor="VR拍摄列表 申请人 => select"
+          @click.native="log_socket.sendUserActionData"
+          v-model="agent.value"
+          placeholder="请输入申请人姓名"
+          clearable
+          filterable
+          @change="agentChange"
+          :loading="agent.loading"
+          value-key="value"
+        >
+          <el-option
+            class="anchor-point"
+            :data-anchor="
+              'VR拍摄列表 申请人 => select => option:' + item.perName
+            "
+            @click.native="log_socket.sendUserActionData"
+            v-for="item in agent.list"
+            :key="item.accountId"
+            :label="item.perName"
+            :value="item.accountId"
           ></el-option>
         </el-select>
       </div>
@@ -222,6 +238,7 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           :default-time="['00:00:00', '23:59:59']"
+          value-format="yyyy-MM-dd HH:mm:ss"
           class="anchor-point"
           :data-anchor="'VR拍摄 申请时间:' + form.time"
         >
@@ -282,14 +299,20 @@ export default {
   mixins: [cascadeHouse],
   data() {
     return {
+      getBuildDataUrl: "/community/information/verify",
+      getTowerDataUrl: "/mateHouse/queryComBuilding",
+      getRoomsDataUrl: "/mateHouse/queryBuildIngHouses",
       statusList: STATUSLIST,
       searchTabList: SEARCHTABLIST,
-      checkStatusValue: this.form.checkStatusValue, //验真状态
-      cusName: "", //业主姓名
       department: {
         loading: false,
         list: []
-      } // 所属门店
+      }, // 所属门店
+      agent: {
+        loading: false,
+        list: [],
+        value: ""
+      }, // 申请人
     };
   },
   methods: {
@@ -349,12 +372,45 @@ export default {
       }
     },
     /**
-     * @example: 失去焦点
-     * @param {string} formField 失去交单的属性名称
-     * @param {string} toFileld  需要赋值给form的属性名称
+     * @example: 所属门店选择事件
      */
-    handleInputBlur(formField, toFileld) {
-      this.form[toFileld] = this[formField];
+    departmentChange(value) {
+      this.agent.list = [];
+      this.agent.value = "";
+      this.form.applyPer = "";
+      if (value != "") {
+        this.getAgentList();
+      }
+    },
+    /**
+     * @example: 获取跟单人列表数据
+     */
+    getAgentList() {
+      this.agent.loading = true;
+      this.$api
+        .post({
+          url: "/spotCheck/spotCheckRecordList",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            selectType: "MORE_SELECT_PER",
+            selectDepartment: this.form.storeId
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.agent.list = e.data.data;
+          }
+        })
+        .finally(() => {
+          this.agent.loading = false;
+        });
+    },
+    /**
+     * @example: 申请人选择事件
+     */
+    agentChange(value) {
+      this.agent.value = value;
+      this.form.applyPer = value;
     },
     resetLoad() {
       Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
@@ -370,7 +426,7 @@ export default {
       this.$message.error(message);
     },
     validateFrom() {
-      this.form.applyPer = this.cusName;
+      this.form.applyPer = this.agent.value;
     }
   }
 };
