@@ -299,7 +299,7 @@ export default {
   mixins: [cascadeHouse],
   data() {
     return {
-      getBuildDataUrl: "/community/information/verify",
+      getBuildDataUrl: "/community/vr/apply",
       getTowerDataUrl: "/mateHouse/queryComBuilding",
       getRoomsDataUrl: "/mateHouse/queryBuildIngHouses",
       statusList: STATUSLIST,
@@ -312,7 +312,7 @@ export default {
         loading: false,
         list: [],
         value: ""
-      }, // 申请人
+      } // 申请人
     };
   },
   methods: {
