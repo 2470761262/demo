@@ -299,9 +299,9 @@ export default {
   mixins: [cascadeHouse],
   data() {
     return {
-      getBuildDataUrl: "/community/information/verify", // 楼盘请求地址
-      getTowerDataUrl: "/mateHouse/queryComBuilding", // 楼栋请求地址
-      getRoomsDataUrl: "/mateHouse/queryBuildIngHouses", // 房间号请求地址
+      getBuildDataUrl: "/community/vr/apply",
+      getTowerDataUrl: "/mateHouse/queryComBuilding",
+      getRoomsDataUrl: "/mateHouse/queryBuildIngHouses",
       statusList: STATUSLIST,
       searchTabList: SEARCHTABLIST,
       department: {
@@ -312,7 +312,7 @@ export default {
         loading: false,
         list: [],
         value: ""
-      }, // 申请人
+      } // 申请人
     };
   },
   methods: {
@@ -348,7 +348,7 @@ export default {
       this.department.loading = true;
       this.$api
         .post({
-          url: "/informator/verify/spotCheckRecordList",
+          url: "/myHouse/vrApplyStoreList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             selectType: "MORE_SELECT_SHOP"
