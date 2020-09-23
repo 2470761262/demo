@@ -291,7 +291,7 @@ const SEARCHTABLIST = [
   { title: "拍摄中", value: 0 },
   { title: "拍摄完成", value: 1 },
   { title: "已取消", value: 2 },
-  { title: "以失败", value: 3 }
+  { title: "已失败", value: 3 }
 ];
 
 export default {
@@ -299,9 +299,9 @@ export default {
   mixins: [cascadeHouse],
   data() {
     return {
-      getBuildDataUrl: "/community/information/verify",
-      getTowerDataUrl: "/mateHouse/queryComBuilding",
-      getRoomsDataUrl: "/mateHouse/queryBuildIngHouses",
+      getBuildDataUrl: "/community/information/verify", // 楼盘请求地址
+      getTowerDataUrl: "/mateHouse/queryComBuilding", // 楼栋请求地址
+      getRoomsDataUrl: "/mateHouse/queryBuildIngHouses", // 房间号请求地址
       statusList: STATUSLIST,
       searchTabList: SEARCHTABLIST,
       department: {
