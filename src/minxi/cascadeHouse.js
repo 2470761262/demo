@@ -1,6 +1,9 @@
 export default {
   data() {
     return {
+      getBuildDataUrl: "/community/houseList",
+      getTowerDataUrl: "/mateHouse/queryComBuilding",
+      getRoomsDataUrl: "/mateHouse/queryBuildIngHousesBySale",
       roomOptData: {}, //房间号选中数据
       roomForList: [], //房间号select数据
       roomLoading: false, //房间号select loading
@@ -50,7 +53,7 @@ export default {
       this.buildLoading = true;
       this.$api
         .get({
-          url: "/community/houseList",
+          url: this.getBuildDataUrl,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             communityName: query
@@ -71,7 +74,7 @@ export default {
       this.towerLoading = true;
       this.$api
         .get({
-          url: "/mateHouse/queryComBuilding",
+          url: this.getTowerDataUrl,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             comId: this.form.comId,
@@ -113,7 +116,7 @@ export default {
     queryRoomData(e) {
       this.$api
         .get({
-          url: "/mateHouse/queryBuildIngHousesBySale",
+          url: this.getRoomsDataUrl,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             comId: this.form.comId,

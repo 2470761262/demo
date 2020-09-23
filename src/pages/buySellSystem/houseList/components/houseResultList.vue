@@ -822,7 +822,7 @@
       <div class="tab-content">
         <div class="tab-content-nav">
           <el-badge
-            :value="item.value === 2 ? '新' : ''"
+            :value="item.value === 3 ? '新' : ''"
             v-for="(item, index) in typeList"
             :key="index"
           >
@@ -1615,7 +1615,10 @@
         ></span>
       </div>
     </div>
-    <div class="tab-filter-radio" v-show="typeActiveIndex !== 2">
+    <div
+      class="tab-filter-radio"
+      v-show="typeActiveIndex !== 3 && typeActiveIndex !== 1"
+    >
       <label class="filter-radio-item anchor-point" data-anchor="首页选项 钥匙">
         <input
           type="checkbox"
@@ -1634,14 +1637,17 @@
         />
         <span>独家</span>
       </label>
-      <label class="filter-radio-item anchor-point" data-anchor="首页选项 实勘">
+      <label
+        class="filter-radio-item anchor-point"
+        data-anchor="首页选项 VR房源"
+      >
         <input
           type="checkbox"
           true-value="1"
           false-value=""
-          v-model="form.isReal"
+          v-model="form.isVr"
         />
-        <span>实勘</span>
+        <span>VR房源</span>
       </label>
       <label class="filter-radio-item anchor-point" data-anchor="首页选项 电梯">
         <input
@@ -1665,20 +1671,24 @@ const TYPELIST = [
     value: 0
   },
   {
-    label: "学区找房",
+    label: "我的58房源",
     value: 1
   },
   {
-    label: "成交房源",
+    label: "学区找房",
     value: 2
   },
   {
-    label: "成交对赌",
+    label: "成交房源",
     value: 3
   },
   {
-    label: "地图找房",
+    label: "成交对赌",
     value: 4
+  },
+  {
+    label: "地图找房",
+    value: 5
   }
 ];
 //楼层
@@ -1892,10 +1902,10 @@ export default {
     changeNavTypeIndex(index) {
       this.typeActiveIndex = index;
       bus.$emit("modifyTableColumn", index);
-      if (index == 1 || index == 4) {
+      if (index == 2 || index == 5) {
         this.navToPageBtn({ private: false });
         return;
-      } else if (index == 2) {
+      } else if (index == 3) {
         this.searchPanelChange = false;
       } else {
         this.searchPanelChange = true;
@@ -1905,10 +1915,10 @@ export default {
         this.typeActiveIndex = index;
       }
       switch (index) {
-        case 2:
+        case 3:
           this.form.sortColumn = "tradeTime";
           break;
-        case 3:
+        case 4:
           this.form.isBet = "1";
           break;
       }

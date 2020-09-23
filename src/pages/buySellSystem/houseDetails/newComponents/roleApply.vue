@@ -107,6 +107,10 @@
             height: 30PX;
             // prettier-ignore
             line-height: 30PX;
+            &.type-vr {
+              // prettier-ignore
+              width: 50PX;
+            }
           }
         }
       }
@@ -311,9 +315,9 @@
           <div class="role-type-top">实勘人</div>
           <div
             class="role-type-bottom"
-            @click="openPop('houseUploadflag', 4, 'houseUploadType', 5)"
+            @click="openPop('houseUploadflag', 12, 'houseUploadType', 0)"
           >
-            <div class="role-type-title">取代</div>
+            <div class="role-type-title type-vr">申请VR</div>
           </div>
         </div>
       </div>
@@ -335,7 +339,7 @@
         @applyAgent="applyAgent"
       ></applyAgentPop>
       <!-- 上传 -->
-      <fixedPopup
+      <!-- <fixedPopup
         :visible.sync="houseUploadflag"
         title
         v-if="houseUploadflag"
@@ -363,7 +367,7 @@
             }}</el-button>
           </div>
         </template>
-      </fixedPopup>
+      </fixedPopup> -->
       <!--钥匙人 -->
       <replacePop
         :replaceType="keyType"
@@ -383,6 +387,10 @@
         :visible.sync="entrustPopFlag"
       ></entrustPop>
     </div>
+    <investigator-apply-Pop
+      :dialogInvestigatorVisible.sync="dialogInvestigatorVisible"
+      :houseId="houseId"
+    ></investigator-apply-Pop>
   </div>
 </template>
 
@@ -396,13 +404,15 @@ export default {
   },
   components: {
     //取代
-    houseUploadExtends: () => import("../newDidLog/houseUploadExtends"),
+    // houseUploadExtends: () => import("../newDidLog/houseUploadExtends"),
     //取代
     replacePop: () => import("../newDidLog/replacePop"),
     //委托人
     entrustPop: () => import("../newDidLog/entrustPop"),
     //选填信息
-    applyAgentPop: () => import("../newDidLog/applyAgentPop")
+    applyAgentPop: () => import("../newDidLog/applyAgentPop"),
+    // 申请实勘人
+    investigatorApplyPop: () => import("../newDidLog/investigatorApplyPop")
   },
   data() {
     return {
@@ -418,7 +428,8 @@ export default {
       middleRadio: 0, //中学占用级
       primaryRadio: 0, //小学占用年级
       showFollow: true, //是否显示组件的跟进
-      audioList: [] //音频文件
+      audioList: [], //音频文件
+      dialogInvestigatorVisible: false
     };
   },
   computed: {
@@ -492,74 +503,74 @@ export default {
     /**
      * refs 获取上传组件实例并且验证非空
      */
-    submitUpload() {
-      let _that = this;
-      let verifyFieldMap = new Map([
-        ["outdoorImgList", "外景图"],
-        ["livingRoomImgList", "客厅"],
-        ["bedroomImgList", "卧室"],
-        ["kitchenImgList", "厨房"],
-        ["toiletImgList", "卫生间"],
-        ["layoutImgList", "户型图"],
-        ["houseVideo", "房源视频"]
-      ]);
-      if (this.$validator.fields.length == 0) {
-        verifyFieldMap.forEach((_value, _key) => {
-          this.$validator.attach({
-            name: _key,
-            alias: _value,
-            rules: "required",
-            getter: function() {
-              return _that.$refs.houseUpload[_key];
-            }
-          });
-        });
-      }
-      this.$validator.validateAll().then(e => {
-        if (!e) {
-          this.$message.warning(this.errorBags.all()[0]);
-        } else {
-          let url = `/agentHouse/propertyCheck/${
-            this.houseUploadType == 12 ? "insertApplyFor" : "insertReplace"
-          }`;
-          let resultIdList = [];
-          verifyFieldMap.forEach((_value, _key) => {
-            if (_that.$refs.houseUpload[_key] instanceof Array) {
-              _that.$refs.houseUpload[_key].forEach(item => {
-                resultIdList.push(item.id);
-              });
-            } else {
-              if (Object.keys(_that.$refs.houseUpload[_key]).length > 0) {
-                resultIdList.push(_that.$refs.houseUpload[_key].id);
-              }
-            }
-          });
-          console.log(resultIdList);
-          let params = {
-            Eid: this.houseId,
-            Type: this.houseUploadType,
-            picList: resultIdList,
-            followMemo: "提交了实勘申请"
-          };
-          if (this.houseUploadType == 4) {
-            params.ReplaceType = 5;
-          }
-          this.houseUploadLoading = true;
-          houseCheck
-            .insertCheck(url, params)
-            .then(e => {
-              if (e.data.code == 200) {
-                this.$message.success(e.data.message);
-              }
-            })
-            .catch(e => {})
-            .finally(() => {
-              this.houseUploadLoading = false;
-              this.houseUploadflag = false;
-            });
-        }
-      });
-    },
+    // submitUpload() {
+    //   let _that = this;
+    //   let verifyFieldMap = new Map([
+    //     ["outdoorImgList", "外景图"],
+    //     ["livingRoomImgList", "客厅"],
+    //     ["bedroomImgList", "卧室"],
+    //     ["kitchenImgList", "厨房"],
+    //     ["toiletImgList", "卫生间"],
+    //     ["layoutImgList", "户型图"],
+    //     ["houseVideo", "房源视频"]
+    //   ]);
+    //   if (this.$validator.fields.length == 0) {
+    //     verifyFieldMap.forEach((_value, _key) => {
+    //       this.$validator.attach({
+    //         name: _key,
+    //         alias: _value,
+    //         rules: "required",
+    //         getter: function() {
+    //           return _that.$refs.houseUpload[_key];
+    //         }
+    //       });
+    //     });
+    //   }
+    //   this.$validator.validateAll().then(e => {
+    //     if (!e) {
+    //       this.$message.warning(this.errorBags.all()[0]);
+    //     } else {
+    //       let url = `/agentHouse/propertyCheck/${
+    //         this.houseUploadType == 12 ? "insertApplyFor" : "insertReplace"
+    //       }`;
+    //       let resultIdList = [];
+    //       verifyFieldMap.forEach((_value, _key) => {
+    //         if (_that.$refs.houseUpload[_key] instanceof Array) {
+    //           _that.$refs.houseUpload[_key].forEach(item => {
+    //             resultIdList.push(item.id);
+    //           });
+    //         } else {
+    //           if (Object.keys(_that.$refs.houseUpload[_key]).length > 0) {
+    //             resultIdList.push(_that.$refs.houseUpload[_key].id);
+    //           }
+    //         }
+    //       });
+    //       console.log(resultIdList);
+    //       let params = {
+    //         Eid: this.houseId,
+    //         Type: this.houseUploadType,
+    //         picList: resultIdList,
+    //         followMemo: "提交了实勘申请"
+    //       };
+    //       if (this.houseUploadType == 4) {
+    //         params.ReplaceType = 5;
+    //       }
+    //       this.houseUploadLoading = true;
+    //       houseCheck
+    //         .insertCheck(url, params)
+    //         .then(e => {
+    //           if (e.data.code == 200) {
+    //             this.$message.success(e.data.message);
+    //           }
+    //         })
+    //         .catch(e => {})
+    //         .finally(() => {
+    //           this.houseUploadLoading = false;
+    //           this.houseUploadflag = false;
+    //         });
+    //     }
+    //   });
+    // },
     /**
      * 取代打开弹出层
      * @param {String} popName 弹出层的Flag名字
@@ -573,15 +584,21 @@ export default {
           this.houseId,
           "正在审核"
         );
-        if (popName == "houseUploadflag") {
-          this.echoData = [
-            ...this.houseData.saleUploadPicDtoList,
-            ...this.houseData.saleUploadVideoDtoList
-          ];
-        }
+        // 图片视频上传组件
+        // if (popName == "houseUploadflag") {
+        //   this.echoData = [
+        //     ...this.houseData.saleUploadPicDtoList,
+        //     ...this.houseData.saleUploadVideoDtoList
+        //   ];
+        // }
         if (!result) {
-          this[typeName] = type;
-          this[popName] = true;
+          //申请VR
+          if (popName == "houseUploadflag") {
+            this.dialogInvestigatorVisible = true;
+          } else {
+            this[typeName] = type;
+            this[popName] = true;
+          }
         }
       } else {
         let result = await houseCheck.isChecking(

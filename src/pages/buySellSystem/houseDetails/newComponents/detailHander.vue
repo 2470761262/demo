@@ -42,10 +42,24 @@
         align-items: center;
         cursor: pointer;
         // prettier-ignore
-        width: 110PX;
+        min-width: 110PX;
         box-sizing: border-box;
         margin-right: 20px;
         outline: none;
+        .logo58 {
+          // prettier-ignore
+          width: 25PX;
+          // prettier-ignore
+          height: 25PX;
+          margin-left: 13px;
+          margin-right: 6px;
+          background: url("../../../../assets/images/logo_58.png") center
+            no-repeat;
+          background-size: 100%;
+        }
+        .nowrap {
+          white-space: nowrap;
+        }
         &:last-child {
           margin-right: 0;
         }
@@ -125,6 +139,14 @@
         </div>
       </div>
       <div class="content-header-right">
+        <button @click="joinOtherResource" v-if="publishBtnType == 1">
+          <i class="logo58"></i>
+          <span class="nowrap">加入我的58房源库</span>
+        </button>
+        <button @click="deleteUnitedHouse" v-if="publishBtnType == 2">
+          <i class="logo58"></i>
+          <span class="nowrap">从我的58房源库下架</span>
+        </button>
         <button @click="nodePop">
           <i class="iconyinxiang iconfont "></i>
           <span>添加印象</span>
@@ -162,7 +184,6 @@
       typeClass="error"
       title="!举报"
     ></report>
-    <!-- 关注 -->
   </div>
 </template>
 
@@ -171,6 +192,12 @@ import { mapState } from "vuex";
 //房源审核
 import houseCheck from "../common/houseCheck";
 export default {
+  props: {
+    publishBtnType: {
+      type: Number,
+      default: 0
+    }
+  },
   computed: {
     ...mapState({
       houseData: state => state.houseDateil.houseData,
@@ -206,6 +233,54 @@ export default {
     this.getisCollect();
   },
   methods: {
+    /**
+     * @example: 加入我的58资源库
+     */
+    joinOtherResource() {
+      this.$parent.dialogJoinResourceVisible = true;
+    },
+    /**
+     * @example: 下架58房源库
+     */
+    deleteUnitedHouse() {
+      this.$confirm("是否下架58房源库?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$api
+            .post({
+              url: `/agent_house/deleteUniteHouse`,
+              data: {
+                houseId: this.houseId,
+                houseNo: this.houseData.HouseNo,
+                comId: this.houseData.Comid
+              },
+              headers: {
+                "Content-Type": "application/json;charset=UTF-8"
+              }
+            })
+            .then(e => {
+              if (e.data.code == 200) {
+                this.$parent.publishBtnType = 1;
+                this.$message({
+                  message: e.data.message,
+                  type: "success"
+                });
+              } else {
+                this.$message.error(e.data.message);
+              }
+            })
+            .catch(e => {});
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消操作"
+          });
+        });
+    },
     handleCopy(data) {
       let oInput = document.createElement("input");
       oInput.value = data;
@@ -221,7 +296,6 @@ export default {
     /**
      * @example: 显示楼栋号
      */
-
     getShowBuliding() {
       this.$api
         .get({

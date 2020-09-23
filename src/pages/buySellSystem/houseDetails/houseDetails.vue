@@ -45,7 +45,7 @@
     </div> -->
     <section class="content-flex" v-if="!loading">
       <div class="content-flex-left">
-        <detail-hander />
+        <detail-hander :publishBtnType="publishBtnType"></detail-hander>
         <div class="content-detail-flex">
           <loop-content />
           <house-message />
@@ -63,10 +63,16 @@
           <logTabContent />
         </div>
         <div class="right-btn-group">
-          <detailBtnGroup />
+          <!-- <detailBtnGroup ref="detailBtnGroup" /> -->
+          <detail-btn-group :publishBtnType="publishBtnType"></detail-btn-group>
         </div>
       </div>
     </section>
+    <!-- 加入58房源库提示弹窗 -->
+    <join-resource-pop
+      :dialogVisible.sync="dialogJoinResourceVisible"
+      :publishInfo="publishInfo"
+    ></join-resource-pop>
   </div>
 </template>
 <script>
@@ -113,7 +119,8 @@ export default {
     historyTrajectory,
     detailBtnGroup,
     betHouse,
-    logTabContent
+    logTabContent,
+    joinResourcePop: () => import("./newDidLog/joinResourcePop")
   },
   computed: {
     ...mapState({
@@ -122,6 +129,7 @@ export default {
   },
   created() {
     this.setHouseID(this.$route.params.houseId);
+    this.publishInfo.houseId = this.$route.params.houseId;
     Promise.all([this.getHouseDetail(), this.getAgentRules()])
       .then(e => {
         this.addBrowseHouseLog(e[0]);
@@ -135,7 +143,16 @@ export default {
   },
   data() {
     return {
-      loading: true
+      loading: true,
+      dialogJoinResourceVisible: false,
+      publishInfo: {
+        houseId: "",
+        houseTitle: "",
+        houseDetail: "",
+        ownerMentality: "",
+        serveIntroduction: ""
+      },
+      publishBtnType: 0 // 0:不显示发布按钮；1：显示发布按钮；2：显示下架按钮
     };
   },
   methods: {
@@ -156,6 +173,13 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
+            this.publishInfo.communityName = result.data.CommunityName;
+            this.publishInfo.middleSchool = result.data.middleSchool;
+            this.publishInfo.price = result.data.Price;
+            this.publishInfo.averagePrice = result.data.averagePrice;
+            if (result.data.plate == 0) {
+              this.getPublishBtnType();
+            }
             if (
               result.data.remark != null &&
               result.data.remark.indexOf("$") != -1
@@ -166,15 +190,24 @@ export default {
                 switch (Arry2[0]) {
                   case "小区介绍":
                     result.data.communityPresentation = Arry2[1];
+                    this.publishInfo.houseDetail = this.publishInfo.houseDetail.concat(
+                      Arry2[1]
+                    );
                     break;
                   case "户型介绍":
                     result.data.houseTypePresentation = Arry2[1];
+                    this.publishInfo.houseDetail = this.publishInfo.houseDetail.concat(
+                      Arry2[1]
+                    );
                     break;
                   case "税费解析":
                     result.data.taxParsing = Arry2[1];
                     break;
                   case "核心卖点":
                     result.data.coreSellingPoint = Arry2[1];
+                    this.publishInfo.houseDetail = this.publishInfo.houseDetail.concat(
+                      Arry2[1]
+                    );
                     break;
                 }
                 if (result.data.applyAgentVo != null) {
@@ -288,6 +321,23 @@ export default {
           }
         })
         .catch(e => {});
+    },
+    /**
+     * @example: 获取发布58按钮权限
+     */
+    getPublishBtnType() {
+      this.$api
+        .get({
+          url: `/agent_house/isReleaseWuBa/${this.houseId}`,
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.publishBtnType = e.data.data ? 2 : 1;
+          }
+        });
     }
   }
 };
