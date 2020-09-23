@@ -38,7 +38,12 @@
             </p>
             <div class="bottom">
               如无123APP，请点击右侧进行下载
-              <span class="btn">下载APP</span>
+              <a
+                href="http://www.123kanfang.com/downloadApp/"
+                target="_blank"
+                class="btn"
+                >下载APP</a
+              >
             </div>
           </div>
         </div>

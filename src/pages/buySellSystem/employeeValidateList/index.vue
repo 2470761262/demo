@@ -458,7 +458,7 @@
           </validate-audio>
           <div class="ts" v-if="recordCheckTime">
             <span>验真时间：</span>
-            <span>{{recordCheckTime}}</span>
+            <span>{{ recordCheckTime }}</span>
           </div>
         </div>
       </div>

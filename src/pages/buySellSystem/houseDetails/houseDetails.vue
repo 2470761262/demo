@@ -102,8 +102,6 @@ import detailBtnGroup from "./newComponents/detailBtnGroup";
 import betHouse from "./newComponents/betHouse";
 //日志tab
 import logTabContent from "./newComponents/logTabContent";
-//加入58房源库提示弹窗
-import joinResourcePop from "./newDidLog/joinResourcePop";
 import util from "@/util/util";
 import { mapActions, mapMutations, mapState } from "vuex";
 import { REMARK } from "@/util/constMap";
@@ -122,7 +120,7 @@ export default {
     detailBtnGroup,
     betHouse,
     logTabContent,
-    joinResourcePop
+    joinResourcePop: () => import("./newDidLog/joinResourcePop")
   },
   computed: {
     ...mapState({
@@ -175,7 +173,10 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            // this.publishInfo.houseTitle = result.data.Title;
+            this.publishInfo.communityName = result.data.CommunityName;
+            this.publishInfo.middleSchool = result.data.middleSchool;
+            this.publishInfo.price = result.data.Price;
+            this.publishInfo.averagePrice = result.data.averagePrice;
             if (result.data.plate == 0) {
               this.getPublishBtnType();
             }
