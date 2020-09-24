@@ -153,7 +153,7 @@
         <button
           @click="deleteUnitedHouse"
           v-if="publishBtnType == 2"
-          :disabled="hisLockBtn"
+          :disabled="isLockBtn"
         >
           <i class="logo58"></i>
           <span class="nowrap">从我的58房源库下架</span>
@@ -229,7 +229,7 @@ export default {
         return true;
       }
       return false;
-    },
+    }
   },
   components: {
     //举报弹出层

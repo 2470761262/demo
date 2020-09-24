@@ -353,24 +353,24 @@ export default {
       // if (parseInt(this.houseData.certificateType) != 1) {
       //   this.releasePopFlag = true;
       // } else {
-        let params = {
-          houseId: this.houseId,
-          houseType: 0
-        };
-        const loading = this.$loading({
-          lock: true,
-          text: "发布外网中..."
+      let params = {
+        houseId: this.houseId,
+        houseType: 0
+      };
+      const loading = this.$loading({
+        lock: true,
+        text: "发布外网中..."
+      });
+      let result = await release.releaseOutsideHouse(params);
+      loading.close();
+      if (result.data.code == 200) {
+        this.commitHouseData({
+          isReleaseOutside: 1
         });
-        let result = await release.releaseOutsideHouse(params);
-        loading.close();
-        if (result.data.code == 200) {
-          this.commitHouseData({
-            isReleaseOutside: 1
-          });
-          this.$message(result.data.message);
-        } else {
-          this.$message("操作失败");
-        }
+        this.$message(result.data.message);
+      } else {
+        this.$message("操作失败");
+      }
       // }
     },
     /**

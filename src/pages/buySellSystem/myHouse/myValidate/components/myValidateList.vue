@@ -123,7 +123,6 @@
 .list-content {
   width: 100%;
   padding-top: 10px;
-  max-height: 500px;
   overflow-x: hidden;
   overflow-y: auto;
   &::-webkit-scrollbar {
@@ -365,7 +364,11 @@
                 >
                   <div>
                     <div>
-                      <span class="audio-title">{{ activity.addPerName }}</span>
+                      <span class="audio-title"
+                        >{{ activity.addPerName }}（{{
+                          activity.deptName
+                        }}）</span
+                      >
                       <el-audio
                         :fixed="false"
                         :url="activity.voiceUrl"
@@ -663,6 +666,7 @@ export default {
           that.stepStatus = "success";
           break;
       }
+      this.voiceList = [];
       this.getHouseVoiceList();
     },
     getVerifyDiff(id, perType) {
