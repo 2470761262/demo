@@ -257,7 +257,11 @@
       </span>
     </el-dialog>
     <!--58绑定弹窗-->
-    <bindBroker58Pop :openFlag.sync="bindBrokerFlag" :accountId="brokerId">
+    <bindBroker58Pop
+      :openFlag.sync="bindBrokerFlag"
+      :accountId="brokerId"
+      @bindBorkerWuBa="bindBorkerWuBa"
+    >
     </bindBroker58Pop>
     <!-- 解绑弹窗 -->
     <el-dialog
@@ -387,6 +391,12 @@ export default {
   },
   methods: {
     /**
+     * @example:绑定成功回调
+     */
+    bindBorkerWuBa() {
+      this.queryEmployeeByParams();
+    },
+    /**
      * 关闭解绑窗口
      */
     closeUnbundingDialog() {
@@ -410,6 +420,7 @@ export default {
           if (e.data.code == 200) {
             type = "sucesss";
             this.unbundingDialogVisible = false;
+            this.queryEmployeeByParams();
           }
           this.$message({
             message: e.data.message,
