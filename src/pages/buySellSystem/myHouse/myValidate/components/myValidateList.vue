@@ -549,7 +549,7 @@ export default {
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             page: this.voice.page,
-            limit: 7,
+            limit: 1,
             eid: this.nowRow.id,
             followType: 10
           }
@@ -667,6 +667,7 @@ export default {
           break;
       }
       this.voiceList = [];
+      this.voice.page = 1;
       this.getHouseVoiceList();
     },
     getVerifyDiff(id, perType) {
