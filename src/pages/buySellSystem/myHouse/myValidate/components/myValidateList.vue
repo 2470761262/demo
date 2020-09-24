@@ -119,6 +119,58 @@
   font-size: @font14;
   color: #f6a420;
 }
+/*********** 查记录弹窗 ***********/
+.list-content {
+  width: 100%;
+  padding-top: 10px;
+  max-height: 500px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-button,
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-track-piece {
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #c9c9c9;
+    border-radius: 50px;
+  }
+}
+/deep/.didLog-content-body {
+  .el-tab-pane {
+    padding-left: 5px;
+    .bottom-tip {
+      padding: 0 10px 20px;
+      font-size: @font14;
+      color: #999;
+    }
+  }
+  .audio-contenr {
+    // prettier-ignore
+    height: 45PX;
+    .audio-contenr-but {
+      // prettier-ignore
+      width: 22PX;
+      // prettier-ignore
+      height: 22PX;
+      // prettier-ignore
+      line-height: 22PX;
+      // prettier-ignore
+      font-size: 22PX;
+    }
+    .autio-time {
+      font-size: @font16;
+    }
+  }
+  .audio-title {
+    font-size: @font14;
+    color: #999;
+  }
+}
 </style>
 <template>
   <div class="tab-page" v-loading="loading">
@@ -163,136 +215,178 @@
       :visible.sync="showVeryfyDetail"
       width="30%"
     >
-      <el-card class="box-card">
-        <div slot="header" class="clearfix">
-          <span>步骤</span>
-        </div>
-        <el-steps :active="stepNow" align-center :process-status="stepStatus">
-          <el-step
-            :title="item.title"
-            :description="item.description"
-            :key="item.index"
-            v-for="item in stepsListNow"
-          ></el-step>
-        </el-steps>
-      </el-card>
-      <el-card
-        v-if="employeeDiff.show"
-        class="box-card"
-        style="line-height:30px"
-      >
-        <div slot="header" class="clearfix">
-          <span>店长异议</span>
-        </div>
-        <div>
-          <div class="tag-group">
-            <el-tag
-              size="small"
-              type="danger"
-              v-for="item in employeeDiff.spanList"
+      <div infinite-scroll-immediate="false" v-infinite-scroll="load">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>步骤</span>
+          </div>
+          <el-steps :active="stepNow" align-center :process-status="stepStatus">
+            <el-step
+              :title="item.title"
+              :description="item.description"
               :key="item.index"
-              >{{ diffList[item] }}</el-tag
-            >
+              v-for="item in stepsListNow"
+            ></el-step>
+          </el-steps>
+        </el-card>
+        <el-card
+          v-if="employeeDiff.show"
+          class="box-card"
+          style="line-height:30px"
+        >
+          <div slot="header" class="clearfix">
+            <span>店长异议</span>
           </div>
-          <div>{{ employeeDiff.remark }}</div>
-        </div>
-      </el-card>
-      <el-card
-        v-if="customerDiff.show"
-        class="box-card"
-        style="line-height:30px"
-      >
-        <div slot="header" class="clearfix">
-          <span>客户异议</span>
-        </div>
-        <div>
-          <div class="tag-group">
-            <el-tag
-              size="small"
-              type="danger"
-              v-for="item in customerDiff.spanList"
-              :key="item.index"
-              >{{ diffList[item] }}</el-tag
-            >
+          <div>
+            <div class="tag-group">
+              <el-tag
+                size="small"
+                type="danger"
+                v-for="item in employeeDiff.spanList"
+                :key="item.index"
+                >{{ diffList[item] }}</el-tag
+              >
+            </div>
+            <div>{{ employeeDiff.remark }}</div>
           </div>
-          <div>{{ customerDiff.remark }}</div>
-        </div>
-      </el-card>
-      <el-card class="box-card" style="line-height:30px">
-        <div slot="header" class="clearfix">
-          <span>房源详情</span>
-        </div>
-        <div>
-          <span class="font-small-title">小区：</span>
-          <span class="font-middle-title">{{
-            nowRow.communityName +
-              "-" +
-              nowRow.buildingName +
-              "-" +
-              nowRow.roomNo
-          }}</span>
-        </div>
-        <div class="div-line">
-          <div class="span-width">
-            <span class="font-small-title">售价：</span>
-            <span>{{ nowRow.price }}万元</span>
+        </el-card>
+        <el-card
+          v-if="customerDiff.show"
+          class="box-card"
+          style="line-height:30px"
+        >
+          <div slot="header" class="clearfix">
+            <span>客户异议</span>
           </div>
-          <div class="span-width">
-            <span class="font-small-title">均价：</span>
-            <span>{{ nowRow.unitPrice }}元/㎡</span>
+          <div>
+            <div class="tag-group">
+              <el-tag
+                size="small"
+                type="danger"
+                v-for="item in customerDiff.spanList"
+                :key="item.index"
+                >{{ diffList[item] }}</el-tag
+              >
+            </div>
+            <div>{{ customerDiff.remark }}</div>
           </div>
-        </div>
-        <div class="div-line">
-          <div class="span-width">
-            <span class="font-small-title">面积：</span>
-            <span>{{ nowRow.inArea || 0 }}/㎡</span>
+        </el-card>
+        <el-card class="box-card" style="line-height:30px">
+          <div slot="header" class="clearfix">
+            <span>房源详情</span>
           </div>
-          <div class="span-width">
-            <span class="font-small-title">户型：</span>
-            <span>{{
-              (nowRow.rooms || 0) +
-                "室" +
-                (nowRow.hall || 0) +
-                "厅" +
-                (nowRow.toilet || 0) +
-                "卫"
+          <div>
+            <span class="font-small-title">小区：</span>
+            <span class="font-middle-title">{{
+              nowRow.communityName +
+                "-" +
+                nowRow.buildingName +
+                "-" +
+                nowRow.roomNo
             }}</span>
           </div>
-        </div>
-        <div class="div-line">
-          <div class="span-width">
-            <span class="font-small-title">朝向：</span>
-            <span>{{ nowRow.face }}</span>
-          </div>
-          <div class="span-width">
-            <span class="font-small-title">装修：</span>
-            <span>{{ nowRow.decoration }}</span>
-          </div>
-        </div>
-      </el-card>
-      <el-card class="box-card">
-        <div slot="header" class="clearfix">
-          <span>业主信息</span>
-        </div>
-        <div class="cus-box">
-          <img
-            width="55px"
-            height="55px"
-            :src="
-              nowRow.headImg == null
-                ? 'https://lsxjytestimgs.oss-cn-shenzhen.aliyuncs.com/FileUpload/default.jpg'
-                : nowRow.headImg
-            "
-          />
-          <div style="margin-left:20px">
-            <span class="font-small-title">{{ nowRow.customerName }}</span>
-            <el-tag type="warning" size="mini">vip</el-tag>
-            <div>
-              <span>{{ nowRow.tel }}</span>
+          <div class="div-line">
+            <div class="span-width">
+              <span class="font-small-title">售价：</span>
+              <span>{{ nowRow.price }}万元</span>
+            </div>
+            <div class="span-width">
+              <span class="font-small-title">均价：</span>
+              <span>{{ nowRow.unitPrice }}元/㎡</span>
             </div>
           </div>
-        </div>
-      </el-card>
+          <div class="div-line">
+            <div class="span-width">
+              <span class="font-small-title">面积：</span>
+              <span>{{ nowRow.inArea || 0 }}/㎡</span>
+            </div>
+            <div class="span-width">
+              <span class="font-small-title">户型：</span>
+              <span>{{
+                (nowRow.rooms || 0) +
+                  "室" +
+                  (nowRow.hall || 0) +
+                  "厅" +
+                  (nowRow.toilet || 0) +
+                  "卫"
+              }}</span>
+            </div>
+          </div>
+          <div class="div-line">
+            <div class="span-width">
+              <span class="font-small-title">朝向：</span>
+              <span>{{ nowRow.face }}</span>
+            </div>
+            <div class="span-width">
+              <span class="font-small-title">装修：</span>
+              <span>{{ nowRow.decoration }}</span>
+            </div>
+          </div>
+        </el-card>
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>业主信息</span>
+          </div>
+          <div class="cus-box">
+            <img
+              width="55px"
+              height="55px"
+              :src="
+                nowRow.headImg == null
+                  ? 'https://lsxjytestimgs.oss-cn-shenzhen.aliyuncs.com/FileUpload/default.jpg'
+                  : nowRow.headImg
+              "
+            />
+            <div style="margin-left:20px">
+              <span class="font-small-title">{{ nowRow.customerName }}</span>
+              <el-tag type="warning" size="mini">vip</el-tag>
+              <div>
+                <span>{{ nowRow.tel }}</span>
+              </div>
+            </div>
+          </div>
+        </el-card>
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>房源验真通话记录</span>
+          </div>
+          <div class="cus-box">
+            <div class="list-content">
+              <el-timeline>
+                <el-timeline-item
+                  v-for="(activity, index) in voiceList"
+                  :key="index"
+                  :icon="activity.icon"
+                  :type="activity.type"
+                  :color="activity.color"
+                  :size="activity.size"
+                  :timestamp="activity.createTime"
+                  placement="top"
+                >
+                  <div>
+                    <div>
+                      <span class="audio-title">{{ activity.followName }}</span>
+                      <el-audio
+                        :fixed="false"
+                        :url="activity.content"
+                      ></el-audio>
+                    </div>
+                  </div>
+                </el-timeline-item>
+              </el-timeline>
+              <div class="bottom-tip" v-if="voice.loading">
+                <i class="el-icon-loading"></i> 加载中...
+              </div>
+              <div class="bottom-tip" v-else-if="voice.loadPageEnd">
+                已经到最底部了~
+              </div>
+              <div class="bottom-tip" v-if="voiceList.length == 0">
+                暂无数据
+              </div>
+            </div>
+          </div>
+        </el-card>
+      </div>
     </fixed-popup>
     <tel-pop
       title=""
@@ -311,6 +405,7 @@ const dom = document;
 import util from "@/util/util";
 //验真电话弹框
 import telPop from "./telPop";
+import elAudio from "@/components/audio";
 let checkStatusStrMap = new Map([
   ["待验真", "span_warning"],
   ["验真成功", "span_success"],
@@ -324,10 +419,19 @@ let pageNameMap = new Map([
 export default {
   inject: ["form"],
   components: {
-    telPop
+    telPop,
+    elAudio
   },
   data() {
     return {
+      voiceList: [],
+      voice: {
+        list: [],
+        totalPage: 0,
+        page: 1,
+        loading: false,
+        loadPageEnd: false
+      },
       telPopFlag: false,
       telPopFlagTypeClass: "info",
       rowData: {}, //行数据
@@ -420,6 +524,47 @@ export default {
     }
   },
   methods: {
+    /**
+     * 查记录下拉滚动分页
+     */
+    load() {
+      console.log("-----------");
+      if (this.voice.page < this.voice.totalPage) {
+        ++this.voice.page;
+        this.getHouseVoiceList();
+      } else {
+        this.voice.loadPageEnd = true;
+      }
+    },
+    /**
+     * 获取语音记录列表
+     */
+    getHouseVoiceList() {
+      console.log(this.nowRow, "--------");
+      let params = {
+        page: this.voice.page,
+        limit: 7,
+        roomId: this.nowRow.id,
+        followType: 2
+      };
+      this.voice.loading = true;
+      this.$api
+        .post({
+          url: "/roomFollow/follows",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: params
+        })
+        .then(e => {
+          if (e.data.code === 200) {
+            this.voiceList = [...this.voiceList, ...e.data.data.list];
+            this.voice.totalPage = e.data.data.totalPage;
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.voice.loading = false;
+        });
+    },
     accesssoryTabClick(tab, event) {
       let key = parseInt(tab.index) + 1;
       this.bigAccessoryFile.forEach(item => {
@@ -521,6 +666,7 @@ export default {
           that.stepStatus = "success";
           break;
       }
+      this.getHouseVoiceList();
     },
     getVerifyDiff(id, perType) {
       this.$api
