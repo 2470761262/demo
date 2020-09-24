@@ -906,8 +906,7 @@ export default {
         cancelButtonText: "取消"
       })
         .then(({ value }) => {
-          row.name = value;
-          this.openBenchmarkPop(row);
+          this.openBenchmarkPop(row, value);
         })
         .catch(() => {
           this.$message({
@@ -919,12 +918,12 @@ export default {
     /**
      * @example: 打开手工对标弹窗表格
      */
-    openBenchmarkPop(row) {
+    openBenchmarkPop(row, name) {
       this.$message({
         message: "对标查询中...",
         type: "info"
       });
-      let params = { name: row.name, idFor58: row.idFor58 };
+      let params = { name: name, idFor58: row.idFor58 };
       this.handleId = row.id;
       this.$api
         .post({
