@@ -165,6 +165,7 @@
               <el-option key="1" label="正常" value="1" />
               <el-option key="0" label="锁定" value="0" />
               <el-option key="2" label="异常" value="2" />
+              <el-option key="3" label="绑定58" value="3" />
             </el-select>
             <el-select
               v-model="queryData.del"
