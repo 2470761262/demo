@@ -29,6 +29,19 @@
     // &:last-child {
     //   border-bottom: none;
     // }
+    .iconhot {
+      // prettier-ignore
+      margin-left: -16PX;
+      // prettier-ignore
+      font-size: 16PX;
+      color: red;
+    }
+    .el-icon-question {
+      color: #327257;
+      &:hover {
+        color: #fff;
+      }
+    }
   }
 }
 </style>
@@ -100,6 +113,15 @@
       @click="cancelOutsideHouse"
     >
       取消发布
+    </button>
+    <button
+      class="btn-item"
+      style="order:5"
+      @click="joinOtherResource"
+      v-if="publishBtnType == 1"
+    >
+      <i class="iconfont iconhot"></i>发布58
+      <!-- <i class="el-icon-question"></i> -->
     </button>
     <button
       class="btn-item"
@@ -202,6 +224,12 @@ export default {
     interviewPop: () => import("../newDidLog/interviewPop"),
     sharePop: () => import("../newDidLog/sharePop")
   },
+  props: {
+    publishBtnType: {
+      type: Number,
+      default: 0
+    }
+  },
   computed: {
     ...mapState({
       houseId: state => state.houseDateil.id,
@@ -286,6 +314,12 @@ export default {
   methods: {
     ...mapMutations(["setParam"]),
     ...mapActions(["commitHouseData"]),
+    /**
+     * @example: 发布58
+     */
+    joinOtherResource() {
+      this.$parent.dialogJoinResourceVisible = true;
+    },
     getEditAuthority(authorityUnderName, houseDatails) {
       if (!authorityUnderName) return;
       return (

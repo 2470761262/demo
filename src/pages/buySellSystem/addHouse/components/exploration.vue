@@ -520,9 +520,9 @@ import util from "@/util/util";
 import but from "@/evenBus/but.js";
 import { LOGINDATA, SMALLThumb } from "@/util/constMap";
 export default {
-  //   $_veeValidate: {
-  //     validator: 'new' // give me my own validator scope.
-  //   },
+  $_veeValidate: {
+    validator: "new" // give me my own validator scope.
+  },
   name: "exploration",
   props: {
     getData: {
@@ -620,6 +620,14 @@ export default {
       kitchenImgList: [], //厨房
       toiletImgList: [], //卫生间
       layoutImgList: [], //户型图
+      comparison: {
+        outdoorImgList: [], //外景图
+        livingRoomImgList: [], //客厅
+        bedroomImgList: [], //卧室
+        kitchenImgList: [], //厨房
+        toiletImgList: [], //卫生间
+        layoutImgList: [] //户型图
+      }, //对比用数据
       houseVideo: {}, //房源视频
       qrCodeImg: "",
       qrCodeImgVedio: "",
@@ -677,7 +685,9 @@ export default {
         let name = temp.picContainer;
         // console.log(that[name], "找到了指定用户");
         // console.log(r.content.picUrl, "接受到消息的图片地址");
-        that.uploadFileInfo(r.content.picClass, r.content.picUrl, function(data) {
+        that.uploadFileInfo(r.content.picClass, r.content.picUrl, function(
+          data
+        ) {
           that[name].push(data);
           that.$store.commit("updateFile", {
             [name]: that[name]
@@ -841,6 +851,10 @@ export default {
                 this.layoutImgList.push(item);
                 break;
             }
+          });
+          //保存图片数组
+          Object.keys(this.comparison).forEach(item => {
+            this.comparison[item] = JSON.parse(JSON.stringify(this[item]));
           });
         }
       });
@@ -1017,8 +1031,79 @@ export default {
           this[fileListName + "Loading"] = false;
         });
     },
+    setDataToUpdate() {
+      let that = this;
+      let sendData = {
+        id: that.$store.state.addHouse.formData.id
+      };
+      let url = "/verifyHouse";
+      let change = false;
+      Object.keys(this.comparison).forEach(key => {
+        if (this[key].length != this.comparison[key].length) {
+          change = true;
+        } else {
+          this[key].forEach(item => {
+            let result = this.comparison[key].filter(
+              filter => filter.url == item.url
+            );
+            if (result.length == 0) {
+              change = true;
+            }
+          });
+        }
+      });
+      if (!change) {
+        return true;
+      }
+      if (this.paramsObj.editUrl) {
+        url = this.paramsObj.editUrl;
+        sendData.saleHouseUpdateRecordList = [];
+        sendData.saleHouseUpdateRecordList.push({
+          houseId: that.$store.state.addHouse.formData.id,
+          updateFiled: "修改图片",
+          oldValue: "暂无",
+          newValue: "暂无"
+        });
+      }
+      if (this.paramsObj.editUrl) {
+        // 编辑
+        return this.$api
+          .put({
+            url: url,
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            data: sendData
+          })
+          .then(e => {
+            if (e.data.code == 200) {
+              return true;
+            } else {
+              return false;
+            }
+          })
+          .catch(() => {
+            return false;
+          });
+      } else {
+        return true;
+      }
+    },
     validateAll() {
-      return true;
+      let that = this;
+      return this.$validator
+        .validateAll()
+        .then(e => {
+          if (e) {
+            return true;
+          }
+          return false;
+        })
+        .then(e => {
+          if (e) {
+            return that.setDataToUpdate();
+          } else {
+            return false;
+          }
+        });
     }
   }
 };

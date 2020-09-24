@@ -17,7 +17,7 @@ export default {
     }
     return api
       .get({
-        url: "/agentHouse/propertyCheck/isChecking",
+        url: "/agentHouse/propertyCheck/realowner/can/apply",
         data: params,
         headers: { "Content-Type": "application/json;charset=UTF-8" }
       })

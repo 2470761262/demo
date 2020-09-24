@@ -1,55 +1,69 @@
 <template>
-  <!-- 信息员验真列表 -->
+  <!-- 小区对标列表 -->
   <div class="container">
-    <breadcrumb></breadcrumb>
     <div class="conditions">
       <div class="conditions-box">
         <el-row :gutter="32">
-          <el-form label-position="right" label-width="80px">
+          <el-form label-position="right" label-width="100px">
             <el-col :span="colChunks[0]">
-              <el-form-item label="房源编号">
-                <el-input
-                  v-model="conditions.houseNo"
-                  placeholder="请输入房源编号"
-                  @change="query(1)"
-                  clearable
-                  class="anchor-point"
-                  :data-anchor="
-                    '信息员验真列表搜索 房源编号:' + conditions.houseNo
-                  "
-                ></el-input>
-              </el-form-item>
+              <el-row :gutter="10">
+                <el-form-item label="楼盘名称">
+                  <el-select
+                    class="width100 anchor-point"
+                    popper-class="anchor-point"
+                    data-anchor="小区对标楼盘 => select"
+                    @click.native="log_socket.sendUserActionData"
+                    v-model="buildOptData"
+                    placeholder="楼盘名称"
+                    clearable
+                    filterable
+                    remote
+                    @focus="remoteBuildInput"
+                    @change="remoteBuildChange"
+                    :remote-method="buildRemoteMethod"
+                    :loading="buildLoading"
+                    value-key="value"
+                  >
+                    <el-option
+                      class="anchor-point"
+                      :data-anchor="
+                        '小区对标楼盘 => select => option:' + item.name
+                      "
+                      @click.native="log_socket.sendUserActionData"
+                      v-for="item in buildForList"
+                      :key="item.value"
+                      :label="item.name"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-row>
             </el-col>
             <el-col :span="colChunks[1]">
               <el-row :gutter="10">
-                <el-form-item label="房屋坐落">
+                <el-form-item label="楼盘地区">
                   <el-col :span="8">
                     <el-select
                       class="anchor-point"
                       popper-class="anchor-point"
-                      data-anchor="我的验真楼盘 => select"
-                      @click.native="log_socket.sendUserActionData"
-                      v-model="buildOptData"
-                      placeholder="楼盘名称"
+                      data-anchor="小区对标省 => select"
+                      v-model="province"
+                      placeholder="选择省"
                       clearable
                       filterable
                       remote
-                      @focus="remoteBuildInput"
-                      @change="remoteBuildChange"
-                      :remote-method="buildRemoteMethod"
-                      :loading="buildLoading"
+                      :loading="provinceLoading"
                       value-key="value"
                     >
                       <el-option
                         class="anchor-point"
                         :data-anchor="
-                          '我的验真楼盘 => select => option:' + item.name
+                          '小区对标省 => select => option:' + item.name
                         "
-                        @click.native="log_socket.sendUserActionData"
-                        v-for="item in buildForList"
-                        :key="item.value"
+                        v-for="item in provinceList"
+                        :key="item.id"
                         :label="item.name"
-                        :value="item"
+                        :value="item.id"
                       ></el-option>
                     </el-select>
                   </el-col>
@@ -57,28 +71,27 @@
                     <el-select
                       class="anchor-point"
                       popper-class="anchor-point"
-                      data-anchor="我的验真栋座 => select"
+                      data-anchor="小区对标市 => select"
                       @click.native="log_socket.sendUserActionData"
-                      v-model="towerOptData"
-                      placeholder="栋座号"
+                      v-model="city"
+                      placeholder="选择市"
                       clearable
                       filterable
                       remote
-                      :remote-method="queryRoomNo"
-                      @change="remoteRoomNoChange"
-                      :loading="towerLoading"
+                      :loading="cityLoading"
                       value-key="value"
+                      @change="getCounty"
                     >
                       <el-option
                         class="anchor-point"
                         :data-anchor="
-                          '我的验真栋座 => select => option:' + item.name
+                          '小区对标市 => select => option:' + item.name
                         "
                         @click.native="log_socket.sendUserActionData"
-                        v-for="item in towerForList"
-                        :key="item.value"
+                        v-for="item in cityList"
+                        :key="item.id"
                         :label="item.name"
-                        :value="item"
+                        :value="item.id"
                       ></el-option>
                     </el-select>
                   </el-col>
@@ -86,28 +99,27 @@
                     <el-select
                       class="anchor-point"
                       popper-class="anchor-point"
-                      data-anchor="我的验真房号 => select"
+                      data-anchor="小区对标区/县 => select"
                       @click.native="log_socket.sendUserActionData"
-                      v-model="roomOptData"
-                      placeholder="房号"
+                      v-model="county"
+                      placeholder="选择区/县"
                       clearable
                       filterable
                       remote
-                      :remote-method="queryRoomData"
-                      @change="queryRoomDataChange"
-                      :loading="roomLoading"
+                      :loading="countyLoading"
                       value-key="value"
+                      @change="query(1)"
                     >
                       <el-option
                         class="anchor-point"
                         :data-anchor="
-                          '我的验真房号 => select => option:' + item.name
+                          '小区对标区/县 => select => option:' + item.name
                         "
                         @click.native="log_socket.sendUserActionData"
-                        v-for="item in roomForList"
-                        :key="item.value"
+                        v-for="item in countyList"
+                        :key="item.id"
                         :label="item.name"
-                        :value="item"
+                        :value="item.id"
                       ></el-option>
                     </el-select>
                   </el-col>
@@ -115,74 +127,14 @@
               </el-row>
             </el-col>
             <el-col :span="colChunks[2]">
-              <el-form-item label="所属门店">
+              <el-form-item label="58对标情况">
                 <el-select
                   class="width100 anchor-point"
                   popper-class="anchor-point"
-                  data-anchor="信息员验真列表所属门店 => select"
-                  @click.native="log_socket.sendUserActionData"
-                  v-model="department.value"
-                  placeholder="请输入门店名称"
-                  clearable
-                  filterable
-                  @focus="departmentFocus"
-                  @change="departmentChange"
-                  :loading="department.loading"
-                  value-key="value"
-                >
-                  <el-option
-                    class="anchor-point"
-                    :data-anchor="
-                      '信息员验真列表所属门店 => select => option:' +
-                        item.depName
-                    "
-                    @click.native="log_socket.sendUserActionData"
-                    v-for="item in department.list"
-                    :key="item.depId"
-                    :label="item.depName"
-                    :value="item.depId"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="colChunks[3]">
-              <el-form-item label="录入人">
-                <el-select
-                  class="width100 anchor-point"
-                  popper-class="anchor-point"
-                  data-anchor="信息员验真列表录入人 => select"
-                  @click.native="log_socket.sendUserActionData"
-                  v-model="agent.value"
-                  placeholder="请输入录入人姓名"
-                  clearable
-                  filterable
-                  @change="agentChange"
-                  :loading="agent.loading"
-                  value-key="value"
-                >
-                  <el-option
-                    class="anchor-point"
-                    :data-anchor="
-                      '信息员验真列表录入人 => select => option:' + item.perName
-                    "
-                    @click.native="log_socket.sendUserActionData"
-                    v-for="item in agent.list"
-                    :key="item.accountId"
-                    :label="item.perName"
-                    :value="item.accountId"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="colChunks[4]">
-              <el-form-item label="验真状态">
-                <el-select
-                  class="width100 anchor-point"
-                  popper-class="anchor-point"
-                  data-anchor="信息员验真列表状态 => select"
+                  data-anchor="小区对标列表58对标情况 => select"
                   @click.native="log_socket.sendUserActionData"
                   filterable
-                  v-model="validateStatus"
+                  v-model="benchmarkingStatus"
                   clearable
                   @change="query(1)"
                   placeholder="请选择"
@@ -190,10 +142,10 @@
                   <el-option
                     class="anchor-point"
                     :data-anchor="
-                      '信息员验真列表验真状态 => select => option:' + item.label
+                      '小区对标列表58对标情况 => select => option:' + item.label
                     "
                     @click.native="log_socket.sendUserActionData"
-                    v-for="item in validateStatusList"
+                    v-for="item in benchmarkingStatusList"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -202,41 +154,50 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="colChunks[5]">
-              <el-form-item label="录入时间">
-                <el-date-picker
-                  prefix-icon="prefix-icon"
-                  v-model="conditions.timeSelect"
-                  type="daterange"
-                  range-separator="至"
-                  start-placeholder="起始时间"
-                  end-placeholder="结束时间"
-                  value-format="yyyy-MM-dd"
+            <el-col :span="colChunks[3]">
+              <el-form-item label="关系同步情况" v-if="false">
+                <el-select
+                  class="width100 anchor-point"
+                  popper-class="anchor-point"
+                  data-anchor="小区对标列表关系同步情况 => select"
+                  @click.native="log_socket.sendUserActionData"
+                  filterable
+                  v-model="relationStatus"
+                  clearable
                   @change="query(1)"
-                  :default-time="['00:00:00', '23:59:59']"
-                  class="anchor-point"
-                  :data-anchor="
-                    '信息员验真列表 录入时间:' + conditions.timeSelect
-                  "
+                  placeholder="请选择"
                 >
-                </el-date-picker>
+                  <el-option
+                    class="anchor-point"
+                    :data-anchor="
+                      '小区对标列表关系同步情况 => select => option:' +
+                        item.label
+                    "
+                    @click.native="log_socket.sendUserActionData"
+                    v-for="item in relationStatusList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="colChunks[6]" class="fr">
+            <el-col :span="colChunks[4]" class="fr">
               <div class="conditions-btn">
                 <div
                   class="btn anchor-pointn"
                   @click="reset"
-                  data-anchor="信息员验真列表重置"
+                  data-anchor="小区对标列表重置"
                 >
                   重置
                 </div>
                 <div
                   class="btn active anchor-pointn"
                   @click="query(1)"
-                  data-anchor="信息员验真列表搜索"
+                  data-anchor="小区对标列表搜索"
                 >
-                  搜索
+                  查询
                 </div>
               </div>
             </el-col>
@@ -247,140 +208,150 @@
     <div class="main">
       <div class="right"></div>
       <div class="content">
+        <div class="btn-box">
+          <button
+            class="batch-button anchor-pointn"
+            @click="batchBenchmarking"
+            data-anchor="小区对标列表批量对标"
+          >
+            批量对标
+          </button>
+          <button
+            class="batch-button anchor-pointn"
+            @click="batchRelation"
+            data-anchor="小区对标列表批量关系同步"
+          >
+            批量关系同步
+          </button>
+        </div>
         <div class="table">
           <el-table
             :data="tableData"
             height="100%"
             v-loading="loading"
             ref="tableList"
+            @selection-change="handleSelectionChange"
           >
             <el-table-column
+              type="selection"
+              width="55"
+              align="center"
+              :selectable="isChooise"
+            ></el-table-column>
+            <el-table-column
               fixed="left"
-              label="房屋信息"
-              width="230"
+              label="楼盘名称"
               align="left"
+              min-width="166"
               show-overflow-tooltip
             >
               <template v-slot="scope">
                 <div class="tab-house-box">
                   <div class="tab-house-title">
-                    {{ scope.row.communityName
-                    }}{{
-                      scope.row.buildingName
-                        ? "-" + scope.row.buildingName
-                        : ""
-                    }}{{ scope.row.roomNo ? "-" + scope.row.roomNo : "" }}
+                    {{ scope.row.name }}
                   </div>
-                  <div class="tab-house-no">{{ scope.row.houseNo }}</div>
                 </div>
               </template>
             </el-table-column>
             <el-table-column
-              min-width="130"
               prop="checkStatus"
-              label="验真状态"
+              label="所在城市"
               align="right"
+              min-width="130"
               show-overflow-tooltip
             >
               <template v-slot="scope">
-                <span
-                  v-if="scope.row.checkStatusStr == '待验真'"
-                  class="span_warning"
-                  >{{ scope.row.checkStatusStr }}</span
-                >
-                <span
-                  v-if="scope.row.checkStatusStr == '验真成功'"
-                  class="span_success"
-                  >{{ scope.row.checkStatusStr }}</span
-                >
-                <span
-                  v-if="scope.row.checkStatusStr == '验真失败'"
-                  class="span_danger"
-                  >{{ scope.row.checkStatusStr }}</span
-                >
-                <span
-                  v-if="scope.row.checkStatusStr == '无效'"
-                  class="span_info"
-                  >{{ scope.row.checkStatusStr }}</span
-                >
-              </template>
-            </el-table-column>
-            <el-table-column label="售价" align="right" show-overflow-tooltip>
-              <template v-slot="scope">
-                <span>{{ scope.row.price }}万</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="面积" align="right" show-overflow-tooltip>
-              <template v-slot="scope">
-                <span>{{ scope.row.inArea }}㎡</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="户型" align="right" show-overflow-tooltip>
-              <template v-slot="scope">
-                <span
-                  >{{ scope.row.rooms || 0 }}-{{ scope.row.hall || 0 }}-{{
-                    scope.row.toilet || 0
-                  }}-{{ scope.row.balcony || 0 }}</span
-                >
+                {{ scope.row.cityName }}
               </template>
             </el-table-column>
             <el-table-column
-              prop="addPerName"
-              label="录入人"
+              label="所在区/县"
               align="right"
+              min-width="130"
               show-overflow-tooltip
             >
               <template v-slot="scope">
-                <div class="tab-house-box">
-                  <div class="tab-house-title">{{ scope.row.addPerName }}</div>
-                  <div class="tab-house-no">{{ scope.row.deptName }}</div>
-                </div>
+                <span>{{ scope.row.countyName }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="验真类型"
+              label="58对标情况"
               align="right"
+              min-width="130"
               show-overflow-tooltip
             >
               <template v-slot="scope">
-                <span>{{ scope.row.sourceStr }}</span>
+                <span>{{ scope.row.contrastStr }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              min-width="200"
-              prop="addTime"
-              label="提交时间"
+              label="磐石小区ID"
               align="right"
+              min-width="130"
               show-overflow-tooltip
             >
+              <template v-slot="scope">
+                <span>{{ scope.row.panshiCommunityId }}</span>
+              </template>
             </el-table-column>
-
+            <el-table-column
+              label="磐石小区名称"
+              align="right"
+              min-width="140"
+              show-overflow-tooltip
+            >
+              <template v-slot="scope">
+                <span>{{ scope.row.displayName }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="磐石小区地址"
+              align="right"
+              min-width="140"
+              show-overflow-tooltip
+            >
+              <template v-slot="scope">
+                <span>{{ scope.row.communityAddress }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="磐石小区所属区域"
+              align="right"
+              min-width="150"
+              show-overflow-tooltip
+            >
+              <template v-slot="scope">
+                <span>{{ scope.row.shangquanDistrictName }}</span>
+              </template>
+            </el-table-column>
             <el-table-column
               fixed="right"
               label="操作"
               align="right"
-              width="300"
+              width="250"
             >
               <template v-slot="scope">
                 <el-button
+                  class="operate-btn"
                   @click="handleCallClick(scope.row)"
-                  type="text"
-                  size="small"
-                  :disabled="scope.row.checkStatusStr != '待验真'"
-                  >一键拨号</el-button
+                  :type="scope.row.contrast != -1 ? 'info' : 'primary'"
+                  :disabled="scope.row.contrast != -1"
+                  >58对标</el-button
                 >
                 <el-button
-                  @click="handleTestClick(scope.row)"
-                  type="text"
-                  size="small"
-                  :disabled="scope.row.checkStatusStr != '待验真'"
-                  >房源验真</el-button
+                  class="operate-btn"
+                  @click="handleSynchro(scope.row)"
+                  :type="
+                    scope.row.panshiCommunityId != null ? 'info' : 'primary'
+                  "
+                  :disabled="scope.row.panshiCommunityId != null"
+                  >关系同步</el-button
                 >
                 <el-button
-                  @click="handleRecordClick(scope.row)"
-                  type="text"
-                  size="small"
-                  >验真记录</el-button
+                  class="operate-btn"
+                  @click="handleBenchmark(scope.row)"
+                  type="primary"
+                  >手工对标</el-button
                 >
               </template>
             </el-table-column>
@@ -398,103 +369,123 @@
         </el-pagination>
       </div>
     </div>
-    <!-- 房源验真弹窗 -->
     <el-dialog
-      title="房源验真"
-      class="test-dialog"
-      :visible.sync="testDialogVisible"
-      width="554px"
+      class="relation-dialog"
+      title="手工对标"
+      :visible.sync="dialogTableVisible"
+      width="800px"
     >
-      <div class="content">
-        <div class="title">房源状态</div>
-        <el-radio-group class="radio-box" v-model="houseStatus">
-          <el-radio-button :label="5">确认出售</el-radio-button>
-          <el-radio-button :label="3">暂不考虑</el-radio-button>
-          <el-radio-button :label="4">已经出售</el-radio-button>
-        </el-radio-group>
-        <p class="tip">
-          注：若选择“暂不考虑”或“已经出售”，则默认视为验真不通过
-        </p>
-        <div class="title">详细说明</div>
-        <el-input
-          class="explain"
-          type="textarea"
-          :rows="2"
-          placeholder="请输入内容"
-          resize="none"
-          v-model="testExplain"
-        >
-        </el-input>
-      </div>
-      <div slot="footer">
-        <el-button class="test-btn cancel" @click="testCancel">取消</el-button>
-        <el-button
-          class="test-btn submit"
-          :loading="testSubmitLoading"
-          @click="testSubmit"
-          >验真结果提交</el-button
-        >
-      </div>
-    </el-dialog>
-    <!-- 房源记录弹窗 -->
-    <el-dialog
-      title="房源记录"
-      class="test-dialog record-content"
-      :visible.sync="recordDialogVisible"
-    >
-      <div class="status-box">
-        <span class="title">房源状态：</span>
-        <span class="text">{{ recordStatus }}</span>
-      </div>
-      <div class="detail-box">
-        <span class="title">详细说明：</span>
-        <div class="detail">
-          <p class="text">{{ recordIntroduction || "暂无" }}</p>
-          <validate-audio
-            v-for="(item, index) in voiceList"
-            :key="index"
-            :url="item"
-          >
-          </validate-audio>
-          <div class="ts" v-if="recordCheckTime">
-            <span>验真时间：</span>
-            <span>{{ recordCheckTime }}</span>
-          </div>
-        </div>
-      </div>
+      <el-table :data="gridData" height="300px">
+        <el-table-column
+          property="communityId"
+          label="磐石小区ID"
+          min-width="100"
+        ></el-table-column>
+        <el-table-column
+          property="communityName"
+          label="磐石小区名称"
+          min-width="120"
+        ></el-table-column>
+        <el-table-column
+          property="address"
+          label="磐石小区详细地址"
+          min-width="150"
+        ></el-table-column>
+        <el-table-column
+          property="mianShangquanName"
+          label="主商圈名称"
+          min-width="120"
+        ></el-table-column>
+        <el-table-column
+          property="mainShangquanDistrictName"
+          label="主商圈区域名称"
+          min-width="120"
+        ></el-table-column>
+        <el-table-column label="操作" fixed="right" width="70">
+          <template v-slot="scope">
+            <el-button
+              type="primary"
+              class="relation-dialog-btn"
+              @click="dialogBenchmark(scope.row)"
+              >对标</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
     </el-dialog>
   </div>
 </template>
 <script>
-import breadcrumb from "./components/breadcrumb.vue";
-import util from "@/util/util";
-import validateAudio from "./components/validateAudio.vue";
-export default {
-  components: {
-    breadcrumb,
-    validateAudio
+const BENCHMARKINGSTATUSLIST = [
+  {
+    label: "全部",
+    value: null
   },
+  {
+    label: "未申请对标",
+    value: -1
+  },
+  {
+    label: "已申请未对标",
+    value: 0
+  },
+  {
+    label: "机器对标成功",
+    value: 1
+  },
+  {
+    label: "机器失败等待人工处理",
+    value: 2
+  },
+  {
+    label: "对标失败",
+    value: 3
+  },
+  {
+    label: "人工对标成功",
+    value: 4
+  },
+  {
+    label: "暂停对标",
+    value: 5
+  },
+  {
+    label: "手工对标",
+    value: 6
+  }
+];
+const RELATIONSTATUSLIST = [
+  {
+    label: "全部",
+    value: null
+  },
+  {
+    label: "已同步",
+    value: 1
+  },
+  {
+    label: "未同步",
+    value: 0
+  }
+];
+import util from "@/util/util";
+export default {
+  components: {},
   data() {
     return {
-      colChunks: [5, 9, 5, 5, 6, 6, 6], // 条件选项栅格布局
-      loading: false,
+      colChunks: [5, 9, 5, 5, 6], // 条件选项栅格布局
+      dialogTableVisible: false,
+      gridData: [],
+      benchmarkingStatus: null,
+      benchmarkingStatusList: BENCHMARKINGSTATUSLIST,
+      relationStatus: null,
+      relationStatusList: RELATIONSTATUSLIST,
+      batchList: [], //批量勾选的数组
       conditions: {
         comId: "",
         cbId: "",
-        bhId: "",
-        houseNo: "", // 房源编号
-        timeSelect: ""
+        bhId: ""
       },
-      department: {
-        loading: false,
-        list: [],
-        value: ""
-      }, // 所属门店
-      agent: {
-        loading: false,
-        list: [],
-        value: ""
-      }, // 录入人
       buildLoading: false, //楼盘select loading
       buildOptData: {}, //当前楼盘选择数据
       buildForList: [], //楼盘select数据
@@ -504,26 +495,16 @@ export default {
       roomLoading: false, //房间号select loading
       roomOptData: {}, //房间号选中数据
       roomForList: [], //房间号select数据
-      validateStatus: "", // 验真状态
-      validateStatusList: [
-        {
-          value: 1,
-          label: "待验真"
-        },
-        {
-          value: 2,
-          label: "验真成功"
-        },
-        {
-          value: 3,
-          label: "验真失败"
-        }
-        // ,
-        // {
-        //   value: 4,
-        //   label: "无效"
-        // }
-      ],
+      province: 350000,
+      provinceList: [],
+      provinceLoading: false,
+      city: null,
+      cityList: [],
+      cityLoading: false,
+      county: null,
+      countyList: [],
+      countyLoading: false,
+      loading: false,
       tableData: [],
       pageJson: {
         page: 1,
@@ -533,21 +514,15 @@ export default {
       },
       sortColumn: "id", //排序字段
       sortType: 1, //排序类型
-      testDialogVisible: false,
-      recordDialogVisible: false,
-      testSubmitLoading: false,
-      houseStatus: 5, // 房源状态
-      testExplain: "", // 房源验真说明
-      recordStatus: "", // 房源记录房源状态
-      recordIntroduction: "", // 房源记录详细说明
-      voiceList: [],
-      recordCheckTime: "" // 验真时间
+      handleId: null
     };
   },
   created() {
     this.query();
     this.setConditionCol();
     window.addEventListener("resize", this.setConditionCol);
+    this.getPro();
+    this.getCity();
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.setConditionCol);
@@ -558,100 +533,35 @@ export default {
      */
     setConditionCol() {
       if (document.body.offsetWidth >= 1440) {
-        this.colChunks = [5, 9, 5, 5, 6, 6, 5];
+        this.colChunks = [5, 9, 5, 5, 6];
       } else {
-        this.colChunks = [7, 10, 7, 8, 8, 8, 8];
+        this.colChunks = [7, 10, 7, 8, 8];
       }
     },
     /**
-     * @example: 请求所属门店数据
+     * @example: 批量对标
      */
-    getDepartmentList() {
-      this.department.loading = true;
-      this.$api
-        .post({
-          url: "/informator/verify/spotCheckRecordList",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: {
-            selectType: "MORE_SELECT_SHOP"
-          }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            this.department.list = e.data.data;
-          }
-        })
-        .finally(() => {
-          this.department.loading = false;
+    batchBenchmarking() {
+      console.log(this.batchList);
+      if (this.batchList.length == 0) {
+        this.$message({
+          message: "请选择楼盘",
+          type: "error"
         });
-    },
-    /**
-     * @example: 所属门店获取焦点事件
-     */
-    departmentFocus() {
-      this.getDepartmentList();
-    },
-    /**
-     * @example: 所属门店选择事件
-     */
-    departmentChange(value) {
-      this.agent.list = [];
-      this.agent.value = "";
-      this.query();
-      if (value != "") {
-        this.getAgentList();
-      }
-    },
-    /**
-     * @example: 获取跟单人列表数据
-     */
-    getAgentList() {
-      this.agent.loading = true;
-      this.$api
-        .post({
-          url: "/spotCheck/spotCheckRecordList",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: {
-            selectType: "MORE_SELECT_PER",
-            selectDepartment: this.department.value
-          }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            this.agent.list = e.data.data;
-          }
-        })
-        .finally(() => {
-          this.agent.loading = false;
-        });
-    },
-    /**
-     * @example: 跟单人选择事件
-     */
-    agentChange(value) {
-      this.agent.value = value;
-      this.query();
-    },
-    /**
-     * @example: 验真结果提交
-     */
-    testSubmit() {
-      if (this.testExplain == "") {
-        this.$message.error("请输入详细说明");
         return;
       }
-      this.testSubmitLoading = true;
-      let url =
-        "/verifyHouse/verify/employee?id=" +
-        this.testRowId +
-        "&Remark=" +
-        this.testExplain +
-        "&checkTag=" +
-        this.houseStatus;
+      this.$message({
+        message: "对标中，请稍后...",
+        type: "info"
+      });
+      this.loading = true;
       this.$api
         .post({
-          url: url,
-          headers: { "Content-Type": "application/json;charset=UTF-8" }
+          url: "/community/contrast/batch/handle",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            ids: this.batchList
+          }
         })
         .then(e => {
           if (e.data.code == 200) {
@@ -659,31 +569,38 @@ export default {
               message: e.data.message,
               type: "success"
             });
-            this.testCancel();
+            this.query(this.pageJson.page);
           } else {
             this.$message.error(e.data.message);
           }
         })
         .finally(() => {
-          this.testSubmitLoading = false;
+          this.loading = false;
         });
     },
     /**
-     * @example: 取消房源验证
+     * @example: 批量关系同步
      */
-    testCancel() {
-      this.testDialogVisible = false;
-    },
-    /**
-     * @example: 一键拨号
-     */
-    handleCallClick(row) {
+    batchRelation() {
+      console.log(this.batchList);
+      if (this.batchList.length == 0) {
+        this.$message({
+          message: "请选择楼盘",
+          type: "error"
+        });
+        return;
+      }
+      this.$message({
+        message: "同步中，请稍后...",
+        type: "info"
+      });
+      this.loading = true;
       this.$api
         .post({
-          url: "/noticeManage/common/verifyOneTouchDialPhone",
+          url: "/community/contrast/batch/synchro",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
-            draftId: row.id
+            ids: this.batchList
           }
         })
         .then(e => {
@@ -692,49 +609,31 @@ export default {
               message: e.data.message,
               type: "success"
             });
+            this.query(this.pageJson.page);
           } else {
             this.$message.error(e.data.message);
           }
         })
-        .finally(() => {});
+        .finally(() => {
+          this.loading = false;
+        });
     },
     /**
-     * @example: 房源验真
+     * @example: 多选框选择改变事件
      */
-    handleTestClick(row) {
-      this.testRowId = row.id;
-      this.testDialogVisible = true;
-      this.houseStatus = 5;
-      this.testExplain = "";
+    handleSelectionChange(item) {
+      item.forEach(element => {
+        if (!this.batchList.includes(element.id)) {
+          this.batchList.push(element.id);
+        }
+      });
+      console.log(this.batchList, "----------");
     },
-    /**
-     * @example: 验真记录
-     */
-    handleRecordClick(row) {
-      this.recordStatus = "";
-      this.recordIntroduction = "";
-      this.voiceList = [];
-      this.recordCheckTime = "";
-      this.recordDialogVisible = true;
-      this.$api
-        .post({
-          url: "/informator/verify/result",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: {
-            id: row.id
-          }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            this.recordStatus = e.data.data.houseState;
-            this.recordIntroduction = e.data.data.remark;
-            this.voiceList = e.data.data.voiceList;
-            this.recordCheckTime = e.data.data.checkTime;
-          } else {
-            this.$message.error(e.data.message);
-          }
-        })
-        .finally(() => {});
+    isChooise(row, index) {
+      if (row.panshiCommunityId != null) {
+        return false;
+      }
+      return true;
     },
     /**
      * @example: 改变每页请求数据数量
@@ -753,39 +652,6 @@ export default {
     handleCurrentChange(val) {
       this.pageJson.page = val;
       this.query(val);
-    },
-    /**
-     * @example: 楼盘激活第一时获取数据
-     */
-    remoteBuildInput() {
-      // this.buildForList.length === 0 && this.buildRemoteMethod();
-      this.buildRemoteMethod();
-    },
-    /**
-     * @example: 远程获取楼盘信息
-     */
-    buildRemoteMethod(query) {
-      this.buildLoading = true;
-      this.$api
-        .get({
-          url: "/community/information/verify",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            communityName: query,
-            page: 1,
-            limit: 50
-          }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            this.buildForList = e.data.data.list;
-          }
-        })
-        .finally(() => {
-          this.buildLoading = false;
-        });
     },
     /**
      * @example: 楼盘选择更改触发事件
@@ -810,6 +676,39 @@ export default {
       this.query();
       //获取楼栋select
       this.queryRoomNo();
+    },
+    /**
+     * @example: 楼盘激活第一时获取数据
+     */
+    remoteBuildInput() {
+      // this.buildForList.length === 0 && this.buildRemoteMethod();
+      this.buildRemoteMethod();
+    },
+    /**
+     * @example: 远程获取楼盘信息
+     */
+    buildRemoteMethod(query) {
+      this.buildLoading = true;
+      this.$api
+        .get({
+          url: "/community/contrast/comm/search",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            communityName: query,
+            page: 1,
+            limit: 50
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.buildForList = e.data.data.list;
+          }
+        })
+        .finally(() => {
+          this.buildLoading = false;
+        });
     },
     /**
      * @example: 获取栋座远程数据
@@ -902,12 +801,9 @@ export default {
     reset() {
       //Object.assign(this.$data, this.$options.data());
       Object.assign(this.$data.conditions, this.$options.data().conditions);
-      Object.assign(this.$data.department, this.$options.data().department);
-      Object.assign(this.$data.agent, this.$options.data().agent);
       this.buildOptData = {};
       this.towerOptData = {};
       this.roomOptData = {};
-      this.validateStatus = "";
       this.query();
     },
     /**
@@ -917,21 +813,23 @@ export default {
       this.pageJson.page = currentPage;
       this.loading = true;
       let params = { limit: this.pageJson.limit, page: currentPage };
-      params.comId = this.conditions.comId;
-      params.cbId = this.conditions.cbId;
-      params.bhId = this.conditions.bhId;
-      params.storeId = this.department.value;
-      params.verifyPer = this.agent.value;
-      params.checkStatus = this.validateStatus;
-      params.beginTime = this.conditions.timeSelect[0];
-      params.endTime = this.conditions.timeSelect[1];
-      params.houseNo = this.conditions.houseNo;
-      params.sortColumn = this.sortColumn;
-      params.sortType = this.sortType;
+      console.log("this.buildOptData", this.buildOptData);
+      if (this.buildOptData != null) {
+        params.comId = this.buildOptData.value;
+      }
+      if (this.city != null) {
+        params.city = this.city;
+      }
+      if (this.county != null) {
+        params.county = this.county;
+      }
+      if (this.benchmarkingStatus != null) {
+        params.contrast = this.benchmarkingStatus;
+      }
       this.$api
         .post({
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          url: "/informator/verify/list",
+          url: "/community/contrast/list",
           data: params
         })
         .then(e => {
@@ -947,6 +845,186 @@ export default {
         })
         .finally(() => {
           this.loading = false;
+        });
+    },
+    handleCallClick(row) {
+      this.$api
+        .post({
+          url: "/community/contrast/handle",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            id: row.id,
+            name: row.name,
+            cityName: row.cityName,
+            countyName: row.countyName,
+            idFor58: row.idFor58
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$message({
+              message: e.data.message,
+              type: "success"
+            });
+            this.query(this.pageJson.page);
+          } else {
+            this.$message.error(e.data.message);
+          }
+        })
+        .finally(() => {});
+    },
+    handleSynchro(row) {
+      this.$api
+        .post({
+          url: "/community/contrast/synchro",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            id: row.id,
+            idFor58: row.idFor58
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$message({
+              message: e.data.message,
+              type: "success"
+            });
+            this.query(this.pageJson.page);
+          } else {
+            this.$message.error(e.data.message);
+          }
+        })
+        .finally(() => {});
+    },
+    /**
+     * @example: 手工对标按钮
+     */
+    handleBenchmark(row) {
+      this.$message({
+        message: "对标查询中...",
+        type: "info"
+      });
+      let params = { name: row.name, idFor58: row.idFor58 };
+      this.handleId = row.id;
+      this.$api
+        .post({
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          url: "/community/contrast/search",
+          data: params
+        })
+        .then(e => {
+          let data = e.data;
+          if (data.code == 200) {
+            this.gridData = data.data;
+            this.dialogTableVisible = true;
+          } else {
+            this.$message({
+              message: e.data.message,
+              type: "error"
+            });
+          }
+        })
+        .catch(e => {
+          console.log(e, "查询锁定房源列表失败");
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    /**
+     * @example: 手工对标弹窗表格操作按钮
+     */
+    dialogBenchmark(row) {
+      this.$api
+        .post({
+          url: "/community/contrast/handmade",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            id: this.handleId,
+            communityId: row.communityId,
+            communityName: row.communityName,
+            address: row.address,
+            mianShangquanName: row.mianShangquanName,
+            mainShangquanDistrictName: row.mainShangquanDistrictName
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$message({
+              message: e.data.message,
+              type: "success"
+            });
+            this.dialogTableVisible = true;
+            this.query(this.pageJson.page);
+          } else {
+            this.$message.error(e.data.message);
+          }
+        })
+        .finally(() => {});
+    },
+    getPro() {
+      this.$api
+        .get({
+          url: "/community/contrast/region",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            level: 1,
+            pid: 100000
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.provinceList = e.data.data;
+          }
+        })
+        .finally(() => {
+          this.buildLoading = false;
+        });
+    },
+    getCity() {
+      this.$api
+        .get({
+          url: "/community/contrast/region",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            level: 2,
+            pid: this.province
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.cityList = e.data.data;
+          }
+        })
+        .finally(() => {
+          this.buildLoading = false;
+        });
+    },
+    getCounty() {
+      this.query();
+      this.county = null;
+      this.$api
+        .get({
+          url: "/community/contrast/region",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            level: 3,
+            pid: this.city
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.countyList = e.data.data;
+          }
+        })
+        .finally(() => {
+          this.buildLoading = false;
         });
     }
   }
@@ -1003,6 +1081,23 @@ export default {
       display: flex;
       flex-direction: column;
       width: 100%;
+      .batch-button {
+        // prettier-ignore
+        height: 36PX;
+        // prettier-ignore
+        padding: 0 10PX;
+        // prettier-ignore
+        margin: 0 10PX 10PX 0;
+        border: none;
+        border-radius: 4px;
+        outline: none;
+        line-height: 1;
+        text-align: center;
+        font-size: @font14;
+        cursor: pointer;
+        background: @backgroud;
+        color: #fff;
+      }
       .table {
         flex: 1;
         display: flex;
@@ -1036,6 +1131,10 @@ export default {
               }
             }
           }
+        }
+        .el-checkbox__inner {
+          width: 18px;
+          height: 18px;
         }
         .el-table__body-wrapper {
           tr {
@@ -1373,6 +1472,44 @@ export default {
           color: #a7a7a7;
         }
       }
+    }
+  }
+}
+.operate-btn {
+  // prettier-ignore
+  height: 30PX;
+  // prettier-ignore
+  padding: 0 10PX;
+  border: none;
+  // prettier-ignore
+  border-radius: 4PX;
+  outline: none;
+  // prettier-ignore
+  line-height: 30PX;
+  text-align: center;
+  font-size: @font12;
+}
+/deep/.relation-dialog {
+  .el-dialog__title {
+    font-size: @font18;
+    font-weight: bold;
+  }
+  .el-dialog__body {
+    // prettier-ignore
+    padding-top: 10PX;
+    .relation-dialog-btn {
+      // prettier-ignore
+      height: 28PX;
+      // prettier-ignore
+      padding: 0 10PX;
+      border: none;
+      // prettier-ignore
+      border-radius: 4PX;
+      outline: none;
+      // prettier-ignore
+      line-height: 28PX;
+      text-align: center;
+      font-size: @font12;
     }
   }
 }

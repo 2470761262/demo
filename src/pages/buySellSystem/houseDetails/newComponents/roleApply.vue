@@ -107,6 +107,10 @@
             height: 30PX;
             // prettier-ignore
             line-height: 30PX;
+            &.type-vr {
+              // prettier-ignore
+              width: 50PX;
+            }
           }
         }
       }
@@ -313,6 +317,8 @@
             class="role-type-bottom"
             @click="openPop('houseUploadflag', 4, 'houseUploadType', 5)"
           >
+            <!-- @click="openPop('houseUploadflag', 12, 'houseUploadType', 0)" -->
+            <!-- <div class="role-type-title type-vr">申请VR</div> -->
             <div class="role-type-title">取代</div>
           </div>
         </div>
@@ -383,6 +389,10 @@
         :visible.sync="entrustPopFlag"
       ></entrustPop>
     </div>
+    <investigator-apply-Pop
+      :dialogInvestigatorVisible.sync="dialogInvestigatorVisible"
+      :houseId="houseId"
+    ></investigator-apply-Pop>
   </div>
 </template>
 
@@ -402,7 +412,9 @@ export default {
     //委托人
     entrustPop: () => import("../newDidLog/entrustPop"),
     //选填信息
-    applyAgentPop: () => import("../newDidLog/applyAgentPop")
+    applyAgentPop: () => import("../newDidLog/applyAgentPop"),
+    // 申请实勘人
+    investigatorApplyPop: () => import("../newDidLog/investigatorApplyPop")
   },
   data() {
     return {
@@ -418,7 +430,8 @@ export default {
       middleRadio: 0, //中学占用级
       primaryRadio: 0, //小学占用年级
       showFollow: true, //是否显示组件的跟进
-      audioList: [] //音频文件
+      audioList: [], //音频文件
+      dialogInvestigatorVisible: false
     };
   },
   computed: {
@@ -573,6 +586,7 @@ export default {
           this.houseId,
           "正在审核"
         );
+        // 图片视频上传组件
         if (popName == "houseUploadflag") {
           this.echoData = [
             ...this.houseData.saleUploadPicDtoList,
@@ -580,8 +594,13 @@ export default {
           ];
         }
         if (!result) {
+          //申请VR
+          // if (popName == "houseUploadflag") {
+          //   this.dialogInvestigatorVisible = true;
+          // } else {
           this[typeName] = type;
           this[popName] = true;
+          // }
         }
       } else {
         let result = await houseCheck.isChecking(

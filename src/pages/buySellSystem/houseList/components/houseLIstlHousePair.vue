@@ -51,6 +51,7 @@
         z-index: 10;
       }
       .tab-image-content {
+        position: relative;
         padding-left: 5px;
         height: 128px;
         display: flex;
@@ -63,6 +64,20 @@
           width: 130px;
           height: 90px;
           border-radius: 4px;
+        }
+        .vr-icon {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          cursor: pointer;
+          img {
+            // prettier-ignore
+            width: 60PX;
+          }
         }
       }
     }
@@ -144,6 +159,19 @@
     line-height: 23PX;
   }
 }
+.off-shelf-btn {
+  // prettier-ignore
+  padding: 6PX 10PX;
+  background: @backgroud;
+  border: none;
+  // prettier-ignore
+  border-radius: 4PX;
+  outline: none;
+  line-height: 1;
+  color: #fff;
+  font-size: @font14;
+  cursor: pointer;
+}
 </style>
 <template>
   <div class="tab-page">
@@ -162,6 +190,13 @@
             @error="houseImageErorHandle(item)"
             scroll-container=".scroll-tab"
           ></el-image>
+          <div
+            class="vr-icon"
+            v-if="item.vrUrl"
+            @click="navigetoVrVideo(item.vrUrl)"
+          >
+            <img src="@/assets/images/houseList_vr.svg" alt="" />
+          </div>
         </div>
       </div>
       <el-table
@@ -310,6 +345,100 @@ export default {
           order: false
         }
       ],
+      otherTableColumn: [
+        {
+          prop: "communityName",
+          label: "楼盘名称",
+          order: false,
+          width: "230",
+          formart: item => {
+            return (
+              <div class="tab-com-item">
+                <div class="tab-house-title">{item.communityName}</div>
+                <div class="tab-houseno">{item.houseNo}</div>
+              </div>
+            );
+          }
+        },
+        {
+          prop: "houseType",
+          label: "户型",
+          order: "custom",
+          formart: item =>
+            (item.rooms || 0) +
+            "-" +
+            (item.hall || 0) +
+            "-" +
+            (item.toilet || 0) +
+            "-" +
+            (item.balcony || 0)
+        },
+        {
+          prop: "inArea",
+          label: "面积",
+          order: "custom",
+          formart: item => item.inArea + "平"
+        },
+        {
+          prop: "price",
+          label: "价格",
+          order: "custom",
+          formart: item => {
+            return (
+              <div>
+                <div>{item.price}万</div>
+                <div>{item.unitPrice}元/平</div>
+              </div>
+            );
+          }
+        },
+        {
+          prop: "floor",
+          label: "楼层",
+          order: true,
+          formart: item => {
+            return `${item.floor}/${item.floorNum}`;
+          }
+        },
+        {
+          prop: "seenNumRecent",
+          label: "30天带看",
+          order: "custom",
+          formart: item => item.seenNumRecent || "0"
+        },
+        {
+          prop: "addTime",
+          label: "挂牌",
+          order: true
+        },
+        {
+          prop: "brokerName",
+          label: "跟单人",
+          order: false,
+          formart: item => {
+            return (
+              <div>
+                <div>{item.brokerName}</div>
+                <div>{item.deptName}</div>
+              </div>
+            );
+          }
+        },
+        {
+          label: "操作",
+          order: false,
+          formart: item => {
+            return (
+              <button
+                class="off-shelf-btn"
+                onClick={this.offShelfHouse.bind(this, item)}
+              >
+                下架房源
+              </button>
+            );
+          }
+        }
+      ],
       dealHouseTableColumn: [
         {
           prop: "communityName",
@@ -412,7 +541,6 @@ export default {
       deep: true,
       immediate: true,
       handler: function(value, ordvalue) {
-        console.log("11111111111111");
         this.getHouseData(JSON.parse(JSON.stringify(value))).then(() => {
           dom.querySelector(".scroll-tab").scrollTop = 0;
           this.$parent.ListeningScroll();
@@ -429,7 +557,10 @@ export default {
     bus.$on("modifyTableColumn", type => {
       this.typeActiveIndex = type;
       switch (type) {
-        case 2:
+        case 1:
+          this.tableColumnField = this.otherTableColumn;
+          break;
+        case 3:
           this.tableColumnField = this.dealHouseTableColumn;
           break;
         default:
@@ -442,6 +573,53 @@ export default {
     bus.$off("modifyTableColumn");
   },
   methods: {
+    /**
+     * @example: 查看vr
+     */
+    navigetoVrVideo(url) {
+      window.open(url, "_blank");
+    },
+    /**
+     * @example: 下架房源
+     */
+    offShelfHouse(row) {
+      console.log(row, "下架房源-------------");
+      this.$confirm("是否下架房源?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$api
+            .post({
+              url: `/agent_house/deleteUniteHouse`,
+              data: {
+                houseId: row.id,
+                houseNo: row.houseNo,
+                comId: row.comId
+              },
+              headers: {
+                "Content-Type": "application/json;charset=UTF-8"
+              }
+            })
+            .then(e => {
+              this.$message(e.data.message);
+              if (e.data.code == 200) {
+                this.getHouseData().then(() => {
+                  dom.querySelector(".scroll-tab").scrollTop = 0;
+                  this.$parent.ListeningScroll();
+                });
+              }
+            })
+            .catch(e => {});
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消操作"
+          });
+        });
+    },
     //解决索引只排序当前页的问题,增加函数自定义索引序号
     sortDevName(str1, str2) {
       let res = 0;
@@ -501,7 +679,6 @@ export default {
      * @example: 处理ErrorImage
      * @param {type}
      */
-
     houseImageErorHandle(item) {
       item.picUrl =
         "https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/9b122fa0df5946058c5a254fae9b3bfc.png";
@@ -516,7 +693,7 @@ export default {
      * @example: 双击前往详情
      */
     navDetailt(item) {
-      if (this.typeActiveIndex == 2) return;
+      if (this.typeActiveIndex == 3) return;
       util.openPage.call(this, {
         name: "houseDetails",
         params: { houseId: item.id, dept: item.perDept }
@@ -606,13 +783,21 @@ export default {
       });
       let param;
       switch (this.typeActiveIndex) {
-        case 2:
+        case 1:
+          param = {
+            url: "/mateHouse/getMateHouse/wuBaHouseIndex",
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            data: restuleParms
+          };
+          break;
+        case 3:
           param = {
             url: "/mateHouse/getMateHouse/tradeHouseIndex",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             data: restuleParms
           };
           break;
+
         default:
           param = {
             url: "/mateHouse/getMateHouse/soleAllHouseIndex",

@@ -186,7 +186,15 @@
           ></el-input>
         </el-form-item>
       </div>
-
+      <div class="flex-row flex-row40">
+        <el-form-item label="58开放平台公司ID:">
+          <el-input
+            type="text"
+            placeholder="请输入内容"
+            v-model="companyEntity.idFor58"
+          ></el-input>
+        </el-form-item>
+      </div>
       <div class="footerContainer el-top">
         <el-button type="primary" @click="savecompany()">确定</el-button>
         <el-button type="primary" @click="back()">返回</el-button>

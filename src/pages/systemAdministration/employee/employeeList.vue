@@ -10,6 +10,9 @@
     /deep/.el-input {
       width: auto;
     }
+    div {
+      margin-right: 10px;
+    }
   }
 }
 .page-content {
@@ -54,6 +57,66 @@
 }
 .no-center {
   text-align: left;
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  align-items: center;
+  .operate-btn {
+    // prettier-ignore
+    min-width: 76PX;
+    // prettier-ignore
+    height: 28PX;
+    padding: 0;
+    // prettier-ignore
+    margin: 5PX 10PX 5PX 0;
+    // prettier-ignore
+    line-height: 28PX;
+    font-size: @font14;
+    &:nth-child(even) {
+      // prettier-ignore
+      margin-right: 0 !important;
+    }
+  }
+}
+/deep/.el-dialog {
+  // prettier-ignore
+  border-radius: 8PX;
+  .el-dialog__header {
+    position: relative;
+    // prettier-ignore
+    padding: 15PX;
+    text-align: center;
+    .el-dialog__title {
+      line-height: 1;
+      font-size: @font16;
+      font-weight: bold;
+    }
+    .el-dialog__headerbtn {
+      top: 50%;
+      transform: translateY(-50%);
+      .el-icon-close {
+        font-size: @font22;
+      }
+    }
+  }
+  .el-dialog__body {
+    // prettier-ignore
+    padding: 0 20PX 20PX;
+  }
+  .unbunding-container {
+    .btn-box {
+      display: flex;
+      justify-content: center;
+      // prettier-ignore
+      margin-top: 15PX;
+      .btn {
+        &.confirm {
+          background: @backgroud;
+          color: #fff;
+        }
+      }
+    }
+  }
 }
 </style>
 
@@ -141,18 +204,27 @@
             :label="item.label"
             :width="item.width"
             :key="item.prop"
+            :formatter="item.formart"
           ></el-table-column>
         </template>
-        <el-table-column label="操作" fixed="right" min-width="180">
+        <el-table-column label="操作" fixed="right" min-width="186">
           <template v-slot="scope">
             <div class="no-center">
               <el-button
+                class="operate-btn"
                 type="primary"
                 size="mini"
-                @click="distributeEvent(item.methodName, scope.row.accountId)"
+                @click="
+                  distributeEvent(
+                    item.methodName,
+                    scope.row.accountId,
+                    item.openFlag
+                  )
+                "
                 v-for="(item, index) in getOpeBtns(
                   scope.row.del,
-                  scope.row.isLocked
+                  scope.row.isLocked,
+                  scope.row.isBindWuBa
                 )"
                 :key="index"
                 >{{ item.name }}</el-button
@@ -184,21 +256,57 @@
         <el-button type="primary" @click="delAccount()">确 定</el-button>
       </span>
     </el-dialog>
+    <!--58绑定弹窗-->
+    <bindBroker58Pop
+      :openFlag.sync="bindBrokerFlag"
+      :accountId="brokerId"
+      @bindBorkerWuBa="bindBorkerWuBa"
+    >
+    </bindBroker58Pop>
+    <!-- 解绑弹窗 -->
+    <el-dialog
+      title="解绑确认"
+      :visible.sync="unbundingDialogVisible"
+      @close="closeUnbundingDialog"
+      width="266px"
+      top="35vh"
+    >
+      <div class="unbunding-container">
+        <div class="content">
+          您是否要解绑该经纪人的58账号？确认后，经纪人将无法使用鑫伽系统将房源发布至58房源、安居客及赶集网！
+        </div>
+        <div class="btn-box">
+          <el-button class="btn cancel" @click="cancelUnbunding"
+            >取消</el-button
+          >
+          <el-button
+            class="btn confirm"
+            @click="confirmUnbunding"
+            :loading="unbundingLoading"
+            >确认解绑</el-button
+          >
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import listPage from "@/components/listPage";
 import getToken from "@/minxi/getUrlToken";
+import bindBroker58Pop from "./didLog/bindBroker58Pop";
 export default {
   mixins: [getToken],
 
   components: {
-    listPage
+    listPage,
+    bindBroker58Pop
   },
 
   data() {
     return {
+      unbundingLoading: false,
+      unbundingDialogVisible: false,
       sidebarFlag: false,
       loading: false, //控制表格加载动画提示
       queryData: {
@@ -227,6 +335,13 @@ export default {
         { prop: "roleName", label: "岗位", width: "150px" },
         { prop: "del", label: "状态", width: "80px" },
         { prop: "isLocked", label: "情况", width: "80px" },
+        {
+          prop: "isBindWuBa",
+          label: "58账号绑定",
+          width: "80px",
+          formart: item =>
+            item.isBindWuBa == null || !item.isBindWuBa ? "未绑定" : "已绑定"
+        },
         { prop: "loginDatetime", label: "最近登录时间", width: "180px" }
       ],
       tableData: [],
@@ -239,7 +354,9 @@ export default {
       checkedId: null,
       checkedType: null,
       id: 0,
-      treeLoading: true
+      treeLoading: true,
+      bindBrokerFlag: false,
+      brokerId: -1
     };
   },
   mounted() {
@@ -273,6 +390,53 @@ export default {
     this.queryEmployeeDatas(1);
   },
   methods: {
+    /**
+     * @example:绑定成功回调
+     */
+    bindBorkerWuBa() {
+      this.queryEmployeeByParams();
+    },
+    /**
+     * 关闭解绑窗口
+     */
+    closeUnbundingDialog() {
+      this.unbundingDialogVisible = false;
+    },
+    /**
+     * 确认解绑
+     */
+    confirmUnbunding() {
+      this.unbundingLoading = true;
+      this.$api
+        .post({
+          url: `/employee/unBindBroker58`,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            accountId: this.brokerId
+          }
+        })
+        .then(e => {
+          let type = "error";
+          if (e.data.code == 200) {
+            type = "sucesss";
+            this.unbundingDialogVisible = false;
+            this.queryEmployeeByParams();
+          }
+          this.$message({
+            message: e.data.message,
+            type: type
+          });
+        })
+        .finally(e => {
+          this.unbundingLoading = false;
+        });
+    },
+    /**
+     * 取消解绑
+     */
+    cancelUnbunding() {
+      this.unbundingDialogVisible = false;
+    },
     queryEmployeeByParams() {
       this.queryEmployeeDatas(1);
     },
@@ -380,9 +544,8 @@ export default {
       // this.$router.push({ path: "/sys/editemployee", query: { id: row.id } });
       //this.employeeEntity = row;
     },
-    distributeEvent(e, id) {
-      this[e](id);
-      console.log(id);
+    distributeEvent(e, id, openFlag) {
+      this[e](id, openFlag);
     },
     lockEmployee(id) {
       let that = this;
@@ -464,41 +627,67 @@ export default {
           });
         });
     },
-    getOpeBtns(del, locked) {
+    getOpeBtns(del, locked, isBindWuBa) {
+      isBindWuBa = isBindWuBa == null ? false : isBindWuBa;
       let array = [
         {
           name: "编辑",
           delFilter: ["在职"],
           lockFilter: ["正常"],
+          isBindWuBaFilter: null,
           methodName: "editEmployee"
         },
         {
           name: "离职",
           delFilter: ["在职", "离职待审核"],
           lockFilter: ["正常"],
+          isBindWuBaFilter: null,
           methodName: "delEmployee"
         },
         {
           name: "复职",
           delFilter: ["离职", "离职待审核"],
           lockFilter: ["正常", "锁定"],
+          isBindWuBaFilter: null,
           methodName: "resumeEmployee"
         },
         {
           name: "锁定",
           delFilter: ["在职"],
           lockFilter: ["正常"],
+          isBindWuBaFilter: null,
           methodName: "lockEmployee"
         },
         {
           name: "解锁",
           delFilter: ["在职", "离职", "离职待审核"],
           lockFilter: ["锁定"],
+          isBindWuBaFilter: null,
           methodName: "unLockEmployee"
+        },
+        {
+          name: "绑定58",
+          delFilter: ["在职"],
+          lockFilter: ["正常"],
+          isBindWuBaFilter: [false],
+          methodName: "openPop",
+          openFlag: "bindBrokerFlag"
+        },
+        {
+          name: "解绑58",
+          delFilter: ["在职"],
+          lockFilter: ["正常"],
+          isBindWuBaFilter: [true],
+          methodName: "openPop",
+          openFlag: "unbundingDialogVisible"
         }
       ];
       var newArr = array.filter(
-        item => item.delFilter.includes(del) && item.lockFilter.includes(locked)
+        item =>
+          item.delFilter.includes(del) &&
+          item.lockFilter.includes(locked) &&
+          (item.isBindWuBaFilter == null ||
+            item.isBindWuBaFilter.includes(isBindWuBa))
       );
       return newArr;
     },
@@ -589,6 +778,10 @@ export default {
         this.checkedType = null;
         this.queryEmployeeDatas(1);
       }
+    },
+    openPop(accountId, flag) {
+      this.brokerId = accountId;
+      this[flag] = !this[flag];
     }
   }
 };

@@ -112,6 +112,11 @@ const TYPELIST = [
     value: 3,
     name: "myBet"
   }
+  // {
+  //   label: "VR拍摄",
+  //   value: 4,
+  //   name: "vrShooting"
+  // }
 ];
 export default {
   components: {
