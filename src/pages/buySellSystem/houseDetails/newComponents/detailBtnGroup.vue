@@ -119,6 +119,7 @@
       style="order:5"
       @click="joinOtherResource"
       v-if="publishBtnType == 1"
+      :disabled="isLockBtn"
     >
       <i class="iconfont iconhot"></i>发布58
       <!-- <i class="el-icon-question"></i> -->

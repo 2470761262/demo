@@ -360,15 +360,15 @@
                   :type="activity.type"
                   :color="activity.color"
                   :size="activity.size"
-                  :timestamp="activity.createTime"
+                  :timestamp="activity.callTime"
                   placement="top"
                 >
                   <div>
                     <div>
-                      <span class="audio-title">{{ activity.followName }}</span>
+                      <span class="audio-title">{{ activity.addPerName }}</span>
                       <el-audio
                         :fixed="false"
-                        :url="activity.content"
+                        :url="activity.voiceUrl"
                       ></el-audio>
                     </div>
                   </div>
@@ -528,7 +528,6 @@ export default {
      * 查记录下拉滚动分页
      */
     load() {
-      console.log("-----------");
       if (this.voice.page < this.voice.totalPage) {
         ++this.voice.page;
         this.getHouseVoiceList();
@@ -540,19 +539,17 @@ export default {
      * 获取语音记录列表
      */
     getHouseVoiceList() {
-      console.log(this.nowRow, "--------");
-      let params = {
-        page: this.voice.page,
-        limit: 7,
-        roomId: this.nowRow.id,
-        followType: 2
-      };
       this.voice.loading = true;
       this.$api
         .post({
-          url: "/roomFollow/follows",
+          url: "/midtel/listByEid",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: params
+          data: {
+            page: this.voice.page,
+            limit: 7,
+            eid: this.nowRow.id,
+            followType: 10
+          }
         })
         .then(e => {
           if (e.data.code === 200) {
@@ -688,7 +685,6 @@ export default {
             that.employeeDiff.remark = res.data.remark;
             that.employeeDiff.show = true;
           }
-          console.log(that.employeeDiff.show);
         })
         .catch(e => {
           console.log("查询失败");
@@ -735,12 +731,9 @@ export default {
           qs: true
         })
         .then(e => {
-          console.log(e.data);
           let result = e.data;
           this.loading = false;
           if (result.code == 200) {
-            console.log(result.message);
-            console.log(result.data);
             this.$alert(
               '<img class="invitationToVerify" src="' +
                 result.data +
