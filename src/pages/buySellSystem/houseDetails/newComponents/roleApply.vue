@@ -396,6 +396,7 @@
     <investigator-apply-Pop
       :dialogInvestigatorVisible.sync="dialogInvestigatorVisible"
       :houseId="houseId"
+      @submit="investigatorApply"
     ></investigator-apply-Pop>
   </div>
 </template>
@@ -507,15 +508,20 @@ export default {
     }
   },
   mounted() {
-    console.log("mounted");
     this.getRealOwnerAuthority();
   },
   methods: {
+    /**
+     * 实勘人申请成功事件
+     */
+    investigatorApply() {
+      this.realOwnerDisabled = true;
+    },
+    /**
+     * 获取申请实勘人按钮权限
+     */
     async getRealOwnerAuthority() {
-      //  ('houseUploadflag', 12, 'houseUploadType', 0)
-      // (popName, type, typeName, replaceType)
       // 如果进入页面不弹提示框需要直接用axios请求
-      console.log("555555555555");
       this.$api
         .get({
           url: "/agentHouse/propertyCheck/realowner/can/apply",
@@ -614,6 +620,9 @@ export default {
      */
     async openPop(popName, type, typeName, replaceType) {
       if (type != 4) {
+        if (popName == "houseUploadflag") {
+          this.dialogInvestigatorVisible = true;
+        }
         let result = await houseCheck.isChecking(
           type,
           replaceType,
@@ -628,7 +637,6 @@ export default {
         //   ];
         // }
         if (!result) {
-          //申请VR
           if (popName == "houseUploadflag") {
             this.dialogInvestigatorVisible = true;
           } else {

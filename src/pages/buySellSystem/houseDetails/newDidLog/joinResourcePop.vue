@@ -9,7 +9,7 @@
       width="500px"
       :closeOnClickModal="false"
     >
-      <div class="investigator-container">
+      <div class="investigator-container" v-show="flag">
         <div class="tip">
           <i class="el-icon-warning"></i>
           <span class="text">加入后，需用58发布才可以在58C端展示</span>
@@ -83,6 +83,68 @@
           >
         </div>
       </div>
+      <div class="investigator-container" v-show="!flag">
+        <div class="formwork" v-infinite-scroll="load">
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <div>1111111111111111111<br /></div>
+          <p v-if="loading">加载中...</p>
+          <p v-if="true">没有更多了</p>
+        </div>
+        <div class="btn-box formwork-btn">
+          <el-button class="btn cancel" @click="back">取消</el-button>
+          <el-button class="btn confirm" @click="selectConfirm"
+            >确定选择</el-button
+          >
+        </div>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -117,7 +179,9 @@ export default {
       houseTitleId: null,
       houseDetailId: null,
       ownerMentalityId: null,
-      serveIntroductionId: null
+      serveIntroductionId: null,
+      flag: true,
+      loading: false
     };
   },
   watch: {
@@ -180,29 +244,30 @@ export default {
           type = 3;
           break;
       }
-      this.$api
-        .post({
-          url: "/releaseWuBaTemplate/random",
-          data: {
-            id: id || 0,
-            type: type
-          },
-          headers: { "Content-Type": "application/json;charset=UTF-8" }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            let content = e.data.data.details
-              .replace("communityName", this.selfPublishInfo.communityName)
-              .replace("middleSchool", this.selfPublishInfo.middleSchool)
-              .replace("price", this.selfPublishInfo.price)
-              .replace("averagePrice", this.selfPublishInfo.averagePrice);
-            this.selfPublishInfo[title] = content;
-            this[field] = e.data.data.id;
-          } else {
-            this.$message.error(e.data.message);
-          }
-        })
-        .catch(e => {});
+      // this.$api
+      //   .post({
+      //     url: "/releaseWuBaTemplate/random",
+      //     data: {
+      //       id: id || 0,
+      //       type: type
+      //     },
+      //     headers: { "Content-Type": "application/json;charset=UTF-8" }
+      //   })
+      //   .then(e => {
+      //     if (e.data.code == 200) {
+      //       let content = e.data.data.details
+      //         .replace("communityName", this.selfPublishInfo.communityName)
+      //         .replace("middleSchool", this.selfPublishInfo.middleSchool)
+      //         .replace("price", this.selfPublishInfo.price)
+      //         .replace("averagePrice", this.selfPublishInfo.averagePrice);
+      //       this.selfPublishInfo[title] = content;
+      //       this[field] = e.data.data.id;
+      //     } else {
+      //       this.$message.error(e.data.message);
+      //     }
+      //   })
+      //   .catch(e => {});
+      this.flag = false;
     },
     confirm() {
       if (this.selfPublishInfo.houseTitle.length < 10) {
@@ -249,6 +314,15 @@ export default {
         .finally(() => {
           this.joinLoading = false;
         });
+    },
+    back() {
+      this.flag = true;
+    },
+    selectConfirm() {
+      this.flag = true;
+    },
+    load() {
+      console.log("loading...");
     }
   }
 };
@@ -276,14 +350,39 @@ export default {
     }
   }
   .el-dialog__body {
+    display: flex;
     // prettier-ignore
-    // max-height: 600PX;
-    // overflow: auto;
+    min-height: 460PX;
+    // prettier-ignore
+    max-height: 70vh;
+    overflow: auto;
     // prettier-ignore
     padding: 0 30PX 30PX;
   }
 }
 /deep/.investigator-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  .formwork {
+    flex: 1;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    &::-webkit-scrollbar-button,
+    &::-webkit-scrollbar-track,
+    &::-webkit-scrollbar-track-piece {
+      display: none;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 50px;
+    }
+  }
+  .formwork-btn {
+  }
   .tip {
     display: flex;
     flex-direction: row;
