@@ -324,10 +324,16 @@
       <!-- 申请实勘人 -->
       <div
         class="role-item role-btn-cotnent"
-        v-else-if="reloData.applyRealOwner"
+        v-else-if="reloData.applyRealOwner && !realOwnerDisabled"
         @click="openPop('houseUploadflag', 12, 'houseUploadType', 0)"
       >
         <button class="role-btn">申请实勘人</button>
+      </div>
+      <div
+        class="role-item role-btn-cotnent"
+        v-else-if="reloData.applyRealOwner && realOwnerDisabled"
+      >
+        <button class="role-btn" disabled>VR拍摄中</button>
       </div>
       <!-- 无申请实勘人权限 -->
       <div class="role-item role-btn-cotnent" v-else>
@@ -416,6 +422,7 @@ export default {
   },
   data() {
     return {
+      realOwnerDisabled: false,
       echoData: [],
       houseUploadLoading: false,
       houseUploadflag: false,
@@ -499,7 +506,36 @@ export default {
       return this.houseData.agentHouseMethod.realOwnerName != null;
     }
   },
+  mounted() {
+    console.log("mounted");
+    this.getRealOwnerAuthority();
+  },
   methods: {
+    async getRealOwnerAuthority() {
+      //  ('houseUploadflag', 12, 'houseUploadType', 0)
+      // (popName, type, typeName, replaceType)
+      // 如果进入页面不弹提示框需要直接用axios请求
+      console.log("555555555555");
+      this.$api
+        .get({
+          url: "/agentHouse/propertyCheck/realowner/can/apply",
+          data: {
+            houseId: this.houseId,
+            type: 12,
+            memo: "正在审核",
+            replaceType: 0
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.realOwnerDisabled = false;
+          }
+        })
+        .catch(e => {
+          this.realOwnerDisabled = true;
+        });
+    },
     /**
      * refs 获取上传组件实例并且验证非空
      */
