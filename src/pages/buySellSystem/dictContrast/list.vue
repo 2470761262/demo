@@ -900,6 +900,26 @@ export default {
      * @example: 手工对标按钮
      */
     handleBenchmark(row) {
+      this.$prompt("", "楼盘名称", {
+        inputValue: row.name,
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      })
+        .then(({ value }) => {
+          row.name = value;
+          this.openBenchmarkPop(row);
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消输入"
+          });
+        });
+    },
+    /**
+     * @example: 打开手工对标弹窗表格
+     */
+    openBenchmarkPop(row) {
       this.$message({
         message: "对标查询中...",
         type: "info"
