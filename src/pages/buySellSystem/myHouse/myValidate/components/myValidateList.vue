@@ -549,7 +549,7 @@ export default {
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             page: this.voice.page,
-            limit: 1,
+            limit: 7,
             eid: this.nowRow.id,
             followType: 10
           }
