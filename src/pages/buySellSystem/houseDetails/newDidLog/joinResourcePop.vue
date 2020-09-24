@@ -17,7 +17,9 @@
         <div class="column">
           <div class="head">
             <span class="title">房源标题</span>
-            <span class="btn" @click="changeText('houseTitle')">换一个</span>
+            <span class="btn" @click="changeText('houseTitle', '房源标题')"
+              >换一个</span
+            >
           </div>
           <el-input
             v-model="selfPublishInfo.houseTitle"
@@ -30,7 +32,9 @@
         <div class="column">
           <div class="head">
             <span class="title">房源详情</span>
-            <span class="btn" @click="changeText('houseDetail')">换一个</span>
+            <span class="btn" @click="changeText('houseDetail', '房源详情')"
+              >换一个</span
+            >
           </div>
           <el-input
             type="textarea"
@@ -45,7 +49,7 @@
         <div class="column">
           <div class="head">
             <span class="title">业主心态</span>
-            <span class="btn" @click="changeText('ownerMentality')"
+            <span class="btn" @click="changeText('ownerMentality', '业主心态')"
               >换一个</span
             >
           </div>
@@ -62,7 +66,9 @@
         <div class="column">
           <div class="head">
             <span class="title">服务介绍</span>
-            <span class="btn" @click="changeText('serveIntroduction')"
+            <span
+              class="btn"
+              @click="changeText('serveIntroduction', '服务介绍')"
               >换一个</span
             >
           </div>
@@ -83,60 +89,24 @@
           >
         </div>
       </div>
-      <div class="investigator-container" v-show="!flag">
+      <div class="investigator-container formwork-panel" v-show="!flag">
+        <div class="title">{{ formworkTitle }}</div>
         <div class="formwork" v-infinite-scroll="load">
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <div>1111111111111111111<br /></div>
-          <p v-if="loading">加载中...</p>
-          <p v-if="true">没有更多了</p>
+          <el-radio-group v-model="formworkRadio">
+            <el-radio
+              :label="index"
+              v-for="(item, index) in formworkData.list"
+              :key="index"
+              >{{ item.details }}</el-radio
+            >
+          </el-radio-group>
+          <p v-if="formworkData.loading">加载中...</p>
+          <p v-else-if="formworkData.loadPageEnd">
+            已经到最底部了~
+          </p>
+          <p v-if="!formworkData.loading && formworkData.list.length == 0">
+            暂无数据
+          </p>
         </div>
         <div class="btn-box formwork-btn">
           <el-button class="btn cancel" @click="back">取消</el-button>
@@ -181,7 +151,16 @@ export default {
       ownerMentalityId: null,
       serveIntroductionId: null,
       flag: true,
-      loading: false
+      formworkData: {
+        page: 1,
+        limit: 20,
+        totalPage: 0,
+        loading: false,
+        loadPageEnd: false,
+        list: []
+      },
+      formworkRadio: "",
+      formworkTitle: "房源标题"
     };
   },
   watch: {
@@ -226,7 +205,8 @@ export default {
     cancel() {
       this.$emit("update:dialogVisible", false);
     },
-    changeText(title) {
+    changeText(title, text) {
+      this.formworkTitle = "请选择" + text;
       let type;
       let field = title + "Id";
       let id = this[field];
@@ -267,6 +247,13 @@ export default {
       //     }
       //   })
       //   .catch(e => {});
+      this.formworkData.type = type;
+      this.formworkData.page = 1;
+      let w = getComputedStyle(
+        document.querySelector(".investigator-container")
+      ).height;
+      document.querySelector(".formwork-panel").style.height = w;
+      this.getFormworkList();
       this.flag = false;
     },
     confirm() {
@@ -319,10 +306,48 @@ export default {
       this.flag = true;
     },
     selectConfirm() {
+      console.log(this.formworkRadio, "+==================");
       this.flag = true;
     },
     load() {
-      console.log("loading...");
+      console.log(
+        "loading...",
+        this.formworkData.page,
+        this.formworkData.totalPage
+      );
+      if (this.formworkData.page < this.formworkData.totalPage) {
+        ++this.formworkData.page;
+        this.getFormworkList();
+      } else {
+        this.formworkData.loadPageEnd = true;
+      }
+    },
+    getFormworkList() {
+      this.formworkData.loading = true;
+      this.$api
+        .post({
+          url: "/releaseWuBaTemplate/list/type",
+          data: {
+            limit: this.formworkData.limit,
+            page: this.formworkData.page,
+            type: this.formworkData.type
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          console.log(e, "------------");
+          if (e.data.code == 200) {
+            this.formworkData.list = e.data.data.list;
+            this.formworkData.totalPage = e.data.data.totalPage;
+            this.formworkData.list = [
+              ...this.formworkData.list,
+              ...e.data.data.list
+            ];
+          }
+        })
+        .finally(e => {
+          this.formworkData.loading = false;
+        });
     }
   }
 };
@@ -356,32 +381,66 @@ export default {
     // prettier-ignore
     max-height: 70vh;
     overflow: auto;
-    // prettier-ignore
-    padding: 0 30PX 30PX;
+    padding: 0;
   }
 }
 /deep/.investigator-container {
   flex: 1;
   display: flex;
   flex-direction: column;
-  .formwork {
-    flex: 1;
-    overflow: auto;
-    &::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
+  // prettier-ignore
+  padding: 0 30PX 30PX;
+  &.formwork-panel {
+    // prettier-ignore
+    padding: 0 0 30PX;
+    .title {
+      // prettier-ignore
+      padding: 5PX 30PX 10PX;
+      font-size: @font14;
+      font-weight: bold;
     }
-    &::-webkit-scrollbar-button,
-    &::-webkit-scrollbar-track,
-    &::-webkit-scrollbar-track-piece {
-      display: none;
+    .formwork {
+      flex: 1;
+      overflow: auto;
+      // prettier-ignore
+      padding: 0 30PX 0;
+      .el-radio__inner {
+        // prettier-ignore
+        width: 14PX;
+        // prettier-ignore
+        height: 14PX;
+      }
+      .el-radio__inner::after {
+        // prettier-ignore
+        width: 4PX;
+        // prettier-ignore
+        height: 4PX;
+      }
+      .el-radio {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        white-space: pre-wrap;
+      }
+      .el-radio__label {
+        // prettier-ignore
+        line-height: 18PX;
+        font-size: @font12;
+      }
+      &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      &::-webkit-scrollbar-button,
+      &::-webkit-scrollbar-track,
+      &::-webkit-scrollbar-track-piece {
+        display: none;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 50px;
+      }
     }
-    &::-webkit-scrollbar-thumb {
-      background: #ccc;
-      border-radius: 50px;
-    }
-  }
-  .formwork-btn {
   }
   .tip {
     display: flex;
