@@ -439,12 +439,11 @@ export default {
      * @example: 双击前往详情
      */
     navDetailt(item) {
-      // if (item.checkStatus && parseInt(item.checkStatus) == 2) {
-      //   util.openPage.call(this, {
-      //     name: "houseDetails",
-      //     params: { houseId: item.houseId }
-      //   });
-      // }
+      console.log("item.houseId", item);
+      util.openPage.call(this, {
+        name: "houseDetails",
+        params: { houseId: item.bwebHouseId }
+      });
     },
     /**
      * @example: 远程排序
