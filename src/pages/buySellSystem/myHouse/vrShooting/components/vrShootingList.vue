@@ -441,7 +441,7 @@ export default {
     navDetailt(item) {
       util.openPage.call(this, {
         name: "houseDetails",
-        params: { houseId: item.id }
+        params: { houseId: item.bwebHouseId }
       });
     },
     /**

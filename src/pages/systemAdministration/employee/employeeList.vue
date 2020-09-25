@@ -165,6 +165,7 @@
               <el-option key="1" label="正常" value="1" />
               <el-option key="0" label="锁定" value="0" />
               <el-option key="2" label="异常" value="2" />
+              <el-option key="3" label="绑定58" value="3" />
             </el-select>
             <el-select
               v-model="queryData.del"
@@ -257,7 +258,11 @@
       </span>
     </el-dialog>
     <!--58绑定弹窗-->
-    <bindBroker58Pop :openFlag.sync="bindBrokerFlag" :accountId="brokerId">
+    <bindBroker58Pop
+      :openFlag.sync="bindBrokerFlag"
+      :accountId="brokerId"
+      @bindBorkerWuBa="bindBorkerWuBa"
+    >
     </bindBroker58Pop>
     <!-- 解绑弹窗 -->
     <el-dialog
@@ -387,6 +392,12 @@ export default {
   },
   methods: {
     /**
+     * @example:绑定成功回调
+     */
+    bindBorkerWuBa() {
+      this.queryEmployeeByParams();
+    },
+    /**
      * 关闭解绑窗口
      */
     closeUnbundingDialog() {
@@ -410,6 +421,7 @@ export default {
           if (e.data.code == 200) {
             type = "sucesss";
             this.unbundingDialogVisible = false;
+            this.queryEmployeeByParams();
           }
           this.$message({
             message: e.data.message,
