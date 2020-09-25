@@ -83,7 +83,7 @@
         <asideNav :menuNodeDatas="menuDatasInParent"></asideNav>
       </el-aside>
       <el-main>
-        <feedback ref="feedback" v-show="isMapNav" />
+        <feedback ref="feedback" :is-map-nav="isMapNav" />
         <div class="children-page" :style="isMapNavStyle">
           <!-- 二级页面 router-view -->
           <keep-alive :max="3">

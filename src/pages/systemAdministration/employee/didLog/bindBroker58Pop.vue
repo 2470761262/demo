@@ -224,6 +224,7 @@ export default {
               if (e.data.code == 200) {
                 type = "sucesss";
                 this.$emit("update:openFlag", false);
+                this.$emit("bindBorkerWuBa");
               }
               this.$message({
                 message: e.data.message,

@@ -1,7 +1,4 @@
 <style lang="less" scoped>
-.nav-breadcrumb {
-  padding: 0 0 10px;
-}
 .el-leave-active {
   transform: translateX(-20px);
 }
@@ -105,7 +102,7 @@
         >
       </div>
     </el-dialog>
-    <div class="nav-flex" :class="isPad">
+    <div class="nav-flex" :class="isPad" v-if="isMapNav">
       <div v-if="!isCustomers">
         <el-breadcrumb separator="/">
           <el-breadcrumb-item
@@ -141,6 +138,9 @@ import { TOKEN } from "@/util/constMap";
 
 export default {
   props: {
+    isMapNav: {
+      type: Boolean
+    },
     homeUrl: {
       type: String,
       default: "/buySellSystem/houseList"

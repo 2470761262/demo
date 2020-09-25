@@ -46,6 +46,9 @@
         box-sizing: border-box;
         margin-right: 20px;
         outline: none;
+        &:disabled {
+          cursor: no-drop;
+        }
         .logo58 {
           // prettier-ignore
           width: 25PX;
@@ -139,11 +142,19 @@
         </div>
       </div>
       <div class="content-header-right">
-        <button @click="joinOtherResource" v-if="publishBtnType == 1">
+        <button
+          @click="joinOtherResource"
+          v-if="publishBtnType == 1"
+          :disabled="isLockBtn"
+        >
           <i class="logo58"></i>
           <span class="nowrap">加入我的58房源库</span>
         </button>
-        <button @click="deleteUnitedHouse" v-if="publishBtnType == 2">
+        <button
+          @click="deleteUnitedHouse"
+          v-if="publishBtnType == 2"
+          :disabled="isLockBtn"
+        >
           <i class="logo58"></i>
           <span class="nowrap">从我的58房源库下架</span>
         </button>
@@ -211,6 +222,13 @@ export default {
       } else {
         return "楼栋号";
       }
+    },
+    //房源是否被锁定
+    isLockBtn() {
+      if (this.houseData.isLocking) {
+        return true;
+      }
+      return false;
     }
   },
   components: {
