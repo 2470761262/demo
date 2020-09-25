@@ -325,18 +325,12 @@
             class="role-type-bottom"
             @click="openPop('houseUploadflag', 4, 'houseUploadType', 5)"
           >
-<<<<<<< HEAD
             <button
               class="role-type-title type-vr"
               :disabled="!isSelfRealOwner"
             >
               申请VR
             </button>
-=======
-            <!-- @click="openPop('houseUploadflag', 12, 'houseUploadType', 0)" -->
-            <!-- <div class="role-type-title type-vr">申请VR</div> -->
-            <div class="role-type-title">取代</div>
->>>>>>> ac6766e1a26b9e2cd93bcdca8b71b98ab38c10b0
           </div>
         </div>
       </div>
