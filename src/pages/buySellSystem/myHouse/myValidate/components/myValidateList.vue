@@ -380,7 +380,10 @@
               <div class="bottom-tip" v-if="voice.loading">
                 <i class="el-icon-loading"></i> 加载中...
               </div>
-              <div class="bottom-tip" v-else-if="voice.loadPageEnd">
+              <div
+                class="bottom-tip"
+                v-else-if="voice.loadPageEnd && voiceList.length != 0"
+              >
                 已经到最底部了~
               </div>
               <div class="bottom-tip" v-if="voiceList.length == 0">
@@ -556,7 +559,11 @@ export default {
         })
         .then(e => {
           if (e.data.code === 200) {
-            this.voiceList = [...this.voiceList, ...e.data.data.list];
+            // 过滤语音时长为0的数据
+            let list = e.data.data.list.filter(item => {
+              return item.callDuration != 0;
+            });
+            this.voiceList = [...this.voiceList, ...list];
             this.voice.totalPage = e.data.data.totalPage;
           }
         })
