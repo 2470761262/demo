@@ -315,7 +315,7 @@ export default {
           if (row.taskState != 9000 && item.name == "取消申请") {
             item.disabled = true;
           }
-          if (row.taskState != 20000 && item.name == "查看视频") {
+          if (row.taskState != 50000 && item.name == "查看视频") {
             item.disabled = true;
           }
           return item;
@@ -439,12 +439,10 @@ export default {
      * @example: 双击前往详情
      */
     navDetailt(item) {
-      // if (item.checkStatus && parseInt(item.checkStatus) == 2) {
-      //   util.openPage.call(this, {
-      //     name: "houseDetails",
-      //     params: { houseId: item.houseId }
-      //   });
-      // }
+      util.openPage.call(this, {
+        name: "houseDetails",
+        params: { houseId: item.id }
+      });
     },
     /**
      * @example: 远程排序

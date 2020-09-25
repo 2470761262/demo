@@ -110,6 +110,14 @@
             &.type-vr {
               // prettier-ignore
               width: 50PX;
+              padding: 0;
+              border: none;
+              font-size: @font12;
+              cursor: pointer;
+              &:disabled {
+                background: #c8c9cc;
+                cursor: no-drop;
+              }
             }
           }
         }
@@ -317,7 +325,12 @@
             class="role-type-bottom"
             @click="openPop('houseUploadflag', 12, 'houseUploadType', 0)"
           >
-            <div class="role-type-title type-vr">申请VR</div>
+            <button
+              class="role-type-title type-vr"
+              :disabled="!isSelfRealOwner"
+            >
+              申请VR
+            </button>
           </div>
         </div>
       </div>
@@ -402,6 +415,7 @@
 </template>
 
 <script>
+import { TOKEN } from "@/util/constMap";
 import { mapState } from "vuex";
 import util from "@/util/util";
 import houseCheck from "../common/houseCheck";
@@ -502,9 +516,17 @@ export default {
     /**
      * @example: 判断是否存在实勘人
      */
-
     isRealOwner() {
       return this.houseData.agentHouseMethod.realOwnerName != null;
+    },
+    /**
+     * @example: 判断实勘人是否当前用户且vrUrl为空
+     */
+    isSelfRealOwner() {
+      return (
+        this.houseData.agentHouseMethod.realOwner ==
+          util.localStorageGet("logindata").accountId && !this.houseData.vrUrl
+      );
     }
   },
   mounted() {
@@ -524,6 +546,7 @@ export default {
       // 如果进入页面不弹提示框需要直接用axios请求
       this.$api
         .get({
+          isShowErrMsg: false,
           url: "/agentHouse/propertyCheck/realowner/can/apply",
           data: {
             houseId: this.houseId,
