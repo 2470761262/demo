@@ -91,10 +91,15 @@
       </div>
       <div class="investigator-container formwork-panel" v-show="!flag">
         <div class="title">{{ formworkTitle }}</div>
-        <div class="formwork" v-infinite-scroll="load">
+        <div
+          class="formwork"
+          v-infinite-scroll="load"
+          :infinite-scroll-immediate="true"
+          v-if="!flag"
+        >
           <el-radio-group v-model="formworkRadio">
             <el-radio
-              :label="index"
+              :label="item.details"
               v-for="(item, index) in formworkData.list"
               :key="index"
               >{{ item.details }}</el-radio
@@ -153,11 +158,13 @@ export default {
       flag: true,
       formworkData: {
         page: 1,
-        limit: 20,
+        limit: 18,
         totalPage: 0,
         loading: false,
         loadPageEnd: false,
-        list: []
+        list: [],
+        type: 1,
+        currentTitle: ""
       },
       formworkRadio: "",
       formworkTitle: "房源标题"
@@ -166,6 +173,7 @@ export default {
   watch: {
     dialogVisible() {
       this.visible = this.dialogVisible;
+      this.flag = true;
     },
     publishInfo: {
       deep: true,
@@ -247,14 +255,16 @@ export default {
       //     }
       //   })
       //   .catch(e => {});
+      this.formworkData.currentTitle = title;
       this.formworkData.type = type;
       this.formworkData.page = 1;
-      let w = getComputedStyle(
+      let h = getComputedStyle(
         document.querySelector(".investigator-container")
       ).height;
-      document.querySelector(".formwork-panel").style.height = w;
+      this.formworkData.list = [];
       this.getFormworkList();
       this.flag = false;
+      document.querySelector(".formwork-panel").style.height = h;
     },
     confirm() {
       if (this.selfPublishInfo.houseTitle.length < 10) {
@@ -306,15 +316,10 @@ export default {
       this.flag = true;
     },
     selectConfirm() {
-      console.log(this.formworkRadio, "+==================");
+      this.selfPublishInfo[this.formworkData.currentTitle] = this.formworkRadio;
       this.flag = true;
     },
     load() {
-      console.log(
-        "loading...",
-        this.formworkData.page,
-        this.formworkData.totalPage
-      );
       if (this.formworkData.page < this.formworkData.totalPage) {
         ++this.formworkData.page;
         this.getFormworkList();
@@ -335,9 +340,7 @@ export default {
           headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
-          console.log(e, "------------");
           if (e.data.code == 200) {
-            this.formworkData.list = e.data.data.list;
             this.formworkData.totalPage = e.data.data.totalPage;
             this.formworkData.list = [
               ...this.formworkData.list,

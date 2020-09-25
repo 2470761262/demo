@@ -183,7 +183,7 @@ export default {
         {
           prop: "communityName",
           label: "楼盘名称",
-          minWith: 166,
+          minWith: 186,
           formart: item => {
             return (
               <div class="tab-com-item">
@@ -235,8 +235,14 @@ export default {
           order: true
         },
         {
-          prop: "",
+          prop: "taskStateStr",
+          label: "123状态",
+          minWith: 160
+        },
+        {
+          prop: "status",
           label: "申请结果",
+          minWith: 90,
           order: true,
           formart: row => {
             let result;
