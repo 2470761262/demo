@@ -407,6 +407,9 @@ export default {
       overflow: auto;
       // prettier-ignore
       padding: 0 30PX 0;
+      .el-radio-group {
+        width: 100%;
+      }
       .el-radio__inner {
         // prettier-ignore
         width: 14PX;
@@ -422,8 +425,10 @@ export default {
       .el-radio {
         display: flex;
         align-items: center;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
         white-space: pre-wrap;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #eee;
       }
       .el-radio__label {
         // prettier-ignore
