@@ -113,6 +113,7 @@
               padding: 0;
               border: none;
               font-size: @font12;
+              outline: none;
               cursor: pointer;
               &:disabled {
                 background: #c8c9cc;
@@ -321,13 +322,11 @@
         </div>
         <div class="role-type">
           <div class="role-type-top">实勘人</div>
-          <div
-            class="role-type-bottom"
-            @click="openPop('houseUploadflag', 4, 'houseUploadType', 5)"
-          >
+          <div class="role-type-bottom">
             <button
               class="role-type-title type-vr"
-              :disabled="!isSelfRealOwner && realOwnerDisabled"
+              @click="openPop('houseUploadflag', 12, 'houseUploadType', 0)"
+              :disabled="!isSelfRealOwner || realOwnerDisabled"
             >
               申请VR
             </button>
@@ -425,7 +424,7 @@ export default {
   },
   components: {
     //取代
-    houseUploadExtends: () => import("../newDidLog/houseUploadExtends"),
+    //houseUploadExtends: () => import("../newDidLog/houseUploadExtends"),
     //取代
     replacePop: () => import("../newDidLog/replacePop"),
     //委托人
