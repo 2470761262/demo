@@ -90,6 +90,14 @@
     </button>
     <button
       class="btn-item"
+      style="order:0"
+      v-if="isEditPicture"
+      :disabled="isLockBtn"
+    >
+      编辑图片
+    </button>
+    <button
+      class="btn-item"
       style="order:2"
       @click="openPop('followUpFlag')"
       :disabled="isLockBtn"
@@ -288,6 +296,28 @@ export default {
       }
       return false;
     },
+    //是否显示编辑图片
+    isEditPicture() {
+      let editAgentPicture = this.betData.find(
+        item => item.rUrl == "editAgentPicture"
+      );
+      if (editAgentPicture) {
+        if (
+          this.houseData.plate == 0 &&
+          this.getEditAuthority(
+            editAgentPicture.authorityUnderName,
+            this.houseData
+          )
+        ) {
+          return true;
+        } //判断跟单人是否在数据权限范围内
+        return this.getRoleAuthority(
+          editAgentPicture.authorityUnderName,
+          this.houseData
+        ); //判断角色人是否存在
+      }
+      return false;
+    },
     //面访按钮禁用
     isInterviewDisabled() {
       //暂时不做控制
@@ -335,6 +365,32 @@ export default {
         (authorityUnderName.accountId &&
           houseDatails.AgentPer == authorityUnderName.accountId)
       );
+    },
+    /**
+     * 获取除跟单人外角色人数据权限
+     */
+    getRoleAuthority(authorityUnderName, houseDatails) {
+      if (!authorityUnderName || !houseDatails.agentHouseMethod) return false;
+      let roleArray = ["addPer", "keyOwner", "onlyOwner", "realOwner"];
+      for (let item in roleArray) {
+        let value = roleArray[item];
+        if (
+          (authorityUnderName.coIdList &&
+            authorityUnderName.coIdList.includes(
+              houseDatails.agentHouseMethod[value + "CompanyId"]
+            )) ||
+          (authorityUnderName.deptList &&
+            authorityUnderName.deptList.includes(
+              houseDatails.agentHouseMethod[value + "DepartmentId"]
+            )) ||
+          (authorityUnderName.accountId &&
+            houseDatails.agentHouseMethod[value] ==
+              authorityUnderName.accountId)
+        ) {
+          return true;
+        }
+      }
+      return false;
     },
     //是否显示转状态弹窗
     async changePopUp() {
