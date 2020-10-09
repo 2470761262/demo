@@ -356,10 +356,12 @@ export default {
                   type: "success",
                   message: "取消成功!"
                 });
-                this.getHouseData().then(() => {
-                  dom.querySelector(".scroll-tab").scrollTop = 0;
-                  //  this.$parent.ListeningScroll();
-                });
+                this.getHouseData(JSON.parse(JSON.stringify(this.form))).then(
+                  () => {
+                    dom.querySelector(".scroll-tab").scrollTop = 0;
+                    //  this.$parent.ListeningScroll();
+                  }
+                );
               } else {
                 this.$message.error(e.data.message);
               }
@@ -499,10 +501,10 @@ export default {
         params.startTime = params.time[0];
         params.endTime = params.time[1];
       }
-      if (params.cbId.length > 0) {
+      if (params.cbId && params.cbId.length > 0) {
         params.bId = parseInt(params.cbId);
       }
-      if (params.bhId.length > 0) {
+      if (params.bhId && params.bhId.length > 0) {
         params.roomId = parseInt(params.bhId);
       }
       delete params.time;
