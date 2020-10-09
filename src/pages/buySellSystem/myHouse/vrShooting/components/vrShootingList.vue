@@ -499,6 +499,12 @@ export default {
         params.startTime = params.time[0];
         params.endTime = params.time[1];
       }
+      if (params.cbId.length > 0) {
+        params.bId = parseInt(params.cbId);
+      }
+      if (params.bhId.length > 0) {
+        params.roomId = parseInt(params.bhId);
+      }
       delete params.time;
       return this.$api
         .post({
