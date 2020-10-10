@@ -265,6 +265,8 @@ export default {
               case 4:
                 result = <span class="span_warning">{row.statusStr}</span>;
                 break;
+              default:
+                result = row.statusStr;
             }
             return result;
           }
