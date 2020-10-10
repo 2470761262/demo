@@ -291,6 +291,7 @@ const SEARCHTABLIST = [
   { title: "拍摄中", value: 0 },
   { title: "制作中", value: 4 },
   { title: "拍摄完成", value: 1 },
+  { title: "制作中", value: 4 },
   { title: "已取消", value: 2 },
   { title: "已失败", value: 3 }
 ];
