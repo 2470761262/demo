@@ -18,8 +18,8 @@ export default {
         model: 0,
         checkList: [
           { title: "委托人", value: 0 },
-          { title: "钥匙人", value: 1 }/*,
-          { title: "实勘人", value: 2 }*/
+          { title: "钥匙人", value: 1 },
+          { title: "实勘人", value: 2 }
         ]
       }
     };
