@@ -323,7 +323,10 @@ export default {
           if (row.taskState != 9000 && item.name == "取消申请") {
             item.disabled = true;
           }
-          if (row.taskState != 50000 && item.name == "查看视频") {
+          if (
+            (row.taskState != 50000 || row.vrUrl == null) &&
+            item.name == "查看视频"
+          ) {
             item.disabled = true;
           }
           return item;
