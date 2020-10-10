@@ -396,6 +396,9 @@ export default {
      * @example:编辑图片提交
      */
     submitUpload() {
+      this.$message({
+        message: "编辑成功"
+      });
       this.houseUploadflag = false;
     },
     ...mapMutations(["setParam"]),

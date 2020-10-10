@@ -40,14 +40,72 @@ export default {
     })
   },
   created() {
-    if (this.echoData.length != 0) {
-      this.FillImgVideo();
-    }
+    Promise.all([this.getLoadDataImg(), this.getLoadDataVideo()])
+      .catch(() => {
+        this.$message.error("获取数据失败~");
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   },
   destroyed() {
     this.socketApi.closeSocket();
   },
   methods: {
+    getLoadDataVideo() {
+      let url = `agentHouse/video/getVideoList/${this.houseId}`;
+      this.$api
+        .post({ url: url })
+        .then(e => {
+          let data = e.data;
+          if (data.code == 200 && data.data.length != 0) {
+            this.houseVideo = data.data[0];
+          }
+        })
+        .catch(() => {
+          this.$message.error("获取数据失败~");
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    //获取上传的图片
+    getLoadDataImg() {
+      let url = `agentHouse/pictures/getPicturesList/${this.houseId}`;
+      return this.$api.post({ url: url }).then(e => {
+        let data = e.data;
+        if (data.code == 200) {
+          let imgList = data.data;
+          imgList.forEach(item => {
+            let type = item.picClass ? item.picClass : item.PicClass;
+            switch (type) {
+              case 1:
+                this.outdoorImgList.push(item);
+                break;
+              case 2:
+                this.livingRoomImgList.push(item);
+                break;
+              case 3:
+                this.bedroomImgList.push(item);
+                break;
+              case 4:
+                this.kitchenImgList.push(item);
+                break;
+              case 5:
+                this.toiletImgList.push(item);
+                break;
+              case 6:
+                this.layoutImgList.push(item);
+                break;
+            }
+          });
+          //保存图片数组
+          Object.keys(this.comparison).forEach(item => {
+            this.comparison[item] = JSON.parse(JSON.stringify(this[item]));
+          });
+        }
+      });
+    },
     /**
      * 回显视频和图片
      */
