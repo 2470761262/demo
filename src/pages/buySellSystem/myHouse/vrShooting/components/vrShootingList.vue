@@ -259,6 +259,9 @@ export default {
               case 3:
                 result = <span class="span_info">{row.statusStr}</span>;
                 break;
+              case 4:
+                result = <span class="span_warning">{row.statusStr}</span>;
+                break;
             }
             return result;
           }
