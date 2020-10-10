@@ -256,12 +256,17 @@ export default {
               case 2:
                 result = <span class="span_danger">{row.statusStr}</span>;
                 break;
+              case 5:
+                result = <span class="span_danger">{row.statusStr}</span>;
+                break;
               case 3:
                 result = <span class="span_info">{row.statusStr}</span>;
                 break;
               case 4:
                 result = <span class="span_warning">{row.statusStr}</span>;
                 break;
+              default:
+                result = row.statusStr;
             }
             return result;
           }
