@@ -25,13 +25,23 @@
         <div class="card-message-item">
           <div class="card-item-title">上次交易时间</div>
           <div class="card-item-data">
-            {{ houseData.IsTwoYears | emptyRead }}
+            {{
+              houseData.IsTwoYears == "1900-01-01"
+                ? "暂无"
+                : houseData.IsTwoYears
+            }}
           </div>
         </div>
         <div class="card-message-item">
           <div class="card-item-title">付款要求</div>
           <div class="card-item-data">
-            {{ houseData.paymentMethod==="0"?"均可":(houseData.paymentMethod==="1"?"一次性付款":"不可用公积金") }}
+            {{
+              houseData.paymentMethod === "0"
+                ? "均可"
+                : houseData.paymentMethod === "1"
+                ? "一次性付款"
+                : "不可用公积金"
+            }}
           </div>
         </div>
       </div>
@@ -46,7 +56,7 @@
         <div class="card-message-item">
           <div class="card-item-title">是否唯一住房</div>
           <div class="card-item-data">
-            {{ houseData.OnlyHouse?"唯一":"不唯一" }}
+            {{ houseData.OnlyHouse ? "唯一" : "不唯一" }}
           </div>
         </div>
       </div>
@@ -140,10 +150,7 @@
         <div class="card-message-item">
           <div class="card-item-title">房屋证件</div>
           <div class="card-item-data">
-            {{
-              houseData.certificateType
-                | emptyRead
-            }}
+            {{ houseData.certificateType | emptyRead }}
           </div>
         </div>
       </div>
