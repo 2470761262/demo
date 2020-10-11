@@ -81,7 +81,7 @@
       style="order:0"
       :disabled="isLockBtn"
       @click="
-        openPop('shareFlag', isShare, '请先完善信息后，才可以扫码分享房源')
+        openPop('shareFlag', isShare, '房源图片少于一张，不允许进行分享，请尽快上传')
       "
     >
       分享房源
@@ -549,6 +549,9 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
+             this.commitHouseData({
+              isReleaseOutside: 1
+             });
             that.appletQRCode = e.data.data;
           }
         });
