@@ -46,7 +46,7 @@ export default {
         storeId: "", // 所属门店
         applyPer: "", // 申请人
         taskState: "", // 状态
-        status: "", // 申请结果
+        status: 1, // 申请结果
         limit: 30,
         page: 1,
         sortColumn: "addTime",
