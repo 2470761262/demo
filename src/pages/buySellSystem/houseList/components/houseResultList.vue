@@ -1619,6 +1619,18 @@
       class="tab-filter-radio"
       v-show="typeActiveIndex !== 3 && typeActiveIndex !== 1"
     >
+      <label
+        class="filter-radio-item anchor-point"
+        data-anchor="首页选项 可发58"
+      >
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isSendWuBa"
+        />
+        <span>可发58</span>
+      </label>
       <label class="filter-radio-item anchor-point" data-anchor="首页选项 钥匙">
         <input
           type="checkbox"
@@ -1637,7 +1649,7 @@
         />
         <span>独家</span>
       </label>
-      <!-- <label
+      <label
         class="filter-radio-item anchor-point"
         data-anchor="首页选项 VR房源"
       >
@@ -1648,8 +1660,8 @@
           v-model="form.isVr"
         />
         <span>VR房源</span>
-      </label> -->
-      <label class="filter-radio-item anchor-point" data-anchor="首页选项 实勘">
+      </label>
+      <!-- <label class="filter-radio-item anchor-point" data-anchor="首页选项 实勘">
         <input
           type="checkbox"
           true-value="1"
@@ -1657,7 +1669,7 @@
           v-model="form.isReal"
         />
         <span>实勘</span>
-      </label>
+      </label> -->
       <label class="filter-radio-item anchor-point" data-anchor="首页选项 电梯">
         <input
           type="checkbox"

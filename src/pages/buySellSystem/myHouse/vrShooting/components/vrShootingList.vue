@@ -183,7 +183,7 @@ export default {
         {
           prop: "communityName",
           label: "楼盘名称",
-          minWith: 166,
+          minWith: 186,
           formart: item => {
             return (
               <div class="tab-com-item">
@@ -235,8 +235,14 @@ export default {
           order: true
         },
         {
-          prop: "",
+          prop: "taskStateStr",
+          label: "123状态",
+          minWith: 160
+        },
+        {
+          prop: "status",
           label: "申请结果",
+          minWith: 90,
           order: true,
           formart: row => {
             let result;
@@ -250,9 +256,17 @@ export default {
               case 2:
                 result = <span class="span_danger">{row.statusStr}</span>;
                 break;
+              case 5:
+                result = <span class="span_danger">{row.statusStr}</span>;
+                break;
               case 3:
                 result = <span class="span_info">{row.statusStr}</span>;
                 break;
+              case 4:
+                result = <span class="span_warning">{row.statusStr}</span>;
+                break;
+              default:
+                result = row.statusStr;
             }
             return result;
           }
@@ -309,7 +323,10 @@ export default {
           if (row.taskState != 9000 && item.name == "取消申请") {
             item.disabled = true;
           }
-          if (row.taskState != 20000 && item.name == "查看视频") {
+          if (
+            (row.taskState != 50000 || row.vrUrl == null) &&
+            item.name == "查看视频"
+          ) {
             item.disabled = true;
           }
           return item;
@@ -350,10 +367,12 @@ export default {
                   type: "success",
                   message: "取消成功!"
                 });
-                this.getHouseData().then(() => {
-                  dom.querySelector(".scroll-tab").scrollTop = 0;
-                  //  this.$parent.ListeningScroll();
-                });
+                this.getHouseData(JSON.parse(JSON.stringify(this.form))).then(
+                  () => {
+                    dom.querySelector(".scroll-tab").scrollTop = 0;
+                    //  this.$parent.ListeningScroll();
+                  }
+                );
               } else {
                 this.$message.error(e.data.message);
               }
@@ -433,12 +452,10 @@ export default {
      * @example: 双击前往详情
      */
     navDetailt(item) {
-      // if (item.checkStatus && parseInt(item.checkStatus) == 2) {
-      //   util.openPage.call(this, {
-      //     name: "houseDetails",
-      //     params: { houseId: item.houseId }
-      //   });
-      // }
+      util.openPage.call(this, {
+        name: "houseDetails",
+        params: { houseId: item.bwebHouseId }
+      });
     },
     /**
      * @example: 远程排序
@@ -494,6 +511,12 @@ export default {
       if (params.time && params.time.length == 2) {
         params.startTime = params.time[0];
         params.endTime = params.time[1];
+      }
+      if (params.cbId && params.cbId.length > 0) {
+        params.bId = parseInt(params.cbId);
+      }
+      if (params.bhId && params.bhId.length > 0) {
+        params.roomId = parseInt(params.bhId);
       }
       delete params.time;
       return this.$api

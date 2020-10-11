@@ -2,7 +2,7 @@
 import exploration from "@/pages/buySellSystem/addHouse/components/exploration";
 import houseCheck from "../common/houseCheck";
 import util from "@/util/util";
-//import { mapState } from "vuex";
+import { mapState } from "vuex";
 
 let enumUpload = new Map();
 let houseEnum = [1, 2, 3, 4, 5, 6]; //上传类型 => 添加房源
@@ -34,20 +34,78 @@ export default {
       default: () => []
     }
   },
-  //   computed: {
-  //     ...mapState({
-  //       houseId: state => state.houseDateil.id
-  //     })
-  //   },
+  computed: {
+    ...mapState({
+      houseId: state => state.houseDateil.id
+    })
+  },
   created() {
-    if (this.echoData.length != 0) {
-      this.FillImgVideo();
-    }
+    Promise.all([this.getLoadDataImg(), this.getLoadDataVideo()])
+      .catch(() => {
+        this.$message.error("获取数据失败~");
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   },
   destroyed() {
     this.socketApi.closeSocket();
   },
   methods: {
+    getLoadDataVideo() {
+      let url = `agentHouse/video/getVideoList/${this.houseId}`;
+      this.$api
+        .post({ url: url })
+        .then(e => {
+          let data = e.data;
+          if (data.code == 200 && data.data.length != 0) {
+            this.houseVideo = data.data[0];
+          }
+        })
+        .catch(() => {
+          this.$message.error("获取数据失败~");
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    //获取上传的图片
+    getLoadDataImg() {
+      let url = `agentHouse/pictures/getPicturesList/${this.houseId}`;
+      return this.$api.post({ url: url }).then(e => {
+        let data = e.data;
+        if (data.code == 200) {
+          let imgList = data.data;
+          imgList.forEach(item => {
+            let type = item.picClass ? item.picClass : item.PicClass;
+            switch (type) {
+              case 1:
+                this.outdoorImgList.push(item);
+                break;
+              case 2:
+                this.livingRoomImgList.push(item);
+                break;
+              case 3:
+                this.bedroomImgList.push(item);
+                break;
+              case 4:
+                this.kitchenImgList.push(item);
+                break;
+              case 5:
+                this.toiletImgList.push(item);
+                break;
+              case 6:
+                this.layoutImgList.push(item);
+                break;
+            }
+          });
+          //保存图片数组
+          Object.keys(this.comparison).forEach(item => {
+            this.comparison[item] = JSON.parse(JSON.stringify(this[item]));
+          });
+        }
+      });
+    },
     /**
      * 回显视频和图片
      */
@@ -61,50 +119,19 @@ export default {
         ["6", "layoutImgList"]
       ]);
 
-      this.loading = true;
       let fileList = [];
       this.echoData.forEach(item => {
+        let result = {
+          id: item.id,
+          url: item.IpStr + item.FileStr + item.PicName
+        };
         if (item.videoUrl) {
-          item.PicClass = 7;
+          this.houseVideo = result;
         }
         if (item.PicClass) {
-          fileList.push({
-            Type: 12,
-            IpStr: item.IpStr,
-            FileStr: item.FileStr,
-            PicName: item.PicName,
-            PicType: "PicFile_AHouseF",
-            AddName: util.localStorageGet("logindata").accountId
-              ? util.localStorageGet("logindata").accountId
-              : 0,
-            subType: item.PicClass,
-            Eid: 0
-          });
+          this[echoMap.get(item.PicClass.toString())].push(result);
         }
       });
-      this.$api
-        .post({
-          url: `/agentHouse/followPic/insertApplyFile`,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: JSON.stringify(fileList)
-        })
-        .then(json => {
-          if (json.data.code == 200) {
-            json.data.data.forEach((item, index) => {
-              let result = {
-                id: item.id,
-                url: item.IpStr + item.FileStr + item.PicName
-              };
-              if (item.subType == 7) {
-                this.houseVideo = result;
-              } else {
-                this[echoMap.get(item.subType.toString())].push(result);
-              }
-            });
-            this.loading = false;
-          }
-        })
-        .catch(e => {});
     },
     /**
      * @param {string} picClass 当前上传的类型 如果是视屏则是null
@@ -114,16 +141,14 @@ export default {
     uploadSectionFile(picClass, uploader, fileListName) {
       this[fileListName + "Loading"] = true;
       let formData = new FormData();
-      formData.append("type", this.replaceType);
       formData.append("file", uploader);
       if (enumUpload.has(picClass)) {
-        formData.append("subType", enumUpload.get(picClass));
-      } else if (picClass === undefined) {
-        formData.append("subType", 7);
+        formData.append("picClass", enumUpload.get(picClass));
       }
+      formData.append("eid", this.houseId);
       this.$api
         .post({
-          url: `/agentHouse/followPic/upload`,
+          url: `/verifyHouse/${picClass != undefined ? "picture" : "video"}`,
           headers: { "Content-Type": "multipart/form-data" },
           data: formData
         })
@@ -146,94 +171,44 @@ export default {
           this[fileListName + "Loading"] = false;
         });
     },
-    //删除视频
-    deleteVideo(item) {
-      houseCheck.removeImg(item.id, item.url).then(e => {
-        if (e.data.code == 200) {
-          this.houseVideo = {};
-          this.$message.success(e.data.message);
-        }
-      });
-    },
-    //删除图片
-    deleteImg(id, url, index, listName) {
-      houseCheck.removeImg(id, url).then(e => {
-        if (e.data.code == 200) {
-          this.$message.success(e.data.message);
-          this[listName].splice(index, 1);
-        }
-      });
-    },
-    //扫码上传回显
-    receiveMessagePic(r) {
+    uploadFileInfo(picClass, url, callBack) {
+      console.log("调用编辑图片，扫码上传，哈哈哈哈");
       let that = this;
-      console.log(r, "rdsasad");
-      let resourceType = r.content.resourceType;
-      let picClass = r.content.picClass;
-      let str = r.content.picUrl;
-      let firstIndex = str.indexOf("/");
-      let secondIndex = str.indexOf("/", firstIndex + 1);
-      let thirdIndex = str.indexOf("/", secondIndex + 1);
-      let lastIndex = str.lastIndexOf("/");
-      let params = {
-        IpStr: str.substring(0, thirdIndex + 1),
-        FileStr: str.substring(thirdIndex + 1, lastIndex + 1),
-        PicName: str.substring(lastIndex + 1, str.length),
-        Type: that.replaceType,
-        subType: resourceType == "vedio" ? 7 : detailEnum[picClass - 1]
-      };
-      console.log(params);
-      if (resourceType == "vedio") {
-        picClass = "vedio";
-        if (that.houseVideo && that.houseVideo.url) {
-          console.log("仅可以上传一个视频,请先手动删除！");
-          this.$message.error("仅可以上传一个视频,请先手动删除！");
-          return;
-        }
-        let audioElement = new Audio(str);
-        audioElement.addEventListener("loadedmetadata", () => {
-          if (audioElement.duration > 91) {
-            this.$message.error("视频时长大于90秒了~");
-          } else {
-            that.insertFile(params, str, picClass);
-          }
-        });
-      } else {
-        that.insertFile(params, str, picClass);
-      }
-    },
-    //添加文件
-    insertFile(params, str, picClass) {
+      let formData = {};
+      //注意大驼峰
+      formData.PicClass = picClass;
+      formData.IpStr = url;
+      formData.FileStr = "";
+      formData.PicName = "";
+      formData.Eid = that.houseId;
       this.$api
         .post({
-          url: "/agentHouse/followPic/insert",
+          url: `/verifyHouse/${
+            picClass != undefined ? "pictureDraft" : "videoDraft"
+          }`,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: params
+          data: formData
         })
         .then(json => {
           if (json.data.code == 200) {
-            let fileobj = {
-              id: json.data.data.id,
-              url: str
-            };
-            listMap.forEach((value, key) => {
-              console.log(value, key, "value,key");
-              if (value == "vedio" && picClass === "vedio") {
-                this[key] = fileobj;
-              } else {
-                if (value == picClass) {
-                  this[key].push(fileobj);
-                }
-              }
+            let result = json.data.data;
+            result.url = url;
+            callBack(result);
+          } else {
+            that.$message({
+              message: json.data.message,
+              type: "warning"
             });
           }
         })
         .catch(e => {
-          this.$message({
-            message: e.data.message,
+          console.log(e);
+          that.$message({
+            message: e.message,
             type: "warning"
           });
-        });
+        })
+        .finally(() => {});
     }
   }
 };

@@ -110,6 +110,15 @@
             &.type-vr {
               // prettier-ignore
               width: 50PX;
+              padding: 0;
+              border: none;
+              font-size: @font12;
+              outline: none;
+              cursor: pointer;
+              &:disabled {
+                background: #c8c9cc;
+                cursor: no-drop;
+              }
             }
           }
         }
@@ -313,23 +322,30 @@
         </div>
         <div class="role-type">
           <div class="role-type-top">实勘人</div>
-          <div
-            class="role-type-bottom"
-            @click="openPop('houseUploadflag', 4, 'houseUploadType', 5)"
-          >
-            <!-- @click="openPop('houseUploadflag', 12, 'houseUploadType', 0)" -->
-            <!-- <div class="role-type-title type-vr">申请VR</div> -->
-            <div class="role-type-title">取代</div>
+          <div class="role-type-bottom">
+            <button
+              class="role-type-title type-vr"
+              @click="openPop('houseUploadflag', 12, 'houseUploadType', 0)"
+              :disabled="!isSelfRealOwner || realOwnerDisabled"
+            >
+              申请VR
+            </button>
           </div>
         </div>
       </div>
       <!-- 申请实勘人 -->
       <div
         class="role-item role-btn-cotnent"
-        v-else-if="reloData.applyRealOwner"
+        v-else-if="reloData.applyRealOwner && !realOwnerDisabled"
         @click="openPop('houseUploadflag', 12, 'houseUploadType', 0)"
       >
         <button class="role-btn">申请实勘人</button>
+      </div>
+      <div
+        class="role-item role-btn-cotnent"
+        v-else-if="reloData.applyRealOwner && realOwnerDisabled"
+      >
+        <button class="role-btn" disabled>VR拍摄中</button>
       </div>
       <!-- 无申请实勘人权限 -->
       <div class="role-item role-btn-cotnent" v-else>
@@ -341,7 +357,7 @@
         @applyAgent="applyAgent"
       ></applyAgentPop>
       <!-- 上传 -->
-      <fixedPopup
+      <!-- <fixedPopup
         :visible.sync="houseUploadflag"
         title
         v-if="houseUploadflag"
@@ -369,7 +385,7 @@
             }}</el-button>
           </div>
         </template>
-      </fixedPopup>
+      </fixedPopup> -->
       <!--钥匙人 -->
       <replacePop
         :replaceType="keyType"
@@ -392,11 +408,13 @@
     <investigator-apply-Pop
       :dialogInvestigatorVisible.sync="dialogInvestigatorVisible"
       :houseId="houseId"
+      @submit="investigatorApply"
     ></investigator-apply-Pop>
   </div>
 </template>
 
 <script>
+import { TOKEN } from "@/util/constMap";
 import { mapState } from "vuex";
 import util from "@/util/util";
 import houseCheck from "../common/houseCheck";
@@ -406,7 +424,7 @@ export default {
   },
   components: {
     //取代
-    houseUploadExtends: () => import("../newDidLog/houseUploadExtends"),
+    //houseUploadExtends: () => import("../newDidLog/houseUploadExtends"),
     //取代
     replacePop: () => import("../newDidLog/replacePop"),
     //委托人
@@ -418,6 +436,7 @@ export default {
   },
   data() {
     return {
+      realOwnerDisabled: false,
       echoData: [],
       houseUploadLoading: false,
       houseUploadflag: false,
@@ -496,83 +515,126 @@ export default {
     /**
      * @example: 判断是否存在实勘人
      */
-
     isRealOwner() {
       return this.houseData.agentHouseMethod.realOwnerName != null;
+    },
+    /**
+     * @example: 判断实勘人是否当前用户且vrUrl为空
+     */
+    isSelfRealOwner() {
+      return (
+        this.houseData.agentHouseMethod.realOwner ==
+          util.localStorageGet("logindata").accountId && !this.houseData.vrUrl
+      );
     }
+  },
+  mounted() {
+    this.getRealOwnerAuthority();
   },
   methods: {
     /**
+     * 实勘人申请成功事件
+     */
+    investigatorApply() {
+      this.realOwnerDisabled = true;
+    },
+    /**
+     * 获取申请实勘人按钮权限
+     */
+    async getRealOwnerAuthority() {
+      // 如果进入页面不弹提示框需要直接用axios请求
+      this.$api
+        .get({
+          isShowErrMsg: false,
+          url: "/agentHouse/propertyCheck/realowner/can/apply",
+          data: {
+            houseId: this.houseId,
+            type: 12,
+            memo: "正在审核",
+            replaceType: 0
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.realOwnerDisabled = false;
+          }
+        })
+        .catch(e => {
+          this.realOwnerDisabled = true;
+        });
+    },
+    /**
      * refs 获取上传组件实例并且验证非空
      */
-    submitUpload() {
-      let _that = this;
-      let verifyFieldMap = new Map([
-        ["outdoorImgList", "外景图"],
-        ["livingRoomImgList", "客厅"],
-        ["bedroomImgList", "卧室"],
-        ["kitchenImgList", "厨房"],
-        ["toiletImgList", "卫生间"],
-        ["layoutImgList", "户型图"],
-        ["houseVideo", "房源视频"]
-      ]);
-      if (this.$validator.fields.length == 0) {
-        verifyFieldMap.forEach((_value, _key) => {
-          this.$validator.attach({
-            name: _key,
-            alias: _value,
-            rules: "required",
-            getter: function() {
-              return _that.$refs.houseUpload[_key];
-            }
-          });
-        });
-      }
-      this.$validator.validateAll().then(e => {
-        if (!e) {
-          this.$message.warning(this.errorBags.all()[0]);
-        } else {
-          let url = `/agentHouse/propertyCheck/${
-            this.houseUploadType == 12 ? "insertApplyFor" : "insertReplace"
-          }`;
-          let resultIdList = [];
-          verifyFieldMap.forEach((_value, _key) => {
-            if (_that.$refs.houseUpload[_key] instanceof Array) {
-              _that.$refs.houseUpload[_key].forEach(item => {
-                resultIdList.push(item.id);
-              });
-            } else {
-              if (Object.keys(_that.$refs.houseUpload[_key]).length > 0) {
-                resultIdList.push(_that.$refs.houseUpload[_key].id);
-              }
-            }
-          });
-          console.log(resultIdList);
-          let params = {
-            Eid: this.houseId,
-            Type: this.houseUploadType,
-            picList: resultIdList,
-            followMemo: "提交了实勘申请"
-          };
-          if (this.houseUploadType == 4) {
-            params.ReplaceType = 5;
-          }
-          this.houseUploadLoading = true;
-          houseCheck
-            .insertCheck(url, params)
-            .then(e => {
-              if (e.data.code == 200) {
-                this.$message.success(e.data.message);
-              }
-            })
-            .catch(e => {})
-            .finally(() => {
-              this.houseUploadLoading = false;
-              this.houseUploadflag = false;
-            });
-        }
-      });
-    },
+    // submitUpload() {
+    //   let _that = this;
+    //   let verifyFieldMap = new Map([
+    //     ["outdoorImgList", "外景图"],
+    //     ["livingRoomImgList", "客厅"],
+    //     ["bedroomImgList", "卧室"],
+    //     ["kitchenImgList", "厨房"],
+    //     ["toiletImgList", "卫生间"],
+    //     ["layoutImgList", "户型图"],
+    //     ["houseVideo", "房源视频"]
+    //   ]);
+    //   if (this.$validator.fields.length == 0) {
+    //     verifyFieldMap.forEach((_value, _key) => {
+    //       this.$validator.attach({
+    //         name: _key,
+    //         alias: _value,
+    //         rules: "required",
+    //         getter: function() {
+    //           return _that.$refs.houseUpload[_key];
+    //         }
+    //       });
+    //     });
+    //   }
+    //   this.$validator.validateAll().then(e => {
+    //     if (!e) {
+    //       this.$message.warning(this.errorBags.all()[0]);
+    //     } else {
+    //       let url = `/agentHouse/propertyCheck/${
+    //         this.houseUploadType == 12 ? "insertApplyFor" : "insertReplace"
+    //       }`;
+    //       let resultIdList = [];
+    //       verifyFieldMap.forEach((_value, _key) => {
+    //         if (_that.$refs.houseUpload[_key] instanceof Array) {
+    //           _that.$refs.houseUpload[_key].forEach(item => {
+    //             resultIdList.push(item.id);
+    //           });
+    //         } else {
+    //           if (Object.keys(_that.$refs.houseUpload[_key]).length > 0) {
+    //             resultIdList.push(_that.$refs.houseUpload[_key].id);
+    //           }
+    //         }
+    //       });
+    //       console.log(resultIdList);
+    //       let params = {
+    //         Eid: this.houseId,
+    //         Type: this.houseUploadType,
+    //         picList: resultIdList,
+    //         followMemo: "提交了实勘申请"
+    //       };
+    //       if (this.houseUploadType == 4) {
+    //         params.ReplaceType = 5;
+    //       }
+    //       this.houseUploadLoading = true;
+    //       houseCheck
+    //         .insertCheck(url, params)
+    //         .then(e => {
+    //           if (e.data.code == 200) {
+    //             this.$message.success(e.data.message);
+    //           }
+    //         })
+    //         .catch(e => {})
+    //         .finally(() => {
+    //           this.houseUploadLoading = false;
+    //           this.houseUploadflag = false;
+    //         });
+    //     }
+    //   });
+    // },
     /**
      * 取代打开弹出层
      * @param {String} popName 弹出层的Flag名字
@@ -580,6 +642,11 @@ export default {
      */
     async openPop(popName, type, typeName, replaceType) {
       if (type != 4) {
+        // 申请实勘人直接打开弹窗
+        if (popName == "houseUploadflag") {
+          this.dialogInvestigatorVisible = true;
+          return;
+        }
         let result = await houseCheck.isChecking(
           type,
           replaceType,
@@ -587,20 +654,15 @@ export default {
           "正在审核"
         );
         // 图片视频上传组件
-        if (popName == "houseUploadflag") {
-          this.echoData = [
-            ...this.houseData.saleUploadPicDtoList,
-            ...this.houseData.saleUploadVideoDtoList
-          ];
-        }
+        // if (popName == "houseUploadflag") {
+        //   this.echoData = [
+        //     ...this.houseData.saleUploadPicDtoList,
+        //     ...this.houseData.saleUploadVideoDtoList
+        //   ];
+        // }
         if (!result) {
-          //申请VR
-          // if (popName == "houseUploadflag") {
-          //   this.dialogInvestigatorVisible = true;
-          // } else {
           this[typeName] = type;
           this[popName] = true;
-          // }
         }
       } else {
         let result = await houseCheck.isChecking(
