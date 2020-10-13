@@ -250,8 +250,9 @@
         <button
           class="role-btn"
           @click="openPop('entrustPopFlag', 1, 'entrustType', 0)"
+          :disabled="addperSaveDisabled"
         >
-          申请委托人
+          {{ addperSaveDisabled ? "录入人优先保护中" : "申请委托人" }}
         </button>
       </div>
       <!-- 无跟申请委托人权限 -->
@@ -294,8 +295,9 @@
         <button
           class="role-btn"
           @click="openPop('keyPopFlag', 0, 'keyType', 0)"
+          :disabled="addperSaveDisabled"
         >
-          申请钥匙人
+          {{ addperSaveDisabled ? "录入人优先保护中" : "申请钥匙人" }}
         </button>
       </div>
       <!-- 无申请钥匙人权限 -->
@@ -339,7 +341,9 @@
         v-else-if="reloData.applyRealOwner && !realOwnerDisabled"
         @click="openPop('houseUploadflag', 12, 'houseUploadType', 0)"
       >
-        <button class="role-btn">申请实勘人</button>
+        <button class="role-btn" :disabled="addperSaveDisabled">
+          {{ addperSaveDisabled ? "录入人优先保护中" : "申请实勘人" }}
+        </button>
       </div>
       <div
         class="role-item role-btn-cotnent"
@@ -450,7 +454,8 @@ export default {
       primaryRadio: 0, //小学占用年级
       showFollow: true, //是否显示组件的跟进
       audioList: [], //音频文件
-      dialogInvestigatorVisible: false
+      dialogInvestigatorVisible: false,
+      addperSaveDisabled: false
     };
   },
   computed: {
@@ -530,6 +535,7 @@ export default {
   },
   mounted() {
     this.getRealOwnerAuthority();
+    this.getAddperWorkmanSave();
   },
   methods: {
     /**
@@ -562,6 +568,29 @@ export default {
         })
         .catch(e => {
           this.realOwnerDisabled = true;
+        });
+    },
+    /**
+     * 获取录入人作业人申请保护
+     */
+    async getAddperWorkmanSave() {
+      // 如果进入页面不弹提示框需要直接用axios请求
+      this.$api
+        .get({
+          isShowErrMsg: false,
+          url: "/agentHouse/propertyCheck/workman/can/apply",
+          data: {
+            houseId: this.houseId
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.addperSaveDisabled = false;
+          }
+        })
+        .catch(e => {
+          this.addperSaveDisabled = true;
         });
     },
     /**
