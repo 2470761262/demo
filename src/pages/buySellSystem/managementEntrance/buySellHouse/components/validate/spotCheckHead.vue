@@ -138,7 +138,25 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="colChunks[4]" class="fr">
+          <el-col :span="colChunks[4]">
+            <el-form-item label="跟单时间">
+              <el-date-picker
+                prefix-icon="prefix-icon"
+                v-model="form.timeSelect"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="起始时间"
+                end-placeholder="结束时间"
+                value-format="yyyy-MM-dd"
+                @change="moreConditionChange"
+                :default-time="['00:00:00', '23:59:59']"
+                class="anchor-point"
+                :data-anchor="'抽检列表 获得跟单时间:' + form.timeSelect"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="colChunks[5]" class="fr">
             <div class="conditions-btn">
               <div class="btn" @click="rest">重置</div>
               <div class="btn active" @click="moreConditionChange">
@@ -156,14 +174,15 @@
 export default {
   data() {
     return {
-      colChunks: [5, 9, 5, 5, 6], // 条件选项栅格布局
+      colChunks: [5, 9, 5, 5, 6, 6], // 条件选项栅格布局
       form: {
         houseNo: "",
         comId: "",
         cbId: "",
         bhId: "",
         store: "",
-        personnel: ""
+        personnel: "",
+        timeSelect: []
       },
       community: {
         loading: false,
@@ -205,9 +224,9 @@ export default {
      */
     setConditionCol() {
       if (document.body.offsetWidth >= 1440) {
-        this.colChunks = [5, 9, 5, 5, 6];
+        this.colChunks = [5, 9, 5, 5, 6, 6];
       } else {
-        this.colChunks = [7, 10, 7, 8, 8];
+        this.colChunks = [7, 10, 7, 8, 8, 8];
       }
     },
     /**
