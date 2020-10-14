@@ -98,7 +98,8 @@ export default {
         isTopFloor: "", //是否是顶层
         isBet: "", //对赌
         isClearPage: 0, // 重置页码开关
-        isVr: "" //是否vr
+        isVr: "", //是否vr
+        isSendWuBa: "" //是否可发58
       }
     };
   },

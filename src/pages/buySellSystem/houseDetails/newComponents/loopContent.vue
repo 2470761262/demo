@@ -12,6 +12,24 @@
       width: 100%;
       height: 100%;
     }
+    .vr-panel {
+      width: 100%;
+      height: 100%;
+      .vr-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        img {
+          // prettier-ignore
+          width: 60PX;
+        }
+      }
+    }
   }
   .loop-warp-abso {
     position: absolute;
@@ -133,15 +151,26 @@
     <section class="loop-warp">
       <div class="loop-warp-static">
         <el-video
-          v-if="!loopActiveFlag"
+          v-if="loopActiveFlag == 0"
           :src="houseData.saleUploadVideoDtoList[0].videoUrl"
         />
         <el-image
           @click.native="showPreview"
-          v-if="loopActiveFlag"
+          v-if="loopActiveFlag == 1 || loopActiveFlag == 2"
           class="is-now-image"
           :src="loopActiveShowData.picUrl"
         ></el-image>
+        <div class="vr-panel" v-if="loopActiveFlag == 3">
+          <el-image
+            @click.native="showPreview"
+            v-if="loopActiveFlag == 3"
+            class="is-now-image"
+            :src="loopActiveShowData.picUrl"
+          ></el-image>
+          <a :href="houseData.vrUrl" class="vr-icon" target="_blank">
+            <img src="@/assets/images/houseList_vr.svg" alt="" />
+          </a>
+        </div>
       </div>
       <div
         class="loop-warp-abso"
@@ -276,10 +305,11 @@ export default {
     },
     //首屏显示类型判断
     loopActiveFlag() {
-      return (
-        this.loopType[this.loopTypeActive].type == 1 ||
-        this.loopType[this.loopTypeActive].type == 2
-      );
+      // return (
+      //   this.loopType[this.loopTypeActive].type == 1 ||
+      //   this.loopType[this.loopTypeActive].type == 2
+      // );
+      return this.loopType[this.loopTypeActive].type;
     },
     //返回当前激活的图片对象数据
     loopActiveShowData() {
@@ -290,17 +320,26 @@ export default {
       return this.mergeHouseImage.map(item => item.picUrl);
     },
     loopType() {
+      let arr;
       if (this.houseData.saleUploadVideoDtoList.length == 0) {
-        return [
+        arr = [
+          { title: "图片", type: 1 },
+          { title: "户型图", type: 2 }
+        ];
+      } else {
+        arr = [
+          { title: "视频", type: 0 },
           { title: "图片", type: 1 },
           { title: "户型图", type: 2 }
         ];
       }
-      return [
-        { title: "视频", type: 0 },
-        { title: "图片", type: 1 },
-        { title: "户型图", type: 2 }
-      ];
+      if (this.houseData.vrUrl) {
+        arr.unshift({
+          title: "VR",
+          type: 3
+        });
+      }
+      return arr;
     }
   },
   mounted() {
