@@ -197,6 +197,16 @@ export default {
     }
     return actualTop;
   },
+  getElementLeft(el) {
+    if (!el) return null;
+    let actualLeft = el.offsetLeft;
+    let current = el.offsetParent;
+    while (current !== null) {
+      actualLeft += current.offsetLeft;
+      current = current.offsetParent;
+    }
+    return actualLeft;
+  },
   format(time, fmt) {
     let date = new Date(time);
     var o = {

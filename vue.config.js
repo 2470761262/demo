@@ -21,6 +21,9 @@ module.exports = {
   parallel: require("os").cpus().length > 1,
   //lintOnSave: true,
   chainWebpack: config => {
+    //  console.log(config.resolve.alias, "config");
+
+    // config.resolve.alias.set("vue$", "vue/dist/vue.esm.js");
     config.resolve.alias.set("@", resolve("src"));
     config.plugins.delete("prefetch");
     config.plugins.delete("preload");

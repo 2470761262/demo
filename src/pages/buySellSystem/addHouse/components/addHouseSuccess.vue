@@ -1,5 +1,7 @@
 <style lang="less" scoped>
-.page-cell-addHouse {
+.page-cell-addHoue {
+  // prettier-ignore
+  width: 940PX;
   height: 100%;
 }
 .page-cell-title {
@@ -121,7 +123,7 @@
 <script>
 import util from "@/util/util";
 import but from "@/evenBus/but.js";
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 export default {
   name: "addHouseSuccess",
   data() {
@@ -140,7 +142,7 @@ export default {
   },
   computed: {
     ...mapState({
-      'formData': state => state.addHouse.formData
+      formData: state => state.addHouse.formData
     })
   },
   created() {
@@ -192,11 +194,11 @@ export default {
       //     that.loading = false;
       //   });
       let audioList = [];
-      if (this.formData.file.audioFile&&this.formData.file.audioFile.id) {
+      if (this.formData.file.audioFile && this.formData.file.audioFile.id) {
         audioList.push(this.formData.file.audioFile.id);
       }
       let videoList = [];
-      if (this.formData.file.houseVideo&&this.formData.file.houseVideo.id) {
+      if (this.formData.file.houseVideo && this.formData.file.houseVideo.id) {
         videoList.push(this.formData.file.houseVideo.id);
       }
       let imageList = [];
@@ -219,10 +221,10 @@ export default {
         imageList.push(item.id);
       }
       let params = {};
-      for(let item in this.formData.step1) {
+      for (let item in this.formData.step1) {
         params[item] = this.formData.step1[item];
       }
-      for(let item in this.formData.step2) {
+      for (let item in this.formData.step2) {
         params[item] = this.formData.step2[item];
       }
       params.imageList = imageList;
@@ -241,7 +243,7 @@ export default {
             this.$router.push({
               path: "/buySellSystem/validateHome",
               query: {
-                id: result.data,
+                id: result.data
               }
             });
           } else {
@@ -250,11 +252,11 @@ export default {
           }
         })
         .catch(e => {
-          console.log(e,"查询失败");
+          console.log(e, "查询失败");
         })
         .finally(e => {
           that.loading = false;
-        })
+        });
     },
     navto() {
       this.$router.replace({ path: "/myHouse/myValidate" });

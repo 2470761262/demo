@@ -67,7 +67,7 @@ function getData() {
       taxDesc: "", //税费解析
       saleDesc: "", //核心卖点
       followWay: "", //跟进的类型
-      followMemo: "", //跟进的内容
+      followMemo: "" //跟进的内容
     },
     step3: {
       //saleReson: "", //卖房原因
@@ -80,6 +80,7 @@ function getData() {
       kitchenImgList: [], //厨房
       toiletImgList: [], //卫生间
       layoutImgList: [], //户型图
+      originalImageList: [], //无状态图片
       houseVideo: {} //房源视频
     }
   };

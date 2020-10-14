@@ -349,10 +349,9 @@
       >
         <houseUploadExtends
           ref="houseUpload"
-          :replaceType="houseUploadType"
-          :wxUploadFile="true"
-          :echoData="echoData"
-          :isFromHouseTask="true"
+          :getData="true"
+          :paramsObj="paramsObj"
+          :houseId="houseId"
         ></houseUploadExtends>
         <template v-slot:floot>
           <div class="text-middle">
@@ -418,6 +417,14 @@ export default {
   },
   data() {
     return {
+      paramsObj: {
+        buttonText: "保存",
+        editUrl: "/agent_house/editAgentHouse",
+        getAudioUrl: "/agentHouse/audio/getAudioList/",
+        getEditUrl: "/agent_house/getEditDetails/",
+        getPicturesUrl: "/agentHouse/pictures/getPicturesList/",
+        getVideoUrl: "/agentHouse/video/getVideoList/"
+      },
       echoData: [],
       houseUploadLoading: false,
       houseUploadflag: false,
@@ -505,74 +512,7 @@ export default {
     /**
      * refs 获取上传组件实例并且验证非空
      */
-    submitUpload() {
-      let _that = this;
-      let verifyFieldMap = new Map([
-        ["outdoorImgList", "外景图"],
-        ["livingRoomImgList", "客厅"],
-        ["bedroomImgList", "卧室"],
-        ["kitchenImgList", "厨房"],
-        ["toiletImgList", "卫生间"],
-        ["layoutImgList", "户型图"],
-        ["houseVideo", "房源视频"]
-      ]);
-      if (this.$validator.fields.length == 0) {
-        verifyFieldMap.forEach((_value, _key) => {
-          this.$validator.attach({
-            name: _key,
-            alias: _value,
-            rules: "required",
-            getter: function() {
-              return _that.$refs.houseUpload[_key];
-            }
-          });
-        });
-      }
-      this.$validator.validateAll().then(e => {
-        if (!e) {
-          this.$message.warning(this.errorBags.all()[0]);
-        } else {
-          let url = `/agentHouse/propertyCheck/${
-            this.houseUploadType == 12 ? "insertApplyFor" : "insertReplace"
-          }`;
-          let resultIdList = [];
-          verifyFieldMap.forEach((_value, _key) => {
-            if (_that.$refs.houseUpload[_key] instanceof Array) {
-              _that.$refs.houseUpload[_key].forEach(item => {
-                resultIdList.push(item.id);
-              });
-            } else {
-              if (Object.keys(_that.$refs.houseUpload[_key]).length > 0) {
-                resultIdList.push(_that.$refs.houseUpload[_key].id);
-              }
-            }
-          });
-          console.log(resultIdList);
-          let params = {
-            Eid: this.houseId,
-            Type: this.houseUploadType,
-            picList: resultIdList,
-            followMemo: "提交了实勘申请"
-          };
-          if (this.houseUploadType == 4) {
-            params.ReplaceType = 5;
-          }
-          this.houseUploadLoading = true;
-          houseCheck
-            .insertCheck(url, params)
-            .then(e => {
-              if (e.data.code == 200) {
-                this.$message.success(e.data.message);
-              }
-            })
-            .catch(e => {})
-            .finally(() => {
-              this.houseUploadLoading = false;
-              this.houseUploadflag = false;
-            });
-        }
-      });
-    },
+    submitUpload() {},
     /**
      * 取代打开弹出层
      * @param {String} popName 弹出层的Flag名字
