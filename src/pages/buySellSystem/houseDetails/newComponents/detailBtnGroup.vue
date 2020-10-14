@@ -249,8 +249,9 @@
       width="960px"
     >
       <houseUploadExtends
+        :houseId="houseId"
         :paramsObj="paramsObj"
-        :getData="getData"
+        :getData="true"
       ></houseUploadExtends>
       <template v-slot:floot>
         <div class="text-middle">
