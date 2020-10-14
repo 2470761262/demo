@@ -683,7 +683,7 @@ export default {
       this.$api
         .post({ url: url })
         .then(e => {
-          if (e.data.code == 200) {
+          if (e.data.code == 200 && e.data.data.length > 0) {
             this.videoData.videoJson = e.data.data[0];
           }
         })
@@ -691,7 +691,7 @@ export default {
           this.$message.error("获取数据失败~");
         })
         .finally(() => {
-          this.videoData.videoLoading = true;
+          this.videoData.videoLoading = false;
         });
     },
     /**

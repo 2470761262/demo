@@ -512,7 +512,9 @@ export default {
     /**
      * refs 获取上传组件实例并且验证非空
      */
-    submitUpload() {},
+    submitUpload() {
+      this.houseUploadflag = false;
+    },
     /**
      * 取代打开弹出层
      * @param {String} popName 弹出层的Flag名字
