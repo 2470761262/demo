@@ -340,6 +340,7 @@ https://imgtest.0be.cn/FileUpload/PicFile_Agent2020/10/13/e719b8118de94879898d87
           :current-type="activeImageType"
         >
           <image-content
+            @isEmptyList="isEmptyList"
             @restoreImageType="restoreImageType"
             :title="imageType[activeImageType].title"
             :current-array="
@@ -624,6 +625,17 @@ export default {
     this.contactSocket();
   },
   methods: {
+    /**
+     * @example: 如果当前激活类型数组是空,点击拖拽目标区域将直接打开弹框
+     */
+    isEmptyList() {
+      if (
+        this.sectionContent[this.imageType[this.activeImageType].targetArray]
+          .length == 0
+      ) {
+        this.openAddImagePop();
+      }
+    },
     /**
      * @example: 查询图片和视频
      */

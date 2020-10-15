@@ -66,6 +66,7 @@
   text-align: center;
   // prettier-ignore
   padding: 10PX 0;
+  border-top: 1px solid #d3d3d3;
 }
 </style>
 <style lang="less">

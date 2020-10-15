@@ -22,6 +22,9 @@
       justify-content: center;
       // prettier-ignore
       padding: 16PX;
+      .target-bor {
+        text-align: center;
+      }
       &.is-empty {
         align-items: flex-start;
       }
@@ -84,8 +87,10 @@
     <div class="is-real" ref="target">
       <div class="empty-content" :class="{ 'is-empty': !isEmpty }">
         <template v-if="isEmpty">
-          <i class="iconfont iconbianzu2"></i>
-          <div class="empty-title">将您拍摄的{{ title }}添加至此处</div>
+          <div class="target-bor" @click="isEmptyList">
+            <i class="iconfont iconbianzu2"></i>
+            <div class="empty-title">将您拍摄的{{ title }}添加至此处</div>
+          </div>
         </template>
         <div class="target-list" v-else>
           <div
@@ -144,6 +149,12 @@ export default {
     this.targetInit();
   },
   methods: {
+    /**
+     * @example:
+     */
+    isEmptyList() {
+      this.$emit("isEmptyList");
+    },
     /**
      * @example: 删除对应元素
      */
