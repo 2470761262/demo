@@ -70,7 +70,41 @@
             text-align: center;
             cursor: pointer;
           }
+          .is-cover {
+            position: absolute;
+            // prettier-ignore
+            bottom: 4PX;
+            left: 0;
+            width: 100%;
+            display: flex;
+            cursor: pointer;
+            .is-no-check {
+              // prettier-ignore
+              width: 12PX;
+              // prettier-ignore
+              height: 12PX;
+              background: #ffffff;
+              border: 1px solid #909399;
+              border-radius: 50%;
+              // prettier-ignore
+              margin: 0 5PX 0 3PX;
+              &.is-check {
+                &::after {
+                  font-family: element-icons !important;
+                  content: "\e79c";
+                  font-size: @font12;
+                  color: @backgroud;
+                }
+              }
+            }
+            .cover-title {
+              font-size: @font12;
+              color: #fff;
+            }
+          }
           img {
+            // prettier-ignore
+            border-radius: 6PX;
             // prettier-ignore
             width: 100%;
             // prettier-ignore
@@ -106,6 +140,13 @@
                 v-if="!item.loading"
                 @click="spliceItem(item, index)"
               ></div>
+              <div class="is-cover" @click="setCover(item)">
+                <div
+                  class="is-no-check"
+                  :class="{ 'is-check': item.id == coverData.id }"
+                ></div>
+                <div class="cover-title">设为封面</div>
+              </div>
             </div>
           </div>
         </div>
@@ -119,6 +160,8 @@ import util from "@/util/util";
 export default {
   inject: ["dragParent"],
   props: {
+    coverData: Object,
+
     title: String,
 
     currentArray: Array
@@ -150,6 +193,17 @@ export default {
   },
   methods: {
     /**
+     * @example: 设置封面
+     */
+
+    setCover(item) {
+      if (item.id == this.coverData.id) {
+        this.$emit("update:coverData", {});
+      } else {
+        this.$emit("update:coverData", item);
+      }
+    },
+    /**
      * @example:
      */
     isEmptyList() {
@@ -159,6 +213,9 @@ export default {
      * @example: 删除对应元素
      */
     spliceItem(item, index) {
+      if (item.id == this.coverData.id) {
+        this.$emit("update:coverData", {});
+      }
       this.$emit("restoreImageType", item, index);
     },
     targetInit() {

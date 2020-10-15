@@ -250,6 +250,7 @@
       width="960px"
     >
       <houseUploadExtends
+        ref="houseUploadExtends"
         :houseId="houseId"
         :paramsObj="paramsObj"
         :getData="true"
@@ -408,10 +409,14 @@ export default {
      * @example:编辑图片提交
      */
     submitUpload() {
-      this.$message({
-        message: "编辑成功"
+      this.$refs.houseUploadExtends.validateAll().then(e => {
+        if (e) {
+          this.houseUploadflag = false;
+          this.$message({
+            message: "编辑成功"
+          });
+        }
       });
-      this.houseUploadflag = false;
     },
     ...mapMutations(["setParam"]),
     ...mapActions(["commitHouseData"]),

@@ -340,6 +340,7 @@ https://imgtest.0be.cn/FileUpload/PicFile_Agent2020/10/13/e719b8118de94879898d87
           :current-type="activeImageType"
         >
           <image-content
+            :cover-data.sync="coverData"
             @isEmptyList="isEmptyList"
             @restoreImageType="restoreImageType"
             :title="imageType[activeImageType].title"
@@ -523,6 +524,8 @@ export default {
   },
   data() {
     return {
+      isHouseDetailOpen: false, //如果是房源详情打开将是true
+      coverData: {}, //封面
       id: this.$store.state.addHouse.formData.id,
       loading: false,
       socketPicArr: [], //socketImage
@@ -814,7 +817,11 @@ export default {
      */
     stillSave() {
       this.isBreakSave = true;
-      this.$parent.nextPage(this.$options.name);
+      if (!this.isHouseDetailOpen) {
+        this.$parent.nextPage(this.$options.name);
+      } else {
+        this.$parent.close();
+      }
     },
     /**
      * @example: 将有状态图片设置为无状态
@@ -1006,21 +1013,22 @@ export default {
           this.imgTipsPop = true;
           r(false);
         } else {
-          //提交数据到store
-          Object.keys(this.sectionContent).forEach(key => {
-            this.$store.commit("updateFile", {
-              [key]: this.sectionContent[key]
+          if (!this.isHouseDetailOpen) {
+            //提交数据到store
+            Object.keys(this.sectionContent).forEach(key => {
+              this.$store.commit("updateFile", {
+                [key]: this.sectionContent[key]
+              });
             });
-          });
-          //提交无状态
-          this.$store.commit("updateFile", {
-            originalImageList: this.originalImageList
-          });
-          //提交音频
-          this.$store.commit("updateFile", {
-            houseVideo: this.videoData.videoJson
-          });
-
+            //提交无状态
+            this.$store.commit("updateFile", {
+              originalImageList: this.originalImageList
+            });
+            //提交音频
+            this.$store.commit("updateFile", {
+              houseVideo: this.videoData.videoJson
+            });
+          }
           r(true);
         }
       });
