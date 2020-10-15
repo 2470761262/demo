@@ -143,7 +143,7 @@
               <div class="is-cover" @click="setCover(item)">
                 <div
                   class="is-no-check"
-                  :class="{ 'is-check': item.id == coverData.id }"
+                  :class="{ 'is-check': item.id == coverDataId }"
                 ></div>
                 <div class="cover-title">设为封面</div>
               </div>
@@ -160,7 +160,7 @@ import util from "@/util/util";
 export default {
   inject: ["dragParent"],
   props: {
-    coverData: Object,
+    coverDataId: Number,
 
     title: String,
 
@@ -197,10 +197,10 @@ export default {
      */
 
     setCover(item) {
-      if (item.id == this.coverData.id) {
-        this.$emit("update:coverData", {});
+      if (item.id == this.coverDataId) {
+        this.$emit("update:coverDataId", null);
       } else {
-        this.$emit("update:coverData", item);
+        this.$emit("update:coverDataId", item.id);
       }
     },
     /**
@@ -213,8 +213,8 @@ export default {
      * @example: 删除对应元素
      */
     spliceItem(item, index) {
-      if (item.id == this.coverData.id) {
-        this.$emit("update:coverData", {});
+      if (item.id == this.coverDataId) {
+        this.$emit("update:coverDataId", null);
       }
       this.$emit("restoreImageType", item, index);
     },

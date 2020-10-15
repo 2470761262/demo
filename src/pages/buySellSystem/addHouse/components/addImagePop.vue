@@ -386,7 +386,7 @@ export default {
      * @example: 确定提交图片
      */
     commitImage() {
-      if (this.temporaryFile.length == 0) {
+      if (this.imgAllArr.length == 0) {
         return this.$message.warning("需要上传图片");
       }
       new Promise((r, s) => {

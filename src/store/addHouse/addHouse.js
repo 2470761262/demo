@@ -73,6 +73,7 @@ function getData() {
       //saleReson: "", //卖房原因
     },
     file: {
+      coverPictureId: null, //封面图片ID
       audioFile: {}, // 音频集合
       outdoorImgList: [], //外景图
       livingRoomImgList: [], //客厅
@@ -89,7 +90,7 @@ function getData() {
 function forSetStep(state, val, stepName) {
   if (typeof val == "object") {
     for (let item in val) {
-      if (state.formData[stepName][item] != undefined) {
+      if (state.formData[stepName][item] !== undefined) {
         state.formData[stepName][item] = val[item];
       }
     }

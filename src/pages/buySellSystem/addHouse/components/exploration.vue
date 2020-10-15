@@ -340,7 +340,7 @@ https://imgtest.0be.cn/FileUpload/PicFile_Agent2020/10/13/e719b8118de94879898d87
           :current-type="activeImageType"
         >
           <image-content
-            :cover-data.sync="coverData"
+            :cover-data-id.sync="coverDataId"
             @isEmptyList="isEmptyList"
             @restoreImageType="restoreImageType"
             :title="imageType[activeImageType].title"
@@ -525,7 +525,7 @@ export default {
   data() {
     return {
       isHouseDetailOpen: false, //如果是房源详情打开将是true
-      coverData: {}, //封面
+      coverDataId: null, //封面图片ID
       id: this.$store.state.addHouse.formData.id,
       loading: false,
       socketPicArr: [], //socketImage
@@ -1020,11 +1020,15 @@ export default {
                 [key]: this.sectionContent[key]
               });
             });
+            //提交封面图片ID
+            this.$store.commit("updateFile", {
+              coverPictureId: this.coverDataId
+            });
             //提交无状态
             this.$store.commit("updateFile", {
               originalImageList: this.originalImageList
             });
-            //提交音频
+            //提交视频
             this.$store.commit("updateFile", {
               houseVideo: this.videoData.videoJson
             });

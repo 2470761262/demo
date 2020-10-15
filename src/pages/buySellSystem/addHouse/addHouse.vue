@@ -459,9 +459,14 @@ export default {
       for (let item in this.formData.step2) {
         params[item] = this.formData.step2[item];
       }
+      //图片封面ID
+      if (this.formData.file.coverPictureId != null) {
+        params.coverPictureId = this.formData.file.coverPictureId;
+      }
       params.imageList = imageList;
       params.audioList = audioList;
       params.videoList = videoList;
+      console.log(params);
       this.$api
         .post({
           url: "/verifyHouse",
