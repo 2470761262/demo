@@ -830,6 +830,7 @@ export default {
       if (!this.isHouseDetailOpen) {
         this.$parent.nextPage(this.$options.name);
       } else {
+        this.updateCover();
         this.$parent.close();
       }
     },
@@ -1062,7 +1063,7 @@ export default {
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             houseId: this.id,
-            pictureId: this.coverDataId
+            coverPictureId: this.coverDataId
           }
         });
       }
