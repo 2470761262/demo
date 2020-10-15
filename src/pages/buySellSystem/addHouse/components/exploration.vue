@@ -526,6 +526,7 @@ export default {
     return {
       isHouseDetailOpen: false, //如果是房源详情打开将是true
       coverDataId: null, //封面图片ID
+      isEditCoverDataIdOrd: null, //用于判断是否修改了封面ID 如果与coverDataId不同则更新封面ID
       id: this.$store.state.addHouse.formData.id,
       loading: false,
       socketPicArr: [], //socketImage
@@ -662,6 +663,12 @@ export default {
           let imgList = data.data;
           imgList.forEach(item => {
             let type = item.picClass ? item.picClass : item.PicClass;
+            //查找对应的封面ID
+            if (item.id === item.coverPictureId) {
+              this.coverDataId = item.coverPictureId;
+              this.isEditCoverDataIdOrd = item.coverPictureId;
+            }
+
             const imgList = [
               "outdoorImgList",
               "livingRoomImgList",
@@ -754,8 +761,10 @@ export default {
      * @example: socket回调 需要弹框打开才会填入socket数组
      */
     receiveMessagePic(r) {
-      console.log(r, "r");
-      if (r.content.resourceType == "video") {
+      if (
+        r.content.resourceType == "video" &&
+        Object.keys(this.videoData.videoJson).length == 0
+      ) {
         this.uploadFileInfo(r.content.picUrl, "videoDraft");
       } else if (r.content.resourceType == "picture" && this.addImagePopFlag) {
         this.$nextTick(() => {
@@ -794,6 +803,7 @@ export default {
               });
             } else if (suffix == "videoDraft") {
               json.url = url;
+              json.id = json.data.data.id;
               this.videoData.videoJson = json;
             }
           } else {
@@ -1013,6 +1023,7 @@ export default {
           this.imgTipsPop = true;
           r(false);
         } else {
+          this.updateCover();
           if (!this.isHouseDetailOpen) {
             //提交数据到store
             Object.keys(this.sectionContent).forEach(key => {
@@ -1036,6 +1047,25 @@ export default {
           r(true);
         }
       });
+    },
+    /**
+     * @example: 更新封面ID
+     */
+
+    updateCover() {
+      if (
+        this.coverDataId !== null &&
+        this.coverDataId !== this.isEditCoverDataIdOrd
+      ) {
+        this.$api.post({
+          url: "/agentHouse/pictures/updateCover",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            houseId: this.id,
+            pictureId: this.coverDataId
+          }
+        });
+      }
     },
     edit() {
       let sendData = {
