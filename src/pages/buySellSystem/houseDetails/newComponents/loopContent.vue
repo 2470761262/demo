@@ -277,9 +277,12 @@ export default {
       if (this.houseData.saleUploadPicDtoList.length == 0) {
         return fittArrayList();
       }
-      return this.houseData.saleUploadPicDtoList.map(item => {
-        return { ...item, smallPicUrl: item.picUrl + SMALLThumb };
-      });
+
+      return this.houseData.saleUploadPicDtoList
+        .filter(item => item.PicClass)
+        .map(item => {
+          return { ...item, smallPicUrl: item.picUrl + SMALLThumb };
+        });
     },
     //根据loopTypeActive显示对应的轮播图片数组
     mergeHouseImage() {
