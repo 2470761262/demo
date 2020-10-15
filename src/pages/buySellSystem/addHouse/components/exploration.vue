@@ -932,6 +932,10 @@ export default {
       this.videoData.videoLoading = true;
       let formData = new FormData();
       formData.append("file", file);
+      //修改
+      if (this.id) {
+        formData.append("Eid", this.id);
+      }
       return this.$api
         .post({
           url: `/verifyHouse/video`,
