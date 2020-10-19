@@ -733,6 +733,7 @@ export default {
           headers: { "Content-Type": "application/json" }
         })
         .then(({ data }) => {
+          console.log(resourceType, "resourceType", data.data.url);
           if (data.code == 200) {
             this.socketPic[resourceType] = data.data.url;
           }
