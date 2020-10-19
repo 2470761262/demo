@@ -54,6 +54,11 @@
 .el-leave-active {
   position: static;
 }
+.page-cell-addHouse {
+  // prettier-ignore
+  width: 940PX;
+  background: #fff;
+}
 </style>
 <template>
   <div class="page-cell-addHouse form-error-tips">

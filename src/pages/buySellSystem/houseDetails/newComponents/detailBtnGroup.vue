@@ -66,6 +66,7 @@
   text-align: center;
   // prettier-ignore
   padding: 10PX 0;
+  border-top: 1px solid #d3d3d3;
 }
 </style>
 <style lang="less">
@@ -81,7 +82,11 @@
       style="order:0"
       :disabled="isLockBtn"
       @click="
-        openPop('shareFlag', isShare, '房源图片少于一张，不允许进行分享，请尽快上传')
+        openPop(
+          'shareFlag',
+          isShare,
+          '房源图片少于一张，不允许进行分享，请尽快上传'
+        )
       "
     >
       分享房源
@@ -245,10 +250,10 @@
       width="960px"
     >
       <houseUploadExtends
-        ref="houseUpload"
-        :wxUploadFile="true"
-        :echoData="echoData"
-        :isFromHouseTask="true"
+        ref="houseUploadExtends"
+        :houseId="houseId"
+        :paramsObj="paramsObj"
+        :getData="true"
       ></houseUploadExtends>
       <template v-slot:floot>
         <div class="text-middle">
@@ -378,6 +383,14 @@ export default {
   },
   data() {
     return {
+      paramsObj: {
+        buttonText: "保存",
+        editUrl: "/agent_house/editAgentHouse",
+        getAudioUrl: "/agentHouse/audio/getAudioList/",
+        getEditUrl: "/agent_house/getEditDetails/",
+        getPicturesUrl: "/agentHouse/pictures/getPicturesList/",
+        getVideoUrl: "/agentHouse/video/getVideoList/"
+      },
       perId: util.localStorageGet("logindata").accountId,
       followUpFlag: false, //跟进弹框开关
       phonePopFlag: false, //查看号码开关
@@ -396,10 +409,14 @@ export default {
      * @example:编辑图片提交
      */
     submitUpload() {
-      this.$message({
-        message: "编辑成功"
+      this.$refs.houseUploadExtends.validateAll().then(e => {
+        if (e) {
+          this.houseUploadflag = false;
+          this.$message({
+            message: "编辑成功"
+          });
+        }
       });
-      this.houseUploadflag = false;
     },
     ...mapMutations(["setParam"]),
     ...mapActions(["commitHouseData"]),
@@ -549,9 +566,9 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
-             this.commitHouseData({
+            this.commitHouseData({
               isReleaseOutside: 1
-             });
+            });
             that.appletQRCode = e.data.data;
           }
         });
