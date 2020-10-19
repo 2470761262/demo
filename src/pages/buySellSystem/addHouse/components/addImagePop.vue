@@ -393,6 +393,10 @@ export default {
         let counter = 0;
         let uploadImage = [];
         this.loading = true;
+        if (this.temporaryFile.length == 0) {
+          this.loading = false;
+          return r([]);
+        }
         for (let index = 0; index < this.temporaryFile.length; index++) {
           this.uploadSectionFile(this.temporaryFile[index].file)
             .then(v => {
