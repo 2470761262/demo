@@ -250,6 +250,7 @@
       width="960px"
     >
       <houseUploadExtends
+        @reLoadPage="reLoadPage"
         ref="houseUploadExtends"
         :houseId="houseId"
         :paramsObj="paramsObj"
@@ -405,6 +406,14 @@ export default {
     };
   },
   methods: {
+    /**
+     * @example: 重新加载页面
+     */
+    reLoadPage() {
+      this.$nextTick(() => {
+        this.$router.go(0);
+      });
+    },
     /**
      * @example:编辑图片提交
      */
