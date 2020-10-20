@@ -278,11 +278,17 @@ export default {
         return fittArrayList();
       }
 
-      return this.houseData.saleUploadPicDtoList
-        .filter(item => item.PicClass)
-        .map(item => {
-          return { ...item, smallPicUrl: item.picUrl + SMALLThumb };
-        });
+      const filterResule = this.houseData.saleUploadPicDtoList.filter(
+        item => item.PicClass
+      );
+
+      if (filterResule.length == 0) {
+        return fittArrayList();
+      }
+
+      return filterResule.map(item => {
+        return { ...item, smallPicUrl: item.picUrl + SMALLThumb };
+      });
     },
     //根据loopTypeActive显示对应的轮播图片数组
     mergeHouseImage() {
