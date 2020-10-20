@@ -29,8 +29,6 @@
       // prettier-ignore
       border-radius: 10PX;
       // prettier-ignore
-      border-radius: 10PX;
-      // prettier-ignore
       padding: 24PX 24PX 30PX 33PX;
       box-sizing: border-box;
       display: flex;
