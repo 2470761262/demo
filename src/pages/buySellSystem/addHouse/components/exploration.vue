@@ -879,6 +879,7 @@ export default {
       } else {
         this.updateCover();
         this.$parent.close();
+        this.$emit("reLoadPage");
       }
     },
     /**
@@ -1169,7 +1170,7 @@ export default {
     }
   },
   beforeDestroy() {
-    window.removeEventListener(this.wiResize);
+    window.removeEventListener("resize", this.wiResize);
     if (this.paramsObj.editUrl) {
       this.edit();
     }
