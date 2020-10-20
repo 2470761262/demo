@@ -655,6 +655,7 @@ export default {
       const { left, bottom, x, y, top, width } = document
         .querySelector(".head-add")
         .getBoundingClientRect();
+      console.log(document.querySelector(".head-add").getBoundingClientRect());
       this.headAddRect = { left, bottom, x, y, top, width: width / 2 };
     },
     /**
@@ -695,6 +696,7 @@ export default {
         })
         .finally(() => {
           this.loading = false;
+          this.wiResize();
         });
     },
     //获取上传的图片
