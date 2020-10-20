@@ -454,6 +454,14 @@ https://imgtest.0be.cn/FileUpload/PicFile_Agent2020/10/13/e719b8118de94879898d87
       @commitImage="commitImage"
       @removeSocketItem="deleteImg"
     />
+    <!-- 操作提示框 -->
+    <operation-model
+      :posi-rect="headAddRect"
+      :now-step="operationStep"
+      :visible.sync="operationPopFlag"
+      v-if="operationPopFlag"
+      @setStep="setStep"
+    />
   </div>
 </template>
 <script>
@@ -494,6 +502,7 @@ export default {
     dragContent,
     imageContent,
     dragItem,
+    operationModel: () => import("./operationModel"),
     addImagePop: () => import("./addImagePop"),
     validateImgTips: () => import("./validateImgTips")
   },
@@ -524,6 +533,9 @@ export default {
   },
   data() {
     return {
+      operationStep: 0, //当前执行步骤
+      headAddRect: {}, //headAdd元素定位
+      operationPopFlag: false, //操作步驟提示框开关
       isHouseDetailOpen: false, //如果是房源详情打开将是true
       coverDataId: null, //封面图片ID
       isEditCoverDataIdOrd: null, //用于判断是否修改了封面ID 如果与coverDataId不同则更新封面ID
@@ -624,11 +636,43 @@ export default {
     if (this.getData) {
       this.promiseAllViodeoAndImg();
     }
-
+    this.isOperationPop();
     //接入聊天
     this.contactSocket();
   },
   methods: {
+    /**
+     * @example: 修改了步骤之后的回调
+     */
+    setStep(v) {
+      if (v.done) {
+        util.localStorageSet("isOperation", true);
+      }
+      this.operationPopFlag = v.visible;
+      this.operationStep = v.next;
+    },
+    wiResize() {
+      const { left, bottom, x, y, top, width } = document
+        .querySelector(".head-add")
+        .getBoundingClientRect();
+      this.headAddRect = { left, bottom, x, y, top, width: width / 2 };
+    },
+    /**
+     * @example: 判断是否浏览器有缓存有缓存,无缓存将打开操作步骤提示
+     */
+    isOperationPop() {
+      this.$nextTick(() => {
+        const isOperation = util.localStorageGet("isOperation");
+        console.log(isOperation, "isOperation");
+        if (!isOperation) {
+          this.wiResize();
+          this.operationStep = 0;
+          this.operationPopFlag = true;
+
+          window.addEventListener("resize", this.wiResize);
+        }
+      });
+    },
     /**
      * @example: 如果当前激活类型数组是空,点击拖拽目标区域将直接打开弹框
      */
@@ -876,6 +920,16 @@ export default {
      */
     commitImage(v) {
       this.originalImageList = [...this.originalImageList, ...v];
+      const isOperation = util.localStorageGet("isOperation");
+      if (!isOperation) {
+        this.$nextTick(() => {
+          this.setStep({
+            done: false,
+            visible: true,
+            next: 1
+          });
+        });
+      }
     },
     /**
      * @example: 触发成功之后删除originalImageList对应的数组元素
@@ -1113,6 +1167,7 @@ export default {
     }
   },
   beforeDestroy() {
+    window.removeEventListener(this.wiResize);
     if (this.paramsObj.editUrl) {
       this.edit();
     }
