@@ -492,13 +492,17 @@ export default {
                 var jsonObject = JSON.parse(item.operation);
                 var text = "";
                 for (var i in jsonObject) {
-                  text +=
-                    jsonObject[i].updateFiled +
-                    "由【" +
-                    (jsonObject[i].oldValue || "暂无") +
-                    "】修改为【" +
-                    jsonObject[i].newValue +
-                    "】；";
+                  if (jsonObject[i].updateFiled == "修改图片") {
+                    text += "修改了图片";
+                  } else {
+                    text +=
+                      jsonObject[i].updateFiled +
+                      "由【" +
+                      (jsonObject[i].oldValue || "暂无") +
+                      "】修改为【" +
+                      jsonObject[i].newValue +
+                      "】；";
+                  }
                 }
                 item.operation = "编辑房源：" + text;
               }

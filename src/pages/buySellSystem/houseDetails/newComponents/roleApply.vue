@@ -369,10 +369,9 @@
       >
         <houseUploadExtends
           ref="houseUpload"
-          :replaceType="houseUploadType"
-          :wxUploadFile="true"
-          :echoData="echoData"
-          :isFromHouseTask="true"
+          :getData="true"
+          :paramsObj="paramsObj"
+          :houseId="houseId"
         ></houseUploadExtends>
         <template v-slot:floot>
           <div class="text-middle">

@@ -33,6 +33,7 @@
         flex: 1;
         // prettier-ignore
         margin-left: 13PX;
+        width: 0;
       }
     }
   }

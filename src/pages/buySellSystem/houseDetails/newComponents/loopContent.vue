@@ -277,7 +277,16 @@ export default {
       if (this.houseData.saleUploadPicDtoList.length == 0) {
         return fittArrayList();
       }
-      return this.houseData.saleUploadPicDtoList.map(item => {
+
+      const filterResule = this.houseData.saleUploadPicDtoList.filter(
+        item => item.PicClass
+      );
+
+      if (filterResule.length == 0) {
+        return fittArrayList();
+      }
+
+      return filterResule.map(item => {
         return { ...item, smallPicUrl: item.picUrl + SMALLThumb };
       });
     },
