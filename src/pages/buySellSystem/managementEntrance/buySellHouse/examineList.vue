@@ -568,7 +568,7 @@ const taskProCheck = [
  * 取代申请
  */
 const replaceCheck = [
-  { label: "钥匙取代", value: 3 },
+  { label: "钥匙取代", value: 15 },
   { label: "实勘取代", value: 13 },
   { label: "普通委托取代", value: "2,44" },
   { label: "独家委托取代", value: "1,44" },
@@ -587,8 +587,8 @@ const houseTypeCheck = [
  * 举报类型
  */
 const reportCheck = [
-  { value: "5", label: "虚假实勘" },
-  { value: "6", label: "虚假委托" },
+  { value: "2", label: "虚假实勘" },
+  { value: "14", label: "虚假委托" },
   { value: "7", label: "虚假钥匙" },
   { value: "8", label: "虚假跟进" },
   { value: "9", label: "房屋已售" },

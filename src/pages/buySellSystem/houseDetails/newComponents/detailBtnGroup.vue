@@ -110,7 +110,7 @@
     <button
       class="btn-item"
       style="order:0"
-      v-if="isEditHouse"
+      v-if="isEditHouse || houseData.plate == 1 || houseData.plate == 4"
       @click="navRouter"
       :disabled="isLockBtn"
     >

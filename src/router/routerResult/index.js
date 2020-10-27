@@ -1579,5 +1579,27 @@ export default [
       import(
         /* webpackChunkName: "messageValidate" */ "@/pages/buySellSystem/dictContrast/list.vue"
       )
+  },
+  {
+    //官网留言管理 配置
+    path: "/sys/configure",
+    meta: {
+      title: "配置管理"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "noticeManageList" */ "@/pages/systemAdministration/officialWebsite/configure.vue"
+      )
+  },
+  {
+    //官网留言管理 留言列表
+    path: "/sys/message",
+    meta: {
+      title: "留言列表"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "noticeManageList" */ "@/pages/systemAdministration/officialWebsite/messageList.vue"
+      )
   }
 ];

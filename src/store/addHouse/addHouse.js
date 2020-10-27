@@ -44,7 +44,7 @@ function getData() {
       propertyFee: "", //物业费
       isOwnerOnly: "", //唯一住房 1唯一 0 不唯一
       decoration: "", //装修
-      houseNow: "", //房屋现状
+      houseNow: null, //房屋现状
       houseSource: "", //房屋来源
       sign: "", //户口情况
       houseDelivery: "", //交房时间
