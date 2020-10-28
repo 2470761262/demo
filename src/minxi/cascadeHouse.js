@@ -12,7 +12,8 @@ export default {
       towerLoading: false, //栋座select loading
       buildOptData: {}, //当前楼盘选择数据
       buildForList: [], //楼盘select数据
-      buildLoading: false //楼盘select loading
+      buildLoading: false, //楼盘select loading
+      isInitLoadroomList: true // 选择楼栋是否加载房间列表
     };
   },
   methods: {
@@ -107,13 +108,21 @@ export default {
       this.roomForList = [];
 
       //获取房间号数据
-      this.queryRoomData();
+      if (this.isInitLoadroomList) {
+        this.queryRoomData();
+      }
     },
     /**
      * @example: 远程获取房间号信息
      * @param {String} e 输入搜索的文本
      */
     queryRoomData(e) {
+      if (!this.isInitLoadroomList) {
+        if (e == undefined || e.trim() == "") {
+          this.roomForList = [];
+          return;
+        }
+      }
       this.$api
         .get({
           url: this.getRoomsDataUrl,

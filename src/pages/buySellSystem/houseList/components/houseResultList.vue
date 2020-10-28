@@ -1734,6 +1734,7 @@ export default {
   },
   data() {
     return {
+      isInitLoadroomList: false, // 选择楼栋是否加载房间列表
       typeActiveIndex: 0, //nav类型激活Index
       searchPanelChange: true, //搜索面板显隐
       temporaryPrimaryValue: "", //临时记录小学select结果,用于删除筛选
