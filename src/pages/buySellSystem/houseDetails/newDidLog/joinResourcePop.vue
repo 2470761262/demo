@@ -9,7 +9,7 @@
       width="500px"
       :closeOnClickModal="false"
     >
-      <div class="investigator-container">
+      <div class="investigator-container" v-show="flag">
         <div class="tip">
           <i class="el-icon-warning"></i>
           <span class="text">加入后，需用58发布才可以在58C端展示</span>
@@ -17,7 +17,9 @@
         <div class="column">
           <div class="head">
             <span class="title">房源标题</span>
-            <span class="btn" @click="changeText('houseTitle')">换一个</span>
+            <span class="btn" @click="changeText('houseTitle', '房源标题')"
+              >换一个</span
+            >
           </div>
           <el-input
             v-model="selfPublishInfo.houseTitle"
@@ -30,7 +32,9 @@
         <div class="column">
           <div class="head">
             <span class="title">房源详情</span>
-            <span class="btn" @click="changeText('houseDetail')">换一个</span>
+            <span class="btn" @click="changeText('houseDetail', '房源详情')"
+              >换一个</span
+            >
           </div>
           <el-input
             type="textarea"
@@ -45,7 +49,7 @@
         <div class="column">
           <div class="head">
             <span class="title">业主心态</span>
-            <span class="btn" @click="changeText('ownerMentality')"
+            <span class="btn" @click="changeText('ownerMentality', '业主心态')"
               >换一个</span
             >
           </div>
@@ -62,7 +66,9 @@
         <div class="column">
           <div class="head">
             <span class="title">服务介绍</span>
-            <span class="btn" @click="changeText('serveIntroduction')"
+            <span
+              class="btn"
+              @click="changeText('serveIntroduction', '服务介绍')"
               >换一个</span
             >
           </div>
@@ -80,6 +86,37 @@
           <el-button class="btn cancel" @click="cancel">取消</el-button>
           <el-button class="btn confirm" @click="confirm" :loading="joinLoading"
             >确定加入</el-button
+          >
+        </div>
+      </div>
+      <div class="investigator-container formwork-panel" v-show="!flag">
+        <div class="title">{{ formworkTitle }}</div>
+        <div
+          class="formwork"
+          v-infinite-scroll="load"
+          :infinite-scroll-immediate="true"
+          v-if="!flag"
+        >
+          <el-radio-group v-model="formworkRadio">
+            <el-radio
+              :label="item.details"
+              v-for="(item, index) in formworkData.list"
+              :key="index"
+              >{{ item.details }}</el-radio
+            >
+          </el-radio-group>
+          <p v-if="formworkData.loading">加载中...</p>
+          <p v-else-if="formworkData.loadPageEnd">
+            已经到最底部了~
+          </p>
+          <p v-if="!formworkData.loading && formworkData.list.length == 0">
+            暂无数据
+          </p>
+        </div>
+        <div class="btn-box formwork-btn">
+          <el-button class="btn cancel" @click="back">取消</el-button>
+          <el-button class="btn confirm" @click="selectConfirm"
+            >确定选择</el-button
           >
         </div>
       </div>
@@ -117,12 +154,26 @@ export default {
       houseTitleId: null,
       houseDetailId: null,
       ownerMentalityId: null,
-      serveIntroductionId: null
+      serveIntroductionId: null,
+      flag: true,
+      formworkData: {
+        page: 1,
+        limit: 18,
+        totalPage: 0,
+        loading: false,
+        loadPageEnd: false,
+        list: [],
+        type: 1,
+        currentTitle: ""
+      },
+      formworkRadio: "",
+      formworkTitle: "房源标题"
     };
   },
   watch: {
     dialogVisible() {
       this.visible = this.dialogVisible;
+      this.flag = true;
     },
     publishInfo: {
       deep: true,
@@ -162,7 +213,8 @@ export default {
     cancel() {
       this.$emit("update:dialogVisible", false);
     },
-    changeText(title) {
+    changeText(title, text) {
+      this.formworkTitle = "请选择" + text;
       let type;
       let field = title + "Id";
       let id = this[field];
@@ -180,29 +232,39 @@ export default {
           type = 3;
           break;
       }
-      this.$api
-        .post({
-          url: "/releaseWuBaTemplate/random",
-          data: {
-            id: id || 0,
-            type: type
-          },
-          headers: { "Content-Type": "application/json;charset=UTF-8" }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            let content = e.data.data.details
-              .replace("communityName", this.selfPublishInfo.communityName)
-              .replace("middleSchool", this.selfPublishInfo.middleSchool)
-              .replace("price", this.selfPublishInfo.price)
-              .replace("averagePrice", this.selfPublishInfo.averagePrice);
-            this.selfPublishInfo[title] = content;
-            this[field] = e.data.data.id;
-          } else {
-            this.$message.error(e.data.message);
-          }
-        })
-        .catch(e => {});
+      // this.$api
+      //   .post({
+      //     url: "/releaseWuBaTemplate/random",
+      //     data: {
+      //       id: id || 0,
+      //       type: type
+      //     },
+      //     headers: { "Content-Type": "application/json;charset=UTF-8" }
+      //   })
+      //   .then(e => {
+      //     if (e.data.code == 200) {
+      //       let content = e.data.data.details
+      //         .replace("communityName", this.selfPublishInfo.communityName)
+      //         .replace("middleSchool", this.selfPublishInfo.middleSchool)
+      //         .replace("price", this.selfPublishInfo.price)
+      //         .replace("averagePrice", this.selfPublishInfo.averagePrice);
+      //       this.selfPublishInfo[title] = content;
+      //       this[field] = e.data.data.id;
+      //     } else {
+      //       this.$message.error(e.data.message);
+      //     }
+      //   })
+      //   .catch(e => {});
+      this.formworkData.currentTitle = title;
+      this.formworkData.type = type;
+      this.formworkData.page = 1;
+      let h = getComputedStyle(
+        document.querySelector(".investigator-container")
+      ).height;
+      this.formworkData.list = [];
+      this.getFormworkList();
+      this.flag = false;
+      document.querySelector(".formwork-panel").style.height = h;
     },
     confirm() {
       if (this.selfPublishInfo.houseTitle.length < 10) {
@@ -249,6 +311,46 @@ export default {
         .finally(() => {
           this.joinLoading = false;
         });
+    },
+    back() {
+      this.flag = true;
+    },
+    selectConfirm() {
+      this.selfPublishInfo[this.formworkData.currentTitle] = this.formworkRadio;
+      this.flag = true;
+    },
+    load() {
+      if (this.formworkData.page < this.formworkData.totalPage) {
+        ++this.formworkData.page;
+        this.getFormworkList();
+      } else {
+        this.formworkData.loadPageEnd = true;
+      }
+    },
+    getFormworkList() {
+      this.formworkData.loading = true;
+      this.$api
+        .post({
+          url: "/releaseWuBaTemplate/list/type",
+          data: {
+            limit: this.formworkData.limit,
+            page: this.formworkData.page,
+            type: this.formworkData.type
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.formworkData.totalPage = e.data.data.totalPage;
+            this.formworkData.list = [
+              ...this.formworkData.list,
+              ...e.data.data.list
+            ];
+          }
+        })
+        .finally(e => {
+          this.formworkData.loading = false;
+        });
     }
   }
 };
@@ -276,14 +378,78 @@ export default {
     }
   }
   .el-dialog__body {
+    display: flex;
     // prettier-ignore
-    // max-height: 600PX;
-    // overflow: auto;
+    min-height: 460PX;
     // prettier-ignore
-    padding: 0 30PX 30PX;
+    max-height: 70vh;
+    overflow: auto;
+    padding: 0;
   }
 }
 /deep/.investigator-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  // prettier-ignore
+  padding: 0 30PX 30PX;
+  &.formwork-panel {
+    // prettier-ignore
+    padding: 0 0 30PX;
+    .title {
+      // prettier-ignore
+      padding: 5PX 30PX 10PX;
+      font-size: @font14;
+      font-weight: bold;
+    }
+    .formwork {
+      flex: 1;
+      overflow: auto;
+      // prettier-ignore
+      padding: 0 30PX 0;
+      .el-radio-group {
+        width: 100%;
+      }
+      .el-radio__inner {
+        // prettier-ignore
+        width: 14PX;
+        // prettier-ignore
+        height: 14PX;
+      }
+      .el-radio__inner::after {
+        // prettier-ignore
+        width: 4PX;
+        // prettier-ignore
+        height: 4PX;
+      }
+      .el-radio {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        white-space: pre-wrap;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #eee;
+      }
+      .el-radio__label {
+        // prettier-ignore
+        line-height: 18PX;
+        font-size: @font12;
+      }
+      &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      &::-webkit-scrollbar-button,
+      &::-webkit-scrollbar-track,
+      &::-webkit-scrollbar-track-piece {
+        display: none;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 50px;
+      }
+    }
+  }
   .tip {
     display: flex;
     flex-direction: row;

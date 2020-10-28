@@ -44,6 +44,30 @@
     }
   }
 }
+.role-btn {
+  outline: none;
+  border: none;
+  background: @backgroud;
+  font-size: @font14;
+  color: #fff;
+  // prettier-ignore
+  padding: 5PX 10PX;
+  border-radius: 4px;
+  cursor: pointer;
+  &[disabled] {
+    background: #fff;
+    color: #c0c4cc;
+    border: 1px solid #ebeef5;
+    border-radius: 4px;
+    cursor: no-drop;
+  }
+}
+.text-middle {
+  text-align: center;
+  // prettier-ignore
+  padding: 10PX 0;
+  border-top: 1px solid #d3d3d3;
+}
 </style>
 <style lang="less">
 // .popover-phone {
@@ -58,7 +82,11 @@
       style="order:0"
       :disabled="isLockBtn"
       @click="
-        openPop('shareFlag', isShare, '请先完善信息后，才可以扫码分享房源')
+        openPop(
+          'shareFlag',
+          isShare,
+          '房源图片少于一张，不允许进行分享，请尽快上传'
+        )
       "
     >
       分享房源
@@ -82,11 +110,20 @@
     <button
       class="btn-item"
       style="order:0"
-      v-if="isEditHouse"
+      v-if="isEditHouse || houseData.plate == 1 || houseData.plate == 4"
       @click="navRouter"
       :disabled="isLockBtn"
     >
       编辑房源
+    </button>
+    <button
+      class="btn-item"
+      style="order:0"
+      v-if="isEditPicture"
+      :disabled="isLockBtn"
+      @click="openPop('houseUploadflag')"
+    >
+      编辑图片
     </button>
     <button
       class="btn-item"
@@ -205,6 +242,27 @@
       v-if="shareFlag"
     >
     </share-pop>
+    <!-- 上传 -->
+    <fixedPopup
+      :visible.sync="houseUploadflag"
+      title
+      v-if="houseUploadflag"
+      width="960px"
+    >
+      <houseUploadExtends
+        ref="houseUploadExtends"
+        :houseId="houseId"
+        :paramsObj="paramsObj"
+        :getData="true"
+      ></houseUploadExtends>
+      <template v-slot:floot>
+        <div class="text-middle">
+          <el-button class="role-btn" @click="submitUpload">
+            提交
+          </el-button>
+        </div>
+      </template>
+    </fixedPopup>
   </div>
 </template>
 
@@ -223,7 +281,9 @@ export default {
     changeHouseType: () => import("../newDidLog/changeHouseType"),
     cancelTask: () => import("../newDidLog/cancelTask"),
     interviewPop: () => import("../newDidLog/interviewPop"),
-    sharePop: () => import("../newDidLog/sharePop")
+    sharePop: () => import("../newDidLog/sharePop"),
+    //上传图片
+    houseUploadExtends: () => import("../newDidLog/houseUploadExtends")
   },
   props: {
     publishBtnType: {
@@ -288,6 +348,28 @@ export default {
       }
       return false;
     },
+    //是否显示编辑图片
+    isEditPicture() {
+      let editAgentPicture = this.betData.find(
+        item => item.rUrl == "editAgentPicture"
+      );
+      if (editAgentPicture) {
+        if (
+          this.houseData.plate == 0 &&
+          this.getEditAuthority(
+            editAgentPicture.authorityUnderName,
+            this.houseData
+          )
+        ) {
+          return true;
+        } //判断跟单人是否在数据权限范围内
+        return this.getRoleAuthority(
+          editAgentPicture.authorityUnderName,
+          this.houseData
+        ); //判断角色人是否存在
+      }
+      return false;
+    },
     //面访按钮禁用
     isInterviewDisabled() {
       //暂时不做控制
@@ -301,6 +383,14 @@ export default {
   },
   data() {
     return {
+      paramsObj: {
+        buttonText: "保存",
+        editUrl: "/agent_house/editAgentHouse",
+        getAudioUrl: "/agentHouse/audio/getAudioList/",
+        getEditUrl: "/agent_house/getEditDetails/",
+        getPicturesUrl: "/agentHouse/pictures/getPicturesList/",
+        getVideoUrl: "/agentHouse/video/getVideoList/"
+      },
       perId: util.localStorageGet("logindata").accountId,
       followUpFlag: false, //跟进弹框开关
       phonePopFlag: false, //查看号码开关
@@ -309,10 +399,25 @@ export default {
       cancelTaskFlag: false, //取消角色人开关
       interviewFlag: false, //添加面访开关
       shareFlag: false, //分享弹框
-      appletQRCode: "" //小程序分享二维码
+      appletQRCode: "", //小程序分享二维码
+      houseUploadflag: false, //上传图片弹窗,
+      echoData: []
     };
   },
   methods: {
+    /**
+     * @example:编辑图片提交
+     */
+    submitUpload() {
+      this.$refs.houseUploadExtends.validateAll().then(e => {
+        if (e) {
+          this.houseUploadflag = false;
+          this.$message({
+            message: "编辑成功"
+          });
+        }
+      });
+    },
     ...mapMutations(["setParam"]),
     ...mapActions(["commitHouseData"]),
     /**
@@ -335,6 +440,32 @@ export default {
         (authorityUnderName.accountId &&
           houseDatails.AgentPer == authorityUnderName.accountId)
       );
+    },
+    /**
+     * 获取除跟单人外角色人数据权限
+     */
+    getRoleAuthority(authorityUnderName, houseDatails) {
+      if (!authorityUnderName || !houseDatails.agentHouseMethod) return false;
+      let roleArray = ["addPer", "keyOwner", "onlyOwner", "realOwner"];
+      for (let item in roleArray) {
+        let value = roleArray[item];
+        if (
+          (authorityUnderName.coIdList &&
+            authorityUnderName.coIdList.includes(
+              houseDatails.agentHouseMethod[value + "CompanyId"]
+            )) ||
+          (authorityUnderName.deptList &&
+            authorityUnderName.deptList.includes(
+              houseDatails.agentHouseMethod[value + "DepartmentId"]
+            )) ||
+          (authorityUnderName.accountId &&
+            houseDatails.agentHouseMethod[value] ==
+              authorityUnderName.accountId)
+        ) {
+          return true;
+        }
+      }
+      return false;
     },
     //是否显示转状态弹窗
     async changePopUp() {
@@ -404,6 +535,13 @@ export default {
      * @param { boolean }isPermissions 是否需要提升没有权限
      */
     openPop(item, isPermissions, message = "不是跟单人没有权限操作") {
+      // 图片视频上传组件
+      if (item == "houseUploadflag") {
+        this.echoData = [
+          ...this.houseData.saleUploadPicDtoList,
+          ...this.houseData.saleUploadVideoDtoList
+        ];
+      }
       if (isPermissions != undefined && isPermissions) {
         return this.$message.error(message);
       }
@@ -428,6 +566,9 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
+            this.commitHouseData({
+              isReleaseOutside: 1
+            });
             that.appletQRCode = e.data.data;
           }
         });

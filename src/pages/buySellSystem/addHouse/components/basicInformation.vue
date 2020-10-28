@@ -117,6 +117,11 @@
     }
   }
 }
+.page-cell-addHouse {
+  // prettier-ignore
+  width: 940PX;
+  background: #fff;
+}
 </style>
 <template>
   <div
@@ -366,9 +371,21 @@
             >修改验真号码</span
           >
           <div class="modify-show">
-            <span class="btn1" @click="modifyComfirm" v-if="validateCancelBtnFlag">确认修改</span>
-            <span class="btn2" @click="modifyCancel" v-if="validateCancelBtnFlag">取消</span>
-            <div class="phone-show" v-if="originPhoneShowFlag">旧号码：{{ validatePhoneNumber }}</div>
+            <span
+              class="btn1"
+              @click="modifyComfirm"
+              v-if="validateCancelBtnFlag"
+              >确认修改</span
+            >
+            <span
+              class="btn2"
+              @click="modifyCancel"
+              v-if="validateCancelBtnFlag"
+              >取消</span
+            >
+            <div class="phone-show" v-if="originPhoneShowFlag">
+              旧号码：{{ validatePhoneNumber }}
+            </div>
           </div>
         </div>
       </div>
@@ -390,7 +407,7 @@
           v-model="formData.tel1"
           data-vv-name="tel1"
           data-vv-as="电话号码"
-          v-validate="isvalidateTel[1]?'phoneLen|phone':''"
+          v-validate="isvalidateTel[1] ? 'phoneLen|phone' : ''"
           @input="telInput('tel1')"
           data-anchor="添加房源业主手机号 => input"
         >
@@ -424,14 +441,21 @@
             :data-vv-name="'tel' + item"
             :data-vv-as="'电话号码' + item"
             data-anchor="添加房源业主新增手机号 => input"
-            @input="telInput('tel'+item)"
-            v-validate="isvalidateTel[item]?{
-              phone: true,
-              isSame: [
-                [formData.tel, ...addTel.map(tel => formData['tel' + tel])],
-                '手机号'
-              ]
-            }:{}"
+            @input="telInput('tel' + item)"
+            v-validate="
+              isvalidateTel[item]
+                ? {
+                    phone: true,
+                    isSame: [
+                      [
+                        formData.tel,
+                        ...addTel.map(tel => formData['tel' + tel])
+                      ],
+                      '手机号'
+                    ]
+                  }
+                : {}
+            "
           >
             <div slot="prepend" class="item-before">手机号{{ item }}</div>
             <div
@@ -940,7 +964,7 @@ export default {
     // this.getNextSaveButton();
     // 编辑状态判断备用手机号是否需要验证
     if (this.paramsObj.editUrl) {
-      this.isvalidateTel = [false, false, false, false]
+      this.isvalidateTel = [false, false, false, false];
     }
   },
   destroyed() {
@@ -954,7 +978,7 @@ export default {
       // 编辑状态判断备用手机号是否需要验证
       if (!this.paramsObj.editUrl) return;
       let index = null;
-      switch(tel){
+      switch (tel) {
         case "tel1":
           index = 1;
           break;
@@ -982,8 +1006,10 @@ export default {
       this.validatePhoneNumber = this.formData.tel;
       this.formData.tel = "";
       this.$nextTick(() => {
-        this.$refs.validatePhoneRef.$el.querySelector(".el-input__inner").focus();
-      })
+        this.$refs.validatePhoneRef.$el
+          .querySelector(".el-input__inner")
+          .focus();
+      });
     },
     /**
      * 确认修改
@@ -1578,8 +1604,8 @@ export default {
             this.originTelObj = {
               tel1: step1.tel1,
               tel2: step1.tel2,
-              tel3: step1.tel3,
-            }
+              tel3: step1.tel3
+            };
 
             this.$store
               .dispatch("InitFormData", {

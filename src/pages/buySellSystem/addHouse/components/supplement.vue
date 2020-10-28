@@ -1,7 +1,10 @@
 <style lang="less" scoped>
 @import url(../../../../assets/publicLess/upLoadFile.less);
 .page-cell-addHouse {
+  // prettier-ignore
+  width: 940PX;
   padding: 0 50px;
+  background: #fff;
   .cell-item-cell {
     display: flex;
     align-items: center;
@@ -1181,7 +1184,7 @@ export default {
         // console.log(r.content, "音频消息内容，准备插入草稿箱");
         that.uploadFileInfo(r.content.picUrl, function(data) {
           that.audioFile = data;
-          console.log(that.audioFile, "扫码上传成功")
+          console.log(that.audioFile, "扫码上传成功");
           that.$store.commit("updateFile", {
             audioFile: that.audioFile
           });
@@ -1548,7 +1551,8 @@ export default {
           }
         });
       }
-      if (this.paramsObj.editUrl) { // 编辑
+      if (this.paramsObj.editUrl) {
+        // 编辑
         return this.$api
           .put({
             url: url,
@@ -1572,7 +1576,8 @@ export default {
           .catch(() => {
             return false;
           });
-      } else { // 录入
+      } else {
+        // 录入
         // 数据只保存到本地
         that.$store.commit("updateStep2", that.deffData);
         return true;

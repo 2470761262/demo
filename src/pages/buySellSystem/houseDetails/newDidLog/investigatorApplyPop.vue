@@ -112,6 +112,7 @@ export default {
               message: "申请成功",
               type: "success"
             });
+            this.$emit("submit");
           } else {
             this.$message.error(e.deta.message);
           }
