@@ -121,7 +121,7 @@ export default {
           data: {
             comId: this.form.comId,
             cbId: this.form.cbId,
-            limit: 20,
+            limit: 999,
             roomNo: e == undefined ? "" : e.trim()
           }
         })
