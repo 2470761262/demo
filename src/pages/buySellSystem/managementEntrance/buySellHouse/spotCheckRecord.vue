@@ -154,7 +154,9 @@
                     @click.native="log_socket.sendUserActionData"
                     v-model="agent.value"
                     :placeholder="
-                      department.value == '' ? '请先选择门店' : '请输入跟单人姓名'
+                      department.value == ''
+                        ? '请先选择门店'
+                        : '请输入跟单人姓名'
                     "
                     clearable
                     filterable
@@ -470,6 +472,7 @@ export default {
     return {
       panelChange: true, //折叠面板
       colChunks: [5, 9, 5, 5, 6, 6, 6], // 条件选项栅格布局
+      isInitLoadroomList: false, // 选择楼栋是否加载房间列表
       loading: false,
       currentStatus: "",
       currentStatusList: [
@@ -632,13 +635,10 @@ export default {
             switch (item.spotCheckStatus) {
               case "任务已完结":
                 return <span class="span_success">{item.spotCheckStatus}</span>;
-                break;
               case "任务未完成":
                 return <span class="span_danger">{item.spotCheckStatus}</span>;
-                break;
               case "任务进行中":
                 return <span class="span_warning">{item.spotCheckStatus}</span>;
-                break;
             }
           }
         },
@@ -652,14 +652,11 @@ export default {
             switch (item.spotCheckResult) {
               case "业主验真通过":
                 return <span class="span_success">{item.spotCheckResult}</span>;
-                break;
               case "业主验真过期":
               case "在售转为暂不售":
                 return <span class="span_danger">{item.spotCheckResult}</span>;
-                break;
               case "暂无结果":
                 return <span class="span_warning">{item.spotCheckResult}</span>;
-                break;
             }
           }
         }
@@ -905,13 +902,21 @@ export default {
 
       this.query();
       //获取房间号数据
-      this.queryRoomData();
+      if (this.isInitLoadroomList) {
+        this.queryRoomData();
+      }
     },
     /**
      * @example: 远程获取房间号信息
      * @param {String} e 输入搜索的文本
      */
     queryRoomData(e) {
+      if (!this.isInitLoadroomList) {
+        if (e == undefined || e.trim() == "") {
+          this.roomForList = [];
+          return;
+        }
+      }
       this.$api
         .get({
           url: "/mateHouse/queryBuildIngHouses",

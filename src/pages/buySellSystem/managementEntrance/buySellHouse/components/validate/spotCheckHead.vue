@@ -175,6 +175,7 @@ export default {
   data() {
     return {
       colChunks: [5, 9, 5, 5, 6, 6], // 条件选项栅格布局
+      isInitLoadroomList: false, // 选择楼栋是否加载房间列表
       form: {
         houseNo: "",
         comId: "",
@@ -279,7 +280,10 @@ export default {
       this.form.bhId = "";
       this.moreConditionChange();
       if (this.form.cbId != "") {
-        this.getRoomList();
+        //获取房间号数据
+        if (this.isInitLoadroomList) {
+          this.getRoomList();
+        }
       }
     },
     /**
@@ -373,6 +377,12 @@ export default {
      * @example:获取房源列表
      */
     getRoomList(query) {
+      if (!this.isInitLoadroomList) {
+        if (query == undefined || query.trim() == "") {
+          this.roomForList = [];
+          return;
+        }
+      }
       this.room.loading = true;
       this.$api
         .get({

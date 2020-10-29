@@ -620,6 +620,7 @@ export default {
   data() {
     return {
       colChunks: [5, 9, 5, 5, 6, 6, 6], // 条件选项栅格布局
+      isInitLoadroomList: false, // 选择楼栋是否加载房间列表
       filterText: "",
       treeData: [], //结构树
       treeLoading: false,
@@ -700,56 +701,7 @@ export default {
         total: 0,
         pageSum: 0
       },
-      data: [
-        {
-          id: 1,
-          label: "一级 1",
-          children: [
-            {
-              id: 4,
-              label: "二级 1-1",
-              children: [
-                {
-                  id: 9,
-                  label: "三级 1-1-1"
-                },
-                {
-                  id: 10,
-                  label: "三级 1-1-2"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          id: 2,
-          label: "一级 2",
-          children: [
-            {
-              id: 5,
-              label: "二级 2-1"
-            },
-            {
-              id: 6,
-              label: "二级 2-2"
-            }
-          ]
-        },
-        {
-          id: 3,
-          label: "一级 3",
-          children: [
-            {
-              id: 7,
-              label: "二级 3-1"
-            },
-            {
-              id: 8,
-              label: "二级 3-2"
-            }
-          ]
-        }
-      ],
+      data: [],
       btnDisabled: {
         checkHouse: true,
         checkStatus: true
@@ -1097,13 +1049,21 @@ export default {
 
       this.query();
       //获取房间号数据
-      this.queryRoomData();
+      if (this.isInitLoadroomList) {
+        this.queryRoomData();
+      }
     },
     /**
      * @example: 远程获取房间号信息
      * @param {String} e 输入搜索的文本
      */
     queryRoomData(e) {
+      if (!this.isInitLoadroomList) {
+        if (e == undefined || e.trim() == "") {
+          this.roomForList = [];
+          return;
+        }
+      }
       this.$api
         .get({
           url: "/mateHouse/queryBuildIngHouses",

@@ -302,6 +302,7 @@ export default {
   },
   data() {
     return {
+      isInitLoadroomList: false, // 选择楼栋是否加载房间列表
       searchTabList: SEARCHTABLIST,
       houseNo: "", //房源编号
       cusName: "", //业主姓名
