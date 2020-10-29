@@ -214,6 +214,7 @@ export default {
   mixins: [cascadeHouse],
   data() {
     return {
+      isInitLoadroomList: false, // 选择楼栋是否加载房间列表
       bettype: BETTYPE,
       checkStatusValue: this.form.checkStatusValue, //验真状态
       houseNo: "", //房源编号

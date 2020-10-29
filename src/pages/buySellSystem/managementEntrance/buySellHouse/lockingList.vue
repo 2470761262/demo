@@ -222,6 +222,7 @@ export default {
   data() {
     return {
       colChunks: [9, 5, 5, 5], // 条件选项栅格布局
+      isInitLoadroomList: false, // 选择楼栋是否加载房间列表
       showUnlockBtn: false,
       loading: false,
       conditions: {
@@ -439,13 +440,21 @@ export default {
 
       this.query();
       //获取房间号数据
-      this.queryRoomData();
+      if (this.isInitLoadroomList) {
+        this.queryRoomData();
+      }
     },
     /**
      * @example: 远程获取房间号信息
      * @param {String} e 输入搜索的文本
      */
     queryRoomData(e) {
+      if (!this.isInitLoadroomList) {
+        if (e == undefined || e.trim() == "") {
+          this.roomForList = [];
+          return;
+        }
+      }
       this.$api
         .get({
           url: "/mateHouse/queryBuildIngHouses",

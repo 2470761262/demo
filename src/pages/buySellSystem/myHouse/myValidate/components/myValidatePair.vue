@@ -321,6 +321,7 @@ export default {
   mixins: [cascadeHouse],
   data() {
     return {
+      isInitLoadroomList: false, // 选择楼栋是否加载房间列表
       validateWayList: VALIDATEWAYLIST,
       validateTypeList: VALIDATETYPELIST,
       searchTabList: SEARCHTABLIST,
