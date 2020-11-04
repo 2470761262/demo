@@ -277,12 +277,15 @@
             class="anchor-pointn"
             data-anchor="我的验真列表重置"
             @click="resetLoad"
-          >重置</span>
+            >重置</span
+          >
           <button
             class="anchor-pointn"
             data-anchor="我的验真列表搜索"
-           @click="validateFrom"
-          >搜索</button>
+            @click="validateFrom"
+          >
+            搜索
+          </button>
         </div>
       </div>
     </div>
@@ -314,7 +317,8 @@ const VALIDATEWAYLIST = [
   { title: "全部", value: "" },
   { title: "微信验真", value: "1" },
   { title: "短信验真", value: "2" },
-  { title: "信息员验真", value: "3" }
+  { title: "信息员验真", value: "3" },
+  { title: "暂无", value: "0" }
 ];
 export default {
   inject: ["form"],
