@@ -1021,8 +1021,7 @@ export default {
         return;
       }
       this.verifyTel().then(data => {
-        if (!data) {
-          console.log("aaa");
+        if (data) {
           this.validateCancelBtnFlag = false;
           this.validatePhoneInputEnable = true;
           this.validatePhoneLoading = true;
@@ -1414,16 +1413,16 @@ export default {
           })
           .then(e => {
             let data = e.data.data;
-            resolve(false);
+            resolve(true);
           })
           .catch(e => {
             if (e.data.code == -30000) {
               this.formData.tel = "";
               this.$message.error(e.data.message);
-              resolve(true);
+              resolve(false);
             } else if (e.data.code == -40000) {
               this.$message.warning(e.data.message);
-              resolve(false);
+              resolve(true);
             }
           })
           .finally(e => {});
