@@ -350,6 +350,7 @@
           v-validate="'required|phoneLen|phone'"
           data-anchor="添加房源业主手机号 => input"
           :disabled="validatePhoneInputEnable"
+          @input="verifyTel(formData.tel)"
           clearable
         >
           <div slot="prepend" class="item-before" data-before="*">
@@ -1020,18 +1021,13 @@ export default {
         this.$message.error("您输入的手机号码有误");
         return;
       }
-      this.verifyTel().then(data => {
-        if (data) {
-          this.validateCancelBtnFlag = false;
-          this.validatePhoneInputEnable = true;
-          this.validatePhoneLoading = true;
-          this.validatePhoneText = "号码待验真";
-          this.validateTip =
-            "您修改了验真号码，系统将在您编辑房源保存后，要求您进行房源验真";
-        } else {
-          console.log(data, "success");
-        }
-      });
+
+      this.validateCancelBtnFlag = false;
+      this.validatePhoneInputEnable = true;
+      this.validatePhoneLoading = true;
+      this.validatePhoneText = "号码待验真";
+      this.validateTip =
+        "您修改了验真号码，系统将在您编辑房源保存后，要求您进行房源验真";
     },
     /**
      * 取消
@@ -1403,30 +1399,27 @@ export default {
       this.formData["tel" + item] = "";
     },
     // 验证号码是否有效
-    verifyTel() {
+    verifyTel(tel) {
       // 满足11位检查号码是否有效
-      return new Promise((resolve, reject) => {
+      if (tel.length == 11) {
         this.$api
           .post({
             isShowErrMsg: false,
-            url: `/verifyHouse/check/tel/?tel=${this.formData.tel}`
+            url: `/verifyHouse/check/tel/?tel=${tel}`
           })
           .then(e => {
             let data = e.data.data;
-            resolve(true);
           })
           .catch(e => {
             if (e.data.code == -30000) {
               this.formData.tel = "";
               this.$message.error(e.data.message);
-              resolve(false);
             } else if (e.data.code == -40000) {
               this.$message.warning(e.data.message);
-              resolve(true);
             }
           })
           .finally(e => {});
-      });
+      }
     },
     //添加电话号码123
     addTelToList() {
