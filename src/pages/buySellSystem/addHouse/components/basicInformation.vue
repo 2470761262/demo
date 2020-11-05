@@ -1417,9 +1417,8 @@ export default {
             resolve(false);
           })
           .catch(e => {
-            console.log(e, "--------");
             if (e.data.code == -30000) {
-              console.log("30000");
+              this.formData.tel = "";
               this.$message.error(e.data.message);
               resolve(true);
             } else if (e.data.code == -40000) {
