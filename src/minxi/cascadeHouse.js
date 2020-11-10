@@ -4,6 +4,7 @@ export default {
       getBuildDataUrl: "/community/houseList",
       getTowerDataUrl: "/mateHouse/queryComBuilding",
       getRoomsDataUrl: "/mateHouse/queryBuildIngHousesBySale",
+      getAllRoomsDataUrl: "/mateHouse/queryBuildIngHouses",
       roomOptData: {}, //房间号选中数据
       roomForList: [], //房间号select数据
       roomLoading: false, //房间号select loading
@@ -131,6 +132,37 @@ export default {
             comId: this.form.comId,
             cbId: this.form.cbId,
             limit: 999,
+            roomNo: e == undefined ? "" : e.trim()
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.roomForList = e.data.data.list;
+          }
+        })
+        .finally(() => {
+          this.roomLoading = false;
+        });
+    },
+    /**
+     * @example: 远程获取房间号信息
+     * @param {String} e 输入搜索的文本
+     */
+    queryAllRoomData(e) {
+      if (!this.isInitLoadroomList) {
+        if (e == undefined || e.trim() == "") {
+          this.roomForList = [];
+          return;
+        }
+      }
+      this.$api
+        .get({
+          url: this.getAllRoomsDataUrl,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            comId: this.form.comId,
+            cbId: this.form.cbId,
+            limit: 20,
             roomNo: e == undefined ? "" : e.trim()
           }
         })

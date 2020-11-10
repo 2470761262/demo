@@ -544,6 +544,18 @@ export default [
           )
       },
       {
+        path: "/managementEntrance/saleStatusRecord",
+        meta: {
+          title: "状态转换记录",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "spotCheckRecord" */ "@/pages/buySellSystem/managementEntrance/saleStatusRecord/saleStatusRecord.vue"
+          )
+      },
+      {
         path: "/managementEntrance/customers",
         meta: {
           title: "客源",
