@@ -336,7 +336,7 @@ export default {
         {
           prop: "followType",
           label: "通话类型",
-          width: "166",
+          width: "120",
           fixed: "left"
         },
         {
@@ -361,7 +361,13 @@ export default {
         },
         {
           prop: "voiceUrl",
-          label: "通话录音"
+          label: "通话录音",
+          width: "320",
+          formart: item => {
+            if (item.voiceUrl) {
+              return <audio controls="controls" src={item.voiceUrl}></audio>;
+            }
+          }
         },
         {
           prop: "perName",

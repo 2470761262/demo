@@ -285,6 +285,19 @@ export default [
           import(
             /* webpackChunkName: "vrShooting" */ "@/pages/buySellSystem/myHouse/vrShooting/vrShooting.vue"
           )
+      },
+      {
+        path: "/myHouse/saleStatusRecord",
+        name: "saleStatusRecord",
+        meta: {
+          title: "转换状态记录",
+          keepAlive: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "saleStatusRecord" */ "@/pages/buySellSystem/myHouse/saleStatusRecord/saleStatusRecord.vue"
+          )
       }
     ]
   },
@@ -541,18 +554,6 @@ export default [
         component: () =>
           import(
             /* webpackChunkName: "spotCheckRecord" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/spotCheckRecord.vue"
-          )
-      },
-      {
-        path: "/managementEntrance/saleStatusRecord",
-        meta: {
-          title: "状态转换记录",
-          isMapNav: true,
-          isPad: true
-        },
-        component: () =>
-          import(
-            /* webpackChunkName: "saleStatusRecord" */ "@/pages/buySellSystem/managementEntrance/saleStatusRecord/saleStatusRecord.vue"
           )
       },
       {

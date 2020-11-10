@@ -12,14 +12,12 @@
 </style>
 <template>
   <div class="content">
-    <breadcrumb></breadcrumb>
     <sale-status-record-pair />
     <sale-status-record-list />
   </div>
 </template>
 
 <script>
-import breadcrumb from "../components/entranceBreadcrumb.vue";
 import saleStatusRecordPair from "./saleStatusRecordPair";
 import saleStatusRecordList from "./saleStatusRecordList";
 export default {
@@ -29,7 +27,6 @@ export default {
     };
   },
   components: {
-    breadcrumb,
     saleStatusRecordPair,
     saleStatusRecordList
   },

@@ -116,6 +116,11 @@ const TYPELIST = [
     label: "VR拍摄",
     value: 4,
     name: "vrShooting"
+  },
+  {
+    label: "状态转换记录",
+    value: 5,
+    name: "saleStatusRecord"
   }
 ];
 export default {
