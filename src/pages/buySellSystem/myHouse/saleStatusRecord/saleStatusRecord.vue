@@ -38,7 +38,7 @@ export default {
         bhId: "",
         newSaleTag: "",
         time: [],
-        sortColumn: "id",
+        sortColumn: "checkTime",
         sortType: "1",
         random: ""
       }

@@ -280,7 +280,7 @@
           :header-cell-class-name="tabHeaderDirection"
           :cell-class-name="tabDirection"
           @sort-change="sortMethod"
-          :default-sort="{ prop: 'id', order: 'descending' }"
+          :default-sort="{ prop: 'checkTime', order: 'ascending' }"
         >
           <el-table-column
             v-for="(item, index) in tableColumnField"
