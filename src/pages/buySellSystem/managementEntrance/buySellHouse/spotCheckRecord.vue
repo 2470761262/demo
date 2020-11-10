@@ -272,7 +272,7 @@
                     start-placeholder="起始时间"
                     end-placeholder="结束时间"
                     value-format="yyyy-MM-dd"
-                    @change="moreConditionChange"
+                    @change="query(1)"
                     :default-time="['00:00:00', '23:59:59']"
                     class="anchor-point"
                     :data-anchor="'抽检记录 获得抽检时间:' + addTimeSelect"
@@ -285,14 +285,14 @@
                   <div
                     class="btn anchor-pointn"
                     @click="reset"
-                    data-anchor="审核列表重置"
+                    data-anchor="抽检记录列表重置"
                   >
                     重置
                   </div>
                   <div
                     class="btn active anchor-pointn"
                     @click="query(1)"
-                    data-anchor="审核列表搜索"
+                    data-anchor="抽检记录列表搜索"
                   >
                     搜索
                   </div>
@@ -302,17 +302,6 @@
           </el-row>
         </div>
       </div>
-    </div>
-    <div class="change-content">
-      <span
-        @click="panelChangeBtn"
-        class="anchor-point"
-        data-anchor="首页展开选项/收起"
-        >展开选项/收起<i
-          class="iconfont iconxingzhuangjiehe1"
-          :class="{ rotate: panelChange }"
-        ></i
-      ></span>
     </div>
     <div class="main">
       <div class="content">
@@ -721,18 +710,18 @@ export default {
     this.query();
     this.setConditionCol();
     window.addEventListener("resize", this.setConditionCol);
-    this.$nextTick(() => {
-      document
-        .querySelector(".entrance-container")
-        .addEventListener("scroll", this.elMainScroll);
-    });
+    // this.$nextTick(() => {
+    //   document
+    //     .querySelector(".entrance-container")
+    //     .addEventListener("scroll", this.elMainScroll);
+    // });
   },
   beforeDestroy() {
-    if (document.querySelector(".entrance-container")) {
-      document
-        .querySelector(".entrance-container")
-        .removeEventListener("scroll", this.elMainScroll);
-    }
+    // if (document.querySelector(".entrance-container")) {
+    //   document
+    //     .querySelector(".entrance-container")
+    //     .removeEventListener("scroll", this.elMainScroll);
+    // }
     window.removeEventListener("resize", this.setConditionCol);
   },
   methods: {
@@ -789,21 +778,21 @@ export default {
     getAreaList() {
       this.department.loading = true;
       this.$api
-              .post({
-                url: "/spotCheck/spotCheckRecordList",
-                headers: { "Content-Type": "application/json;charset=UTF-8" },
-                data: {
-                  selectType: "MORE_SELECT_AREA"
-                }
-              })
-              .then(e => {
-                if (e.data.code == 200) {
-                  this.area.list = e.data.data;
-                }
-              })
-              .finally(() => {
-                this.area.loading = false;
-              });
+        .post({
+          url: "/spotCheck/spotCheckRecordList",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            selectType: "MORE_SELECT_AREA"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.area.list = e.data.data;
+          }
+        })
+        .finally(() => {
+          this.area.loading = false;
+        });
     },
     /**
      * @example: 所属门店获取焦点事件
@@ -1057,6 +1046,7 @@ export default {
       params.cbId = this.conditions.cbId;
       params.bhId = this.conditions.bhId;
       params.houseNo = this.conditions.houseNo;
+      params.areaId = this.area.value;
       params.store = this.department.value;
       params.personnel = this.agent.value;
       params.currentStatus = this.currentStatus;
@@ -1093,8 +1083,10 @@ export default {
       this.currentStatus = "";
       this.spotCheckResult = "";
       Object.assign(this.$data.conditions, this.$options.data().conditions);
+      Object.assign(this.$data.area, this.$options.data().area);
       Object.assign(this.$data.department, this.$options.data().department);
       Object.assign(this.$data.agent, this.$options.data().agent);
+      this.addTimeSelect = [];
       this.buildOptData = {};
       this.towerOptData = {};
       this.roomOptData = {};
@@ -1121,27 +1113,6 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1;
-  .change-content {
-    text-align: center;
-    margin-bottom: 4px;
-    margin-top: 10px;
-    color: @backgroud;
-    font-size: @font16;
-    span {
-      cursor: pointer;
-      .iconfont {
-        margin-left: 8px;
-        font-size: @font14;
-        transition: transform 0.3s;
-        transform: rotateZ(180deg);
-        display: inline-block;
-
-        &.rotate {
-          transform: rotateZ(0deg) !important;
-        }
-      }
-    }
-  }
   .conditions {
     // prettier-ignore
     padding: 0 24PX 20PX 24PX;
