@@ -1096,6 +1096,7 @@ export default {
       Object.assign(this.$data.area, this.$options.data().area);
       Object.assign(this.$data.department, this.$options.data().department);
       Object.assign(this.$data.agent, this.$options.data().agent);
+      this.addTimeSelect = [];
       this.buildOptData = {};
       this.towerOptData = {};
       this.roomOptData = {};
