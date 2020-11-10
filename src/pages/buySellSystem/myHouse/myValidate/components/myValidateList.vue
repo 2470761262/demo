@@ -662,7 +662,7 @@ export default {
       switch (row.checkStatusStr) {
         case "待验真":
           that.stepNow = 1;
-          //that.stepsListNow[0].description = "待业主验真";
+          that.stepsListNow[1].title = "待业主验真";
           that.stepStatus = "";
           break;
         case "验真失败":
