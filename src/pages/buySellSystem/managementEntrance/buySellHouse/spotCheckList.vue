@@ -26,6 +26,55 @@
       }
     }
   }
+  .tab-filter-radio {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 46px;
+    padding-bottom: 10px;
+    position: sticky;
+    top: 0px;
+    z-index: 10;
+    margin-top: -30px;
+    .filter-radio-item {
+      display: flex;
+      cursor: pointer;
+      // prettier-ignore
+      margin-left: 30PX;
+      align-items: center;
+      input {
+        display: none;
+      }
+      input[type="checkbox"]:checked + span {
+        &::before {
+          content: "\2713";
+          color: black;
+          font-size: @font16;
+        }
+      }
+      &:first-child {
+        margin-left: 0;
+      }
+      span {
+        font-size: @font16;
+        color: black;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        &::before {
+          content: "";
+          // prettier-ignore
+          width: 16PX;
+          // prettier-ignore
+          height: 16PX;
+          // prettier-ignore
+          line-height: 16PX;
+          margin-right: 8px;
+          text-align: center;
+          border: 1px solid black;
+        }
+      }
+    }
+  }
   .main {
     flex: 1;
     display: flex;
@@ -270,6 +319,34 @@
       <div class="right"></div>
       <div class="content">
         <button class="batch-button" @click="batchSpotCheck">批量抽检</button>
+        <div class="tab-filter-radio">
+          <label
+            class="filter-radio-item anchor-point"
+            data-anchor="管理者通道-买卖房源-抽检列表 30天无带看"
+          >
+            <input
+              type="checkbox"
+              true-value="1"
+              false-value=""
+              @change="conditionChange"
+              v-model="condition.seenNumRecent0"
+            />
+            <span>30天无带看</span>
+          </label>
+          <label
+            class="filter-radio-item anchor-point"
+            data-anchor="管理者通道-买卖房源-抽检列表 30天无回访"
+          >
+            <input
+              type="checkbox"
+              true-value="1"
+              false-value=""
+              @change="conditionChange"
+              v-model="condition.callNum0"
+            />
+            <span>30天无回访</span>
+          </label>
+        </div>
         <div class="table">
           <el-table
             :data="tableData"
@@ -350,6 +427,8 @@ export default {
       condition: {
         page: 1,
         limit: 100,
+        seenNumRecent0: "",
+        callNum0: "",
         sortColumn: "id",
         sortType: "DESC"
       }, //基础查询条件
@@ -519,6 +598,14 @@ export default {
       this.condition.sortColumn =
         item.prop == "agentName" ? "agentName.keyword" : item.prop;
       this.condition.sortType = item.order == "ascending" ? 0 : 1;
+      this.clearList();
+      this.getSpotChekList();
+    },
+    /**
+     * @example:查询条件改变
+     */
+    conditionChange(value) {
+      this.moreCondition = value;
       this.clearList();
       this.getSpotChekList();
     },

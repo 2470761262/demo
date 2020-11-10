@@ -156,6 +156,24 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
+          <el-col :span="colChunks[4]">
+            <el-form-item label="挂牌时间">
+              <el-date-picker
+                prefix-icon="prefix-icon"
+                v-model="form.addTimeSelect"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="起始时间"
+                end-placeholder="结束时间"
+                value-format="yyyy-MM-dd"
+                @change="moreConditionChange"
+                :default-time="['00:00:00', '23:59:59']"
+                class="anchor-point"
+                :data-anchor="'抽检列表 获得挂牌时间:' + form.addTimeSelect"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
           <el-col :span="colChunks[5]" class="fr">
             <div class="conditions-btn">
               <div class="btn" @click="rest">重置</div>
@@ -183,7 +201,9 @@ export default {
         bhId: "",
         store: "",
         personnel: "",
-        timeSelect: []
+        seenNumRecent: null,
+        timeSelect: [],
+        addTimeSelect: []
       },
       community: {
         loading: false,
