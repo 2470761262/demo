@@ -604,6 +604,14 @@ export default {
     /**
      * @example:查询条件改变
      */
+    conditionChange(value) {
+      this.moreCondition = value;
+      this.clearList();
+      this.getSpotChekList();
+    },
+    /**
+     * @example:查询条件改变
+     */
     moreConditionChange(value) {
       this.moreCondition = value;
       this.clearList();
