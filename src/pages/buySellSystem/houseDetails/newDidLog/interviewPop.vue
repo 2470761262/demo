@@ -1096,7 +1096,7 @@ export default {
       //webSocketUser:默认是二维码标识，可以不传。发消息就是基于这个标识发送的；如果一个页面有多个二维码需要自己生成全球唯一（见guid()函数实例）
       this.$api
         .post({
-          url: "/scanUpload/getUploadQrCode",
+          url: "/scanUpload/getUploadQrCodeMulti1",
           data: { remark: "请选择文件" },
           headers: { "Content-Type": "application/json" }
         })

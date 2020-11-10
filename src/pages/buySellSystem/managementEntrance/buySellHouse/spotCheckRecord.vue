@@ -303,17 +303,6 @@
         </div>
       </div>
     </div>
-    <div class="change-content">
-      <span
-        @click="panelChangeBtn"
-        class="anchor-point"
-        data-anchor="首页展开选项/收起"
-        >展开选项/收起<i
-          class="iconfont iconxingzhuangjiehe1"
-          :class="{ rotate: panelChange }"
-        ></i
-      ></span>
-    </div>
     <div class="main">
       <div class="content">
         <div class="table">
@@ -721,18 +710,18 @@ export default {
     this.query();
     this.setConditionCol();
     window.addEventListener("resize", this.setConditionCol);
-    this.$nextTick(() => {
-      document
-        .querySelector(".entrance-container")
-        .addEventListener("scroll", this.elMainScroll);
-    });
+    // this.$nextTick(() => {
+    //   document
+    //     .querySelector(".entrance-container")
+    //     .addEventListener("scroll", this.elMainScroll);
+    // });
   },
   beforeDestroy() {
-    if (document.querySelector(".entrance-container")) {
-      document
-        .querySelector(".entrance-container")
-        .removeEventListener("scroll", this.elMainScroll);
-    }
+    // if (document.querySelector(".entrance-container")) {
+    //   document
+    //     .querySelector(".entrance-container")
+    //     .removeEventListener("scroll", this.elMainScroll);
+    // }
     window.removeEventListener("resize", this.setConditionCol);
   },
   methods: {
@@ -1124,27 +1113,6 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1;
-  .change-content {
-    text-align: center;
-    margin-bottom: 4px;
-    margin-top: 10px;
-    color: @backgroud;
-    font-size: @font16;
-    span {
-      cursor: pointer;
-      .iconfont {
-        margin-left: 8px;
-        font-size: @font14;
-        transition: transform 0.3s;
-        transform: rotateZ(180deg);
-        display: inline-block;
-
-        &.rotate {
-          transform: rotateZ(0deg) !important;
-        }
-      }
-    }
-  }
   .conditions {
     // prettier-ignore
     padding: 0 24PX 20PX 24PX;

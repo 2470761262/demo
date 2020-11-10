@@ -302,17 +302,7 @@
         @moreConditionChange="moreConditionChange"
       ></spot-check-head>
     </div>
-    <div class="change-content">
-      <span
-        @click="panelChangeBtn"
-        class="anchor-point"
-        data-anchor="首页展开选项/收起"
-        >展开选项/收起<i
-          class="iconfont iconxingzhuangjiehe1"
-          :class="{ rotate: panelChange }"
-        ></i
-      ></span>
-    </div>
+
     <div class="main">
       <div class="right"></div>
       <div class="content">
@@ -528,19 +518,19 @@ export default {
     };
   },
   beforeDestroy() {
-    if (document.querySelector(".entrance-container")) {
-      document
-        .querySelector(".entrance-container")
-        .removeEventListener("scroll", this.elMainScroll);
-    }
+    // if (document.querySelector(".entrance-container")) {
+    //   document
+    //     .querySelector(".entrance-container")
+    //     .removeEventListener("scroll", this.elMainScroll);
+    // }
   },
   created() {
     this.getSpotChekList();
-    this.$nextTick(() => {
-      document
-        .querySelector(".entrance-container")
-        .addEventListener("scroll", this.elMainScroll);
-    });
+    // this.$nextTick(() => {
+    //   document
+    //     .querySelector(".entrance-container")
+    //     .addEventListener("scroll", this.elMainScroll);
+    // });
   },
   methods: {
     elMainScroll() {
