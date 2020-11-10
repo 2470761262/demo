@@ -118,7 +118,7 @@ const TYPELIST = [
     name: "vrShooting"
   },
   {
-    label: "状态转换记录",
+    label: "转换状态记录",
     value: 5,
     name: "saleStatusRecord"
   }

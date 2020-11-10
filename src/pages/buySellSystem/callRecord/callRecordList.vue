@@ -365,7 +365,13 @@ export default {
           width: "320",
           formart: item => {
             if (item.voiceUrl) {
-              return <audio controls="controls" src={item.voiceUrl}></audio>;
+              return (
+                <audio
+                  controls="controls"
+                  controlsList="nodownload"
+                  src={item.voiceUrl}
+                ></audio>
+              );
             }
           }
         },
