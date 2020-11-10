@@ -1097,7 +1097,7 @@ export default {
       this.$api
         .post({
           url: "/scanUpload/getUploadQrCode",
-          data: { remark: "请选择图片" },
+          data: { remark: "请选择文件" },
           headers: { "Content-Type": "application/json" }
         })
         .then(e => {
