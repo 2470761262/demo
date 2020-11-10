@@ -296,6 +296,12 @@ export default {
           formart: item => item.addTimeFormat
         },
         {
+          prop: "release58Num",
+          label: "发布58次数",
+          order: "custom",
+          formart: item => item.release58Num || "0"
+        },
+        {
           prop: "agentName",
           label: "跟单人",
           order: false
