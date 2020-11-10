@@ -169,7 +169,7 @@
         <div class="search-item-title ">状态</div>
         <div class="search-item-body">
           <el-select
-            v-model="form.status"
+            v-model="form.newSaleTag"
             placeholder="请选择状态"
             clearable
             filterable
@@ -224,14 +224,6 @@ export default {
       isInitLoadroomList: false, // 选择楼栋是否加载房间列表
       statusList: [
         {
-          value: 0,
-          label: "在售"
-        },
-        {
-          value: 2,
-          label: "我售"
-        },
-        {
           value: 3,
           label: "无效"
         },
@@ -270,6 +262,7 @@ export default {
         if (e) {
           this.form.status = this.status;
           this.form.time = this.time;
+          this.form.random = this.form.random = new Date().getTime();
         }
       });
     }
