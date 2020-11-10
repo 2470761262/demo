@@ -120,7 +120,7 @@
       </div>
       <!-- 回访人电话 -->
       <div class="search-item">
-        <div class="search-item-title ">主叫号码</div>
+        <div class="search-item-title ">回访人电话</div>
         <div class="search-item-body">
           <el-input
             clearable
@@ -135,7 +135,7 @@
       </div>
       <!-- 拨打电话 -->
       <div class="search-item">
-        <div class="search-item-title ">被叫号码</div>
+        <div class="search-item-title ">拨打电话</div>
         <div class="search-item-body">
           <el-input
             clearable
@@ -212,6 +212,7 @@ export default {
     resetLoad() {
       Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
       Object.assign(this.$data, this.$options.data());
+      this.getFollowType();
     },
     validateFrom() {
       this.$validator.validateAll().then(e => {
