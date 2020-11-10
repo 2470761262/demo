@@ -552,7 +552,19 @@ export default [
         },
         component: () =>
           import(
-            /* webpackChunkName: "spotCheckRecord" */ "@/pages/buySellSystem/managementEntrance/saleStatusRecord/saleStatusRecord.vue"
+            /* webpackChunkName: "saleStatusRecord" */ "@/pages/buySellSystem/managementEntrance/saleStatusRecord/saleStatusRecord.vue"
+          )
+      },
+      {
+        path: "/buySellSystem/callRecord",
+        meta: {
+          title: "电话沟通列表",
+          isMapNav: false,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "midTelCallList" */ "@/pages/buySellSystem/callRecord/callRecord.vue"
           )
       },
       {

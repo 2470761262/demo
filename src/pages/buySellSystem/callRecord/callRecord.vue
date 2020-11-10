@@ -12,16 +12,14 @@
 </style>
 <template>
   <div class="content">
-    <breadcrumb></breadcrumb>
-    <sale-status-record-pair />
-    <sale-status-record-list />
+    <call-record-pair />
+    <call-record-list />
   </div>
 </template>
 
 <script>
-import breadcrumb from "../components/entranceBreadcrumb.vue";
-import saleStatusRecordPair from "./saleStatusRecordPair";
-import saleStatusRecordList from "./saleStatusRecordList";
+import callRecordPair from "./callRecordPair";
+import callRecordList from "./callRecordList";
 export default {
   provide() {
     return {
@@ -29,17 +27,17 @@ export default {
     };
   },
   components: {
-    breadcrumb,
-    saleStatusRecordPair,
-    saleStatusRecordList
+    callRecordPair,
+    callRecordList
   },
   data() {
     return {
       form: {
-        comId: "",
-        cbId: "",
-        bhId: "",
-        newSaleTag: "",
+        followType: "",
+        subFollowType: "",
+        perName: "",
+        caller: "",
+        called: "",
         time: [],
         sortColumn: "id",
         sortType: "1",
