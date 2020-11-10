@@ -1057,6 +1057,7 @@ export default {
       params.cbId = this.conditions.cbId;
       params.bhId = this.conditions.bhId;
       params.houseNo = this.conditions.houseNo;
+      params.areaId = this.area.value;
       params.store = this.department.value;
       params.personnel = this.agent.value;
       params.currentStatus = this.currentStatus;
