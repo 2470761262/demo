@@ -116,6 +116,36 @@
                 </el-row>
               </el-col>
               <el-col :span="colChunks[2]">
+                <el-form-item label="所属区域">
+                  <el-select
+                    class="width100 anchor-point"
+                    popper-class="anchor-point"
+                    data-anchor="抽检记录所属区域 => select"
+                    @click.native="log_socket.sendUserActionData"
+                    v-model="area.value"
+                    placeholder="请输入区域名称"
+                    clearable
+                    filterable
+                    @focus="areaFocus"
+                    @change="areaChange"
+                    :loading="area.loading"
+                    value-key="value"
+                  >
+                    <el-option
+                      class="anchor-point"
+                      :data-anchor="
+                        '抽检记录所属区域 => select => option:' + item.depName
+                      "
+                      @click.native="log_socket.sendUserActionData"
+                      v-for="item in area.list"
+                      :key="item.depId"
+                      :label="item.depName"
+                      :value="item.depId"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="colChunks[2]">
                 <el-form-item label="所属门店">
                   <el-select
                     class="width100 anchor-point"
@@ -178,7 +208,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="colChunks[4]">
+              <el-col :span="colChunks[3]">
                 <el-form-item label="当前状态">
                   <el-select
                     class="width100 anchor-point"
@@ -205,7 +235,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="colChunks[5]">
+              <el-col :span="colChunks[3]">
                 <el-form-item label="抽检结果">
                   <el-select
                     class="width100 anchor-point"
@@ -230,6 +260,24 @@
                     >
                     </el-option>
                   </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="colChunks[4]">
+                <el-form-item label="抽检时间">
+                  <el-date-picker
+                    prefix-icon="prefix-icon"
+                    v-model="addTimeSelect"
+                    type="daterange"
+                    range-separator="至"
+                    start-placeholder="起始时间"
+                    end-placeholder="结束时间"
+                    value-format="yyyy-MM-dd"
+                    @change="moreConditionChange"
+                    :default-time="['00:00:00', '23:59:59']"
+                    class="anchor-point"
+                    :data-anchor="'抽检记录 获得抽检时间:' + addTimeSelect"
+                  >
+                  </el-date-picker>
                 </el-form-item>
               </el-col>
               <el-col :span="colChunks[6]" class="fr">
@@ -475,6 +523,7 @@ export default {
       isInitLoadroomList: false, // 选择楼栋是否加载房间列表
       loading: false,
       currentStatus: "",
+      addTimeSelect: [],
       currentStatusList: [
         {
           value: 0,
@@ -518,6 +567,11 @@ export default {
         bhId: "",
         houseNo: ""
       },
+      area: {
+        loading: false,
+        list: [],
+        value: ""
+      }, // 所属区域
       department: {
         loading: false,
         list: [],
@@ -716,7 +770,8 @@ export default {
           url: "/spotCheck/spotCheckRecordList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
-            selectType: "MORE_SELECT_SHOP"
+            selectType: "MORE_SELECT_SHOP",
+            selectDepartment: this.area.value
           }
         })
         .then(e => {
@@ -727,6 +782,47 @@ export default {
         .finally(() => {
           this.department.loading = false;
         });
+    },
+    /**
+     * @example: 请求所属区域数据
+     */
+    getAreaList() {
+      this.department.loading = true;
+      this.$api
+              .post({
+                url: "/spotCheck/spotCheckRecordList",
+                headers: { "Content-Type": "application/json;charset=UTF-8" },
+                data: {
+                  selectType: "MORE_SELECT_AREA"
+                }
+              })
+              .then(e => {
+                if (e.data.code == 200) {
+                  this.area.list = e.data.data;
+                }
+              })
+              .finally(() => {
+                this.area.loading = false;
+              });
+    },
+    /**
+     * @example: 所属门店获取焦点事件
+     */
+    areaFocus() {
+      this.getAreaList();
+    },
+    /**
+     * @example: 所属门店选择事件
+     */
+    areaChange(value) {
+      this.department.list = [];
+      this.department.value = "";
+      this.agent.list = [];
+      this.agent.value = "";
+      this.query();
+      if (value != "") {
+        this.getDepartmentList();
+      }
     },
     /**
      * @example: 所属门店获取焦点事件
@@ -964,6 +1060,7 @@ export default {
       params.store = this.department.value;
       params.personnel = this.agent.value;
       params.currentStatus = this.currentStatus;
+      params.addTimeSelect = this.addTimeSelect;
       params.currentResult = this.spotCheckResult;
       params.sortColumn = this.sortColumn;
       params.sortType = this.sortType;
