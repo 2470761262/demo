@@ -272,7 +272,7 @@
                     start-placeholder="起始时间"
                     end-placeholder="结束时间"
                     value-format="yyyy-MM-dd"
-                    @change="moreConditionChange"
+                    @change="query(1)"
                     :default-time="['00:00:00', '23:59:59']"
                     class="anchor-point"
                     :data-anchor="'抽检记录 获得抽检时间:' + addTimeSelect"
@@ -285,14 +285,14 @@
                   <div
                     class="btn anchor-pointn"
                     @click="reset"
-                    data-anchor="审核列表重置"
+                    data-anchor="抽检记录列表重置"
                   >
                     重置
                   </div>
                   <div
                     class="btn active anchor-pointn"
                     @click="query(1)"
-                    data-anchor="审核列表搜索"
+                    data-anchor="抽检记录列表搜索"
                   >
                     搜索
                   </div>
@@ -789,21 +789,21 @@ export default {
     getAreaList() {
       this.department.loading = true;
       this.$api
-              .post({
-                url: "/spotCheck/spotCheckRecordList",
-                headers: { "Content-Type": "application/json;charset=UTF-8" },
-                data: {
-                  selectType: "MORE_SELECT_AREA"
-                }
-              })
-              .then(e => {
-                if (e.data.code == 200) {
-                  this.area.list = e.data.data;
-                }
-              })
-              .finally(() => {
-                this.area.loading = false;
-              });
+        .post({
+          url: "/spotCheck/spotCheckRecordList",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            selectType: "MORE_SELECT_AREA"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.area.list = e.data.data;
+          }
+        })
+        .finally(() => {
+          this.area.loading = false;
+        });
     },
     /**
      * @example: 所属门店获取焦点事件
@@ -1093,6 +1093,7 @@ export default {
       this.currentStatus = "";
       this.spotCheckResult = "";
       Object.assign(this.$data.conditions, this.$options.data().conditions);
+      Object.assign(this.$data.area, this.$options.data().area);
       Object.assign(this.$data.department, this.$options.data().department);
       Object.assign(this.$data.agent, this.$options.data().agent);
       this.buildOptData = {};

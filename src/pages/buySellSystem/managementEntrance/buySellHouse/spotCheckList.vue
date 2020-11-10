@@ -32,9 +32,7 @@
     padding-right: 46px;
     padding-bottom: 10px;
     position: sticky;
-    top: 0px;
     z-index: 10;
-    margin-top: -30px;
     .filter-radio-item {
       display: flex;
       cursor: pointer;
