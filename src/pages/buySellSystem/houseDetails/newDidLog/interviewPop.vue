@@ -725,6 +725,22 @@
                 <i class="el-icon-error" @click.stop="deleteFile(item)"></i>
               </div>
               <div
+                class="upLoadFile-file-phone"
+                style="display:inherit;margin-left:10px;float:left;padding:0px"
+              >
+                <el-image
+                  style="width:125px;margin:0px"
+                  :src="qrCodeImg"
+                  :preview-src-list="[qrCodeImg]"
+                  fit="cover"
+                >
+                  <div slot="placeholder" class="image-slot">
+                    加载中<span>...</span>
+                  </div>
+                </el-image>
+              </div>
+
+              <div
                 class="file-btn"
                 title="文本"
                 v-for="item in fileListType.txt"
@@ -804,6 +820,7 @@ export default {
       fileLoading: false,
       loading: false,
       loginData: util.localStorageGet(LOGINDATA),
+      qrCodeImg: null,
       pickerTimeValue: "",
       pickerTime: [
         { title: "今天", time: util.format(new Date(), "yyyy-MM-dd") },
@@ -837,6 +854,9 @@ export default {
         loading: false
       }
     };
+  },
+  created() {
+    this.requestQrCode();
   },
   methods: {
     ...mapMutations(["setParam"]),
@@ -1049,6 +1069,104 @@ export default {
             });
         }
       });
+    },
+    contactSocket(user) {
+      console.log("用户【" + user + "】开始接入");
+      this.socketApi.initWebSocket(
+        this.$api.baseUrl().replace("http", ""),
+        user
+      );
+      this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
+      console.log("用户【" + user + "】接入完毕");
+    },
+    guid() {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
+        c
+      ) {
+        var r = (Math.random() * 16) | 0,
+          v = c == "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    },
+    requestQrCode() {
+      //请求二维码参数说明，是一个js对象
+      //remark 标题，用于显示在小程序上传资源页面标题；
+      //resourceType 资源类型 默认picture,还有vedio,audio分别代表视频和音频--扫码后自动适应时选择图片还是视频还是音频
+      //businessParams：闭环参数 传过来什么接受消息时回传，注意是一个json字符串，请利用JSON.stringify(js对象)转换
+      //webSocketUser:默认是二维码标识，可以不传。发消息就是基于这个标识发送的；如果一个页面有多个二维码需要自己生成全球唯一（见guid()函数实例）
+      this.$api
+        .post({
+          url: "/scanUpload/getUploadQrCode",
+          data: { remark: "请选择图片" },
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(
+              result.data.url,
+              "拿到二维码地址，直接显示到pc页面即可"
+            );
+            (this.qrCodeImg = result.data.url),
+              console.log(
+                result.data.qrCode,
+                "二维码唯一标识，用于初始化websocket的连接用户"
+              );
+            let qrCode = result.data.qrCode;
+            this.contactSocket(qrCode);
+          } else {
+            console.log("h获取xx二维码结果：" + result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询视频二维码失败");
+          console.log(e);
+        });
+    },
+    receiveMessage(r) {
+      debugger;
+      //回调函数，用于接收扫码后发送的消息
+      console.log(r, "消息内容");
+      //。。。执行你需要的业务逻辑
+      //回调函数，用于接收扫码后发送的消息
+      console.log(r.content, "消息内容");
+      let that = this;
+      if (that.fileList.length < 9) {
+        let str = r.content.picUrl;
+        let firstIndex = str.indexOf("/");
+        let secondIndex = str.indexOf("/", firstIndex + 1);
+        let thirdIndex = str.indexOf("/", secondIndex + 1);
+        let lastIndex = str.lastIndexOf("/");
+        let params = {
+          domain: str.substring(0, thirdIndex + 1),
+          folder: str.substring(thirdIndex + 1, lastIndex + 1),
+          fileName: str.substring(lastIndex + 1, str.length),
+          uploadName: str.substring(lastIndex + 1, str.length)
+        };
+        that.insertPic(params);
+      }
+      //。。。执行你需要的业务逻辑
+    },
+    //添加图片
+    insertPic(params) {
+      this.$api
+        .post({
+          url: "/saleHouseInterview/interviewPic/insert",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: params
+        })
+        .then(json => {
+          if (json.data.code == 200) {
+            this.fileList = [...this.fileList, json.data.data];
+            console.log(this.fileList, "fileList");
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            this.$message(e.response.data.message);
+          }
+        });
     }
   }
 };
