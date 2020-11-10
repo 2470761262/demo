@@ -663,16 +663,17 @@ export default {
         case "待验真":
           that.stepNow = 1;
           //that.stepsListNow[0].description = "待业主验真";
+          that.stepStatus = "";
           break;
         case "验真失败":
           that.stepNow = 2;
-          that.steps[1].title =
+          that.stepsListNow[1].title =
             "验真失败，" + (row.failedResonStr || "过期未验真");
           that.stepStatus = "error";
           break;
         case "验真成功":
           that.stepNow = 2;
-          that.steps[1].title = "业主验真成功";
+          that.stepsListNow[1].title = "业主验真成功";
           that.stepStatus = "success";
           break;
       }
