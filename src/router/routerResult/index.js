@@ -1,6 +1,67 @@
 export default [
   {
     //买卖系统房源列表
+    path: "/info",
+    meta: {
+      keepAlive: true,
+      title: "新首页",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(/* webpackChunkName: "info" */ "@/pages/info/home/index.vue")
+  },
+  {
+    //买卖系统房源列表
+    path: "/clockIn",
+    meta: {
+      keepAlive: true,
+      title: "打卡",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(/* webpackChunkName: "clockIn" */ "@/pages/info/clockIn/index.vue")
+  },
+  {
+    //买卖系统房源列表
+    path: "/clockList",
+    meta: {
+      keepAlive: true,
+      title: "考勤",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "clockList" */ "@/pages/info/clockList/index.vue"
+      ),
+
+    //我的房源
+    redirect: "/clockList/myInfo",
+    children: [
+      {
+        //买卖系统开发线索
+        path: "/clockList/myInfo",
+        meta: {
+          keepAlive: true,
+          title: "我的日志",
+          // isScrollTop: true, //是否需要记录坐标
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "myInfo" */ "@/pages/info/clockList/myInfo/index.vue"
+          )
+      }
+    ]
+  },
+  {
+    //买卖系统房源列表
     path: "/buySellSystem/houseList",
     meta: {
       keepAlive: true,
