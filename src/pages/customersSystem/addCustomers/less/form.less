@@ -1,161 +1,302 @@
 @import "./public";
+
 .step-content() {
- // padding: 0 24px 24px;
- // background: rgba(255, 255, 255, 1);
-  .title {
-    // prettier-ignore
-    font-size: 24PX;
-    color: rgba(48, 49, 51, 1);
-    line-height: 32px;
-    margin: 24px 0;
-  }
-  .split-line {
-    height: 1px;
-    display: block;
-    background: rgba(240, 242, 245, 1);
-  }
-  .input-group {
     @width: 506px;
-    margin-top: 35px;
-    &:first-of-type {
-      margin-top: 16px;
-    }
-    &.is-required {
-      .input-head {
-        &::before {
-          content: "";
-          margin-right: 8px;
-          border-radius: 50%;
-          width: 6px;
-          height: 6px;
-          background: rgba(246, 47, 47, 1);
-        }
-      }
-    }
-    .input-head {
-      width: @width;
-      // prettier-ignore
-      font-size: 16PX;
-      // prettier-ignore
-      line-height: 21px;
-      color: rgba(48, 49, 51, 1);
-      font-weight: bold;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      // justify-content: space-between;
-      .inline-btn {
-        color: #247257;
-        font-size: inherit;
-        font-weight: normal;
-        flex: 1;
-        text-align: right;
-        cursor: pointer;
-      }
-    }
-    .tag-content {
-      margin-bottom: 16px;
-      /deep/.el-tag {
-        height: 36px;
-        line-height: 34px;
+    // padding: 0 24px 24px;
+    // background: rgba(255, 255, 255, 1);
+    .title {
         // prettier-ignore
-        font-size: 16PX;
+        font-size: @font24;
         color: rgba(48, 49, 51, 1);
-        & + .el-tag {
-          margin-left: 8px;
+        line-height: 32px;
+        padding: 24px 0;
+    }
+
+    .split-line {
+        height: 1px;
+        display: block;
+        background: rgba(240, 242, 245, 1);
+    }
+
+    .input-group {
+       
+        margin-top: 35px;
+
+        .input-group-split {
+            display: flex;
+            width: @width;
+            align-items: center;
+
+            .input-split {
+                width: 8px;
+                height: 1px;
+                background: rgba(96, 98, 102, 1);
+                margin: 0 19px;
+            }
+
+            .input-content {
+                flex: 1;
+            }
         }
-      }
+
+        &:first-of-type {
+            margin-top: 16px;
+        }
+
+        &.is-required {
+            .input-head {
+                &::before {
+                    content: "";
+                    margin-right: 8px;
+                    border-radius: 50%;
+                    width: 6px;
+                    height: 6px;
+                    background: rgba(246, 47, 47, 1);
+                }
+            }
+        }
+
+        .input-head {
+            width: @width;
+            // prettier-ignore
+            font-size: @font16;
+            // prettier-ignore
+            line-height: 21px;
+            color: rgba(48, 49, 51, 1);
+            font-weight: bold;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+
+            // justify-content: space-between;
+            .inline-btn {
+                color:  @backgroud;
+                font-size: inherit;
+                font-weight: normal;
+                flex: 1;
+                text-align: right;
+                cursor: pointer;
+            }
+        }
+
+        .tag-content {
+            margin-bottom: 16px;
+
+            /deep/.el-tag {
+                height: 36px;
+                line-height: 34px;
+                // prettier-ignore
+                font-size: @font16;
+                color: rgba(48, 49, 51, 1);
+
+                &+.el-tag {
+                    margin-left: 8px;
+                }
+            }
+        }
+
+        .alert-content {
+            padding: 16px 0;
+            font-size: @font16;
+            width: @width;
+            box-sizing: border-box;
+            text-indent: 24px;
+            margin-top: 16px;
+
+            &.warning {
+                background: rgba(255, 150, 0, 0.07);
+                color: rgba(255, 150, 0, 1);
+            }
+        }
+
+        .input-assist-tips {
+            width: @width;
+            font-size: @font16;
+            color: rgba(48, 49, 51, 1);
+            margin: 28px 0 4px 0;
+        }
+
+        .input-pack {
+            display: flex;
+
+            .inline-remove-btn {
+                font-size: @font18;
+                color: rgba(243, 58, 58, 1);
+                cursor: pointer;
+                align-self: center;
+                margin-left: 16px;
+            }
+            .inline-top-btn {
+                font-size: @font18;
+                color: @backgroud;
+                cursor: pointer;
+                align-self: center;
+                margin-left: 16px;
+            }
+        }
+
+        .input-content {
+            width: @width;
+            height: 48px;
+            .input;
+
+            &.is-suffix {
+                /deep/.el-input__suffix {
+                    right: 0;
+                }
+
+                /deep/.el-input__inner {
+                    padding-right: 48px;
+                }
+            }
+
+            &.is-auto-height {
+                height: auto;
+            }
+        }
+
+        .radio-content {
+            cursor: pointer;
+            display: inline-block;
+
+            &+.radio-content {
+                margin-left: 16px;
+            }
+
+            input[type="radio"] {
+                display: none;
+            }
+
+            input[type="radio"]:checked+.radio-title {
+                background: @backgroud;
+                color: rgba(255, 255, 255, 1);
+            }
+
+            .radio-title {
+                width: 103px;
+                height: 48px;
+                background: rgba(240, 242, 245, 1);
+                border-radius: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: @font16;
+                color: rgba(144, 147, 153, 1);
+                // prettier-ignore
+                line-height: 21PX;
+            }
+        }
+
+        .primary-btn {
+            min-width: 86px;
+            height: 48px;
+            font-size: @font16;
+        }
+
+        .checkbox-content {
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 16px;
+            input[type="checkbox"] {
+              display: none;
+            }
+            input[type="checkbox"]:checked + .checkbox-title {
+              background: @backgroud;
+              color: rgba(255, 255, 255, 1);
+            }
+            .checkbox-title {
+              height: 48px;
+              background: rgba(240, 242, 245, 1);
+              border-radius: 4px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: @font16;
+              color: rgba(144, 147, 153, 1);
+              // prettier-ignore
+              line-height: 21PX;
+              margin-bottom: 16px;
+              padding: 0 16px;
+            }
+        }
     }
-    .alert-content {
-      padding: 16px 0;
-      // prettier-ignore
-      font-size: 16PX;
-      width: @width;
-      box-sizing: border-box;
-      text-indent: 24px;
-      margin-top: 16px;
-      &.warning {
-        background: rgba(255, 150, 0, 0.07);
-        color: rgba(255, 150, 0, 1);
-      }
+    /deep/ .el-checkbox-button, .el-checkbox-button__inner {
+        margin-right: 16px
     }
-    .input-assist-tips {
-      width: @width;
-      // prettier-ignore
-      font-size: 16PX;
-      color: rgba(48, 49, 51, 1);
-      margin-bottom: 16px;
+    /deep/ .el-checkbox-button:last-child .el-checkbox-button__inner {
+        border-radius: 4px;
     }
-    .input-pack {
-      display: flex;
-      .inline-remove-btn {
-        // prettier-ignore
-        font-size: 18PX;
-        color: rgba(243, 58, 58, 1);
-        cursor: pointer;
-        align-self: center;
-        margin-left: 16px;
-      }
+    /deep/ .el-checkbox-button:first-child .el-checkbox-button__inner {
+        border-radius: 4px;
+        border:none
     }
-    .input-content {
-      width: @width;
-      height: 48px;
-      .input;
-    }
-    .radio-content {
-      cursor: pointer;
-      display: inline-block;
-      & + .radio-content {
-        margin-left: 16px;
-      }
-      input[type="radio"] {
-        display: none;
-      }
-      input[type="radio"]:checked + .radio-title {
-        background: @backgroud;
-        color: rgba(255, 255, 255, 1);
-      }
-      .radio-title {
-        width: 103px;
+    /deep/ .el-checkbox-button__inner {
         height: 48px;
         background: rgba(240, 242, 245, 1);
         border-radius: 4px;
         display: flex;
+        border: none;
         align-items: center;
         justify-content: center;
-        // prettier-ignore
-        font-size: 16PX;
+        font-size: @font16;
         color: rgba(144, 147, 153, 1);
         // prettier-ignore
         line-height: 21PX;
-      }
+        padding: 0 16px;
+        & :first-child {
+            border: none
+        }
     }
-    .primary-btn {
-      min-width: 86px;
-      height: 48px;
-      // prettier-ignore
-      font-size: 16PX
+    /deep/ .el-checkbox-button.is-checked .el-checkbox-button__inner {
+        color: #fff;
+        background: @backgroud;
     }
-  }
 }
+
 .error-tips {
-  .error-tips();
+    .error-tips();
 }
+
 .after-error-tips {
-  .after-error-tips();
+    .after-error-tips();
 }
+
 .pop-content {
-  margin-top: 40px !important;
+    margin-top: 40px !important;
 }
+
 .split-step-content {
-  height: 16px;
-  background: #f4f4f4;
-  display: block;
+    height: 16px;
+    background: #f4f4f4;
+    display: block;
 }
+
 .options-item {
-  .el-select-dropdown__item {
+    .el-select-dropdown__item {
+        height: 48px;
+        line-height: 48px;
+        font-size: @font16;
+    }
+}
+
+.btn-primary() {
     height: 48px;
-    line-height: 48px;
-    font-size: 16px;
-  }
+    outline: none;
+    border: 1px solid @backgroud;
+    background: #fff;
+    border-radius: 4px;
+    box-sizing: border-box;
+    padding: 0 16px;
+    font-size: @font16;
+    margin-left: 16px;
+    color: @backgroud;
+    cursor: pointer;
+}
+
+.btn-primary-back() {
+    .btn-primary;
+    color: #fff;
+    border-radius: 4px;
+    background: @backgroud;
+    border: none;
 }

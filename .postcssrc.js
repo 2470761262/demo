@@ -3,12 +3,13 @@
 module.exports = {
   plugins: {
     "postcss-plugin-px2rem": {
+      exclude: /cutmomersPair.vue|cutmomersResultList.vue/,
       remUnit: 100,
-      selectorBlackList: [/^html$/, ".page-cell-main-menu"],
+      selectorBlackList: [/^html$/],
       unitPrecision: 5,
       minPixelValue: 2,
-      propBlackList:["border","border-radius"]
+      propBlackList: ["border"]
     },
-    "postcss-lsx-zr":{}
+    "postcss-lsx-zr": {}
   }
 };

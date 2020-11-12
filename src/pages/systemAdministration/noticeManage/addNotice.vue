@@ -227,7 +227,9 @@
           </div>
         </el-main>
         <div class="footerContainer right">
-          <el-button type="primary" @click="sendNotice">发送</el-button>
+          <el-button type="primary" @click="sendNotice" :loading="sendLoading"
+            >发送</el-button
+          >
           <el-button>取消</el-button>
         </div>
       </el-container>
@@ -401,7 +403,8 @@ export default {
           label: "PC+微信"
         }
       ],
-      treeLoading: false
+      treeLoading: false,
+      sendLoading: false
     };
   },
   watch: {},
@@ -717,6 +720,7 @@ export default {
       }
       this.notice.addPer = 44430; //发送人
       //this.notice.receiveAcountIds = [44430]; //接收人id
+      this.sendLoading = true;
       this.$api
         .post({
           url: "/noticeManage/common/sendNoticeReady",
@@ -738,6 +742,7 @@ export default {
           }
         })
         .catch(e => {
+          this.sendLoading = false;
           console.log("发送公告结果");
           console.log(e);
         });

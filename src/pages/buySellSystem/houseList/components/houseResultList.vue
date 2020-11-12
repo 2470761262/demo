@@ -1,1083 +1,2159 @@
 <style lang="less" scoped>
-.query-data-pad {
-  padding: 0 20px;
-}
-.page-query-data {
-  display: flex;
-  .page-query-data-title {
-    font-size: 16px;
-    line-height: 32px;
-    margin-right: 15px;
+@import "~@/pages/customersSystem/addCustomers/less/form.less";
+
+.page-result-content {
+  //padding: 0 24px;
+  background: #fff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
+  margin-bottom: 8px;
+
+  .page-posi-sticky {
+    background: #fff;
+    z-index: 100;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 100;
   }
-  .page-query-data-tag {
-    flex: 1;
-    .query-tag {
-      margin-right: 10px;
-      margin-bottom: 10px;
-      font-size: 16px;
-    }
-  }
-}
-.i {
-  cursor: pointer;
-}
-.select-tabs {
-  display: flex;
-  justify-content: space-between;
-  padding: 15px 0;
-  border-top: 1px solid #d7d7d7;
-  border-bottom: 1px solid #d7d7d7;
-}
-.select-tabs-cell {
-  display: flex;
-  .select-tabs-item {
+
+  .page-result-head {
     display: flex;
-    align-items: center;
-    margin-right: 55px;
-    cursor: pointer;
-    &:last-child {
-      margin-right: 0;
-    }
-    .tabs-item-title {
-      font-size: 20px;
-    }
-    .el-icon-sort {
-      font-size: 18px;
-    }
-  }
-}
-.select-checkbox {
-  margin-right: 30px;
-  &:last-child {
-    margin-right: 0;
-  }
-  input {
-    display: none;
-  }
-  span {
-    display: flex;
-    align-items: center;
-    font-size: 18px;
-    &::after {
-      content: "";
-      border: 1px solid #767676;
-      width: 17px;
-      height: 17px;
-      box-sizing: border-box;
-      margin-left: 10px;
-      line-height: 1;
-      text-align: center;
-    }
-  }
-  input[type="checkbox"]:checked + span {
-    &::after {
-      content: "\2713";
-    }
-  }
-  input[type="radio"]:checked + span {
-    &::after {
-      content: "\2713";
-    }
-  }
-}
-.select-for-warp {
-  min-height: 400px;
-  .select-for-item {
-    display: flex;
-    padding: 12px 0;
-    border-bottom: 1px solid #dbdbdb;
-    .select-for-item-img {
-      width: 140px;
-      height: 100px;
-      border-radius: 4px;
-      overflow: hidden;
-      align-self: center;
-      /deep/.el-image {
-        width: 100%;
-        height: 100%;
-      }
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-    .select-for-item-data {
-      margin-left: 50px;
-      flex: 1;
+    // justify-content: space-between;
+    //padding: 24px 0;
+    margin-top: 15px;
+    padding: 0 15px;
+
+    .head-content-input {
+      // prettier-ignore
+      width: 455PX;
+      // prettier-ignore
+      height: 40PX;
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      .item-data-top {
-        display: flex;
-        align-items: center;
-        .item-data-top-no {
-          //margin-right: 80px;
-          flex: 1;
-          width: 0;
-          color: #adadad;
-          font-size: 14px;
-        }
-        .item-data-top-tag {
-          display: flex;
-          .top-tag-item {
-            font-size: 14px;
-            padding: 2px 8px;
-            background: var(--color--primary);
-            border-radius: 4px;
-            color: #fff;
-          }
-        }
-        .broker-content {
-          display: flex;
-          align-items: center;
-          margin-left: 30px;
-          .broker-img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-          }
-          .brokerName,
-          .deparName {
-            font-size: 15px;
-            color: #333;
-          }
+
+      .content-input {
+        // prettier-ignore
+        width: 390PX;
+        border: 1px solid rgba(206, 206, 206, 1);
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        text-indent: 16px;
+        // line-height: 48px;
+        height: 100%;
+        box-sizing: border-box;
+        outline: none;
+        font-size: @font16;
+
+        &::placeholder {
+          font-size: @font16;
+          color: #a6aaaf;
         }
       }
-      i {
+
+      .inquire-content {
+        flex: 1;
+        background: @backgroud;
+        outline: none;
+        border: 0;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        font-size: @font24;
+        color: #fff;
         cursor: pointer;
       }
-      .item-data-downPayment {
-        font-size: 16px;
-        color: #636363;
-      }
-      .item-data-middle {
-        font-size: 20px;
-        color: #636363;
-        margin: 10px 0;
-      }
-      .item-data-plate {
-        // font-size: 14px;
-        //
-        // align-self: flex-start;
-        //
-        margin-top: 10px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        .plate-warp {
-          padding: 4px 10px;
-          border: 1px solid #ddd;
-          border-radius: 20px;
-        }
-      }
-      .item-data-bottom {
-        display: flex;
-        .item-data-bottom-detali {
-          color: #636363;
-          font-size: 16px;
-          align-self: flex-end;
-          flex: 1;
-          width: 0;
-        }
-        .item-data-bottom-price {
-          font-size: 20px;
-          color: #e5a670;
-          line-height: 1;
-        }
-        .item-data-bottom-avgPirce {
-          align-self: flex-end;
-          margin-left: 10px;
-          color: #636363;
-          font-size: 14px;
-        }
-      }
     }
-    .select-for-item-but {
-      margin: 0 30px;
-      height: 50px;
-      width: 50px;
-      color: #fff;
-      font-size: 30px;
-      align-self: center;
-      background: var(--color--primary);
-      border-radius: 50%;
+
+    .head-fun-right {
+      flex: 1;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
+      align-items: flex-start;
+      margin-top: 15px;
+
+      .btn-primary {
+        display: flex;
+        align-items: center;
+        margin-left: 30px;
+        font-size: @font16;
+        border-radius: 30px;
+        padding-top: 7px;
+        padding-bottom: 7px;
+        height: auto;
+
+        i {
+          font-size: @font16;
+          margin-right: 5px;
+        }
+
+        &.house-back {
+          background: @backgroud;
+          color: #fff;
+          box-shadow: 0 4px 10px @opacityBackground;
+        }
+      }
     }
   }
-}
-.select-page-nav {
-  display: flex;
-  margin-top: 30px;
-  justify-content: center;
-  /deep/.el-pagination {
-    .el-pagination__total {
-      font-size: 15px;
+
+  // <!-- nav类型切换 -->
+  .tab-content {
+    //  display: flex;
+    &::after {
+      content: "";
+      display: block;
+      height: 1px;
+      // prettier-ignore
+      margin-top: 9PX;
+      background: rgba(240, 242, 245, 1);
     }
-    li {
-      font-size: 15px;
-      border: 1px solid #dcdfe6;
-      border-radius: 4px;
-      margin-right: 10px;
+
+    .tab-content-nav {
+      display: flex;
+      // prettier-ignore
+      margin-top: 15PX;
+      // prettier-ignore
+      padding: 0 15PX;
+
+      .tab-content-item {
+        font-size: @font18;
+        // prettier-ignore
+        margin-right: 32PX;
+        position: relative;
+        color: rgba(96, 98, 102, 1);
+        cursor: pointer;
+
+        &.small {
+          font-size: @font14;
+        }
+
+        &.active {
+          color: @backgroud;
+          //   font-weight: bold;
+          display: flex;
+          align-items: center;
+
+          &::after {
+            content: "";
+            position: absolute;
+            // prettier-ignore
+            bottom: -10PX;
+
+            height: 2px;
+            background: @backgroud;
+            width: 100%;
+            left: 0;
+          }
+
+          &::before {
+            content: "";
+            margin-right: 8px;
+            background: @backgroud;
+            // prettier-ignore
+            width: 6PX;
+            // prettier-ignore
+            height: 6PX;
+            border-radius: 50%;
+          }
+        }
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+
+  // <!-- 选择楼盘 & 楼栋 & 房间号 & 跟单人姓名 -->
+  .cascader-content {
+    .btn-reset {
+      // prettier-ignore
+      height: 40PX;
+      // prettier-ignore
+      width: 65PX;
+      padding: 0 1px;
+    }
+
+    display: flex;
+    // prettier-ignore
+    // padding: 15PX;
+
+    // border-bottom: 1px solid #f0f2f5;
+    // prettier-ignore
+    @height35: 40PX;
+
+    .input-content {
+      @width: auto;
+      // prettier-ignore
+      margin-right: 18PX;
+      height: @height35 !important;
+
       &:last-child {
         margin-right: 0;
       }
-    }
-    .el-pagination__jump {
-      font-size: 15px;
-    }
-  }
-}
-.flex-cell {
-  display: flex;
 
-  .flex-cell-tab {
-    flex: 1;
-    width: 0;
+      .step-content > .input-group > .input-content;
+
+      &.input_180 {
+        // prettier-ignore
+        width: 180PX;
+      }
+
+      &.input_210 {
+        // prettier-ignore
+        width: 210PX;
+      }
+
+      &.input_120 {
+        // prettier-ignore
+        width: 120PX;
+      }
+
+      &.input_175 {
+        // prettier-ignore
+        width: 175PX;
+      }
+
+      &.input_102 {
+        // prettier-ignore
+        width: 102PX;
+      }
+
+      @media screen and (max-width: 1545px) {
+        &.input_210 {
+          // prettier-ignore
+          width: 135PX;
+        }
+        &.input_175 {
+          // prettier-ignore
+          width: 110PX;
+        }
+        &.input_120 {
+          // prettier-ignore
+          width: 110PX;
+        }
+      }
+
+      /deep/ .el-input__inner {
+        text-align: center;
+        background: #f0f7fc;
+        border: none;
+        font-size: @font14;
+        height: @height35;
+        line-height: @height35;
+        // box-shadow: ;
+        &::placeholder {
+          font-size: @font14;
+          color: #a6aaaf;
+        }
+      }
+
+      /deep/ .el-icon-circle-close {
+        line-height: @height35 !important;
+      }
+    }
+
+    .cascader-content-build {
+      // prettier-ignore
+      margin-right: 18PX;
+    }
+
+    .btn-primary-back {
+      margin-left: 0;
+      height: @height35;
+      padding: 0 35px;
+    }
+
+    .btn-reset {
+      // prettier-ignore
+      height: 40PX;
+      // prettier-ignore
+      width: 65PX;
+      margin-left: 10px;
+      padding: 5px;
+    }
+    @media screen and (max-width: 1350px) {
+      .input-content {
+        // prettier-ignore
+        margin-right: 10PX;
+      }
+      .cascader-content-build {
+        // prettier-ignore
+        margin-right: 10PX;
+      }
+      .btn-primary-back {
+        padding: 0 20px;
+      }
+      .btn-reset {
+        width: auto;
+        padding: 0 20px;
+      }
+    }
   }
-  .menuMarin {
-    margin-right: 60px;
-    margin-left: 20px;
+
+  .search-content {
+    &.no-frist {
+      .search-content-item {
+        &:first-child {
+          // prettier-ignore
+          margin-top: 19PX;
+        }
+      }
+
+      .head-content-input {
+        border-bottom: 1px solid #f0f2f5;
+        padding: 18px 0 0 15px;
+        // prettier-ignore
+        width: 455PX;
+        // prettier-ignore
+        height: 40PX;
+        display: flex;
+
+        .content-input {
+          // prettier-ignore
+          width: 390PX;
+          border: 1px solid rgba(206, 206, 206, 1);
+          border-top-left-radius: 4px;
+          border-bottom-left-radius: 4px;
+          text-indent: 16px;
+          // line-height: 48px;
+          height: 100%;
+          box-sizing: border-box;
+          outline: none;
+          font-size: @font16;
+
+          &::placeholder {
+            font-size: @font16;
+            color: #a6aaaf;
+          }
+        }
+
+        .inquire-content {
+          flex: 1;
+          background: @backgroud;
+          outline: none;
+          border: 0;
+          border-top-right-radius: 4px;
+          border-bottom-right-radius: 4px;
+          font-size: @font24;
+          color: #fff;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .search-content-item {
+      display: flex;
+      // prettier-ignore
+      margin-top: 15PX;
+      align-items: flex-start;
+      padding: 0 15px;
+
+      &:first-child {
+        margin-top: 18px;
+      }
+
+      .search-item-title {
+        margin-right: 20px;
+        font-size: @font16;
+        color: black;
+        flex-shrink: 0;
+        margin-bottom: 5px;
+      }
+
+      .search-item-right {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        /deep/ .el-radio-group {
+          white-space: nowrap;
+        }
+
+        // prettier-ignore
+        @height26: 26PX;
+
+        .input-group {
+          @width: auto;
+          margin-bottom: 5px;
+
+          .step-content > .input-group;
+
+          .input-content {
+            // prettier-ignore
+            width: 90PX;
+
+            height: @height26;
+            @media screen and (max-width: 1450px) {
+              width: 170px;
+            }
+          }
+
+          .input-split {
+            margin: 0 8px !important;
+          }
+
+          margin-top: 0;
+
+          /deep/ .el-input__inner {
+            line-height: @height26 !important;
+            height: @height26 !important;
+            padding-left: 10px;
+            font-size: @font12 !important;
+            padding-right: 24px !important;
+            //min-width: 110px;
+            &::placeholder {
+              font-size: @font12 !important;
+              //  line-height: 34px !important;
+            }
+          }
+
+          .suffix-tips {
+            line-height: @height26 !important;
+            font-size: @font12 !important;
+            margin-right: 8px !important;
+          }
+        }
+
+        /deep/ .el-radio {
+          // prettier-ignore
+          margin-bottom: 10PX;
+
+          &:first-child {
+            margin-right: 25px;
+          }
+
+          margin-right: 41px;
+
+          .el-radio__input {
+            display: none;
+          }
+
+          &.is-checked {
+            background: @backgroud;
+
+            .el-radio__label {
+              color: #fff;
+            }
+          }
+
+          &.is-bordered {
+            height: auto;
+            padding: 4px 5px;
+            //  margin-right: 30px;
+            margin-left: 0;
+            border: none;
+          }
+
+          .el-radio__label {
+            padding: 0;
+            font-size: @font16;
+            font-weight: 400;
+          }
+        }
+
+        /deep/ .el-checkbox-group {
+          margin-bottom: 5px;
+        }
+
+        /deep/ .el-checkbox {
+          margin-right: 24px;
+
+          .el-checkbox__label {
+            font-size: @font16;
+          }
+        }
+
+        .select-content {
+          margin-bottom: 5px;
+
+          /deep/ .el-select__tags {
+            flex-wrap: nowrap;
+            overflow: hidden;
+          }
+
+          .input-content {
+            // prettier-ignore
+            @width: 170PX;
+            // prettier-ignore
+            margin-right: 24PX;
+            // prettier-ignore
+            height: @height26 !important;
+
+            &:last-child {
+              margin-right: 0;
+            }
+
+            .step-content > .input-group > .input-content;
+
+            /deep/ .el-input__inner {
+              height: @height26 !important;
+              line-height: @height26 !important;
+              font-size: @font12 !important;
+
+              &::placeholder {
+                font-size: @font12 !important;
+              }
+            }
+
+            /deep/ .el-input__icon {
+              line-height: @height26 !important;
+            }
+          }
+        }
+
+        .btn-primary-back {
+          // prettier-ignore
+          height: 26PX;
+          // prettier-ignore
+          padding: 0 6PX;
+          margin-bottom: 5px;
+          font-size: @font14;
+          flex-shrink: 0;
+        }
+      }
+    }
   }
 }
-.image-slot {
-  height: 100%;
+
+.change-content {
+  text-align: center;
+  margin-bottom: 4px;
+  margin-top: 10px;
+  color: @backgroud;
+  font-size: @font16;
+
+  span {
+    cursor: pointer;
+
+    .iconfont {
+      margin-left: 8px;
+      font-size: @font14;
+      transition: transform 0.3s;
+      transform: rotateZ(180deg);
+      display: inline-block;
+
+      &.rotate {
+        transform: rotateZ(0deg) !important;
+      }
+    }
+  }
 }
-.is-order {
-  color: var(--color--primary);
-  font-weight: 600;
+
+.btn-primary {
+  .btn-primary;
+}
+
+.btn-primary-back {
+  .btn-primary-back();
+  // &.btn-reset {
+  //   // prettier-ignore
+  //   height: 40PX;
+  //   // prettier-ignore
+  //   width: 65PX;
+  // }
+}
+
+.options-item {
+  .options-item;
+}
+
+.options-custom-item {
+  .options-item;
+
+  .el-select-dropdown__item {
+    display: flex;
+    // prettier-ignore
+    height: 40PX;
+
+    /deep/ span {
+      flex: 1;
+      // width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: @font14;
+    }
+  }
+}
+/*** 钥匙独家实勘电梯 ****/
+.tab-filter-radio {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 46px;
+  padding-bottom: 10px;
+  position: sticky;
+  top: 0px;
+  z-index: 10;
+  background: #fff;
+  .filter-radio-item {
+    display: flex;
+    cursor: pointer;
+    // prettier-ignore
+    margin-left: 30PX;
+    align-items: center;
+    input {
+      display: none;
+    }
+    input[type="checkbox"]:checked + span {
+      &::before {
+        content: "\2713";
+        color: black;
+        font-size: @font16;
+      }
+    }
+    &:first-child {
+      margin-left: 0;
+    }
+    span {
+      font-size: @font16;
+      color: black;
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      &::before {
+        content: "";
+        // prettier-ignore
+        width: 16PX;
+        // prettier-ignore
+        height: 16PX;
+        // prettier-ignore
+        line-height: 16PX;
+        margin-right: 8px;
+        text-align: center;
+        border: 1px solid black;
+      }
+    }
+  }
+}
+/*** 即将更新标记 ****/
+/deep/.el-badge__content.is-fixed {
+  right: 40px;
 }
 </style>
 <template>
-  <div class="query-data-pad">
-    <div
-      class="page-query-data"
-      v-if="dynamicTags.length > 0 || querySelectFlag"
-    >
-      <div class="page-query-data-title">所有房源&nbsp;></div>
-      <div class="page-query-data-tag">
-        <el-tag
-          :data-anchor="'首页列表筛选框' + tag.title + ' ' + tag.value"
-          :key="index"
-          class="query-tag anchor-point"
-          v-for="(tag, index) in dynamicTags"
-          closable
-          :disable-transitions="false"
-          @close="handleClose(tag)"
-          >{{ tag.title }}{{ tag.value }}</el-tag
-        >
-      </div>
-      <div class="select-tabs-cell" v-if="querySelectFlag">
-        <label
-          class="select-checkbox anchor-point"
-          data-anchor="首页电梯勾选框"
-        >
-          <input
-            type="checkbox"
-            @click="elevatorSelect()"
-            class="anchor-point"
-            data-anchor="首页电梯勾选框"
-          />
-          <span>电梯</span>
-        </label>
-        <label
-          class="select-checkbox anchor-point"
-          data-anchor="首页钥匙勾选框"
-        >
-          <input
-            type="checkbox"
-            @click="keySelect()"
-            class="anchor-point"
-            data-anchor="首页钥匙勾选框"
-          />
-          <span>钥匙</span>
-        </label>
-        <label
-          class="select-checkbox anchor-point"
-          data-anchor="首页独家勾选框"
-        >
-          <input
-            type="checkbox"
-            @click="onlySelect()"
-            class="anchor-point"
-            data-anchor="首页独家勾选框"
-          />
-          <span>独家</span>
-        </label>
-      </div>
-    </div>
-    <!-- 缩小时不显示 -->
-    <div class="select-tabs" v-if="!querySelectFlag">
-      <div class="select-tabs-cell">
-        <div
-          class="select-tabs-item anchor-point"
-          data-anchor="首页默认排序按钮"
-          :class="{ 'is-order': form.sortColumn == 'lastFollowTime' }"
-          @click="defaultSelect()"
-        >
-          <div
-            class="tabs-item-title anchor-point"
-            data-anchor="首页默认排序按钮"
-          >
-            默认排序
-          </div>
-        </div>
-        <div
-          class="select-tabs-item anchor-point"
-          data-anchor="首页价格排序按钮"
-          :class="{ 'is-order': form.sortColumn == 'price' }"
-          @click="priceSelect()"
-        >
-          <div
-            class="tabs-item-title anchor-point"
-            data-anchor="首页价格排序按钮"
-          >
-            价格
-          </div>
-          <i
-            class="el-icon-sort anchor-point"
-            data-anchor="首页价格排序按钮"
-          ></i>
-        </div>
-        <div
-          class="select-tabs-item anchor-point"
-          data-anchor="首页面单价排序按钮"
-          :class="{ 'is-order': form.sortColumn == 'unitPrice' }"
-          @click="unitPriceSelect()"
-        >
-          <div
-            class="tabs-item-title anchor-point"
-            data-anchor="首页单价排序按钮"
-          >
-            单价
-          </div>
-          <i
-            class="el-icon-sort anchor-point"
-            data-anchor="首页单价排序按钮"
-          ></i>
-        </div>
-        <div
-          class="select-tabs-item anchor-point"
-          data-anchor="首页面积排序按钮"
-          :class="{ 'is-order': form.sortColumn == 'inArea' }"
-          @click="inAreaSelect()"
-        >
-          <div
-            class="tabs-item-title anchor-point"
-            data-anchor="首页面积排序按钮"
-          >
-            面积
-          </div>
-          <i
-            class="el-icon-sort anchor-point"
-            data-anchor="首页面积排序按钮"
-          ></i>
-        </div>
-      </div>
-      <div class="select-tabs-cell">
-        <label
-          class="select-checkbox anchor-point"
-          data-anchor="首页电梯勾选框"
-        >
-          <input
-            type="checkbox"
-            @click="elevatorSelect()"
-            class="anchor-point"
-            data-anchor="首页电梯勾选框"
-          />
-          <span>电梯</span>
-        </label>
-        <label
-          class="select-checkbox anchor-point"
-          data-anchor="首页钥匙勾选框"
-        >
-          <input
-            type="checkbox"
-            @click="keySelect()"
-            class="anchor-point"
-            data-anchor="首页钥匙勾选框"
-          />
-          <span>钥匙</span>
-        </label>
-        <label
-          class="select-checkbox anchor-point"
-          data-anchor="首页独家勾选框"
-        >
-          <input
-            type="checkbox"
-            @click="onlySelect()"
-            class="anchor-point"
-            data-anchor="首页独家勾选框"
-          />
-          <span>独家</span>
-        </label>
-      </div>
-    </div>
-    <div
-      class="select-for-warp"
-      v-loading="loading"
-      element-loading-text="我在去获取数据的路上了~"
-    >
-      <template v-if="!querySelectFlag">
-        <template v-if="renderList.length > 0">
-          <!-- @dblclick="toHouseDetail(item)" -->
-          <div
-            class="select-for-item anchor-point"
-            data-anchor="首页房源信息点击列表"
-            v-for="(item, index) in renderList"
-            :key="index"
-            @click.stop="toHouseDetail(item)"
-          >
-            <div class="select-for-item-img">
-              <el-image
-                :src="item.picUrl + '?x-oss-process=style/thumb'"
-                fit="cover"
-              >
-                <div slot="placeholder" class="image-slot">
-                  加载中
-                  <span>...</span>
-                </div>
-                <div slot="error" fit="cover" class="image-slot">
-                  <el-image :src="'' | houseMiniImg"></el-image>
-                </div>
-              </el-image>
-            </div>
-            <div
-              class="select-for-item-data anchor-point"
-              data-anchor="首页房源信息点击列表"
-            >
-              <div class="item-data-top">
-                <div class="item-data-top-no overText">{{ item.houseNo }}</div>
-                <div class="item-data-top-tag">
-                  <div class="top-tag-item overText" v-if="item.keyOwner > 0">
-                    钥匙
-                  </div>
-                  <div
-                    class="top-tag-item overText"
-                    style="margin-left:5px"
-                    v-if="item.isOnly > 0"
-                  >
-                    独家
-                  </div>
-                </div>
-                <div class="broker-content" v-if="item.plate == 0">
-                  <img
-                    class="broker-img"
-                    :src="item.headimgurl | defaultImg"
-                    alt="经纪人"
-                  />
-                  <div class="brokerName">{{ item.brokerName }}/</div>
-                  <div class="deparName">{{ item.deptName }}</div>
-                </div>
-              </div>
-              <div class="item-data-plate">
-                <!-- 店公共盘 -->
-                <div class="plate-warp" v-if="plateResultMet(item.plate) != ''">
-                  {{ item.plate | plateResult }}
-                </div>
-                <div class="item-data-downPayment"></div>
-                <!-- 参考首付:
-                {{ item.price | downPaymentFilter(downPaymentPercent) }}万 -->
-              </div>
-              <div class="item-data-middle overText">{{ item.title }}</div>
-              <div class="item-data-bottom">
-                <div class="item-data-bottom-detali overText">
-                  {{ item.communityName }} &nbsp;/&nbsp;{{ item.inArea }}㎡
-                  &nbsp;/&nbsp;{{ item.rooms }}房{{ item.hall || 0 }}厅{{
-                    item.toilet || 0
-                  }}卫
-                </div>
-                <div class="item-data-bottom-price overText">
-                  ￥{{ item.price }}万
-                </div>
-                <div class="item-data-bottom-avgPirce overText">
-                  {{ item.unitPrice }}元/平
-                </div>
-              </div>
-            </div>
-            <!-- <div class="select-for-item-but">
-              <i
-                class="el-icon-document icon i"
-                @click.stop="toHouseDetail(item)"
-              ></i>
-            </div> -->
-          </div>
-        </template>
-        <template v-else>
-          <el-alert title="暂无数据" type="primary" center show-icon></el-alert>
-        </template>
-      </template>
-      <template v-else>
-        <div class="flex-cell">
-          <div class="flex-cell-tab">
-            <el-table
-              :data="renderList"
-              v-if="tableColumn.length > 0"
-              @sort-change="sortMethod"
-              :default-sort="{ prop: 'price', order: 'descending' }"
-              border
-            >
-              <el-table-column
-                v-for="(item, index) in tableColumn"
+  <div>
+    <div class="page-result-content">
+      <div class="page-posi-sticky filex-content">
+        <!-- 房屋类型 -->
+        <!-- <div class="head-nav-type">
+              <div
+                class="nav-type-item anchor-point"
+                :class="{ active: index == 0 }"
+                v-for="(item, index) in navToPage"
                 :key="index"
-                :prop="item.prop"
-                :label="item.label"
-                :min-width="item.width"
-                :sortable="item.order"
-                :formatter="item.formart"
-                :sort-orders="['ascending', 'descending']"
-                show-overflow-tooltip
-              ></el-table-column>
-              <el-table-column label="操作" fixed="right" width="80px">
-                <template slot-scope="scope">
-                  <el-button
-                    class="anchor-point"
-                    data-anchor="首页房源列表查看按钮"
-                    size="mini"
-                    type="primary"
-                    @click="toHouseDetail(scope.row)"
-                    >查看</el-button
-                  >
-                </template>
-              </el-table-column>
-            </el-table>
+                :data-anchor="'首页类型:' + item.title"
+                @click="navToPageBtn(item)"
+              >
+                {{ item.title }}
+              </div>
+            </div> -->
+        <navHeader></navHeader>
+        <!-- 头部按钮, 搜索 -->
+        <div class="page-result-head">
+          <!-- 选择楼盘 & 楼栋 & 房间号 & 跟单人姓名 -->
+          <div class="cascader-content" v-show="searchPanelChange">
+            <div class="cascader-content-build">
+              <!-- 楼栋 -->
+              <el-select
+                v-model="buildOptData"
+                placeholder="请输入楼盘名称"
+                class="input-content input_210 anchor-point"
+                clearable
+                filterable
+                remote
+                popper-class="options-custom-item anchor-point"
+                data-anchor="首页楼盘 => select"
+                @click.native="log_socket.sendUserActionData"
+                @focus="remoteBuildInput"
+                @change="remoteBuildChange"
+                :remote-method="buildRemoteMethod"
+                :loading="buildLoading"
+                value-key="value"
+              >
+                <el-option
+                  v-for="item in buildForList"
+                  class="anchor-point"
+                  :data-anchor="'首页列表楼盘 => select => option:' + item.name"
+                  @click.native="log_socket.sendUserActionData"
+                  :key="item.value"
+                  :label="item.name"
+                  :value="item"
+                >
+                </el-option>
+              </el-select>
+              <!-- 栋座 -->
+              <el-select
+                v-model="towerOptData"
+                placeholder="请输入栋座"
+                clearable
+                filterable
+                class="input-content input_175 anchor-point"
+                popper-class="options-custom-item anchor-point"
+                data-anchor="首页栋座 => select"
+                @click.native="log_socket.sendUserActionData"
+                value-key="value"
+                remote
+                :remote-method="queryRoomNo"
+                @change="remoteRoomNoChange"
+                :loading="towerLoading"
+              >
+                <el-option
+                  v-for="item in towerForList"
+                  class="anchor-point"
+                  :data-anchor="'首页列表栋座 => select => option:' + item.name"
+                  @click.native="log_socket.sendUserActionData"
+                  :key="item.value"
+                  :label="item.name"
+                  :value="item"
+                >
+                </el-option>
+              </el-select>
+              <!-- 房间号 -->
+              <el-select
+                v-model="roomOptData"
+                placeholder="请输入房号"
+                clearable
+                filterable
+                popper-class="options-custom-item anchor-point"
+                class="input-content input_120 anchor-point"
+                data-anchor="首页房号 => select"
+                @click.native="log_socket.sendUserActionData"
+                remote
+                :remote-method="queryRoomData"
+                :loading="roomLoading"
+                value-key="value"
+                @change="queryRoomDataChange"
+              >
+                <el-option
+                  v-for="item in roomForList"
+                  class="anchor-point"
+                  :data-anchor="'首页列表房号 => select => option:' + item.name"
+                  @click.native="log_socket.sendUserActionData"
+                  :key="item.value"
+                  :label="item.name"
+                  :value="item"
+                >
+                </el-option>
+              </el-select>
+            </div>
+
+            <el-input
+              type="text"
+              v-model="agentPerName"
+              placeholder="跟单人姓名"
+              class="input-content input_102 anchor-point"
+              :data-anchor="'首页搜索 跟单人姓名:' + agentPerName"
+            />
+            <button
+              class="btn-primary-back anchor-point"
+              @click="handleAgentPerName"
+              :data-anchor="'首页跟单人搜索{' + agentPerName + '}'"
+            >
+              搜索
+            </button>
+            <button
+              class="btn-primary-back btn-reset anchor-point"
+              @click="reset"
+              data-anchor="首页搜索框重置"
+            >
+              重置
+            </button>
           </div>
-          <definitionmenu
-            class="menuMarin"
-            :loading="menuLoading"
-            :renderList="menuRenderList"
-            :tableColumn="tableColumn"
-            :resetList="tableColumnField"
-            @change="tabColumnChange"
-          ></definitionmenu>
+          <!-- <div class="head-content-input">
+                  <input
+                    type="text"
+                    placeholder="请输入房源编号,楼盘名称"
+                    data-anchor="首页房源编号,楼盘名称输入框"
+                    class="content-input anchor-point"
+                    v-model="houseNoOrName"
+                    @keydown.enter="handleHouseNoOrName"
+                  />
+                  <button
+                    class="inquire-content anchor-point"
+                    @click="handleHouseNoOrName"
+                    :data-anchor="'首页房源编号,楼盘名称搜索{' + houseNoOrName + '}'"
+                  >
+                    <i class="el-icon-search"></i>
+                  </button>
+                </div> -->
+
+          <div class="head-fun-right">
+            <el-badge value="新">
+              <button
+                class="btn-primary anchor-point"
+                data-anchor="首页开发线索"
+                @click="navToPath('/buySellSystem/threadDevelop')"
+              >
+                <i class="iconxiansuo iconfont"></i>
+                开发线索
+              </button>
+            </el-badge>
+            <!-- <el-badge value="即将下线">
+              <button
+                class="btn-primary anchor-point"
+                data-anchor="首页管理入口"
+                @click="navToPath('/buySellSystem/shopDisk')"
+              >
+                <i class=" iconjichuguanli1 iconfont"></i>
+                管理入口
+              </button>
+            </el-badge> -->
+            <button
+              class="btn-primary anchor-point"
+              data-anchor="首页我的房源"
+              @click="navToPath('/buySellSystem/myHouse')"
+            >
+              <i class="icondaohang_wodefangyuan1 iconfont"></i>
+              我的房源
+            </button>
+            <button
+              class="btn-primary house-back anchor-point"
+              data-anchor="首页录入房源"
+              @click="navToPath('/buySellSystem/addHouse')"
+            >
+              <i class=" iconluru iconfont"></i>
+              录入房源
+            </button>
+          </div>
         </div>
-      </template>
+      </div>
+      <!-- <div class="placeholder-filex" :style="{ height: isFixedHeight }"></div> -->
+
+      <!-- nav类型切换 -->
+      <div class="tab-content">
+        <div class="tab-content-nav">
+          <el-badge
+            :value="item.value === 3 ? '新' : ''"
+            v-for="(item, index) in typeList"
+            :key="index"
+          >
+            <div
+              class="tab-content-item anchor-point"
+              :class="{ active: typeActiveIndex == index }"
+              :data-anchor="'首页找房:' + item.label"
+              @click="changeNavTypeIndex(index)"
+            >
+              {{ item.label }}
+            </div>
+          </el-badge>
+        </div>
+      </div>
+      <div class="search-content no-frist" v-show="panelChange">
+        <div class="head-content-input">
+          <input
+            type="text"
+            placeholder="请输入房源编号,楼盘名称"
+            data-anchor="首页房源编号,楼盘名称输入框"
+            class="content-input anchor-point"
+            v-model="houseNoOrName"
+            @keydown.enter="handleHouseNoOrName"
+          />
+          <button
+            class="inquire-content anchor-point"
+            @click="handleHouseNoOrName"
+            :data-anchor="'首页房源编号,楼盘名称搜索{' + houseNoOrName + '}'"
+          >
+            <i class="el-icon-search"></i>
+          </button>
+        </div>
+        <!-- 选择楼盘 & 楼栋 & 房间号 & 跟单人姓名 -->
+        <!-- <div class="cascader-content" v-show="searchPanelChange">
+              <div class="cascader-content-build">
+
+                <el-select
+                  v-model="buildOptData"
+                  placeholder="请输入楼盘名称"
+                  class="input-content input_210 anchor-point"
+                  clearable
+                  filterable
+                  remote
+                  popper-class="options-custom-item anchor-point"
+                  data-anchor="首页楼盘 => select"
+                  @click.native="log_socket.sendUserActionData"
+                  @focus="remoteBuildInput"
+                  @change="remoteBuildChange"
+                  :remote-method="buildRemoteMethod"
+                  :loading="buildLoading"
+                  value-key="value"
+                >
+                  <el-option
+                    v-for="item in buildForList"
+                    class="anchor-point"
+                    :data-anchor="'首页列表楼盘 => select => option:' + item.name"
+                    @click.native="log_socket.sendUserActionData"
+                    :key="item.value"
+                    :label="item.name"
+                    :value="item"
+                  >
+                  </el-option>
+                </el-select>
+
+                <el-select
+                  v-model="towerOptData"
+                  placeholder="请输入栋座"
+                  clearable
+                  filterable
+                  class="input-content input_175 anchor-point"
+                  popper-class="options-custom-item anchor-point"
+                  data-anchor="首页栋座 => select"
+                  @click.native="log_socket.sendUserActionData"
+                  value-key="value"
+                  remote
+                  :remote-method="queryRoomNo"
+                  @change="remoteRoomNoChange"
+                  :loading="towerLoading"
+                >
+                  <el-option
+                    v-for="item in towerForList"
+                    class="anchor-point"
+                    :data-anchor="'首页列表栋座 => select => option:' + item.name"
+                    @click.native="log_socket.sendUserActionData"
+                    :key="item.value"
+                    :label="item.name"
+                    :value="item"
+                  >
+                  </el-option>
+                </el-select>
+
+                <el-select
+                  v-model="roomOptData"
+                  placeholder="请输入房号"
+                  clearable
+                  filterable
+                  popper-class="options-custom-item anchor-point"
+                  class="input-content input_120 anchor-point"
+                  data-anchor="首页房号 => select"
+                  @click.native="log_socket.sendUserActionData"
+                  remote
+                  :remote-method="queryRoomData"
+                  :loading="roomLoading"
+                  value-key="value"
+                  @change="queryRoomDataChange"
+                >
+                  <el-option
+                    v-for="item in roomForList"
+                    class="anchor-point"
+                    :data-anchor="'首页列表房号 => select => option:' + item.name"
+                    @click.native="log_socket.sendUserActionData"
+                    :key="item.value"
+                    :label="item.name"
+                    :value="item"
+                  >
+                  </el-option>
+                </el-select>
+              </div>
+
+              <el-input
+                type="text"
+                v-model="agentPerName"
+                placeholder="跟单人姓名"
+                class="input-content input_102 anchor-point"
+                :data-anchor="'首页搜索 跟单人姓名:' + agentPerName"
+              />
+              <button
+                class="btn-primary-back anchor-point"
+                @click="handleAgentPerName"
+                :data-anchor="'首页跟单人搜索{' + agentPerName + '}'"
+              >
+                搜索
+              </button>
+            </div> -->
+        <!-- 范围 -->
+        <div class="search-content-item" v-show="searchPanelChange">
+          <div class="search-item-title">范围</div>
+          <div class="search-item-right">
+            <el-radio-group v-model="form.plate" size="small">
+              <el-radio
+                class="anchor-point"
+                data-anchor="首页选项 范围:不限"
+                label=""
+                border
+                >不限
+              </el-radio>
+              <el-radio
+                class="anchor-point"
+                data-anchor="首页选项 范围:跟单房源"
+                label="0"
+                border
+                >跟单房源
+              </el-radio>
+              <el-radio
+                class="anchor-point"
+                data-anchor="首页选项 范围:店公共盘"
+                label="1"
+                border
+                >店公共盘
+              </el-radio>
+              <el-radio
+                class="anchor-point"
+                data-anchor="首页选项 范围:公司公盘"
+                label="4"
+                border
+                >公司公盘
+              </el-radio>
+            </el-radio-group>
+          </div>
+        </div>
+        <!-- 类型 -->
+        <div class="search-content-item" v-show="searchPanelChange">
+          <div class="search-item-title">类型</div>
+          <div class="search-item-right">
+            <el-radio
+              label="不限"
+              class="anchor-point"
+              data-anchor="首页选项 类型:不限"
+              border
+              v-model="typeRadio"
+              @change="radioChange('typeList')"
+              >不限
+            </el-radio>
+            <el-checkbox-group
+              v-model="form.typeList"
+              @change="formCheckBoxChange('typeRadio')"
+            >
+              <el-checkbox
+                label="1"
+                class="anchor-point"
+                data-anchor="首页选项 类型:我的相关"
+                >我的相关
+              </el-checkbox>
+              <el-checkbox
+                label="2"
+                class="anchor-point"
+                data-anchor="首页选项 类型:关注房源"
+                >关注房源
+              </el-checkbox>
+              <el-checkbox
+                label="3"
+                class="anchor-point"
+                data-anchor="首页选项 类型:3天新上房源"
+                >3天新上房源
+              </el-checkbox>
+              <el-checkbox
+                label="4"
+                class="anchor-point"
+                data-anchor="首页选项 类型:产权人"
+                >产权人
+              </el-checkbox>
+              <el-checkbox
+                label="5"
+                class="anchor-point"
+                data-anchor="首页选项 类型:实际控制人"
+                >实际控制人
+              </el-checkbox>
+              <el-checkbox
+                label="6"
+                class="anchor-point"
+                data-anchor="首页选项 类型:投资房源"
+                >投资房源
+              </el-checkbox>
+            </el-checkbox-group>
+          </div>
+        </div>
+        <!-- 商圈 -->
+        <div class="search-content-item" v-if="RegionList.length != 0">
+          <div class="search-item-title">商圈</div>
+          <div class="search-item-right">
+            <el-radio
+              label="不限"
+              class="anchor-point"
+              data-anchor="首页选项 商圈:不限"
+              border
+              v-model="bussinessDistrictRadio"
+              @change="radioChange('bussinessDistrictList')"
+              >不限
+            </el-radio>
+            <el-checkbox-group
+              v-model="form.bussinessDistrictList"
+              @change="formCheckBoxChange('bussinessDistrictRadio')"
+            >
+              <el-checkbox
+                :label="item.name"
+                class="anchor-point"
+                :data-anchor="'首页选项 商圈:' + item.name"
+                v-for="item in RegionList"
+                :key="item.value"
+              ></el-checkbox>
+            </el-checkbox-group>
+          </div>
+        </div>
+        <!-- 价钱 -->
+        <div class="search-content-item" v-show="searchPanelChange">
+          <div class="search-item-title">价格</div>
+          <div class="search-item-right ">
+            <div class="data-content">
+              <el-radio-group
+                v-model="price.radioCheck"
+                size="small"
+                @change="
+                  packCheckChange(
+                    'priceList',
+                    'minPrice',
+                    'maxPrice',
+                    'price',
+                    $event,
+                    true,
+                    'name'
+                  )
+                "
+              >
+                <el-radio
+                  :label="item.name"
+                  class="anchor-point"
+                  :data-anchor="'首页选项 价格:' + item.name"
+                  border
+                  v-for="item in priceList"
+                  :key="item.name"
+                  >{{ item.name }}
+                </el-radio>
+              </el-radio-group>
+            </div>
+            <div class="input-group">
+              <div class="input-group-split">
+                <el-input
+                  placeholder="最小值"
+                  :data-anchor="'首页选项 价格最小值:' + price.minPrice"
+                  class="input-content is-suffix anchor-point"
+                  v-model="price.minPrice"
+                >
+                  <template v-slot:suffix>
+                    <i class="suffix-tips">万元</i>
+                  </template>
+                </el-input>
+                <i class="input-split"></i>
+                <el-input
+                  placeholder="最大值"
+                  :data-anchor="'首页选项 价格最大值:' + price.maxPrice"
+                  class="input-content is-suffix anchor-point"
+                  v-model="price.maxPrice"
+                >
+                  <template v-slot:suffix>
+                    <i class="suffix-tips">万元</i>
+                  </template>
+                </el-input>
+              </div>
+            </div>
+            <button
+              class="btn-primary-back anchor-point"
+              :data-anchor="
+                '首页选项 价格:确定{' +
+                  (price.minPrice && price.maxPrice
+                    ? price.minPrice + '~' + price.maxPrice
+                    : price.radioCheck) +
+                  '}'
+              "
+              @click="submitFormBtn('price', 'minPrice', 'maxPrice')"
+            >
+              确定
+            </button>
+          </div>
+        </div>
+        <!-- 面积 -->
+        <div class="search-content-item">
+          <div class="search-item-title">面积</div>
+          <div class="search-item-right ">
+            <div class="data-content">
+              <el-radio-group
+                v-model="area.radioCheck"
+                size="small"
+                @change="
+                  packCheckChange(
+                    'areaList',
+                    'minInArea',
+                    'maxInArea',
+                    'area',
+                    $event,
+                    true,
+                    'name'
+                  )
+                "
+              >
+                <el-radio
+                  :label="item.name"
+                  class="anchor-point"
+                  :data-anchor="'首页选项 面积:' + item.name"
+                  border
+                  v-for="item in areaList"
+                  :key="item.name"
+                  >{{ item.name }}
+                </el-radio>
+              </el-radio-group>
+            </div>
+            <div class="input-group">
+              <div class="input-group-split">
+                <el-input
+                  placeholder="最小值"
+                  class="input-content is-suffix anchor-point"
+                  :data-anchor="'首页选项 面积最小值:' + area.minInArea"
+                  v-model="area.minInArea"
+                >
+                  <template v-slot:suffix>
+                    <i class="suffix-tips">㎡</i>
+                  </template>
+                </el-input>
+                <i class="input-split"></i>
+                <el-input
+                  placeholder="最大值"
+                  class="input-content is-suffix anchor-point"
+                  :data-anchor="'首页选项 面积最大值:' + area.maxInArea"
+                  v-model="area.maxInArea"
+                >
+                  <template v-slot:suffix>
+                    <i class="suffix-tips">㎡</i>
+                  </template>
+                </el-input>
+              </div>
+            </div>
+            <button
+              class="btn-primary-back anchor-point"
+              :data-anchor="
+                '首页选项 面积:确定{' +
+                  (area.minInArea && area.maxInArea
+                    ? area.minInArea + '~' + area.maxInArea
+                    : area.radioCheck) +
+                  '}'
+              "
+              @click="submitFormBtn('area', 'minInArea', 'maxInArea')"
+            >
+              确定
+            </button>
+          </div>
+        </div>
+        <!-- 房型 -->
+        <div class="search-content-item" v-if="RoomsList.length != 0">
+          <div class="search-item-title">房型</div>
+          <div class="search-item-right ">
+            <div class="data-content">
+              <el-radio-group
+                v-model="room.value"
+                size="small"
+                @change="roomChange"
+              >
+                <el-radio label="不限" border>不限</el-radio>
+                <el-radio
+                  :label="item.value"
+                  class="anchor-point"
+                  :data-anchor="'首页选项 房型:' + item.name"
+                  border
+                  v-for="(item, index) in RoomsList"
+                  :key="index"
+                  >{{ item.name }}
+                </el-radio>
+              </el-radio-group>
+            </div>
+            <div class="input-group">
+              <div class="input-group-split">
+                <el-input
+                  placeholder="最小值"
+                  class="input-content is-suffix anchor-point"
+                  :data-anchor="'首页选项 房型最小值:' + room.minRoom"
+                  v-model="room.minRoom"
+                >
+                  <template v-slot:suffix>
+                    <i class="suffix-tips">房</i>
+                  </template>
+                </el-input>
+                <i class="input-split"></i>
+                <el-input
+                  placeholder="最大值"
+                  class="input-content is-suffix anchor-point"
+                  :data-anchor="'首页选项 房型最大值:' + room.maxRoom"
+                  v-model="room.maxRoom"
+                >
+                  <template v-slot:suffix>
+                    <i class="suffix-tips">房</i>
+                  </template>
+                </el-input>
+              </div>
+            </div>
+            <button
+              class="btn-primary-back anchor-point"
+              :data-anchor="
+                '首页选项 房型:确定{' +
+                  (room.minRoom && room.maxRoom
+                    ? room.minRoom + '~' + room.maxRoom
+                    : room.value) +
+                  '}'
+              "
+              @click="roomSubmit"
+            >
+              确定
+            </button>
+          </div>
+        </div>
+        <!-- 楼层 -->
+        <div class="search-content-item">
+          <div class="search-item-title">楼层</div>
+          <div class="search-item-right ">
+            <div class="data-content">
+              <el-radio-group
+                v-model="floor.radioCheck"
+                size="small"
+                @change="floorChange"
+              >
+                <el-radio
+                  :label="item.title"
+                  class="anchor-point"
+                  :data-anchor="'首页选项 楼层:' + item.title"
+                  border
+                  v-for="item in floorlist"
+                  :key="item.title"
+                  >{{ item.title }}
+                </el-radio>
+              </el-radio-group>
+            </div>
+            <div class="input-group">
+              <div class="input-group-split">
+                <el-input
+                  placeholder="最小值"
+                  class="input-content is-suffix anchor-point"
+                  :data-anchor="'首页选项 楼层最小值:' + floor.minFloor"
+                  v-model="floor.minFloor"
+                >
+                  <template v-slot:suffix>
+                    <i class="suffix-tips">层</i>
+                  </template>
+                </el-input>
+                <i class="input-split"></i>
+                <el-input
+                  placeholder="最大值"
+                  class="input-content is-suffix anchor-point"
+                  :data-anchor="'首页选项 楼层最大值:' + floor.maxFloor"
+                  v-model="floor.maxFloor"
+                >
+                  <template v-slot:suffix>
+                    <i class="suffix-tips">层</i>
+                  </template>
+                </el-input>
+              </div>
+            </div>
+            <button
+              class="btn-primary-back anchor-point"
+              :data-anchor="
+                '首页选项 楼层:确定{' +
+                  (floor.minFloor && floor.maxFloor
+                    ? floor.minFloor + '~' + floor.maxFloor
+                    : floor.radioCheck) +
+                  '}'
+              "
+              @click="floorBtn"
+            >
+              确定
+            </button>
+          </div>
+        </div>
+        <!-- 朝向 -->
+        <div class="search-content-item" v-if="faceList.length != 0">
+          <div class="search-item-title">朝向</div>
+          <div class="search-item-right">
+            <el-radio
+              label="不限"
+              class="anchor-point"
+              data-anchor="首页选项 朝向:不限"
+              border
+              v-model="faceRadio"
+              @change="radioChange('faceList')"
+              >不限
+            </el-radio>
+            <el-checkbox-group
+              v-model="form.faceList"
+              @change="formCheckBoxChange('faceRadio')"
+            >
+              <el-checkbox
+                :label="item.name"
+                class="anchor-point"
+                :data-anchor="'首页选项 朝向:' + item.name"
+                v-for="item in faceList"
+                :key="item.value"
+              ></el-checkbox>
+            </el-checkbox-group>
+          </div>
+        </div>
+        <!-- 装修 -->
+        <div
+          class="search-content-item"
+          v-if="RenovationList.length != 0"
+          v-show="searchPanelChange"
+        >
+          <div class="search-item-title">装修</div>
+          <div class="search-item-right">
+            <el-radio
+              label="不限"
+              class="anchor-point"
+              data-anchor="首页选项 装修:不限"
+              border
+              v-model="renovationRadio"
+              @change="radioChange('decorationList')"
+              >不限
+            </el-radio>
+            <el-checkbox-group
+              v-model="form.decorationList"
+              @change="formCheckBoxChange('renovationRadio')"
+            >
+              <el-checkbox
+                :label="item.name"
+                class="anchor-point"
+                :data-anchor="'首页选项 装修:' + item.name"
+                v-for="item in RenovationList"
+                :key="item.value"
+              ></el-checkbox>
+            </el-checkbox-group>
+          </div>
+        </div>
+        <!-- 用途 -->
+        <div class="search-content-item" v-if="PurposeList.length != 0">
+          <div class="search-item-title">用途</div>
+          <div class="search-item-right">
+            <el-radio
+              label="不限"
+              class="anchor-point"
+              data-anchor="首页选项 用途:不限"
+              border
+              v-model="purposeRadio"
+              @change="radioChange('houseUseList')"
+              >不限
+            </el-radio>
+            <el-checkbox-group
+              v-model="form.houseUseList"
+              @change="formCheckBoxChange('purposeRadio')"
+            >
+              <el-checkbox
+                :label="item.name"
+                class="anchor-point"
+                :data-anchor="'首页选项 用途:' + item.name"
+                v-for="item in PurposeList"
+                :key="item.value"
+              ></el-checkbox>
+            </el-checkbox-group>
+          </div>
+        </div>
+        <!-- 小学 -->
+        <div class="search-content-item" v-if="PrimarySchoolList.length != 0">
+          <div class="search-item-title">小学</div>
+          <div class="search-item-right">
+            <!-- <el-radio-group v-model="form.primarySchool" size="small">
+                      <el-radio label="" border>不限</el-radio>
+                      <el-radio border v-for="item in mathPrimary" :key="item.value">{{
+                        item.name
+                      }}</el-radio>
+                    </el-radio-group> -->
+            <el-radio
+              label="不限"
+              class="anchor-point"
+              :data-anchor="'首页选项 小学:不限'"
+              border
+              v-model="primarySchoolRadio"
+              @change="
+                radioChange(
+                  'primarySchoolList',
+                  true,
+                  'primarySchool',
+                  'temporaryPrimaryList'
+                )
+              "
+              >不限
+            </el-radio>
+            <el-checkbox-group v-model="temporaryPrimaryList">
+              <el-checkbox
+                :label="item.name"
+                class="anchor-point"
+                :data-anchor="'首页选项 小学:' + item.name"
+                v-for="item in mathPrimary"
+                :key="item.value"
+                @change="
+                  formCheckChange(
+                    'temporaryPrimaryList',
+                    'primarySchool',
+                    'primarySchoolList',
+                    'primarySchoolRadio'
+                  )
+                "
+              ></el-checkbox>
+            </el-checkbox-group>
+            <div class="select-content">
+              <el-select
+                v-model="primarySchool"
+                placeholder="请输入划片小学"
+                class="input-content anchor-point"
+                :data-anchor="'首页选项 小学 => select'"
+                @click.native="log_socket.sendUserActionData"
+                clearable
+                filterable
+                popper-class="options-custom-item"
+                @change="
+                  schoolChange(
+                    'primarySchoolList',
+                    $event,
+                    'temporaryPrimaryList',
+                    'primarySchoolRadio'
+                  )
+                "
+                multiple
+              >
+                <el-option
+                  class="options-item anchor-point"
+                  v-for="item in mathPrimaryAfter"
+                  :data-anchor="
+                    '首页选项 小学 => select => option:' + item.name
+                  "
+                  @click.native="log_socket.sendUserActionData"
+                  :key="item.value"
+                  :label="item.name"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </div>
+            <!-- <button
+                      class="btn-primary-back anchor-point"
+                      :data-anchor="'首页选项 小学:确定{' + form.primarySchoolList + '}'"
+                      @click="pushSelectSchool('primarySchoolList', 'primarySchool')"
+                    >
+                      确定
+                    </button> -->
+          </div>
+        </div>
+        <!-- 中学 -->
+        <div class="search-content-item" v-if="MiddleSchoolList.length != 0">
+          <div class="search-item-title">中学</div>
+          <div class="search-item-right">
+            <!-- <el-radio-group v-model="form.middleSchool" size="small">
+                      <el-radio label="" border>不限</el-radio>
+                      <el-radio
+                        :label="item.value"
+                        border
+                        v-for="item in mathMiddle"
+                        :key="item.value"
+                        >{{ item.name }}</el-radio
+                      >
+                    </el-radio-group> -->
+            <el-radio
+              label="不限"
+              class="anchor-point"
+              :data-anchor="'首页选项 中学:不限'"
+              border
+              v-model="middleSchoolRadio"
+              @change="
+                radioChange(
+                  'middleSchoolList',
+                  true,
+                  'middleSchool',
+                  'temporaryMiddleList'
+                )
+              "
+              >不限
+            </el-radio>
+            <el-checkbox-group v-model="temporaryMiddleList">
+              <el-checkbox
+                :label="item.name"
+                class="anchor-point"
+                :data-anchor="'首页选项 中学:' + item.name"
+                v-for="item in mathMiddle"
+                :key="item.value"
+                @change="
+                  formCheckChange(
+                    'temporaryMiddleList',
+                    'middleSchool',
+                    'middleSchoolList',
+                    'middleSchoolRadio'
+                  )
+                "
+              ></el-checkbox>
+            </el-checkbox-group>
+            <div class="select-content">
+              <el-select
+                v-model="middleSchool"
+                placeholder="请输入划片中学"
+                class="input-content anchor-point"
+                :data-anchor="'首页选项 中学 => select'"
+                @click.native="log_socket.sendUserActionData"
+                clearable
+                filterable
+                popper-class="options-custom-item"
+                @change="
+                  schoolChange(
+                    'middleSchoolList',
+                    $event,
+                    'temporaryMiddleList',
+                    'middleSchoolRadio'
+                  )
+                "
+                multiple
+              >
+                <el-option
+                  class="options-item anchor-point"
+                  v-for="item in mathMiddleAfter"
+                  :data-anchor="
+                    '首页选项 中学 => select => option:' + item.label
+                  "
+                  @click.native="log_socket.sendUserActionData"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </div>
+            <!-- <button
+                      class="btn-primary-back anchor-point"
+                      :data-anchor="'首页选项 中学:确定{' + form.middleSchoolList + '}'"
+                      @click="pushSelectSchool('middleSchoolList', 'middleSchool')"
+                    >
+                      确定
+                    </button> -->
+          </div>
+        </div>
+      </div>
+      <div class="change-content">
+        <span
+          @click="panelChangeBtn"
+          class="anchor-point"
+          data-anchor="首页展开选项/收起"
+          >展开选项/收起<i
+            class="iconfont iconxingzhuangjiehe1"
+            :class="{ rotate: panelChange }"
+          ></i
+        ></span>
+      </div>
     </div>
-    <div class="select-page-nav">
-      <el-pagination
-        @current-change="handleCurrentChange"
-        :current-page="pageJson.currentPage"
-        :page-size="pageJson.pageSize"
-        layout="total, prev, pager, next, jumper"
-        :total="pageJson.total"
-      ></el-pagination>
+    <div
+      class="tab-filter-radio"
+      v-show="typeActiveIndex !== 3 && typeActiveIndex !== 1"
+    >
+      <label
+        class="filter-radio-item anchor-point"
+        data-anchor="首页选项 可发58"
+      >
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isSendWuBa"
+        />
+        <span>可发58</span>
+      </label>
+      <label class="filter-radio-item anchor-point" data-anchor="首页选项 钥匙">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isKey"
+        />
+        <span>钥匙</span>
+      </label>
+      <label class="filter-radio-item anchor-point" data-anchor="首页选项 独家">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isOnly"
+        />
+        <span>独家</span>
+      </label>
+      <label
+        class="filter-radio-item anchor-point"
+        data-anchor="首页选项 VR房源"
+      >
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isVr"
+        />
+        <span>VR房源</span>
+      </label>
+      <!-- <label class="filter-radio-item anchor-point" data-anchor="首页选项 实勘">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isReal"
+        />
+        <span>实勘</span>
+      </label> -->
+      <label class="filter-radio-item anchor-point" data-anchor="首页选项 电梯">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isElevator"
+        />
+        <span>电梯</span>
+      </label>
     </div>
   </div>
 </template>
 
 <script>
-import definitionmenu from "@/components/definitionMenu";
-import tableMenu from "@/util/getTableMenu";
-export default {
-  inject: ["form", "Slider"],
-  components: {
-    definitionmenu
+import bus from "@/evenBus/but.js";
+//切换tab类型
+const TYPELIST = [
+  {
+    label: "全部房源",
+    value: 0
   },
-  props: {
-    querySelectFlag: {
-      type: Boolean,
-      default: true
-    }
+  {
+    label: "我的58房源",
+    value: 1
+  },
+  {
+    label: "学区找房",
+    value: 2
+  },
+  {
+    label: "成交房源",
+    value: 3
+  },
+  {
+    label: "成交对赌",
+    value: 4
+  },
+  {
+    label: "地图找房",
+    value: 5
+  }
+];
+//楼层
+const FLOORLIST = [
+  { title: "不限", value: { minFloor: "", maxFloor: "" } },
+  { title: "地下室", value: { minFloor: "-4", maxFloor: "-1" } },
+  { title: "一层", value: { minFloor: "1", maxFloor: "1" } },
+  { title: "顶层", value: { isTopFloor: "1" } }
+];
+import navHeader from "@/components/navHeader";
+import cascadeHouse from "@/minxi/cascadeHouse";
+export default {
+  mixins: [cascadeHouse],
+  inject: ["form", "clearPage"],
+  components: {
+    navHeader
   },
   watch: {
-    form: {
-      deep: true,
-      // immediate: true,
-      handler: function(value, ordvalue) {
-        this.renderTag(value);
-        this.getHouseData(JSON.parse(JSON.stringify(value)));
-      }
+    typeActiveIndex() {
+      this.clearPage.time = new Date().getTime();
     }
-  },
-  created() {
-    tableMenu.getTableMenu(this.tableColumnField, 16).then(e => {
-      this.menuLoading = false;
-      this.menuRenderList = e;
-      console.log(this.renderList, "this.renderListthis.renderList");
-      this.renderTag(this.form);
-      this.getHouseData(JSON.parse(JSON.stringify(this.form)));
-    });
   },
   data() {
     return {
-      dynamicTags: [],
-      menuRenderList: [],
-      loading: false,
-      pageJson: {
-        total: 1,
-        pageSize: 8,
-        currentPage: 1
+      isInitLoadroomList: false, // 选择楼栋是否加载房间列表
+      typeActiveIndex: 0, //nav类型激活Index
+      searchPanelChange: true, //搜索面板显隐
+      temporaryPrimaryValue: "", //临时记录小学select结果,用于删除筛选
+      temporaryMiddleValue: "", //临时记录中学select结果,用于删除筛选
+      isFixedHeight: "0px",
+      agentPerName: "", //跟单人姓名
+      houseNoOrName: "", //房源编号,楼盘名称
+      primarySchool: [], //小学select
+      middleSchool: [], //中学Select
+      temporaryPrimaryList: [], //小学select
+      temporaryMiddleList: [], //中学Select
+      middleSchoolRadio: "不限", //中学不限
+      purposeRadio: "不限", //房屋用途radio不限
+      primarySchoolRadio: "不限", //小学校radio
+      renovationRadio: "不限", //装修radio不限
+      faceRadio: "不限", //朝向radio不限
+      typeRadio: "不限", //类型radio不限
+      bussinessDistrictRadio: "不限", //商圈radio不限
+      price: {
+        radioCheck: "不限", //单选
+        minPrice: "", //最小价钱
+        maxPrice: "" //最高价钱
       },
-      tableColumnField: [
-        {
-          prop: "houseNo",
-          label: "房源编号",
-          width: "170",
-          order: false,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "communityName",
-          label: "小区名称",
-          order: false,
-          width: "150",
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "inArea",
-          label: "面积(m²)",
-          width: "110",
-          order: "custom",
-          disabled: false,
-          default: true,
-          formart: item => item.inArea + "m²"
-        },
-        {
-          prop: "price",
-          label: "售价(万元)",
-          width: "120",
-          order: "custom",
-          disabled: false,
-          default: true,
-          formart: item => item.price + "万元"
-        },
-        // {
-        //   prop: "downPayment",
-        //   label: "参考首付",
-        //   width: "120",
-        //   order: false,
-        //   disabled: false,
-        //   default: true,
-        //   formart: item =>
-        //     (item.price * this.downPaymentPercent).toFixed(1) + "万元"
-        // },
-        {
-          prop: "seenNum",
-          label: "被看次数",
-          width: "120",
-          order: "custom",
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "outfollow",
-          label: "未跟进天数",
-          width: "120",
-          order: "custom",
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "noSeenDay",
-          label: "未被看天数",
-          width: "120",
-          order: true,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "addTime",
-          label: "添加时间",
-          width: "120",
-          order: "custom",
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "brokerName",
-          label: "跟单人",
-          width: "120",
-          order: false,
-          disabled: false,
-          default: true,
-          formart: item =>
-            item.brokerName != undefined ? item.brokerName : item.agentName
-        },
-        {
-          prop: "houseType",
-          label: "户型",
-          width: "150",
-          order: false,
-          disabled: false,
-          default: true,
-          formart: item =>
-            (item.rooms || 0) +
-            "室" +
-            (item.hall || 0) +
-            "厅" +
-            (item.toilet || 0) +
-            "卫"
-        },
-        {
-          prop: "unitPrice",
-          label: "单价(元/㎡)",
-          width: "120",
-          order: "custom",
-          disabled: false,
-          default: true,
-          format: item => item.unitPrice + "元/㎡"
-        },
-        {
-          prop: "face",
-          label: "朝向",
-          width: "120",
-          order: false,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "floor",
-          label: "楼层",
-          width: "120",
-          order: false,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "decoration",
-          label: "装修",
-          width: "120",
-          order: false,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "addName",
-          label: "录入人",
-          width: "120",
-          order: false,
-          disabled: false,
-          default: true
-        }
-      ],
-      tableColumn: [],
-      menuLoading: true, //自定义菜单
-      renderList: [],
-      downPaymentPercent: 0.3 //首付的百分比
+      area: {
+        radioCheck: "不限", //单选
+        minInArea: "", // 最小面积
+        maxInArea: "" // 最高面积
+      },
+      floor: {
+        radioCheck: "不限", //单选
+        minFloor: "", //最低楼层
+        maxFloor: "" //最高楼层
+      },
+      room: {
+        value: "不限", //单选
+        minRoom: "", //最低房型
+        maxRoom: "" //最高房型
+      },
+      typeList: TYPELIST,
+      floorlist: FLOORLIST, //楼层
+      panelChange: false, //折叠面板
+      RegionList: [], //商圈
+      faceList: [], //朝向
+      areaList: [], //面积
+      priceList: [], //价钱
+      PrimarySchoolList: [], //小学
+      MiddleSchoolList: [], //中学
+      RoomsList: [], //房型
+      RenovationList: [], //装修
+      PurposeList: [] //用途
     };
   },
-  filters: {
-    downPaymentFilter(value, downPaymentPercent) {
-      return (value * downPaymentPercent).toFixed(1);
+  computed: {
+    mathPrimary() {
+      if (this.PrimarySchoolList.length == 0) return [];
+      return this.PrimarySchoolList.slice(0, 4);
     },
-    plateResult(value) {
-      let plate = {
-        //  0: "个人跟单房源",
-        "1": "店公共盘",
-        "4": "公司公盘"
-        //  6: "暂不售",
-        //  7: "我售",
-        //  8: "业主自售",
-        // 9: "他司售",
-        // 10: "无效"
-      };
-      return plate[value] ? plate[value] : "";
+    mathPrimaryAfter() {
+      if (this.PrimarySchoolList.length < 4) return [];
+      return this.PrimarySchoolList.slice(4);
+    },
+    mathMiddle() {
+      if (this.MiddleSchoolList.length == 0) return [];
+      return this.MiddleSchoolList.slice(0, 4);
+    },
+    mathMiddleAfter() {
+      if (this.MiddleSchoolList.length < 4) return [];
+      return this.MiddleSchoolList.slice(4);
     }
   },
+  created() {
+    this.mapGetPanelData();
+  },
   methods: {
-    plateResultMet(value) {
-      return this.$options.filters.plateResult(value);
+    /**
+     * @example: 重置
+     */
+    reset() {
+      this.searchPanelChange = true;
+      this.temporaryPrimaryList = [];
+      this.temporaryMiddleList = [];
+      this.typeActiveIndex = 0;
+      bus.$emit("modifyTableColumn", 0);
+      this.resetData();
     },
-    elevatorSelect() {
-      if (this.form.elevator != "") {
-        this.form.elevator = "";
-      } else {
-        this.form.elevator = "1";
-      }
+    /**
+     * @example: 重置查询条件数据
+     */
+    resetData() {
+      //Object.assign(this.$data, this.$options.data.call(this));
+      Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
+      Object.assign(this.$data.price, this.$options.data().price);
+      Object.assign(this.$data.area, this.$options.data().area);
+      Object.assign(this.$data.floor, this.$options.data().floor);
+      Object.assign(this.$data.room, this.$options.data().room);
+      this.typeActiveIndex = 0;
+      this.roomOptData = {};
+      this.towerOptData = {};
+      this.buildOptData = {};
+      this.roomForList = [];
+      this.towerForList = [];
+      this.buildForList = [];
+      this.agentPerName = ""; //跟单人姓名
+      this.houseNoOrName = ""; //房源编号,楼盘名称
+      this.primarySchool = []; //小学select
+      this.middleSchool = []; //中学Select
+      this.typeRadio = "不限"; //类型radio不限
+      this.bussinessDistrictRadio = "不限"; //商圈radio不限
+      this.middleSchoolRadio = "不限"; //中学不限
+      this.purposeRadio = "不限"; //房屋用途radio不限
+      this.primarySchoolRadio = "不限"; //小学校radio
+      this.renovationRadio = "不限"; //装修radio不限
+      this.faceRadio = "不限"; //朝向radio不限
+      this.temporaryPrimaryValue = "";
+      this.temporaryMiddleValue = "";
     },
-    tabColumnChange(e, length = 0) {
-      console.log(e, "e");
-      this.tableColumn = e;
-      if (length > 0) {
-        let prop = e.map(item => {
-          return { prop: item.prop };
+    /**
+     * @example: 顶部Tab点击
+     * @param {Object} item
+     */
+    navToPageBtn(item) {
+      if (!item.private) {
+        this.$msgbox({
+          title: "温馨提示",
+          message: <div> 功能正在开发中，敬请期待</div>,
+          showCancelButton: false
         });
-        tableMenu.insert(prop, 16);
       }
     },
-    toHouseDetail(item) {
-      let id = item.id;
-      console.log(item, "谢谢谢谢谢谢谢谢");
-      if (item.hasOwnProperty("houseId")) {
-        id = item.houseId;
-      }
-      this.$router.push({
-        name: "houseDetails",
-        params: { houseId: id, dept: item.perDept }
-      });
+    /**
+     * @example: 搜索跟单人姓名
+     */
+    handleAgentPerName() {
+      this.form.agentPerName = this.agentPerName;
     },
-    //远程排序
-    sortMethod(item) {
-      this.form.sortColumn = item.prop;
-      this.form.sortType = item.order;
-      //  this.getHouseData(JSON.parse(JSON.stringify(value)));
-      console.log(item);
-    },
-    keySelect() {
-      if (this.form.keyOwner != "") {
-        this.form.keyOwner = "";
+    //跳转页面
+    navToPath(path) {
+      if (
+        path == "/buySellSystem/myHouse" ||
+        path == "/buySellSystem/threadDevelop"
+      ) {
+        window.open(this.$router.resolve(path).href, "_blank");
       } else {
-        this.form.keyOwner = "1";
+        this.$router.push({ path: path });
       }
     },
-    onlySelect() {
-      if (this.form.isOnly != "") {
-        this.form.isOnly = "";
-      } else {
-        this.form.isOnly = "1";
-      }
+    /**
+     * @example: 处理房源编号，楼盘名称点击查询
+     */
+
+    handleHouseNoOrName() {
+      this.form.keyWord = this.houseNoOrName;
     },
-    defaultSelect() {
-      this.form.sortColumn = "lastFollowTime";
-      this.form.sortType = "descending";
-    },
-    priceSelect() {
-      this.form.sortColumn = "price";
-      if (this.form.sortType == "ascending") {
-        this.form.sortType = "descending";
-      } else {
-        this.form.sortType = "ascending";
-      }
-      console.log(this.form.sortType);
-    },
-    inAreaSelect() {
-      this.form.sortColumn = "inArea";
-      if (this.form.sortType == "ascending") {
-        this.form.sortType = "descending";
-      } else {
-        this.form.sortType = "ascending";
-      }
-      console.log(this.form.sortType);
-    },
-    unitPriceSelect() {
-      this.form.sortColumn = "unitPrice";
-      if (this.form.sortType == "ascending") {
-        this.form.sortType = "descending";
-      } else {
-        this.form.sortType = "ascending";
-      }
-      console.log(this.form.sortType);
-    },
-    InitPageJson() {
-      this.pageJson = { total: 1, currentPage: 1, pageSize: 8 };
-    },
-    getHouseData(value, initPage = true) {
-      let that = this;
-      this.loading = true;
-      Object.keys(value).forEach(item => {
-        if (value[item] instanceof Array) {
-          value[item] = value[item].join(",");
+    /**
+     * @example: 添加select选中到筛选结果
+     * @param {string} field
+     * @param {string} selectFieldValue
+     */
+    pushSelectSchool(field, selectFieldValue) {
+      let index = -1;
+      if (this[selectFieldValue] !== "") {
+        index = this.form[field].findIndex(
+          item => item == this[selectFieldValue]
+        );
+        if (index == -1) {
+          this.form[field].push(this[selectFieldValue]);
         }
-      });
-      let actionUrl = value.action;
-      value.action = "";
-      console.log(value, "==============>?");
-      let restuleParms = Object.assign({}, value, {
-        page: that.pageJson.currentPage,
-        limit: that.pageJson.pageSize
-      });
+      }
+    },
+    /**
+     * @example: 学校selectChange选择
+     * @param {string } field
+     * @param {string} e
+     */
+    schoolChange(field, e, temporaryField, radio) {
+      this.form[field] = Array.from(new Set([...e, ...this[temporaryField]]));
+      if (this.form[field].length) {
+        this[radio] = "";
+      } else {
+        this[radio] = "不限";
+      }
+    },
+    /**
+     * @example: 修改nav类型激活Index
+     * @param {Number}  index
+     */
+    changeNavTypeIndex(index) {
+      this.typeActiveIndex = index;
+      bus.$emit("modifyTableColumn", index);
+      if (index == 2 || index == 5) {
+        this.navToPageBtn({ private: false });
+        return;
+      } else if (index == 3) {
+        this.searchPanelChange = false;
+      } else {
+        this.searchPanelChange = true;
+      }
+      this.resetData();
+      if (index != this.typeActiveIndex) {
+        this.typeActiveIndex = index;
+      }
+      switch (index) {
+        case 3:
+          this.form.sortColumn = "tradeTime";
+          break;
+        case 4:
+          this.form.isBet = "1";
+          break;
+      }
+    },
+    /**
+     * @example: 折叠面板
+     */
+    panelChangeBtn() {
+      this.panelChange = !this.panelChange;
+    },
+    /**
+     * @example: 获取筛选列表
+     * @param {String}  constant 列表名称
+     */
+    queryConstant(constant) {
       return this.$api
         .get({
-          url: actionUrl,
-          token: false,
-          data: restuleParms
-        })
-        .then(e => {
-          let data = e.data;
-          if (initPage) that.InitPageJson();
-          if (data.code == 200) {
-            console.log(data);
-            that.renderList = data.data.data;
-            that.pageJson.total = data.data.dataCount;
+          url: "/mateHouse/queryConstant",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            constant: constant
           }
         })
-        .finally(() => {
-          that.loading = false;
+        .then(e => {
+          if (e.data.code == 200) {
+            return [e.data.data, constant];
+          }
         });
     },
-    //创建需要渲染的标签
-    renderTag(value) {
-      let that = this;
-      console.log(value);
-      //清空
-      this.dynamicTags = [];
-      //价格
-      if (value.minPrice !== "") {
-        this.dynamicTags.push({
-          title: `价格:${value.minPrice}-${
-            value.maxPrice == "9999" ? "无限" : value.maxPrice
-          }万`,
-          field: "price",
-          arr: false
+    /**
+     * @example: 统一获取列表数据
+     */
+    mapGetPanelData() {
+      //需要获取接口的数据对象
+      //key 传递接口的数据参数
+      //value 返回值结果对象名称
+      const panelMap = new Map([
+        ["Region", "RegionList"],
+        ["face", "faceList"],
+        ["PrimarySchool", "PrimarySchoolList"],
+        ["MiddleSchool", "MiddleSchoolList"],
+        ["Rooms", "RoomsList"],
+        ["Renovation", "RenovationList"],
+        ["Purpose", "PurposeList"],
+        ["Price", "priceList"],
+        ["Area", "areaList"]
+      ]);
+      for (let item of panelMap.keys()) {
+        this.queryConstant(item).then(([data, itemName]) => {
+          this[panelMap.get(itemName)] = data;
         });
       }
-      //首付
-      if (value.minDownPayment !== "") {
-        this.dynamicTags.push({
-          title: `首付:${(
-            value.minDownPayment * this.downPaymentPercent
-          ).toFixed(1)}-${
-            value.maxDownPayment == "9999"
-              ? "无限"
-              : (value.maxDownPayment * this.downPaymentPercent).toFixed(1)
-          }万`,
-          field: "downPayment",
-          arr: false
-        });
+    },
+    /**
+     * @example: 价钱范围,面积范围,楼层范围,统一提交输入框的数据到form
+     * @param { string } field  等于当前组件存放数据的父级对象名称
+     * @param { string } min  等于form注入里的min名称 form 与 field min 对应
+     * @param { string } max  等于form注入里的max名称 form 与 field max 对应
+     */
+    submitFormBtn(field, min, max) {
+      if (
+        (field == "area" || field == "price") &&
+        !(
+          /^0\.\d+$|^[1-9]+(\.\d+|\d+)?$/.test(this[field][min]) &&
+          /^0\.\d+$|^[1-9]+(\.\d+|\d+)?$/.test(this[field][max])
+        )
+      ) {
+        this.$message.warning("请输入正数");
+        return;
       }
-      //面积
-      if (value.minInArea !== "") {
-        this.dynamicTags.push({
-          title: `面积:${value.minInArea}-${
-            value.maxInArea == "9999" ? "无限" : value.maxInArea
-          }㎡`,
-          field: "area",
-          arr: false
-        });
+      if (
+        field == "floor" &&
+        !(
+          /^(-)?[1-9]?[0-9]*$/.test(this[field][min]) &&
+          /^(-)?[1-9]?[0-9]*$/.test(this[field][max])
+        )
+      ) {
+        this.$message.warning("请输入整数");
+        return;
       }
-      //楼层
-      if (value.minFloor !== "") {
-        this.dynamicTags.push({
-          title: `楼层:${value.minFloor}-${
-            value.maxFloor == "9999" ? "无限" : value.maxFloor
-          }层`,
-          field: "floot",
-          arr: false
-        });
+      if (parseFloat(this[field][min]) >= parseFloat(this[field][max])) {
+        this.$message.warning("最大值应该大于最小值");
+        return;
       }
+      if (this[field][min] === "" && this[field][max] === "") return;
 
-      //楼栋号
-      if (value.cbNo != null && value.cbNo != "") {
-        this.dynamicTags.push({
-          title: `楼栋号:${value.cbNo}`,
-          field: "cbNo",
-          arr: false
-        });
+      this[field].radioCheck = ""; //
+      this.form[min] = this[field][min];
+      this.form[max] = this[field][max];
+    },
+    floorBtn() {
+      if (this.form.isTopFloor == "1") {
+        this.form.isTopFloor = "";
+        this.floor.radioCheck = "";
+        return;
       }
-
-      //房间号
-      if (value.roomNumber != null && value.roomNumber != "") {
-        this.dynamicTags.push({
-          title: `房间号:${value.roomNumber}`,
-          field: "roomNumber",
-          arr: false
-        });
-      }
-      //楼盘名称
-      if (value.communityName != null && value.communityName != "") {
-        this.dynamicTags.push({
-          title: `楼盘名称:${value.communityName}`,
-          field: "communityName",
-          arr: false
-        });
-      }
-      //房源类型
-      if (value.title != null && value.title != "") {
-        this.dynamicTags.push({
-          title: `房源类型:${value.title}`,
-          field: "type",
-          arr: false
-        });
+      this.submitFormBtn("floor", "minFloor", "maxFloor");
+    },
+    floorChange(e) {
+      if (e == "顶层") {
+        this.form.isTopFloor = "1";
+        this.form.minFloor = "";
+        this.form.maxFloor = "";
+        this.floor.minFloor = "";
+        this.floor.maxFloor = "";
       } else {
-        this.dynamicTags.push({
-          title: `房源类型:全部在售`,
-          field: "type",
-          arr: false
-        });
-      }
-      //商圈
-      this.appendFormTag(value.business, "商圈", "business");
-      //房型
-      this.appendFormTag(value.houseType, "房型", "houseType");
-      //装修
-      this.appendFormTag(value.renovation, "装修", "renovation");
-      //房屋用途
-      this.appendFormTag(value.purpose, "房屋用途", "purpose");
-      //朝向
-      this.appendFormTag(value.face, "朝向", "face");
-      //小学
-      this.appendFormTag(value.primarySchool, "小学", "primarySchool");
-      //中学
-      this.appendFormTag(value.middleSchool, "中学", "middleSchool");
-      if (value.searchInfo != null && value.searchInfo != "") {
-        this.dynamicTags.push({
-          title: `搜索关键字:${value.searchInfo}`,
-          field: "searchInfo",
-          arr: false
-        });
+        if (this.form.isTopFloor == "1") {
+          this.form.isTopFloor = "";
+        }
+        this.packCheckChange("floorlist", "minFloor", "maxFloor", "floor", e);
       }
     },
-    appendFormTag(to, titleName, fieldName) {
-      //房型
-      to.forEach(item => {
-        this.dynamicTags.push({
-          title: `${titleName}:`,
-          value: `${item}`,
-          field: `${fieldName}`,
-          arr: true
-        });
+    /**
+     * @example:传参封装方法 需要checkbox多选的统一封装
+     * @param { stirng } scopeList 需要遍历的数组名称
+     * @param { string } min 同上
+     * @param { string } max 同上
+     * @param { string } field 同上
+     * @param { string } event change结果
+     */
+    packCheckChange(
+      scopeList,
+      min,
+      max,
+      field,
+      event,
+      IsParse = false,
+      properName = "title"
+    ) {
+      const [result] = this[scopeList].filter((fItem, fIndex) => {
+        if (fItem[properName] == event) return fItem;
       });
-    },
-    filterSplice(e) {
-      return this.form[e.field].findIndex(item => {
-        return item == e.value;
-      });
-    },
-    //标签关闭
-    handleClose(e) {
-      if (e.arr) {
-        // 删除多选
-        this.form[e.field].splice(this.filterSplice(e), 1);
-      } else {
-        // 删除 slider
 
-        if (e.field == "price") {
-          this.Slider.priceSlider = [20, 20];
-          this.form.maxPrice = "";
-          this.form.minPrice = "";
-        }
-        if (e.field == "area") {
-          this.Slider.areaSlider = [20, 20];
-          this.form.maxInArea = "";
-          this.form.minInArea = "";
-        }
-        if (e.field == "floot") {
-          this.Slider.flootSlider = [-2, -2];
-          this.form.maxFloor = "";
-          this.form.minFloor = "";
-        }
-        if (e.field == "communityName") {
-          this.form.communityName = "";
-          this.form.cbNo = "";
-          this.form.roomNumber = "";
-          this.form.comId = "";
-          this.form.cbId = "";
-          this.form.roomNo = "";
-        }
-        if (e.field == "cbNo") {
-          this.form.cbNo = "";
-          this.form.roomNumber = "";
-          this.form.cbId = "";
-          this.form.roomNo = "";
-        }
-        if (e.field == "roomNumber") {
-          this.form.roomNumber = "";
-          this.form.roomNo = "";
-        }
-        if (e.field == "searchInfo") {
-          this.form.searchInfo = "";
-        }
+      const value = IsParse ? JSON.parse(result.value) : result.value;
+
+      this.form[min] = value[min];
+
+      this.form[max] = value[max];
+
+      this[field][min] = "";
+
+      this[field][max] = "";
+    },
+    /**
+     * @example: 房型的选择的change事件
+     */
+    roomChange(value) {
+      this.room.maxRoom = "";
+      this.room.minRoom = "";
+      this.form.roomTypeList = value == "不限" ? [] : [value];
+    },
+    /**
+     * @example: room确定查询按钮事件
+     */
+    roomSubmit() {
+      if (
+        !(
+          /^[1-9][0-9]*$/.test(this.room.minRoom) &&
+          /^[1-9][0-9]*$/.test(this.room.maxRoom)
+        )
+      ) {
+        this.$message.warning("请输入正整数");
+        return;
+      }
+      if (parseInt(this.room.minRoom) >= parseInt(this.room.maxRoom)) {
+        this.$message.warning("房型最大值应该大于房型最小值");
+        return;
+      }
+      let result = [];
+      for (
+        let i = 0, end = this.room.maxRoom - this.room.minRoom;
+        i <= end;
+        i++
+      ) {
+        result.push(parseInt(this.room.minRoom) + i);
+      }
+      this.room.value = "";
+      this.form.roomTypeList = result;
+    },
+    /**
+     * @example: 朝向radio change 事件
+     * @param {string } field
+     */
+    radioChange(field, isClear, field2, field3) {
+      this.form[field] = [];
+      if (isClear) {
+        this[field] = "";
+        this[field2] = "";
+        this[field3] = [];
       }
     },
-    //跳转第几页
-    handleCurrentChange(e) {
-      this.pageJson.currentPage = e;
-      this.getHouseData(JSON.parse(JSON.stringify(this.form)), false);
+    /**
+     * @example: 朝向checkboxChange事件
+     *
+     */
+    formCheckBoxChange(field) {
+      this[field] = "";
+    },
+    /**
+     * @example: 学校多选项值改变事件(判断下拉多选框是否存在相同选项，存在则数据联动)
+     * @param {string } type 学校类型
+     * @param {string } name 选项字段
+     * @param {string } val 值
+     */
+    formCheckChange(type, selectFeield, field, radio) {
+      this.form[field] = Array.from(
+        new Set([...this[type], ...this[selectFeield]])
+      );
+      if (this.form[field].length) {
+        this[radio] = "";
+      } else {
+        this[radio] = "不限";
+      }
     }
   }
 };

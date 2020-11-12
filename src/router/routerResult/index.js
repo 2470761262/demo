@@ -4,7 +4,10 @@ export default [
     path: "/buySellSystem/houseList",
     meta: {
       keepAlive: true,
-      title: "首页"
+      title: "首页",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
     },
     component: () =>
       import(
@@ -12,11 +15,29 @@ export default [
       )
   },
   {
+    //买卖系统开发线索
+    path: "/buySellSystem/threadDevelop",
+    meta: {
+      keepAlive: true,
+      title: "开发线索",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "threadDevelop" */ "@/pages/buySellSystem/threadDevelop/threadDevelop.vue"
+      )
+  },
+  {
     //买卖系统录入房源
-    path: "/buySellSystem/houseDetails",
+    path:
+      "/buySellSystem/houseDetails/:houseId/:browse?/:key?/:dept?/:detailType?",
     name: "houseDetails",
     meta: {
-      title: "房源详情"
+      title: "房源详情",
+      // isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
     },
     component: () =>
       import(
@@ -25,7 +46,7 @@ export default [
   },
   {
     //买卖系统历史房源
-    path: "/buySellSystem/historyDetails",
+    path: "/buySellSystem/historyDetails/:houseId/:tradeType?/:browse?/:key?",
     name: "historyDetails",
     meta: {
       title: "历史详情"
@@ -37,7 +58,7 @@ export default [
   },
   {
     //买卖系统验证房源
-    path: "/buySellSystem/validateHouseDetails",
+    path: "/buySellSystem/validateHouseDetails/:houseId",
     name: "validateHouseDetails",
     meta: {
       title: "验真详情"
@@ -49,7 +70,7 @@ export default [
   },
   {
     //买卖系统楼盘详情
-    path: "/buySellSystem/buildingHouseDetail",
+    path: "/buySellSystem/buildingHouseDetail/:houseId/:browse?/:key?",
     name: "buildingHouseDetail",
     meta: {
       title: "楼盘详情"
@@ -61,7 +82,7 @@ export default [
   },
   {
     //买卖系统交易房源详情
-    path: "/buySellSystem/tradeHouseDetail",
+    path: "/buySellSystem/tradeHouseDetail/:houseId/:houseType?/:browse?/:key?",
     name: "tradeHouseDetail",
     meta: {
       title: "房源历史交易详情"
@@ -73,7 +94,8 @@ export default [
   },
   {
     //潜在出售房源详情
-    path: "/buySellSystem/potentialHouseDetail",
+    path:
+      "/buySellSystem/potentialHouseDetail/:houseId/:houseType?/:browse?/:key?",
     name: "potentialHouseDetail",
     meta: {
       title: "潜在出售房源详情",
@@ -128,6 +150,156 @@ export default [
       import(
         /* webpackChunkName: "chiefRecommendHouse" */ "@/pages/buySellSystem/houseRecommend/chiefRecommendHouse.vue"
       )
+  },
+  {
+    path: "/buySellSystem/validateHome",
+    name: "validateHome",
+    meta: {
+      title: "验真首页",
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "validateHome" */ "@/pages/buySellSystem/newvalidate/validateHome.vue"
+      )
+  },
+  {
+    path: "/buySellSystem/messageValidate",
+    name: "messageValidate",
+    meta: {
+      title: "信息员验真",
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "messageValidate" */ "@/pages/buySellSystem/newvalidate/messageValidate.vue"
+      )
+  },
+  {
+    path: "/buySellSystem/pMsgValidate",
+    name: "pMsgValidate",
+    meta: {
+      title: "短信验真",
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "pMsgValidate" */ "@/pages/buySellSystem/newvalidate/pMsgValidate.vue"
+      )
+  },
+  {
+    path: "/buySellSystem/wxValidate",
+    name: "wxValidate",
+    meta: {
+      title: "微信验真",
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "wxValidate" */ "@/pages/buySellSystem/newvalidate/wxValidate.vue"
+      )
+  },
+  {
+    //我的房源
+    path: "/buySellSystem/myHouse",
+    redirect: "/myHouse/myRole",
+    meta: {
+      title: "我的房源",
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "myHouse" */ "@/pages/buySellSystem/myHouse/myHouse.vue"
+      ),
+    children: [
+      {
+        //我的角色
+        path: "/myHouse/myRole",
+        name: "myRole",
+        meta: {
+          title: "我的角色",
+          keepAlive: true,
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "myRole" */ "@/pages/buySellSystem/myHouse/myRole/myRole.vue"
+          )
+      },
+      {
+        //我的验真
+        path: "/myHouse/myValidate",
+        name: "myValidate",
+        meta: {
+          title: "我的验真",
+          keepAlive: true,
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "myValidate" */ "@/pages/buySellSystem/myHouse/myValidate/myValidate.vue"
+          )
+      },
+      {
+        //我的审核
+        path: "/myHouse/myExamine",
+        name: "myExamine",
+        meta: {
+          title: "我的审核",
+          keepAlive: true,
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "myExamine" */ "@/pages/buySellSystem/myHouse/myExamine/myExamine.vue"
+          )
+      },
+      {
+        //我的对赌
+        path: "/myHouse/myBet",
+        name: "myBet",
+        meta: {
+          title: "我的对赌",
+          keepAlive: true,
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "myBet" */ "@/pages/buySellSystem/myHouse/myBet/myBet.vue"
+          )
+      },
+      {
+        // VR拍摄
+        path: "/myHouse/vrShooting",
+        name: "vrShooting",
+        meta: {
+          title: "VR拍摄",
+          keepAlive: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "vrShooting" */ "@/pages/buySellSystem/myHouse/vrShooting/vrShooting.vue"
+          )
+      },
+      {
+        path: "/myHouse/saleStatusRecord",
+        name: "saleStatusRecord",
+        meta: {
+          title: "转换状态记录",
+          keepAlive: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "saleStatusRecord" */ "@/pages/buySellSystem/myHouse/saleStatusRecord/saleStatusRecord.vue"
+          )
+      }
+    ]
   },
   {
     //资源库-无号码-录入号码
@@ -194,6 +366,267 @@ export default [
       import(
         /* webpackChunkName: "addFloorList" */ "@/pages/buySellSystem/addFloorList/addFloorList.vue"
       )
+  },
+  {
+    //数据看板配置列表
+    path: "/report/reportTableList",
+    meta: {
+      title: "数据看板表管理"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "reportConfList" */ "@/pages/report/table/reportTableList.vue"
+      )
+  },
+  {
+    path: "/report/addTable",
+    name: "addTable",
+    meta: {
+      title: "添加表"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "addReport" */ "@/pages/report/table/addTable.vue"
+      )
+  },
+  {
+    //数据看板配置列表
+    path: "/report/reportConfList",
+    meta: {
+      title: "数据看板配置列表"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "reportConfList" */ "@/pages/report/reportConfList.vue"
+      )
+  },
+  {
+    //数据看板
+    path: "/report/reportDataList",
+    meta: {
+      title: "看板数据"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "reportDataList" */ "@/pages/report/reportDataList.vue"
+      )
+  },
+  {
+    path: "/buySellSystem/resourceManage",
+    redirect: "/buySellSystem/resourceManageList",
+    component: () =>
+      import(
+        /* webpackChunkName: "resourceManage" */ "@/pages/buySellSystem/resourceManage/index.vue"
+      ),
+    children: [
+      {
+        path: "/buySellSystem/resourceManageList",
+        meta: {
+          title: "资源库管理",
+          isMapNav: true, //不需要导航
+          isPad: true, //不需要el-main padding
+          keepAlive: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "resourceManageList" */ "@/pages/buySellSystem/resourceManage/list.vue"
+          )
+      },
+      {
+        path: "/buySellSystem/resourceManageDetail/:id",
+        name: "resourceManageDetail",
+        meta: {
+          title: "资源库管理",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "resourceManageDetail" */ "@/pages/buySellSystem/resourceManage/detail.vue"
+          )
+      }
+    ]
+  },
+  {
+    // 房源系统-管理入口
+    path: "/buySellSystem/managementEntrance",
+    redirect: "/managementEntrance/business",
+    meta: {
+      title: "管理入口",
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "managementEntrance" */ "@/pages/buySellSystem/managementEntrance/index.vue"
+      ),
+    children: [
+      {
+        path: "/managementEntrance/business",
+        meta: {
+          title: "业务管理",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "managementEntranceOfBusiness" */ "@/pages/buySellSystem/managementEntrance/business.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/houseDeploy",
+        meta: {
+          title: "房源调配",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseDeploy" */ "@/pages/buySellSystem/managementEntrance/houseDeploy/houseDeploy.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/3day",
+        meta: {
+          title: "3天新增",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "house3Day" */ "@/pages/buySellSystem/managementEntrance/3day/house3Day.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/7day",
+        meta: {
+          title: "7天被看房源",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "house7Day" */ "@/pages/buySellSystem/managementEntrance/7day/house7Day.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/houseLockingList",
+        meta: {
+          title: "锁定列表",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseLockingList" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/lockingList.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/houseExamineHouse",
+        meta: {
+          title: "审核列表",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseExamineHouse" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/examineList.vue"
+          )
+      },
+      {
+        //抽检列表
+        path: "/managementEntrance/spotCheckList",
+        meta: {
+          title: "抽检列表",
+          isMapNav: true //不需要导航
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "spotCheckList" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/spotCheckList.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/spotCheckRecord",
+        meta: {
+          title: "抽检记录",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "spotCheckRecord" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/spotCheckRecord.vue"
+          )
+      },
+      {
+        path: "/buySellSystem/callRecord",
+        meta: {
+          title: "电话沟通列表",
+          isMapNav: false,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "midTelCallList" */ "@/pages/buySellSystem/callRecord/callRecord.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/customers",
+        meta: {
+          title: "客源",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseExamineHouse" */ "@/pages/buySellSystem/managementEntrance/customers/customersList.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/rentHouse",
+        meta: {
+          title: "租赁房源",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseExamineHouse" */ "@/pages/buySellSystem/managementEntrance/rentHouse/rentHouse.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/personnel",
+        meta: {
+          title: "人员管理",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseExamineHouse" */ "@/pages/buySellSystem/managementEntrance/personnel/personnel.vue"
+          )
+      }
+    ]
+  },
+  {
+    // 信息员验真列表
+    path: "/buySellSystem/employeeValidateList",
+    meta: {
+      title: "信息员验真列表",
+      isMapNav: true,
+      isPad: true
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "employeeValidateList" */ "@/pages/buySellSystem/employeeValidateList/index.vue"
+      )
+  },
+  {
+    path: "/report/addReport",
+    name: "addReport",
+    meta: {
+      title: "添加看板"
+    },
+    component: () =>
+      import(/* webpackChunkName: "addReport" */ "@/pages/report/addReport.vue")
   },
   {
     //买卖系统三级路由
@@ -455,18 +888,18 @@ export default [
             /* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/validateHouseList/validateHouseList.vue"
           )
       },
-      {
-        //我司成交
-        path: "/buySellSystem/ourComDeal",
-        meta: {
-          title: "我司成交",
-          keepAlive: true
-        },
-        component: () =>
-          import(
-            /* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/dealHouse/ourComDeal.vue"
-          )
-      },
+      // {
+      //   //我司成交
+      //   path: "/buySellSystem/ourComDeal",
+      //   meta: {
+      //     title: "我司成交",
+      //     keepAlive: true
+      //   },
+      //   component: () =>
+      //     import(
+      //       /* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/dealHouse/ourComDeal.vue"
+      //     )
+      // },
       {
         //他司成交
         path: "/buySellSystem/otherComDeal",
@@ -1076,11 +1509,122 @@ export default [
     //客源系统 新整客户
     path: "/customers/addCustomers",
     meta: {
-      title: "新增客源"
+      title: "新增客源",
+      isMapNav: true //不需要导航
     },
     component: () =>
       import(
         /* webpackChunkName: "addCustomers" */ "@/pages/customersSystem/addCustomers/addCustomers.vue"
+      )
+  },
+  {
+    //客源系统 新整客户
+    path: "/customers/editCustomers",
+    meta: {
+      title: "修改客户信息",
+      isMapNav: true //不需要导航
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "editCustomers" */ "@/pages/customersSystem/addCustomers/editCustomers.vue"
+      )
+  },
+  {
+    //客源系统 私客列表
+    path: "/customers/privateCustomersList",
+    meta: {
+      title: "私客列表",
+      keepAlive: true,
+      isMapNav: true //不需要导航
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "privateCustomersList" */ "@/pages/customersSystem/privateCustomersList/privateCustomersList.vue"
+      )
+  },
+  {
+    //客源系统 公客列表
+    path: "/customers/publicCustomersList",
+    meta: {
+      title: "公客列表",
+      keepAlive: true,
+      isMapNav: true //不需要导航
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "publicCustomersList" */ "@/pages/customersSystem/publicCustomersList/publicCustomersList.vue"
+      )
+  },
+  {
+    //客源系统 公客详情
+    path: "/customers/publicCustomersDetail",
+    meta: {
+      title: "公客详情",
+      isMapNav: true //不需要导航
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "publicCustomersList" */ "@/pages/customersSystem/publicCustomersDetail/publicCustomersDetail.vue"
+        //客源系统 新整客户
+      )
+  },
+  {
+    //客源系统 私客详情
+    path: "/customers/customersDetail",
+    meta: {
+      title: "私客详情",
+      isMapNav: true //不需要导航
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "customersDetail" */ "@/pages/customersSystem/customersDetail/customersDetail.vue"
+      )
+  },
+  {
+    //客源系统 添加带看
+    path: "/customers/takeLook",
+    meta: {
+      title: "添加带看",
+      isMapNav: true //不需要导航
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "takeLook" */ "@/pages/customersSystem/customersDetail/takeLook.vue"
+      )
+  },
+  {
+    path: "/buySellSystem/dictContrast",
+    name: "dictContrast",
+    meta: {
+      title: "小区对标",
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "messageValidate" */ "@/pages/buySellSystem/dictContrast/list.vue"
+      )
+  },
+  {
+    //官网留言管理 配置
+    path: "/sys/configure",
+    meta: {
+      title: "配置管理"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "noticeManageList" */ "@/pages/systemAdministration/officialWebsite/configure.vue"
+      )
+  },
+  {
+    //官网留言管理 留言列表
+    path: "/sys/message",
+    meta: {
+      title: "留言列表"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "noticeManageList" */ "@/pages/systemAdministration/officialWebsite/messageList.vue"
       )
   }
 ];

@@ -5,7 +5,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1995;
+  z-index: 2001;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -130,7 +130,12 @@
             <h3 :style="{ 'text-align': titleDirection }">{{ title }}</h3>
             <i class="el-icon-close anchor-point" @click.stop="close"></i>
           </div>
-          <div class="didLog-content-sroll">
+          <div
+            class="didLog-content-sroll"
+            v-infinite-scroll="load"
+            infinite-scroll-immediate="false"
+            :infinite-scroll-disabled="scrollDisabled"
+          >
             <slot> </slot>
           </div>
           <slot name="floot">
@@ -139,7 +144,7 @@
                 class="floot-btn close-btn"
                 type="info"
                 v-show="mergeConfig.cancelBtnShow"
-                @click="close"
+                @click="btnClose"
                 >{{ mergeConfig.cancelBtnText }}</el-button
               >
               <el-button
@@ -211,6 +216,16 @@ export default {
       default: () => {
         return {};
       }
+    },
+    customFlag: {
+      //是否自定义取消按钮事件
+      type: Boolean,
+      default: false
+    },
+    scrollDisabled: {
+      //是否需要滚动监听
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -234,6 +249,9 @@ export default {
     return {};
   },
   methods: {
+    load() {
+      this.$emit("scrollLoad");
+    },
     maskHide() {
       if (this.maskHideEvent) {
         if (this.beforeClose) {
@@ -255,6 +273,13 @@ export default {
     },
     close() {
       this.$emit("update:visible", false);
+    },
+    btnClose() {
+      if (!this.customFlag) {
+        this.close();
+      } else {
+        this.$emit("customBtn");
+      }
     }
   }
 };

@@ -48,8 +48,9 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
-            data-anchor="业主自售楼盘筛选"
+            data-anchor="业主自售楼盘筛选 => select"
             class="anchor-point"
+            @click.native="log_socket.sendUserActionData"
             v-model="data.comId"
             @focus="remoteInput"
             @change="queryCBId"
@@ -61,17 +62,19 @@
             :loading="loading"
           >
             <el-option
-              data-anchor="业主自售楼盘筛选"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in options"
+              :data-anchor="'业主自售楼盘筛选 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
             ></el-option>
           </el-select>
           <el-select
-            data-anchor="业主自售楼栋筛选"
+            data-anchor="业主自售楼栋筛选 => select"
             class="anchor-point"
+            @click.native="log_socket.sendUserActionData"
             v-model="data.cbId"
             filterable
             clearable
@@ -79,9 +82,10 @@
             @change="buildChange"
           >
             <el-option
-              data-anchor="业主自售楼栋筛选"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in cbIdList"
+              :data-anchor="'业主自售楼栋筛选 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -90,16 +94,20 @@
           <el-select
             v-model="data.bhId"
             filterable
-            data-anchor="业主自售房间号筛选"
+            @click.native="log_socket.sendUserActionData"
+            data-anchor="业主自售房间号筛选 => select"
             placeholder="房间号"
             class="anchor-point"
             :loading="HouseNoLoading"
             v-loadmore="loadMore"
           >
             <el-option
-              data-anchor="业主自售房间号筛选"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in roomNoList"
+              :data-anchor="
+                '业主自售房间号筛选 => select => option:' + item.name
+              "
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -254,6 +262,7 @@ import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import moreSelect from "@/components/moreSelect";
 import common from "../houseResource/common/common";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -448,7 +457,7 @@ export default {
         return;
       }
       var that = this;
-      this.$router.push({
+      util.openPage.call(this, {
         name: "historyDetails",
         params: { houseId: id, tradeType: 1 }
       });

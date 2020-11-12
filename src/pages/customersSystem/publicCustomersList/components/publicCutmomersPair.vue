@@ -1,0 +1,667 @@
+<style lang="less" scoped>
+.pariWarp {
+  position: relative;
+  .SwtichBox {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    display: flex;
+    width: 240px;
+    height: 50px;
+    border: 1px solid @backgroud;
+    border-radius: 8px;
+    .SwitchItemOn,
+    .SwitchItem {
+      margin: 5px;
+      width: 110px;
+      height: 40px;
+      text-align: center;
+      border-radius: 4px;
+      cursor: pointer;
+      > i,
+      > span {
+        line-height: 40px;
+        font-size: 18px;
+      }
+    }
+
+    .SwitchItemOn {
+      background: @backgroud;
+      > i,
+      > span {
+        color: #ffffff;
+      }
+    }
+    .SwitchItem {
+      background: #ffffff;
+      > i,
+      > span {
+        color: @backgroud;
+      }
+    }
+  }
+  .ItemRow {
+    margin: 24px 0;
+  }
+  .SearchItemRow {
+    .SearchItem {
+      display: flex;
+      justify-content: space-between;
+      min-width: 495px;
+      height: 50px;
+      border-radius: 4px;
+      border: 1px solid #cecece;
+      overflow: hidden;
+      .selectItem {
+        margin: 10px 0;
+        border-right: 1px solid #cecece;
+      }
+      /deep/.el-input {
+        width: 125px;
+        height: 30px;
+        line-height: 30px;
+        i {
+          line-height: inherit;
+        }
+        .el-input__inner {
+          line-height: inherit;
+          height: inherit;
+          text-align: center;
+          border: 0;
+          font-size: @font16;
+          color: #606266;
+        }
+        .el-input-suniff {
+          color: #606266;
+        }
+      }
+      .InputItem {
+      }
+      /deep/.el-input {
+        width: 280px;
+        height: 50px;
+        overflow: hidden;
+        padding-left: 20px;
+        .el-input__inner {
+          text-align: left !important;
+          width: 100%;
+          line-height: 50px;
+          border: none;
+          font-size: 16px;
+        }
+      }
+      .SubmitItem {
+        width: 80px;
+        height: 50px;
+        background: @backgroud;
+        text-align: center;
+        cursor: pointer;
+        > i {
+          line-height: 50px;
+          color: #ffffff;
+          font-size: @font24;
+        }
+      }
+    }
+  }
+  /deep/.el-form-item__content {
+    display: flex;
+  }
+  .tapSwitchRow {
+    display: flex;
+    border-bottom: 1px solid #f0f2f5;
+    .tapSwitchItem,
+    .tapSwitchItemOn {
+      margin-right: 35px;
+      height: 50px;
+      line-height: 50px;
+      font-size: @font18;
+      cursor: pointer;
+    }
+    .tapSwitchItem {
+      border-bottom: 2px solid #ffffff;
+    }
+    .tapSwitchItemOn {
+      border-bottom: 2px solid @backgroud;
+      color: @backgroud;
+      font-weight: bold;
+    }
+  }
+  .ChooseItemRow {
+    display: flex;
+    height: 30px;
+    .ChooseItemBox {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0px -15px 0;
+      .ChooseItem {
+        /deep/.el-checkbox__input {
+          width: 0 !important;
+          height: 0 !important;
+          overflow: hidden;
+        }
+        /deep/.el-checkbox__label {
+          padding-left: 0 !important;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          vertical-align: middle;
+          font-size: @font14;
+          line-height: 32px;
+        }
+        .is-checked {
+          border: 1px solid @backgroud !important;
+          border-radius: 4px;
+          /deep/.el-checkbox__label {
+            color: @backgroud;
+          }
+        }
+        .el-checkbox {
+          //margin-right: 0 !important;
+          transition: all 0.2s ease-in;
+          margin-right: 20px;
+          padding: 0 15px;
+          border: 1px solid #fff;
+          border-radius: 4px;
+          height: 32px;
+          line-height: 32px;
+        }
+      }
+    }
+    .RadioItemBox {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0px -15px 0;
+      .RadioItem {
+        /deep/.el-radio__input {
+          width: 0 !important;
+          height: 0 !important;
+          overflow: hidden;
+        }
+        /deep/.el-radio__label {
+          padding-left: 0 !important;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          vertical-align: middle;
+          font-size: @font14;
+          line-height: 32px;
+        }
+        .is-checked {
+          border: 1px solid @backgroud !important;
+          border-radius: 4px;
+          /deep/.el-radio__label {
+            color: @backgroud;
+          }
+        }
+        .el-radio {
+          //margin-right: 0 !important;
+          transition: all 0.2s ease-in;
+          height: 32px;
+          line-height: 32px;
+          margin-right: 20px;
+          padding: 0 15px;
+          border: 1px solid #fff;
+          border-radius: 4px;
+        }
+      }
+    }
+    .InputItem {
+      display: flex;
+      align-self: center;
+      margin-top: 10px;
+      .split-line {
+        width: 20px;
+        position: relative;
+        &::after {
+          content: "";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          height: 2px;
+          width: 20px;
+          transform: translate(-50%, -50%);
+          background: #686a6e;
+        }
+      }
+      .InputItemCell {
+        display: flex;
+        border: 1px solid #cecece;
+        border-radius: 4px;
+        padding: 0 10px;
+        margin: 0 10px;
+        height: 36px;
+        line-height: 36px;
+
+        > span {
+          color: #686a6e;
+          font-size: @font14;
+          white-space: nowrap;
+        }
+        /deep/.el-input {
+          width: 100px;
+          height: 36px;
+          line-height: 36px;
+          i {
+            line-height: inherit;
+          }
+          .el-input__inner {
+            border-color: #fff;
+            line-height: inherit;
+            height: inherit;
+            text-align: center;
+            font-size: @font14;
+          }
+        }
+      }
+      /deep/.el-button {
+        margin-left: 20px;
+        padding: 0;
+        width: 70px;
+        height: 40px;
+        line-height: 40px;
+        font-size: @font14;
+        background: @backgroud;
+        color: #ffffff;
+        text-align: center;
+      }
+    }
+    .timePickerItem {
+      position: relative;
+      /deep/.el-input__inner {
+        border-color: #ffffff;
+        /deep/.el-input__icon {
+          display: none;
+        }
+        /deep/.el-range-input {
+          width: 155px;
+          height: 36px;
+          line-height: 36px;
+          border: 1px solid #cecece;
+          border-radius: 4px;
+        }
+      }
+      .elIcon {
+        position: absolute;
+        top: 0;
+        left: -20px;
+        color: #cecece;
+        > i {
+          margin-left: 160px;
+        }
+      }
+    }
+
+    /deep/.el-button {
+      margin-left: 20px;
+      padding: 0;
+      width: 70px;
+      height: 40px;
+      line-height: 40px;
+      font-size: @font14;
+      background: @backgroud;
+      color: #ffffff;
+      text-align: center;
+    }
+  }
+  /deep/.el-form-item__label {
+    width: 125px !important;
+    line-height: 40px;
+    font-size: @font14;
+    font-weight: bold;
+    text-align: left;
+    line-height: 32px;
+  }
+  .FoldRow {
+    .FoldItem {
+      margin: 0 auto;
+      width: 150px;
+      text-align: center;
+      font-size: @font16;
+      color: #247257;
+      > i {
+        margin-left: 10px;
+        transform: rotate(-90deg);
+      }
+      .ShowMore {
+        transform: rotate(90deg) !important;
+      }
+    }
+  }
+}
+</style>
+<template>
+  <div class="pariWarp">
+    <div class="SwtichBox">
+      <div
+        class="SwitchItem"
+        @click="navigateTo('/customers/privateCustomersList')"
+      >
+        <i class="iconfont iconcube-kehu"></i>
+        <span>私客池</span>
+      </div>
+      <div class="SwitchItemOn">
+        <i class="iconfont iconkehu"></i>
+        <span>公客池</span>
+      </div>
+    </div>
+    <el-form>
+      <el-form-item class="ItemRow SearchItemRow">
+        <div class="SearchItem">
+          <el-input
+            class="InputItem"
+            placeholder="请输入客户姓名或联系方式"
+            v-model="form.KeyWord"
+          />
+          <div class="SubmitItem" @click="submit">
+            <i class="el-icon-search"></i>
+          </div>
+        </div>
+      </el-form-item>
+      <el-form-item
+        label="客户需求"
+        class="ItemRow ChooseItemRow"
+        prop="HouseType"
+      >
+        <el-radio-group v-model="form.requirementType" class="RadioItemBox">
+          <div
+            class="RadioItem"
+            v-for="(item, index) in customerNeedsList"
+            :key="index"
+          >
+            <el-radio :label="item.value" name="requireTypes">{{
+              item.name
+            }}</el-radio>
+          </div>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item
+        label="公客类型"
+        class="ItemRow ChooseItemRow"
+        prop="HouseType"
+      >
+        <el-radio-group v-model="form.plate" class="RadioItemBox">
+          <div
+            class="RadioItem"
+            v-for="(item, index) in PublicTypeList"
+            :key="index"
+          >
+            <el-radio :label="item.value" name="plate">{{
+              item.name
+            }}</el-radio>
+          </div>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item
+        label="进池原因"
+        class="ItemRow ChooseItemRow"
+        prop="Reason"
+      >
+        <el-checkbox-group
+          v-model="plateChangeReasons"
+          class="ChooseItemBox"
+          @change="setPlateChangeReason()"
+        >
+          <div
+            class="ChooseItem"
+            v-for="(item, index) in ReasonList"
+            :key="index"
+          >
+            <el-checkbox :label="item.value" name="plateChangeReasons">{{
+              item.name
+            }}</el-checkbox>
+          </div>
+        </el-checkbox-group>
+      </el-form-item>
+      <el-form-item
+        label="回访时间"
+        class="ItemRow ChooseItemRow"
+        prop="HouseType"
+      >
+        <el-radio-group
+          v-model="ReVisit"
+          class="RadioItemBox"
+          @change="getDialTime(ReVisit)"
+        >
+          <div
+            class="RadioItem"
+            v-for="(item, index) in ReVisitList"
+            :key="index"
+          >
+            <el-radio :label="item.id" name="ReVisit">{{ item.name }}</el-radio>
+          </div>
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item
+        label="我的回访"
+        class="ItemRow ChooseItemRow"
+        prop="HouseType"
+      >
+        <el-radio-group
+          v-model="MyReVisit"
+          class="RadioItemBox"
+          @change="getMyDialTime(MyReVisit)"
+        >
+          <div
+            class="RadioItem"
+            v-for="(item, index) in MyReVisitList"
+            :key="index"
+          >
+            <el-radio :label="item.id" name="MyReVisit">{{
+              item.name
+            }}</el-radio>
+          </div>
+        </el-radio-group>
+      </el-form-item>
+    </el-form>
+  </div>
+</template>
+<script>
+const customerNeedsModle = [
+  {
+    name: "不限",
+    value: ""
+  },
+  {
+    name: "买二手",
+    value: 1
+  },
+  {
+    name: "租赁",
+    value: 4
+  },
+  {
+    name: "买新房",
+    value: 2
+  }
+];
+const PublicTypeModle = [
+  {
+    name: "不限",
+    value: ""
+  },
+  {
+    name: "门店公客",
+    value: 1
+  },
+  {
+    name: "区域公客",
+    value: 2
+  },
+  {
+    name: "公司公客",
+    value: 4
+  }
+];
+const ReasonModle = [
+  {
+    name: "不限",
+    value: 0
+  },
+  {
+    name: "无效转入",
+    value: 1
+  },
+  {
+    name: "离职转入",
+    value: 2
+  },
+  {
+    name: "滚动转入",
+    value: 3
+  },
+  {
+    name: "核销房源转入",
+    value: 4
+  },
+  {
+    name: "超期未维护转入",
+    value: 5
+  }
+];
+
+const ReVisitListModle = [
+  {
+    id: 0,
+    name: "不限",
+    value: [0, 0]
+  },
+  {
+    id: 1,
+    name: "今日有回访",
+    value: [1, 1]
+  },
+  {
+    id: 2,
+    name: "30天内有回访",
+    value: [31, 1]
+  },
+  {
+    id: 3,
+    name: "30天以上未回访",
+    value: [0, 31]
+  }
+];
+
+const MyReVisitListModle = [
+  { id: 0, name: "不限", value: [0, 0] },
+  { id: 1, name: "今日回访", value: [1, 1] },
+  { id: 2, name: "本月回访", value: [2, 1] }
+];
+import { formatDate } from "element-ui/src/utils/date-util";
+
+export default {
+  inject: ["form"],
+  data() {
+    return {
+      customerNeedsList: customerNeedsModle,
+      PublicTypeList: PublicTypeModle,
+      ReasonList: ReasonModle,
+      ReVisitList: ReVisitListModle,
+      ReVisit: 0, //回访时间
+      MyReVisitList: MyReVisitListModle,
+      MyReVisit: 0, //我的回访
+      plateChangeReasons: [0],
+      Today: ""
+    };
+  },
+  created() {
+    this.Today = formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");
+    console.log(this.Today);
+  },
+  methods: {
+    navigateTo(path) {
+      this.$router.push({ path: path });
+    },
+    submit() {
+      this.form.submitSearch = !this.form.submitSearch;
+    },
+    setPlateChangeReason() {
+      //this.form.plateChangeReasons = this.plateChangeReasons;
+      let l = this.plateChangeReasons.length;
+      let i = this.plateChangeReasons.indexOf(0);
+      if (i == l - 1) {
+        //最后一个选择了不限
+        //包含 不限
+        this.plateChangeReasons = [0];
+      } else if (i > -1) {
+        this.plateChangeReasons.splice(i, 1);
+      }
+      if (this.plateChangeReasons.indexOf(0) > -1) {
+        this.form.plateChangeReasons = []; //不限，就不传
+      } else {
+        this.form.plateChangeReasons = this.plateChangeReasons;
+      }
+      console.log(this.form.plateChangeReasons, "准备传递给后端的条件");
+    },
+    getDialTime(i) {
+      for (let j = 0; j < 2; j++) {
+        let n = this.ReVisitList[i].value[j];
+        if (n == 0) {
+          this.$set(this.form.DialTime, [j], "");
+        } else if (j == 0) {
+          this.$set(
+            this.form.DialTime,
+            [j],
+            formatDate(
+              new Date().setDate(new Date().getDate() - n + 1),
+              "yyyy-MM-dd "
+            ) + "00:00:00"
+          );
+        } else {
+          this.$set(
+            this.form.DialTime,
+            [j],
+            formatDate(
+              new Date().setDate(new Date().getDate() - n + 1),
+              "yyyy-MM-dd "
+            ) + "23:59:59"
+          );
+        }
+      }
+      console.log(this.form.DialTime);
+    },
+    getMyDialTime(i) {
+      for (let j = 0; j < 2; j++) {
+        let n = this.MyReVisitList[i].value[j];
+        if (n == 0) {
+          this.$set(this.form.MyDialTime, [j], "");
+        } else if (n == 2) {
+          //取本月一号
+          this.$set(
+            this.form.MyDialTime,
+            [j],
+            formatDate(new Date().setDate(new Date().getDate()), "yyyy-MM") +
+              "-01 00:00:00"
+          );
+        } else if (j == 0) {
+          this.$set(
+            this.form.MyDialTime,
+            [j],
+            formatDate(
+              new Date().setDate(new Date().getDate() - n + 1),
+              "yyyy-MM-dd "
+            ) + "00:00:00"
+          );
+        } else {
+          this.$set(
+            this.form.MyDialTime,
+            [j],
+            formatDate(
+              new Date().setDate(new Date().getDate() - n + 1),
+              "yyyy-MM-dd "
+            ) + "23:59:59"
+          );
+        }
+      }
+      console.log(this.form);
+    }
+  }
+};
+</script>

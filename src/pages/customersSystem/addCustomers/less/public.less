@@ -1,5 +1,5 @@
 .input() {
-    /deep/.el-input__inner {
+    /deep/.el-input__inner,/deep/.el-textarea__inner {
         height: 48px;
         line-height: 48px;
         border-radius: 4px;
@@ -17,7 +17,18 @@
             border-color: var(--color--primary);
         }
     }
-
+    /deep/ .suffix-tips{
+        font-size: 16px;
+        font-style:normal;
+        line-height: 48px;
+        margin-right: 16px;
+    }
+    /deep/.el-icon-arrow-up{
+        font-size: 16PX;
+        &::before{
+            content: "\e78f";
+        }
+    }
     /deep/.el-input__clear {
         font-family: "iconfont" !important;
         font-size: 18PX;
@@ -27,6 +38,50 @@
         }
     }
     
+}
+/deep/.el-input--prefix .el-input__inner {
+    height: 48px;
+    line-height: 48px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(206, 206, 206, 1);
+    font-size: 16PX;
+    font-family:MicrosoftYaHei;
+    &::placeholder {
+        font-size: 16PX;
+        color: rgba(144, 147, 153, 1);
+        font-family:MicrosoftYaHei;
+    }
+
+    &:focus {
+        border-color: var(--color--primary);
+    }
+}
+/deep/ .el-range-editor.el-input__inner {
+    height: 48px;
+    line-height: 48px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(206, 206, 206, 1);
+    font-size: 16PX;
+    font-family:MicrosoftYaHei;
+    &::placeholder {
+        font-size: 16PX;
+        color: rgba(144, 147, 153, 1);
+        font-family:MicrosoftYaHei;
+    }
+
+    &:focus {
+        border-color: var(--color--primary);
+    }
+}
+/deep/ .el-range-editor .el-range-input {
+    font-family:MicrosoftYaHei;
+    font-size: 16PX;
+}
+/deep/ .el-textarea__inner {
+    font-family:MicrosoftYaHei;
+    font-size: 16PX;
 }
 
 .error-tips() {

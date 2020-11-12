@@ -325,6 +325,7 @@
           <el-select
             data-anchor="我的数据更多筛选区域 => select"
             v-model="queryCondition.deptParentId"
+            @click.native="log_socket.sendUserActionData"
             :remote-method="remoteArea"
             clearable
             @focus="remoteSelect"
@@ -332,9 +333,12 @@
             class="select"
           >
             <el-option
-              data-anchor="我的数据更多筛选区域 => select => option"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in deptParentList"
+              :data-anchor="
+                '我的数据更多筛选区域 => select => option:' + item.depName
+              "
               :key="item.depId"
               :value="item.depId"
               :label="item.depName"
@@ -343,6 +347,7 @@
           <span class="font">门店</span>
           <el-select
             data-anchor="我的数据更多筛选门店 => select"
+            @click.native="log_socket.sendUserActionData"
             class="select"
             v-model="queryCondition.store"
             @focus="getDepartmentAuthority"
@@ -350,9 +355,12 @@
             clearable
           >
             <el-option
-              data-anchor="我的数据更多筛选门店 => select => option"
+              @click.native="log_socket.sendUserActionData"
               class="anchor-point"
               v-for="item in storeList"
+              :data-anchor="
+                '我的数据更多筛选门店 => select => option:' + item.depName
+              "
               :key="item.depId"
               :value="item.depId"
               :label="item.depName"
@@ -361,15 +369,19 @@
           <span class="font">个人</span>
           <el-select
             data-anchor="我的数据更多筛选个人呢 => select"
-            class="select"
+            class="select anchor-point"
+            @click.native="log_socket.sendUserActionData"
             v-model="queryCondition.personnel"
             clearable
             @change="changeAccount"
           >
             <el-option
-              data-anchor="我的数据更多筛选个人 => select => option"
+              @click.native="log_socket.sendUserActionData"
               class="anchor-point"
               v-for="item in perList"
+              :data-anchor="
+                '我的数据更多筛选个人 => select => option:' + item.perName
+              "
               :key="item.accountId"
               :value="item.accountId"
               :label="item.perName"

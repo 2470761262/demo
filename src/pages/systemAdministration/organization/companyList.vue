@@ -229,7 +229,8 @@ export default {
             }
           }
         },
-        { prop: "addDate", label: "添加时间" }
+        { prop: "addDate", label: "添加时间" },
+        { prop: "idFor58", label: "58开发平台公司ID" }
       ],
       tableData: [],
       selectTag: "",

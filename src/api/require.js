@@ -7,6 +7,7 @@ import { Message } from "element-ui";
 import store from "@/store/store";
 //let CancelToken = axios.CancelToken;
 //let requerList = [];
+let isShowErrMsg = true; // code不返回200时是否弹错误提示
 let http = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // api 的 base_url
   headers: {
@@ -45,15 +46,17 @@ http.interceptors.response.use(
         message: response.data.message,
         type: "error"
       });
-      vm.$router.push({
-        path: "/"
+      vm.$router.replace({
+        path: "/logOut"
       });
       return;
     } else if (response.data.code != 200) {
-      Message({
-        message: response.data.message,
-        type: "error"
-      });
+      if (isShowErrMsg) {
+        Message({
+          message: response.data.message,
+          type: "error"
+        });
+      }
       return Promise.reject(response);
     }
     return response;
@@ -81,8 +84,9 @@ http.interceptors.response.use(
   }
 );
 //请求对象
-let ApiData = {
+let ApiReportData = {
   post(arg) {
+    isShowErrMsg = arg.isShowErrMsg == undefined ? true : arg.isShowErrMsg;
     if (!arg.method) {
       arg.method = "POST";
     }
@@ -126,5 +130,5 @@ let ApiData = {
   }
 };
 export default {
-  ...ApiData
+  ...ApiReportData
 };

@@ -1,11 +1,17 @@
 import util from "@/util/util";
-import { TREMEPACKERS, TREMEDEFTULTCOLOR } from "@/util/constMap";
+import {
+  TREMEPACKERS,
+  TREMEDEFTULTCOLOR,
+  FONTSIZEBASE,
+  FONTSIZEBASENAME
+} from "@/util/constMap";
 //const version = require('element-ui/package.json').version // element-ui version from node_modules
 const defaultColor = "#409EFF"; // 不可修改
 const tint = 0.76;
 let themeData = {
+  dom: document.documentElement,
   chalk: "",
-  createImport(val, ordVal = defaultColor) {
+  createImport(val, ordVal = defaultColor, font) {
     let newVal = val;
     if (newVal == undefined) {
       let storeColor = util.localStorageGet(TREMEPACKERS);
@@ -15,39 +21,76 @@ let themeData = {
       }
       newVal = storeColor;
     }
+    if (font == undefined) {
+      let fontsizebasename = util.localStorageGet(FONTSIZEBASENAME);
+      if (!fontsizebasename) {
+        util.localStorageSet(FONTSIZEBASENAME, FONTSIZEBASE);
+      }
+    }
     // if (process.env.NODE_ENV != 'development') {
     // themeData.createStyle(newVal, ordVal);
     // }
     themeData.createStyle(newVal, ordVal);
     themeData.init(newVal);
+    themeData.font(font);
     return Promise.resolve();
+  },
+  font(fontSize) {
+    let fontsizebasename = util.localStorageGet(FONTSIZEBASENAME);
+    const fontRootField = [
+      "--font--12",
+      "--font--13",
+      "--font--14",
+      "--font--15",
+      "--font--16",
+      "--font--17",
+      "--font--18",
+      "--font--19",
+      "--font--20",
+      "--font--21",
+      "--font--22",
+      "--font--23",
+      "--font--24",
+      "--font--25",
+      "--font--26"
+    ];
+    if (!fontSize) {
+      if (fontsizebasename) {
+        fontRootField.forEach((item, index) => {
+          this.dom.style.setProperty(item, fontsizebasename + index + "px");
+        });
+      } else {
+        fontRootField.forEach((item, index) => {
+          this.dom.style.setProperty(item, FONTSIZEBASE + index + "px");
+        });
+      }
+    } else {
+      fontRootField.forEach((item, index) => {
+        this.dom.style.setProperty(item, fontSize + index + "px");
+      });
+      util.localStorageSet(FONTSIZEBASENAME, fontSize);
+    }
   },
   init(color) {
     let tremePackers = util.localStorageGet(TREMEPACKERS);
     console.log(tremePackers, "tremePackers", color);
     if (!color) {
       if (tremePackers) {
-        document.documentElement.style.setProperty(
-          "--color--primary",
-          tremePackers
-        );
-        document.documentElement.style.setProperty(
+        this.dom.style.setProperty("--color--primary", tremePackers);
+        this.dom.style.setProperty(
           "--color--opticyBackground",
           tintColor(tremePackers.replace("#", ""), tint)
         );
       } else {
-        document.documentElement.style.setProperty(
-          "--color--primary",
-          defaultColor
-        );
-        document.documentElement.style.setProperty(
+        this.dom.style.setProperty("--color--primary", defaultColor);
+        this.dom.style.setProperty(
           "--color--opticyBackground",
           tintColor(defaultColor.replace("#", ""), tint)
         );
       }
     } else {
-      document.documentElement.style.setProperty("--color--primary", color);
-      document.documentElement.style.setProperty(
+      this.dom.style.setProperty("--color--primary", color);
+      this.dom.style.setProperty(
         "--color--opticyBackground",
         tintColor(color.replace("#", ""), tint)
       );

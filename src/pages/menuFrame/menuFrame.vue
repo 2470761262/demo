@@ -9,12 +9,11 @@
   }
   .page-cell-main-menu {
     // prettier-ignore
-    height: calc(100% - 80px);
-    @media screen and(max-width: 1280px) {
-      // prettier-ignore
-      height: calc(100% - 100px);
+    //height: calc(100% - 80PX);
+    height: 100%;
+    &.is-nest {
+      height: 100% !important;
     }
-
     .el-aside,
     .el-main {
       height: 100%;
@@ -32,10 +31,22 @@
       background-color: rgb(84, 92, 100);
     }
     .children-page {
-      min-height: calc(100% - 26px);
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
+    }
+  }
+}
+.is-map-nav {
+  .el-main {
+    padding: 0;
+  }
+}
+.is-map-nav-top {
+  .el-main {
+    padding: 0;
+    /deep/.nav-breadcrumb {
+      margin-top: 20px;
     }
   }
 }
@@ -58,27 +69,23 @@
 </style>
 <template>
   <section class="page-cell-conter">
-    <el-container>
+    <!-- <el-container>
       <el-header v-if="asideNavFlag" height="80px">
         <header-content :userInfoData="loginUserData"></header-content>
       </el-header>
-    </el-container>
-    <el-container class="page-cell-main-menu" id="page-cell-main">
+    </el-container> -->
+    <el-container
+      :class="[isPad, { 'is-nest': isHander }]"
+      class="page-cell-main-menu"
+      id="page-cell-main"
+    >
       <el-aside class="el-background" v-if="asideNavFlag">
         <asideNav :menuNodeDatas="menuDatasInParent"></asideNav>
       </el-aside>
       <el-main>
-        <feedback ref="feedback" />
-        <div class="children-page">
+        <feedback ref="feedback" :is-map-nav="isMapNav" />
+        <div class="children-page" :style="isMapNavStyle">
           <!-- 二级页面 router-view -->
-          <!-- <transition name="el">
-            <keep-alive
-              :max="3"
-              include="houseList,otherIframe,customersIframe"
-            >
-              <router-view />
-            </keep-alive>
-          </transition> -->
           <keep-alive :max="3">
             <router-view v-if="$route.meta.keepAlive" />
           </keep-alive>
@@ -92,7 +99,7 @@
 <script>
 //左侧菜单
 import asideNav from "@/components/asideNav";
-import headerContent from "@/components/headerContent";
+//import headerContent from "@/components/headerContent";
 import util from "@/util/util";
 import { LOGINDATA } from "@/util/constMap";
 import but from "@/evenBus/but";
@@ -103,15 +110,37 @@ export default {
   name: "menuFrame",
   components: {
     asideNav,
-    headerContent,
+    // headerContent,
     rightFixedChunk
   },
   data() {
     return {
+      isHander: false,
       asideNavFlag: true,
       loginUserData: {},
       menuDatasInParent: []
     };
+  },
+  computed: {
+    isMapNav() {
+      return !this.$route.meta.isMapNav;
+    },
+    isPad() {
+      if (!this.isMapNav) {
+        return "is-map-nav";
+      }
+      if (this.$route.meta.isPad) {
+        return "is-map-nav-top";
+      }
+      return "";
+    },
+    isMapNavStyle() {
+      if (this.isMapNav) {
+        return { "min-height": "calc(100% - .29rem)" };
+      } else {
+        return { "min-height": "100%" };
+      }
+    }
   },
   methods: {
     /**
@@ -124,6 +153,10 @@ export default {
   created() {
     this.$nextTick(() => {
       this.asideNavFlag = util.localStorageGet("nest");
+      //   console.log(document.querySelector(".page-cell-header"), "11");
+      //   this.isHander = document.querySelector(".page-cell-header")
+      //     ? false
+      //     : true;
     });
     this.loginUserData = util.localStorageGet(LOGINDATA);
     if (this.loginUserData && this.loginUserData.menuNodes) {

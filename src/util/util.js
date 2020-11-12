@@ -1,4 +1,9 @@
 import * as constMap from "./constMap";
+
+function go(a, b) {
+  return a + b;
+}
+
 export default {
   localStorageSet(key, value) {
     if (typeof value == "object") {
@@ -65,7 +70,7 @@ export default {
   },
   countMapFilter(value, ListName = "ROOMTYPE", resultValue = null) {
     let result = constMap[ListName].filter(
-      item => item.value == parseInt(value)
+      item => parseInt(item.value) == parseInt(value)
     );
     return result.length > 0 ? result[0].key : resultValue;
   },
@@ -192,6 +197,16 @@ export default {
     }
     return actualTop;
   },
+  getElementLeft(el) {
+    if (!el) return null;
+    let actualLeft = el.offsetLeft;
+    let current = el.offsetParent;
+    while (current !== null) {
+      actualLeft += current.offsetLeft;
+      current = current.offsetParent;
+    }
+    return actualLeft;
+  },
   format(time, fmt) {
     let date = new Date(time);
     var o = {
@@ -228,5 +243,30 @@ export default {
       }
     }
     return null;
+  },
+  openPage(pageParams) {
+    window.open(this.$router.resolve(pageParams).href, "_blank");
+  },
+  //获取指定class的父节点
+  getParents(element, className) {
+    var returnParentElement = null;
+    function getParentNode(element, className) {
+      if (
+        !element ||
+        !element.tagName ||
+        element.tagName.toLowerCase() == "body" ||
+        element.tagName.toLowerCase() == "html"
+      ) {
+        return null;
+      }
+      if (element && element.classList.contains(className)) {
+        returnParentElement = element;
+      } else {
+        getParentNode(element.parentElement, className);
+      }
+    }
+    getParentNode(element, className);
+
+    return returnParentElement;
   }
 };

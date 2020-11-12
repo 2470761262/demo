@@ -64,10 +64,10 @@
         :lastParams="{ id: forID.id, method: 'reset' }"
         :hisEdit="false"
       ></sidebarList>
-      <div class="browse-nav-content" v-scrollCenter="'page-contenr-com'">
+      <!-- <div class="browse-nav-content" v-scrollCenter="'page-contenr-com'">
         <el-button @click="navPage('/buySellSystem/houseList')">首页</el-button>
         <el-button @click="navPage()">返回</el-button>
-      </div>
+      </div> -->
       <browsebar :browse="browse" v-if="browse.addTime"></browsebar>
     </section>
     <!--按钮组 -->
@@ -257,6 +257,7 @@ export default {
               }
             }
             this.$set(this.houseDetails, "data", result.data);
+            document.title = this.houseDetails.data.CommunityName || "未知楼盘";
             if (result.data.isLocking) {
               //如果锁定房源的话就禁用
               this.buttonLocking.value = true;
@@ -305,6 +306,9 @@ export default {
         });
     },
     addBrowseHouseLog(param) {
+      if (!param || !param.HouseId) {
+        return false;
+      }
       let that = this;
       let url = "/house/browse/add";
       this.$api

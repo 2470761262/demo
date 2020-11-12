@@ -22,10 +22,10 @@ export default router => {
           } else {
             Notification({
               title: "提示",
-              message: "您没有进行登录,将跳转登录页面!",
+              message: "您没有进行登录!",
               type: "warning"
             });
-            next({ path: "/" });
+            next({ path: "/logOut" });
           }
         }
       }
@@ -33,7 +33,15 @@ export default router => {
   });
   router.afterEach((to, from) => {
     if (document.querySelector(".el-main")) {
-      document.querySelector(".el-main").scrollTop = 0;
+      if (from.meta.isScrollTop) {
+        util.sessionLocalStorageSet(
+          "scrollTop",
+          document.querySelector(".el-main").scrollTop
+        );
+      } else {
+        document.querySelector(".el-main").scrollTop = 0;
+        util.sessionLocalStorageSet("scrollTop", 0);
+      }
     }
   });
 };

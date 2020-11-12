@@ -11,7 +11,7 @@ module.exports = {
   outputDir: "dist",
   assetsDir: "assets",
   productionSourceMap: false,
-  filenameHashing: false,
+  filenameHashing: true,
   css: {
     extract: false,
     sourceMap: false,
@@ -19,11 +19,15 @@ module.exports = {
     modules: false
   },
   parallel: require("os").cpus().length > 1,
-  lintOnSave: true,
+  //lintOnSave: true,
   chainWebpack: config => {
+    //  console.log(config.resolve.alias, "config");
+
+    // config.resolve.alias.set("vue$", "vue/dist/vue.esm.js");
     config.resolve.alias.set("@", resolve("src"));
     config.plugins.delete("prefetch");
     config.plugins.delete("preload");
+    config.module.rules.delete("eslint");
     const types = ["vue-modules", "vue", "normal-modules", "normal"];
     types.forEach(type =>
       addStyleResource(config.module.rule("less").oneOf(type))
@@ -53,6 +57,7 @@ module.exports = {
     }
   },
   devServer: {
+    disableHostCheck: true,
     open: true,
     host: "localhost",
     port: 8080, // 端口号

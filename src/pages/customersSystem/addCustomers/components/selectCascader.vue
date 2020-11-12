@@ -31,7 +31,6 @@
           padding-left: 24px;
           // prettier-ignore
           font-size: 16PX;
-          text-shadow: 0px 10px 16px rgba(0, 0, 0, 0.24);
           color: rgba(48, 49, 51, 1);
           cursor: pointer;
           &.active {
@@ -45,7 +44,6 @@
       display: block;
       height: 1px;
       background: rgba(240, 242, 245, 1);
-      box-shadow: 0px 10px 16px 0px rgba(0, 0, 0, 0.24);
     }
     .cascder-ul-foot {
       display: flex;
@@ -56,12 +54,10 @@
         width: 130px;
         height: 48px;
         background: @backgroud;
-        box-shadow: 0px 10px 16px 0px rgba(0, 0, 0, 0.24);
         border-radius: 4px;
         // prettier-ignore
         font-size: 16PX;
         color: rgba(255, 255, 255, 1);
-        text-shadow: 0px 10px 16px rgba(0, 0, 0, 0.24);
       }
     }
   }
@@ -162,10 +158,10 @@ export default {
       type: String,
       default: "title"
     },
-    advanceValue: {
+    value: {
       type: Array
     },
-    value: {
+    cascaderList: {
       type: Array,
       default: () => []
     }
@@ -215,25 +211,22 @@ export default {
     }
   },
   watch: {
-    value: {
+    cascaderList: {
       immediate: true,
       handler(val, oldVal) {
-        this.rednerCascader = JSON.parse(
-          JSON.stringify(
-            val.map(item => {
-              item.active = false;
-              return item;
-            })
-          )
-        );
+        this.rednerCascader = JSON.parse(JSON.stringify(val)).map(item => {
+          item.active = false;
+          return item;
+        });
       }
     },
-    advanceValue: {
+    value: {
       immediate: true,
       handler(value) {
         if (value) {
           this.result = loopResultList(value, this.rednerCascader);
-          this.inputValue = this.result[this.result.length - 1].title;
+          if (this.result.length != 0)
+            this.inputValue = this.result[this.result.length - 1].title;
         }
       }
     }

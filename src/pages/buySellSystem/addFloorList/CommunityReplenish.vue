@@ -259,7 +259,7 @@ export default {
       formData.append("file", uploader.file);
       this.$api
         .post({
-          url: "/draft-house/picture",
+          url: "/verifyHouse/picture",
           headers: { "Content-Type": "multipart/form-data" },
           data: formData,
           onUploadProgress: progressEvent => {

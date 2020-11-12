@@ -23,8 +23,7 @@ select {
 }
 
 body {
-    font: 12px"SimHei",
-        sans-serif;
+    font: 12px Microsoft Yahei,Helvetica,Arial,sans-serif;
     background: #fff;
     //-webkit-text-size-adjust: 100%;
 }
@@ -107,11 +106,15 @@ html {
     min-width: 1280px;
     max-width: 1920px;
 
+    // @media screen and (max-width: 1200px) {
+    //     font-size: 50px;
+    // }
+
     @media screen and (max-width: 1280px) {
         font-size: 66.66px;
     }
 
-    @media screen and (min-width: 1281px) and (max-width: 1919px) {
+    @media screen and (min-width: 1280px) and (max-width: 1919px) {
         font-size: calc(100vw / 1920 * 100);
     }
 
@@ -182,3 +185,4 @@ body {
     height: 300px;
     margin: 0 auto;
 }
+

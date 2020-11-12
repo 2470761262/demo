@@ -472,6 +472,9 @@ export default {
         });
     },
     addBrowseHouseLog(param) {
+      if (!param || !param.HouseId) {
+        return false;
+      }
       let that = this;
       let url = "/house/browse/add";
       this.$api

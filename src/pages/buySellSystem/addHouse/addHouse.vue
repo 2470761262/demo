@@ -36,23 +36,27 @@
       }
       .page-contenr-com-posi {
         position: relative;
-        background: #fff;
-        border-left: 1px solid #999;
-        border-right: 1px solid #999;
-        width: 940px;
-        padding-bottom: 59px;
+        //  background: #fff;
+        display: flex;
+        justify-content: center;
+        // prettier-ignore
+        // width: 940PX;
+        // prettier-ignore
+        padding-bottom: 70PX;
         box-sizing: border-box;
-        left: calc(50% - 940px / 2);
+        // prettier-ignore
+        // left: calc(50% - 940PX / 2);
         min-height: 100%;
       }
     }
     .page-contenr-but {
       display: flex;
       justify-content: center;
-      border-top: 1px solid #f2f2f2;
+      //border-top: 1px solid #f2f2f2;
       padding: 10px 0px;
       position: absolute;
-      bottom: 0;
+      // prettier-ignore
+      bottom: 17PX;
       width: 100%;
     }
   }
@@ -69,7 +73,7 @@
 .right-nav-content {
   position: absolute;
   right: 0;
-  transform: translateX(calc(100% + 1px));
+  //transform: translateX(calc(100% + 1px));
   display: flex;
   flex-direction: column;
   > button:last-child {
@@ -169,6 +173,7 @@ import basicInformation from "@/pages/buySellSystem/addHouse/components/basicInf
 //异步组件工厂方法
 import componentsFactory from "@/util/componentsFactory";
 import getMenuRid from "@/minxi/getMenuRid";
+import { mapState } from "vuex";
 import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
@@ -191,8 +196,13 @@ export default {
         import("@/pages/buySellSystem/addHouse/components/addHouseSuccess")
       ) //邀请验真
   },
+  computed: {
+    ...mapState({
+      formData: state => state.addHouse.formData,
+      isformDataNoCommit: state => state.addHouse.isformDataNoCommit
+    })
+  },
   created() {
-    console.log(1);
     let params = {};
     if (Object.keys(this.$route.params).length > 0) {
       params = this.$route.params;
@@ -206,8 +216,14 @@ export default {
       params = this.$route.query;
     }
     let { method, id, paramsObj } = params;
-    console.log(method, id);
-    if (method && id) {
+
+    this.$store.commit("setIsfreshValMutation", false);
+    if (method == "afresh" && id) {
+      // 重新录入
+      this.$store.commit("updateId", id);
+      this.$store.commit("setIsfreshValMutation", true);
+      this.disabled = true;
+    } else if (method && id) {
       this.$store.commit("updateId", id);
       this.formDataGet = true;
       this.disabled = true;
@@ -257,7 +273,7 @@ export default {
     };
   },
   beforeRouteLeave(to, from, next) {
-    if (this.$store.state.addHouse.isformDataNoCommit) {
+    if (this.isformDataNoCommit) {
       this.$confirm("您的表单还未提交,确定离开吗?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -316,6 +332,8 @@ export default {
           break;
         case "exploration":
           flag = await this.$refs.com.validateAll();
+          //重新设置跳过开关为false
+          this.$refs.com.isBreakSave = false;
           break;
         case "addHouseSuccess":
           await this.$refs.com.validateAll();
@@ -334,11 +352,16 @@ export default {
       }
       this.butLoading = false;
       if (parmse && flag) {
-        this.stepsActiveIndex = 3;
-        this.componentName = this.stepsList[
-          this.stepsActiveIndex
-        ].componentName;
         this.$store.commit("updateIsformDataNoCommit", false);
+        // 编辑房源跳转保存成功组件；录入取消跳转房源保存成功组件，直接请求保存数据
+        if (this.paramsObj.editUrl) {
+          this.stepsActiveIndex = 3;
+          this.componentName = this.stepsList[
+            this.stepsActiveIndex
+          ].componentName;
+        } else {
+          this.submit();
+        }
         return;
       }
       if (this.stepsActiveIndex < this.stepsList.length && flag) {
@@ -386,7 +409,7 @@ export default {
           url: `/agent_house/editHousePicture`,
           headers: { "Content-Type": "application/json" },
           data: {
-            id: this.$store.state.addHouse.formData.id
+            id: this.formData.id
           }
         })
         .then(e => {
@@ -396,6 +419,79 @@ export default {
           }
         })
         .catch(() => {});
+    },
+    submit() {
+      this.butLoading = true;
+      let audioList = [];
+      if (this.formData.file.audioFile && this.formData.file.audioFile.id) {
+        audioList.push(this.formData.file.audioFile.id);
+      }
+      let videoList = [];
+      if (this.formData.file.houseVideo && this.formData.file.houseVideo.id) {
+        videoList.push(this.formData.file.houseVideo.id);
+      }
+      let imageList = [];
+      for (let item of this.formData.file.outdoorImgList) {
+        imageList.push(item.id);
+      }
+      for (let item of this.formData.file.livingRoomImgList) {
+        imageList.push(item.id);
+      }
+      for (let item of this.formData.file.bedroomImgList) {
+        imageList.push(item.id);
+      }
+      for (let item of this.formData.file.kitchenImgList) {
+        imageList.push(item.id);
+      }
+      for (let item of this.formData.file.toiletImgList) {
+        imageList.push(item.id);
+      }
+      for (let item of this.formData.file.layoutImgList) {
+        imageList.push(item.id);
+      }
+      for (let item of this.formData.file.originalImageList) {
+        imageList.push(item.id);
+      }
+      let params = {};
+      for (let item in this.formData.step1) {
+        params[item] = this.formData.step1[item];
+      }
+      for (let item in this.formData.step2) {
+        params[item] = this.formData.step2[item];
+      }
+      //图片封面ID
+      if (this.formData.file.coverPictureId != null) {
+        params.coverPictureId = this.formData.file.coverPictureId;
+      }
+      params.imageList = imageList;
+      params.audioList = audioList;
+      params.videoList = videoList;
+      console.log(params);
+      this.$api
+        .post({
+          url: "/verifyHouse",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: params
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.$router.push({
+              path: "/buySellSystem/validateHome",
+              query: {
+                id: result.data
+              }
+            });
+          } else {
+            this.$message.error(result.message);
+          }
+        })
+        .catch(e => {
+          this.$message.error("房源验真失败");
+        })
+        .finally(e => {
+          this.butLoading = false;
+        });
     }
   },
   mounted() {

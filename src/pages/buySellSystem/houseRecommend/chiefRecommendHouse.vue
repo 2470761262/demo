@@ -124,6 +124,7 @@ import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import houseContrast from "@/minxi/houseContrast";
 import definitionmenu from "@/components/definitionMenu";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
@@ -313,7 +314,10 @@ export default {
 
     toLook(id) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      util.openPage.call(this, {
+        name: "houseDetails",
+        params: { houseId: id }
+      });
     },
     queryChiefHouseParams() {
       this.queryVerifyHouseDatas(1, "id", "ascending");

@@ -36,7 +36,11 @@ export default {
           //自定义指令 限制只能输入大于0的数字
           input.onkeyup = () => {
             if (input.value.length === 1) {
-              input.value = input.value.replace(/[^1-9]/g, "");
+              if (binding.modifiers.zore) {
+                input.value = input.value.replace(/[^0-9]/g, "");
+              } else {
+                input.value = input.value.replace(/[^1-9]/g, "");
+              }
             } else {
               input.value = input.value.replace(/[^\d]/g, "");
             }

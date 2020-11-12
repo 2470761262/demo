@@ -16,14 +16,15 @@ export const HOUSEBELONGLIST = [
     value: 2
   },
   {
-    key: "无",
+    key: "其他",
     value: 3
   }
 ];
 
 export const TREMEPACKERS = "tremePackers"; //默认皮肤缓存
 export const TREMEDEFTULTCOLOR = "#0d824b"; //默认皮肤颜色
-
+export const FONTSIZEBASE = 12; //基础字体大小
+export const FONTSIZEBASENAME = "fontsizebase"; //基础字体大小
 export const HOUSEUSE = [
   // 房屋用途 houseUse
   {
@@ -42,7 +43,7 @@ export const HOUSEUSE = [
 export const DECORATION = [
   {
     //装修 decoration
-    key: "毛胚",
+    key: "毛坯",
     value: 1
   },
   {
@@ -195,6 +196,25 @@ export const HOUSESOURCE = [
   {
     key: "安居客",
     value: 7
+  }
+];
+export const HOUSINGSITUATION = [
+  //房屋现状 HOUSINGSITUATION
+  {
+    key: "自住",
+    value: 0
+  },
+  {
+    key: "出租",
+    value: 1
+  },
+  {
+    key: "空置",
+    value: 2
+  },
+  {
+    key: "已租空置",
+    value: 3
   }
 ];
 export const HOUSENOW = [
@@ -495,5 +515,32 @@ export const SEX = [
   {
     key: "女",
     value: 0
+  }
+];
+
+export const PURCHASEPURPOSE = [
+  {
+    key: "刚需",
+    value: "刚需"
+  },
+  {
+    key: "投资",
+    value: "投资"
+  },
+  {
+    key: "办公",
+    value: "办公"
+  },
+  {
+    key: "改善",
+    value: "改善"
+  },
+  {
+    key: "教育",
+    value: "教育"
+  },
+  {
+    key: "其他",
+    value: "其他"
   }
 ];
