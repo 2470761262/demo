@@ -259,10 +259,14 @@ export default {
         return true;
       }
     },
-    //是否多选
-    multiple: {
-      type: Boolean,
-      default: false
+    /**
+     * @example: 选择类型
+     *  multiple 多选
+     * single 单选
+     */
+    choice: {
+      type: String,
+      default: "single"
     }
   },
   data() {
@@ -318,31 +322,57 @@ export default {
       );
     },
     /**
+     * @example:多选
+     */
+    multipleSelect(item) {
+      /**
+       * 都看到这里了,代表你需要,那就你来实现把。
+       */
+      if (this.checkResultTime.includes(item.time)) {
+        const filterList = this.checkResultTime.filter(v => v != item.time);
+
+        if (filterList.length == 0 && !this.isEmpty) {
+          this.checkResultTime = [item.time];
+        } else {
+          this.checkResultTime = filterList;
+        }
+      } else {
+        this.checkResultTime.push(item.time);
+      }
+      this.$emit("input", this.checkResultTime);
+    },
+    /**
+     * @example: 单选
+     */
+    singleSelect(item) {
+      if (this.isEmpty) {
+        //单选
+        this.checkResultTime.includes(item.time)
+          ? (this.checkResultTime = [])
+          : (this.checkResultTime = [item.time]);
+      } else {
+        if (!this.checkResultTime.includes(item.time)) {
+          this.checkResultTime = [item.time];
+        } else {
+          return;
+        }
+      }
+
+      this.$emit("input", this.checkResultTime.join(""));
+    },
+    /**
      * @example: 选择时间
      */
-
     checkTime(item) {
       if (item.disabled) return;
-      //多选 或者 区间选择
-      if (this.multiple) {
-        /**
-         * 都看到这里了,代表你需要,那就你来实现把。
-         */
-      } else {
-        if (this.isEmpty) {
-          //单选
-          this.checkResultTime.includes(item.time)
-            ? (this.checkResultTime = [])
-            : (this.checkResultTime = [item.time]);
-        } else {
-          if (!this.checkResultTime.includes(item.time)) {
-            this.checkResultTime = [item.time];
-          } else {
-            return;
-          }
-        }
-
-        this.$emit("input", this.checkResultTime.join(""));
+      //还差一个区间
+      switch (this.choice) {
+        case "multiple": //多选
+          this.multipleSelect(item);
+          break;
+        case "single": //单选
+          this.singleSelect(item);
+          break;
       }
 
       //change通知this.checkResultTime将不转换格式直接输出数组

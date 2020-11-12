@@ -285,6 +285,7 @@
           height: 277px;
           .scrollbar {
             height: 100%;
+            position: relative;
             /deep/.el-scrollbar__wrap {
               overflow-x: hidden;
             }
@@ -296,6 +297,22 @@
               flex-wrap: wrap;
               padding: 0 24px;
               margin: 0 -8px;
+              .is-empty {
+                position: absolute;
+                top: 60px;
+                left: 50%;
+                text-align: center;
+                transform: translateX(-50%);
+                img {
+                  width: 114px;
+                  height: 94px;
+                }
+                div {
+                  font-size: @font14;
+                  color: #606266;
+                  margin-top: 24px;
+                }
+              }
               .scrollbar-item {
                 flex: 0 0 calc((100% - 32px) / 2);
                 margin: 0 8px 16px;
@@ -1149,86 +1166,12 @@
                 <div class="collapse-box-scroll">
                   <el-scrollbar class="scrollbar">
                     <div class="scrollbar-warp">
-                      <div class="scrollbar-item">
-                        <div class="posi-tips">无需考勤</div>
+                      <div class="is-empty">
                         <img
-                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          src="https://xinjiawang-b.oss-cn-shenzhen.aliyuncs.com/static/imgs/f6793f303f0d0e64ebce24a08b968d2.png?Expires=1605184162&OSSAccessKeyId=TMP.3KjvtPmTKjs5xV3yosmiBqADWPdmWSwuvwXAVeztEdAJhN2VkqF2CHmm5QmBCngekA2fno1bFvZyV7XavJHv8FS9191QXh&Signature=3M8aLei%2FoB9mP3fgMZqW9xDkCIU%3D&versionId=CAEQHBiBgMCZ4.7wrRciIDVhNmY2ODAxYjcwMjQ0ZmE5NjMzNzI3YTgzNzIwZGFi&response-content-type=application%2Foctet-stream"
                           alt=""
                         />
-                        <div class="item-right">
-                          <div class="item-title">李黁接</div>
-                          <div class="item-dept">中城一店</div>
-                        </div>
-                      </div>
-                      <div class="scrollbar-item">
-                        <img
-                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
-                          alt=""
-                        />
-                        <div class="item-right">
-                          <div class="item-title">李黁接</div>
-                          <div class="item-dept">中城一店</div>
-                        </div>
-                      </div>
-                      <div class="scrollbar-item">
-                        <img
-                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
-                          alt=""
-                        />
-                        <div class="item-right">
-                          <div class="item-title">李黁接</div>
-                          <div class="item-dept">中城一店</div>
-                        </div>
-                      </div>
-                      <div class="scrollbar-item">
-                        <img
-                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
-                          alt=""
-                        />
-                        <div class="item-right">
-                          <div class="item-title">李黁接</div>
-                          <div class="item-dept">中城一店</div>
-                        </div>
-                      </div>
-                      <div class="scrollbar-item">
-                        <img
-                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
-                          alt=""
-                        />
-                        <div class="item-right">
-                          <div class="item-title">李黁接</div>
-                          <div class="item-dept">中城一店</div>
-                        </div>
-                      </div>
-                      <div class="scrollbar-item">
-                        <img
-                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
-                          alt=""
-                        />
-                        <div class="item-right">
-                          <div class="item-title">李黁接</div>
-                          <div class="item-dept">中城一店</div>
-                        </div>
-                      </div>
-                      <div class="scrollbar-item">
-                        <img
-                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
-                          alt=""
-                        />
-                        <div class="item-right">
-                          <div class="item-title">李黁接</div>
-                          <div class="item-dept">中城一店</div>
-                        </div>
-                      </div>
-                      <div class="scrollbar-item">
-                        <img
-                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
-                          alt=""
-                        />
-                        <div class="item-right">
-                          <div class="item-title">李黁接</div>
-                          <div class="item-dept">中城一店</div>
-                        </div>
+                        <div>暂无数据</div>
                       </div>
                     </div>
                   </el-scrollbar>
