@@ -68,6 +68,11 @@
           line-height: 28px;
           cursor: pointer;
           transition: all 0.2s;
+          &.is-interval {
+            background: @opacityBackground;
+            border-radius: 0;
+            width: 100%;
+          }
           &.not-select {
             color: #909399;
             cursor: default;
@@ -216,6 +221,16 @@ function computedTime(year, month, day) {
   }
   return util.format(`${year}-${month}-${day}`, "yyyy-MM-dd");
 }
+
+/**
+ * @example: 比较时间大小
+ */
+function compareTime(after, before, bool) {
+  if (!bool) {
+    return Date.parse(after, before) > Date.parse(before);
+  }
+  return Date.parse(after, before) < Date.parse(before);
+}
 //保存当前日期实例
 const nowData = new Date();
 
@@ -261,8 +276,9 @@ export default {
     },
     /**
      * @example: 选择类型
-     *  multiple 多选
-     * single 单选
+     *  multiple    多选
+     *  single      单选
+     *  interval    区间
      */
     choice: {
       type: String,
@@ -309,6 +325,9 @@ export default {
               //格式化传入时间
               this.checkResultTime = [util.format(value, "yyyy-MM-dd")];
             }
+            //只有第一次初始化时去更新时间
+            if (this.choice == "interval" && !ordValue && value.length == 2)
+              this.setIntervalItemClass();
           } else {
             if (!ordValue) {
               //没传则设置今天为默认选中
@@ -346,7 +365,6 @@ export default {
      */
     singleSelect(item) {
       if (this.isEmpty) {
-        //单选
         this.checkResultTime.includes(item.time)
           ? (this.checkResultTime = [])
           : (this.checkResultTime = [item.time]);
@@ -365,7 +383,7 @@ export default {
      */
     checkTime(item) {
       if (item.disabled) return;
-      //还差一个区间
+
       switch (this.choice) {
         case "multiple": //多选
           this.multipleSelect(item);
@@ -373,10 +391,67 @@ export default {
         case "single": //单选
           this.singleSelect(item);
           break;
+        case "interval": //区间
+          this.intervalSelect(item);
+          break;
       }
 
       //change通知this.checkResultTime将不转换格式直接输出数组
       this.$emit("change", this.checkResultTime);
+    },
+    /**
+     * @example: 区间
+     */
+    intervalSelect(item) {
+      if (!Array.isArray(this.checkResultTime)) this.checkResultTime = [];
+
+      if (this.checkResultTime.length == 2) {
+        this.checkResultTime = [item.time];
+      } else if (this.checkResultTime.length < 2) {
+        if (compareTime(item.time, this.checkResultTime, true)) {
+          this.checkResultTime.unshift(item.time);
+        } else {
+          this.checkResultTime.push(item.time);
+        }
+      }
+
+      if (this.checkResultTime.length == 2)
+        this.$emit("input", this.checkResultTime);
+
+      this.setIntervalItemClass();
+    },
+    /**
+     * @example: 设置区间样式
+     */
+    setIntervalItemClass() {
+      this.beforeMonthList = this.beforeMonthList.map(
+        this.compareTimeInitMonthList
+      );
+
+      this.currentMonthList = this.currentMonthList.map(
+        this.compareTimeInitMonthList
+      );
+
+      this.afterMonthList = this.afterMonthList.map(
+        this.compareTimeInitMonthList
+      );
+    },
+    /**
+     * @example: 比较是否时间在区间内
+     */
+    compareTimeInitMonthList(v) {
+      if (
+        compareTime(v.time, this.checkResultTime[0], false) &&
+        compareTime(v.time, this.checkResultTime[1], true)
+      ) {
+        //如果已经有默认数组了直接添加
+        if (v.class) v.class.push("is-interval");
+        else v.class = ["is-interval"]; //没有默认数组
+      } else {
+        if (v.class) v.class = v.class.filter(v => v != "is-interval");
+      }
+
+      return v;
     },
     /**
      * @example: 下一个月
@@ -411,6 +486,8 @@ export default {
       this.month = date.getMonth() + 1;
       this.day = date.getDate();
       this.initDate();
+      //切换为当前选择的区间月时重置计算
+      if (this.choice == "interval") this.setIntervalItemClass();
     },
     getWeekDay(year, month, day) {
       return new Date(`${year}/${month}/${day}`).getDay();
@@ -486,7 +563,7 @@ export default {
           : {};
         return {
           day,
-          time: computedTime(this.year, this.month - 1, day),
+          time: computedTime(this.year, this.month + 1, day),
           ...filterMerge
         };
       });
