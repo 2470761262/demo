@@ -1041,7 +1041,6 @@
         <ls-collapse v-model="root.activeCollapse">
           <ls-collapse-item sign="calendar" :title="cd.collapseTile">
             <ls-calendar
-              choice="interval"
               :is-empty="false"
               :current="root.current"
               v-model="root.calendarTiem"
