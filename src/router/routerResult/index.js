@@ -57,6 +57,76 @@ export default [
           import(
             /* webpackChunkName: "myInfo" */ "@/pages/info/clockList/myInfo/index.vue"
           )
+      },
+      {
+        path: "/clockList/statistic",
+        meta: {
+          keepAlive: true,
+          title: "考勤统计",
+          // isScrollTop: true, //是否需要记录坐标
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockStatistic" */ "@/pages/info/clockList/statistic/index.vue"
+          )
+      },
+      {
+        path: "/clockList/examine",
+        meta: {
+          keepAlive: true,
+          title: "考勤审批",
+          // isScrollTop: true, //是否需要记录坐标
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockExamine" */ "@/pages/info/clockList/examine/index.vue"
+          )
+      }
+    ]
+  },
+  {
+    path: "/clockRule",
+    meta: {
+      keepAlive: true,
+      title: "考勤规则",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: { render: e => e("router-view") },
+    redirect: "/clockRule/list",
+    children: [
+      {
+        path: "/clockRule/list",
+        meta: {
+          keepAlive: true,
+          title: "考勤规则管理",
+          // isScrollTop: true, //是否需要记录坐标
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockRuleList" */ "@/pages/info/clockRule/list/index.vue"
+          )
+      },
+      {
+        path: "/clockRule/quotes",
+        meta: {
+          keepAlive: true,
+          title: "名言警句管理",
+          // isScrollTop: true, //是否需要记录坐标
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockRuleQuotes" */ "@/pages/info/clockRule/quotes/index.vue"
+          )
       }
     ]
   },
