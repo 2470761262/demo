@@ -73,6 +73,7 @@
 }
 </style>
 <template>
+  <!-- 考勤规则管理 -->
   <div class="content">
     <div class="head">
       <div class="head-type">
@@ -99,55 +100,14 @@
       </div>
     </div>
     <div class="scroll">
-      <router-view></router-view>
+      考勤规则管理
     </div>
   </div>
 </template>
 
 <script>
+import clockRuleHead from "../mixins/clockRuleHead.js";
 export default {
-  data() {
-    return {
-      currentNavIndex: 0,
-      currentSubNavIndex: 0,
-      navs: [
-        {
-          name: "考勤统计",
-          path: "/clockList"
-        },
-        {
-          name: "考勤规则",
-          path: "/clockRule"
-        }
-      ],
-      subNavs: [
-        {
-          name: "我的日志",
-          path: "/clockList/myInfo"
-        },
-        {
-          name: "考勤统计",
-          path: "/clockList/statistic"
-        },
-        {
-          name: "考勤审批",
-          path: "/clockList/examine"
-        }
-      ]
-    };
-  },
-  methods: {
-    navigateToOhter(path, index) {
-      if (index != undefined) this.currentSubNavIndex = index;
-      this.$router.push({ path: path });
-    }
-  },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      vm.currentSubNavIndex = vm.subNavs.findIndex(item => {
-        return item.path == to.fullPath;
-      });
-    });
-  }
+  mixins: [clockRuleHead]
 };
 </script>
