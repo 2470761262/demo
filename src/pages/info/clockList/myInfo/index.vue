@@ -212,6 +212,9 @@
         }
       }
     }
+    .list-foot {
+      margin-top: 24px;
+    }
   }
   .list-right {
     width: 292px;
@@ -263,6 +266,81 @@
             height: 8px;
             border-radius: 50%;
             margin-right: 8px;
+          }
+        }
+      }
+      .collapse-box {
+        background: #ffffff;
+        box-shadow: 0px 8px 13px 0px rgba(68, 163, 163, 0.1);
+        border-radius: 8px;
+        .collapse-box-head {
+          height: 60px;
+          padding-left: 24px;
+          color: #303133;
+          font-size: @font18;
+          line-height: 60px;
+          font-weight: bold;
+        }
+        .collapse-box-scroll {
+          height: 277px;
+          .scrollbar {
+            height: 100%;
+            /deep/.el-scrollbar__wrap {
+              overflow-x: hidden;
+            }
+            /deep/.is-horizontal {
+              display: none;
+            }
+            .scrollbar-warp {
+              display: flex;
+              flex-wrap: wrap;
+              padding: 0 24px;
+              margin: 0 -8px;
+              .scrollbar-item {
+                flex: 0 0 calc((100% - 32px) / 2);
+                margin: 0 8px 16px;
+                height: 71px;
+                background: #f8f8f9;
+                border-radius: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                .posi-tips {
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  width: 52px;
+                  height: 15px;
+                  font-size: @font12;
+                  text-align: center;
+                  line-height: 15px;
+                  color: #fff;
+                  background-image: url(https://img.0be.cn/pc/bp1.png);
+                  background-size: 100% 100%;
+                  background-repeat: no-repeat;
+                }
+                img {
+                  width: 34px;
+                  height: 34px;
+                  border-radius: 50%;
+                  margin-right: 9px;
+                }
+                .item-right {
+                  line-height: 1;
+                  .item-title {
+                    font-size: @font14;
+                    color: #303133;
+                    font-weight: bold;
+                  }
+                  .item-dept {
+                    margin-top: 8px;
+                    color: #606266;
+                    font-size: @font12;
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -930,11 +1008,21 @@
           </div>
         </div>
       </div>
+      <div class="list-foot">
+        <!--  :page-sizes="[100, 200, 300, 400]"  sizes-->
+        <el-pagination
+          :current-page="root.page.currentPage"
+          :page-size="root.page.pagesize"
+          layout="total,prev, pager, next, jumper"
+          :total="root.page.total"
+        >
+        </el-pagination>
+      </div>
     </div>
     <div class="list-right">
       <div class="posi-sticky">
         <ls-collapse v-model="root.activeCollapse">
-          <ls-collapse-item sign="calendar" :title="root.calendarTiem">
+          <ls-collapse-item sign="calendar" :title="cd.collapseTile">
             <ls-calendar
               :is-empty="false"
               :current="root.current"
@@ -956,9 +1044,196 @@
               </template>
             </ls-calendar>
           </ls-collapse-item>
-          <ls-collapse-item sign="calendar1" title="sxsx">
+          <ls-collapse-item sign="calendar1" title="我的管理(10)">
             <template>
-              <div>2222</div>
+              <div class="collapse-box">
+                <div class="collapse-box-head">
+                  <div>我的管理(10)</div>
+                </div>
+                <div class="collapse-box-scroll">
+                  <el-scrollbar class="scrollbar">
+                    <div class="scrollbar-warp">
+                      <div class="scrollbar-item">
+                        <div class="posi-tips">无需考勤</div>
+                        <img
+                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          alt=""
+                        />
+                        <div class="item-right">
+                          <div class="item-title">李黁接</div>
+                          <div class="item-dept">中城一店</div>
+                        </div>
+                      </div>
+                      <div class="scrollbar-item">
+                        <img
+                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          alt=""
+                        />
+                        <div class="item-right">
+                          <div class="item-title">李黁接</div>
+                          <div class="item-dept">中城一店</div>
+                        </div>
+                      </div>
+                      <div class="scrollbar-item">
+                        <img
+                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          alt=""
+                        />
+                        <div class="item-right">
+                          <div class="item-title">李黁接</div>
+                          <div class="item-dept">中城一店</div>
+                        </div>
+                      </div>
+                      <div class="scrollbar-item">
+                        <img
+                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          alt=""
+                        />
+                        <div class="item-right">
+                          <div class="item-title">李黁接</div>
+                          <div class="item-dept">中城一店</div>
+                        </div>
+                      </div>
+                      <div class="scrollbar-item">
+                        <img
+                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          alt=""
+                        />
+                        <div class="item-right">
+                          <div class="item-title">李黁接</div>
+                          <div class="item-dept">中城一店</div>
+                        </div>
+                      </div>
+                      <div class="scrollbar-item">
+                        <img
+                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          alt=""
+                        />
+                        <div class="item-right">
+                          <div class="item-title">李黁接</div>
+                          <div class="item-dept">中城一店</div>
+                        </div>
+                      </div>
+                      <div class="scrollbar-item">
+                        <img
+                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          alt=""
+                        />
+                        <div class="item-right">
+                          <div class="item-title">李黁接</div>
+                          <div class="item-dept">中城一店</div>
+                        </div>
+                      </div>
+                      <div class="scrollbar-item">
+                        <img
+                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          alt=""
+                        />
+                        <div class="item-right">
+                          <div class="item-title">李黁接</div>
+                          <div class="item-dept">中城一店</div>
+                        </div>
+                      </div>
+                    </div>
+                  </el-scrollbar>
+                </div>
+              </div>
+            </template>
+          </ls-collapse-item>
+          <ls-collapse-item sign="calendar2" title="我的关注(3)">
+            <template>
+              <div class="collapse-box">
+                <div class="collapse-box-head">
+                  <div>我的关注(3)</div>
+                </div>
+                <div class="collapse-box-scroll">
+                  <el-scrollbar class="scrollbar">
+                    <div class="scrollbar-warp">
+                      <div class="scrollbar-item">
+                        <div class="posi-tips">无需考勤</div>
+                        <img
+                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          alt=""
+                        />
+                        <div class="item-right">
+                          <div class="item-title">李黁接</div>
+                          <div class="item-dept">中城一店</div>
+                        </div>
+                      </div>
+                      <div class="scrollbar-item">
+                        <img
+                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          alt=""
+                        />
+                        <div class="item-right">
+                          <div class="item-title">李黁接</div>
+                          <div class="item-dept">中城一店</div>
+                        </div>
+                      </div>
+                      <div class="scrollbar-item">
+                        <img
+                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          alt=""
+                        />
+                        <div class="item-right">
+                          <div class="item-title">李黁接</div>
+                          <div class="item-dept">中城一店</div>
+                        </div>
+                      </div>
+                      <div class="scrollbar-item">
+                        <img
+                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          alt=""
+                        />
+                        <div class="item-right">
+                          <div class="item-title">李黁接</div>
+                          <div class="item-dept">中城一店</div>
+                        </div>
+                      </div>
+                      <div class="scrollbar-item">
+                        <img
+                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          alt=""
+                        />
+                        <div class="item-right">
+                          <div class="item-title">李黁接</div>
+                          <div class="item-dept">中城一店</div>
+                        </div>
+                      </div>
+                      <div class="scrollbar-item">
+                        <img
+                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          alt=""
+                        />
+                        <div class="item-right">
+                          <div class="item-title">李黁接</div>
+                          <div class="item-dept">中城一店</div>
+                        </div>
+                      </div>
+                      <div class="scrollbar-item">
+                        <img
+                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          alt=""
+                        />
+                        <div class="item-right">
+                          <div class="item-title">李黁接</div>
+                          <div class="item-dept">中城一店</div>
+                        </div>
+                      </div>
+                      <div class="scrollbar-item">
+                        <img
+                          src="https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1962761216.jpg"
+                          alt=""
+                        />
+                        <div class="item-right">
+                          <div class="item-title">李黁接</div>
+                          <div class="item-dept">中城一店</div>
+                        </div>
+                      </div>
+                    </div>
+                  </el-scrollbar>
+                </div>
+              </div>
             </template>
           </ls-collapse-item>
         </ls-collapse>

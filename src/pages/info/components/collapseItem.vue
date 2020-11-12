@@ -18,7 +18,7 @@
     .collapseItem-text {
       color: #303133;
       font-weight: bold;
-      font-size: @font16;
+      font-size: @font18;
     }
     .el-icon-arrow-right {
       font-size: @font18;
@@ -47,9 +47,6 @@ export default {
     title: String
   },
   inject: ["instance"],
-  created() {
-    console.log(this.title);
-  },
   computed: {
     isShow: {
       get() {
