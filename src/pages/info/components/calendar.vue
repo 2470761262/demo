@@ -229,6 +229,11 @@ export default {
       type: Boolean,
       default: false
     },
+    //是否可以勾选之后为空,
+    isEmpty: {
+      type: Boolean,
+      default: true
+    },
     //加载提示语
     loadingText: {
       type: String,
@@ -324,10 +329,18 @@ export default {
          * 都看到这里了,代表你需要,那就你来实现把。
          */
       } else {
-        //单选
-        this.checkResultTime.includes(item.time)
-          ? (this.checkResultTime = [])
-          : (this.checkResultTime = [item.time]);
+        if (this.isEmpty) {
+          //单选
+          this.checkResultTime.includes(item.time)
+            ? (this.checkResultTime = [])
+            : (this.checkResultTime = [item.time]);
+        } else {
+          if (!this.checkResultTime.includes(item.time)) {
+            this.checkResultTime = [item.time];
+          } else {
+            return;
+          }
+        }
 
         this.$emit("input", this.checkResultTime.join(""));
       }

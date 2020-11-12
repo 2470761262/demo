@@ -933,22 +933,35 @@
     </div>
     <div class="list-right">
       <div class="posi-sticky">
-        <ls-calendar :current="root.current" v-model="root.calendarTiem">
-          <template v-slot:dots="{ col }">
-            <div
-              class="calendar-dots"
-              :class="{ 'is-hide': root.calendarTiem == col.time }"
-              :style="{ 'background-color': root.color[col.type] }"
-            ></div>
-          </template>
-          <template v-slot:foot>
-            <div class="calendar-foot">
-              <div class="calendar-foot-item">考勤正常</div>
-              <div class="calendar-foot-item">考勤异常</div>
-              <div class="calendar-foot-item">无考勤</div>
-            </div>
-          </template>
-        </ls-calendar>
+        <ls-collapse v-model="root.activeCollapse">
+          <ls-collapse-item sign="calendar" :title="root.calendarTiem">
+            <ls-calendar
+              :is-empty="false"
+              :current="root.current"
+              v-model="root.calendarTiem"
+            >
+              <template v-slot:dots="{ col }">
+                <div
+                  class="calendar-dots"
+                  :class="{ 'is-hide': root.calendarTiem == col.time }"
+                  :style="{ 'background-color': root.color[col.type] }"
+                ></div>
+              </template>
+              <template v-slot:foot>
+                <div class="calendar-foot">
+                  <div class="calendar-foot-item">考勤正常</div>
+                  <div class="calendar-foot-item">考勤异常</div>
+                  <div class="calendar-foot-item">无考勤</div>
+                </div>
+              </template>
+            </ls-calendar>
+          </ls-collapse-item>
+          <ls-collapse-item sign="calendar1" title="sxsx">
+            <template>
+              <div>2222</div>
+            </template>
+          </ls-collapse-item>
+        </ls-collapse>
       </div>
     </div>
   </div>
@@ -958,10 +971,14 @@
 import { V2Init } from "vcomposition2";
 import lsCalendar from "@/pages/info/components/calendar";
 import { enter } from "./realization/index";
+import lsCollapse from "@/pages/info/components/collapse";
+import lsCollapseItem from "@/pages/info/components/collapseItem";
 export default V2Init({
   created: [enter],
   components: {
-    lsCalendar
+    lsCalendar,
+    lsCollapse,
+    lsCollapseItem
   }
 });
 </script>
