@@ -392,8 +392,10 @@ export default {
           this.singleSelect(item);
           break;
         case "interval": //区间
+          //区间选择将会执行下面的change通知
+          //在intervalSelect方法内判断是否需要执行change
           this.intervalSelect(item);
-          break;
+          return;
       }
 
       //change通知this.checkResultTime将不转换格式直接输出数组
@@ -415,10 +417,13 @@ export default {
         }
       }
 
-      if (this.checkResultTime.length == 2)
-        this.$emit("input", this.checkResultTime);
-
+      // 设置区间样式
       this.setIntervalItemClass();
+
+      if (this.checkResultTime.length == 2) {
+        this.$emit("input", this.checkResultTime);
+        this.$emit("change", this.checkResultTime);
+      }
     },
     /**
      * @example: 设置区间样式

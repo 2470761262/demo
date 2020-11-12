@@ -5,7 +5,7 @@ import util from "@/util/util";
  */
 function useCalendar(v2) {
   v2.reactive({
-    calendarTiem: "2020-11-05",
+    calendarTiem: ["2020-11-05", "2020-11-23"],
     color: ["#0DA88B", "#F6A420", "#EF5656"],
     current: []
   });
