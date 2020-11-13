@@ -1,3 +1,44 @@
+<template>
+  <!-- 名言警句配置 -->
+  <div class="content">
+    <div class="head">
+      <div class="head-type">
+        <div
+          class="head-type-item"
+          v-for="(item, index) in navs"
+          :key="index"
+          :class="{ active: currentNavIndex == index }"
+          @click="navigateToOhter(item.path)"
+        >
+          {{ item.name }}
+        </div>
+      </div>
+      <div class="head-underling-nva">
+        <div class="head-nav-box">
+          <div
+            class="head-nav-item"
+            v-for="(item, index) in subNavs"
+            :key="index"
+            :class="{ active: currentSubNavIndex == index }"
+            @click="navigateToOhter(item.path, index)"
+          >
+            {{ item.name }}
+          </div>
+        </div>
+        <button class="btn-add">新增名言警句</button>
+      </div>
+    </div>
+    <div class="scroll">
+      名言警句配置
+    </div>
+  </div>
+</template>
+<script>
+import clockRuleHead from "../mixins/clockRuleHead.js";
+export default {
+  mixins: [clockRuleHead]
+};
+</script>
 <style lang="less" scoped>
 .content {
   flex: 1;
@@ -41,25 +82,40 @@
     .head-underling-nva {
       display: flex;
       height: 58px;
+      justify-content: space-between;
       align-items: center;
-      padding-left: 24px;
-      .head-nav-item {
-        height: 26px;
-        padding: 0 8px;
-        border-radius: 4px;
-        border: 1px solid transparent;
-        box-sizing: border-box;
-        font-size: @font14;
-        text-align: center;
-        line-height: 24px;
-        color: #606266;
-        margin-right: 16px;
-        cursor: pointer;
-        &.active {
-          color: @backgroud;
-          background: @opacityBackground;
-          border: 1px solid @backgroud;
+      padding: 0 24px;
+      .head-nav-box {
+        display: flex;
+        .head-nav-item {
+          height: 26px;
+          padding: 0 8px;
+          border-radius: 4px;
+          border: 1px solid transparent;
+          box-sizing: border-box;
+          font-size: @font14;
+          text-align: center;
+          line-height: 24px;
+          color: #606266;
+          margin-right: 16px;
+          cursor: pointer;
+          &.active {
+            color: @backgroud;
+            background: @opacityBackground;
+            border: 1px solid @backgroud;
+          }
         }
+      }
+      .btn-add {
+        height: 40px;
+        padding: 0 16px;
+        line-height: 40px;
+        background: @backgroud;
+        border: none;
+        border-radius: 4px;
+        color: #fff;
+        outline: none;
+        cursor: pointer;
       }
     }
   }
@@ -72,42 +128,3 @@
   }
 }
 </style>
-<template>
-  <!-- 名言警句配置 -->
-  <div class="content">
-    <div class="head">
-      <div class="head-type">
-        <div
-          class="head-type-item"
-          v-for="(item, index) in navs"
-          :key="index"
-          :class="{ active: currentNavIndex == index }"
-          @click="navigateToOhter(item.path)"
-        >
-          {{ item.name }}
-        </div>
-      </div>
-      <div class="head-underling-nva">
-        <div
-          class="head-nav-item"
-          v-for="(item, index) in subNavs"
-          :key="index"
-          :class="{ active: currentSubNavIndex == index }"
-          @click="navigateToOhter(item.path, index)"
-        >
-          {{ item.name }}
-        </div>
-      </div>
-    </div>
-    <div class="scroll">
-      名言警句配置
-    </div>
-  </div>
-</template>
-
-<script>
-import clockRuleHead from "../mixins/clockRuleHead.js";
-export default {
-  mixins: [clockRuleHead]
-};
-</script>

@@ -143,6 +143,34 @@ export default [
           )
       },
       {
+        path: "/clockRule/add",
+        meta: {
+          keepAlive: true,
+          title: "添加考勤规则",
+          // isScrollTop: true, //是否需要记录坐标
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockRuleAdd" */ "@/pages/info/clockRule/addorEditClockRule/index.vue"
+          )
+      },
+      {
+        path: "/clockRule/edit",
+        meta: {
+          keepAlive: true,
+          title: "编辑考勤规则",
+          // isScrollTop: true, //是否需要记录坐标
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockRuleEdit" */ "@/pages/info/clockRule/addorEditClockRule/index.vue"
+          )
+      },
+      {
         path: "/clockRule/quotes",
         meta: {
           keepAlive: true,
