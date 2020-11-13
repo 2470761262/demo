@@ -68,6 +68,10 @@
           line-height: 28px;
           cursor: pointer;
           transition: all 0.2s;
+          &.is-hover {
+            opacity: 0.7;
+            .is-interval;
+          }
           &.is-interval {
             background: @opacityBackground;
             border-radius: 0;
@@ -76,6 +80,7 @@
           &.not-select {
             color: #909399;
             cursor: default;
+            opacity: 0.7;
             //cursor: not-allowed;
           }
           &.disabled {
@@ -93,6 +98,10 @@
           &.active {
             background: @backgroud;
             color: #fff;
+          }
+          &.hover-active {
+            .active;
+            opacity: 0.7;
           }
         }
       }
@@ -131,7 +140,12 @@
         >
           <span
             class="text not-select"
-            :class="item.class"
+            :class="[
+              {
+                active: checkResultTime.includes(item.time)
+              },
+              item.class
+            ]"
             :style="item.style"
             >{{ item.day }}</span
           >
@@ -145,8 +159,10 @@
           @click="checkTime(item)"
         >
           <span
-            class="text"
+            @mouseout="currentMouseout(item)"
+            @mouseover="currentMouseover(item)"
             :class="[
+              'text',
               {
                 active: checkResultTime.includes(item.time),
                 disabled: item.disabled
@@ -167,7 +183,12 @@
         >
           <span
             class="text not-select"
-            :class="item.class"
+            :class="[
+              {
+                active: checkResultTime.includes(item.time)
+              },
+              item.class
+            ]"
             :style="item.style"
             >{{ item.day }}</span
           >
@@ -304,6 +325,29 @@ export default {
   },
   methods: {
     /**
+     * @example: 鼠标滑入
+     */
+    currentMouseover(item) {
+      if (this.checkResultTime.length > 0 && this.checkResultTime.length < 2) {
+        let timeArr = this.checkResultTime.slice();
+        if (compareTime(item.time, timeArr, true)) {
+          timeArr.unshift(item.time);
+        } else {
+          timeArr.push(item.time);
+        }
+        item.class.push("hover-active");
+        this.setDiffTime(timeArr, "is-hover");
+      }
+    },
+    /**
+     * @example: 鼠标滑出
+     */
+
+    currentMouseout(item) {
+      item.class = item.class.filter(v => v != "hover-active");
+      this.setDiffTime([], "is-hover");
+    },
+    /**
      * @example: 监听合并属性变化
      */
     watchWalk() {
@@ -416,9 +460,9 @@ export default {
           this.checkResultTime.push(item.time);
         }
       }
-
+      item.class = item.class.filter(v => v != "hover-active");
       // 设置区间样式
-      this.setIntervalItemClass();
+      this.setDiffTime();
 
       if (this.checkResultTime.length == 2) {
         this.$emit("input", this.checkResultTime);
@@ -426,34 +470,36 @@ export default {
       }
     },
     /**
+     * @example: 统一判断
+     */
+    setDiffTime(arr, className) {
+      if (this.checkResultTime.length > 0 && this.choice == "interval")
+        this.setIntervalItemClass(arr, className);
+    },
+    /**
      * @example: 设置区间样式
      */
-    setIntervalItemClass() {
-      this.beforeMonthList = this.beforeMonthList.map(
-        this.compareTimeInitMonthList
-      );
-
-      this.currentMonthList = this.currentMonthList.map(
-        this.compareTimeInitMonthList
-      );
-
-      this.afterMonthList = this.afterMonthList.map(
-        this.compareTimeInitMonthList
-      );
+    setIntervalItemClass(arr, className) {
+      const diffList = arr || this.checkResultTime;
+      ["beforeMonthList", "currentMonthList", "afterMonthList"].forEach(v => {
+        this[v] = this[v].map(t => {
+          return this.compareTimeInitMonthList(t, diffList, className);
+        });
+      });
     },
     /**
      * @example: 比较是否时间在区间内
      */
-    compareTimeInitMonthList(v) {
+    compareTimeInitMonthList(v, diffArr, className = "is-interval") {
       if (
-        compareTime(v.time, this.checkResultTime[0], false) &&
-        compareTime(v.time, this.checkResultTime[1], true)
+        compareTime(v.time, diffArr[0], false) &&
+        compareTime(v.time, diffArr[1], true)
       ) {
         //如果已经有默认数组了直接添加
-        if (v.class) v.class.push("is-interval");
-        else v.class = ["is-interval"]; //没有默认数组
+        if (v.class) v.class.push(className);
+        else v.class = [className]; //没有默认数组
       } else {
-        if (v.class) v.class = v.class.filter(v => v != "is-interval");
+        if (v.class) v.class = v.class.filter(v => v != className);
       }
 
       return v;
@@ -492,7 +538,7 @@ export default {
       this.day = date.getDate();
       this.initDate();
       //切换为当前选择的区间月时重置计算
-      if (this.choice == "interval") this.setIntervalItemClass();
+      this.setDiffTime();
     },
     getWeekDay(year, month, day) {
       return new Date(`${year}/${month}/${day}`).getDay();
@@ -513,7 +559,7 @@ export default {
               JSON.stringify(this.before.filter(b => b.day == day)[0] || {})
             )
           : {};
-
+        if (!filterMerge.class) filterMerge.class = [];
         return {
           day,
           time: computedTime(this.year, this.month - 1, day),
@@ -530,6 +576,7 @@ export default {
               JSON.stringify(this.current.filter(b => b.day == day)[0] || {})
             )
           : {};
+        if (!filterMerge.class) filterMerge.class = [];
 
         //计算现实当前年月小于当前天之前的天数高亮
         if (
@@ -537,15 +584,7 @@ export default {
           this.month == readDate.getMonth() + 1 &&
           day < readDate.getDate()
         ) {
-          try {
-            filterMerge.class
-              ? filterMerge.class.push("highlight")
-              : (filterMerge.class = ["highlight"]);
-          } catch (e) {
-            console.warn(
-              "component calendar props current option class need Array"
-            );
-          }
+          filterMerge.class.push("highlight");
         }
         return {
           day,
@@ -566,6 +605,7 @@ export default {
               JSON.stringify(this.after.filter(b => b.day == day)[0] || {})
             )
           : {};
+        if (!filterMerge.class) filterMerge.class = [];
         return {
           day,
           time: computedTime(this.year, this.month + 1, day),
