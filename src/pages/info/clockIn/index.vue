@@ -119,6 +119,9 @@
           }
         }
       }
+      .clock-righ {
+        margin-left: 24px;
+      }
     }
   }
 }

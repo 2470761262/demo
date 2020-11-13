@@ -1,7 +1,7 @@
 <style lang="less" scoped>
 .clock-time {
   width: 292px;
-  margin-left: 24px;
+  //margin-left: 24px;
   background: #ffffff;
   box-shadow: 0px 8px 13px 0px rgba(68, 163, 163, 0.1);
   border-radius: 8px;
@@ -99,7 +99,7 @@ export default {
         prompt = "早上好";
       } else if (hour > 12 && hour < 14) {
         prompt = "中午好";
-      } else if (hour > 14 && hour < 18) {
+      } else if (hour >= 14 && hour < 18) {
         prompt = "下午好";
       } else {
         prompt = "晚上好";

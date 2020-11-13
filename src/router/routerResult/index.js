@@ -13,7 +13,20 @@ export default [
       import(/* webpackChunkName: "info" */ "@/pages/info/home/index.vue")
   },
   {
-    //买卖系统房源列表
+    //考勤系统免考勤
+    path: "/noClock",
+    meta: {
+      keepAlive: true,
+      title: "免考勤",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(/* webpackChunkName: "noClock" */ "@/pages/info/noClock/index.vue")
+  },
+  {
+    //考勤系统打卡
     path: "/clockIn",
     meta: {
       keepAlive: true,
@@ -26,7 +39,22 @@ export default [
       import(/* webpackChunkName: "clockIn" */ "@/pages/info/clockIn/index.vue")
   },
   {
-    //买卖系统房源列表
+    //考勤系统日志详情
+    path: "/logDetail",
+    meta: {
+      keepAlive: true,
+      title: "日志详情",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "logDetail" */ "@/pages/info/logDetail/index.vue"
+      )
+  },
+  {
+    //勤系统2级
     path: "/clockList",
     meta: {
       keepAlive: true,
@@ -40,11 +68,11 @@ export default [
         /* webpackChunkName: "clockList" */ "@/pages/info/clockList/index.vue"
       ),
 
-    //我的房源
+    //考勤系统我的日志
     redirect: "/clockList/myInfo",
     children: [
       {
-        //买卖系统开发线索
+        //考勤系统我的日志
         path: "/clockList/myInfo",
         meta: {
           keepAlive: true,
