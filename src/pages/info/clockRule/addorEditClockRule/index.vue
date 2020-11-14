@@ -95,7 +95,9 @@
             <p class="red">已将2020年11月8日设置为上班日</p>
             <p class="green">已将2020年11月10日、11日、12日设置为休息日</p>
           </div>
-          <button class="set-btn">设置特殊考勤日期</button>
+          <button class="set-btn" @click="openDateDialog">
+            设置特殊考勤日期
+          </button>
         </div>
         <div class="panel bottom">
           <div class="bottom-btn">
@@ -106,7 +108,7 @@
         </div>
       </div>
       <div class="sidebar">
-        <h2 class="topic">关联考勤部分/人员</h2>
+        <h2 class="topic">关联考勤部门/人员</h2>
         <div class="panel right">
           <el-tabs
             class="sub-nav"
@@ -123,17 +125,20 @@
           <div class="content">
             <div class="tabpanel" v-if="activeTabName == 'first'">
               <div class="relate-ipt-box">
-                <el-input class="ipt" v-model="value" clearable></el-input>
-                <div class="result-panel">
-                  <div class="list">
+                <el-input
+                  class="ipt"
+                  v-model="value"
+                  clearable
+                  @focus="relateIptFocus"
+                ></el-input>
+                <div class="result-panel" :class="{ active: openFilterPanel }">
+                  <div class="list" v-infinite-scroll="relateDepartLoad">
                     <el-checkbox-group v-model="checkList">
-                      <div
-                        class="column"
-                        v-for="(item, index) in 180"
+                      <el-checkbox
+                        :label="'复选框' + index"
+                        v-for="(item, index) in 20"
                         :key="index"
-                      >
-                        <el-checkbox :label="'复选框' + index"></el-checkbox>
-                      </div>
+                      ></el-checkbox>
                     </el-checkbox-group>
                   </div>
                   <div class="bottom">
@@ -141,39 +146,74 @@
                   </div>
                 </div>
               </div>
+              <div class="relate-list">
+                <div class="column" v-for="(item, index) in 20" :key="index">
+                  <span class="title">绿色鑫家园-事业部</span>
+                  <span class="btn el-icon-delete-solid"></span>
+                </div>
+                <div class="no-data" v-if="false">
+                  <img
+                    src="@/assets//images/clockRule_add_ralate_no_data.svg"
+                    alt=""
+                  />
+                  <p>暂无关联部门</p>
+                </div>
+              </div>
             </div>
             <div class="tabpanel" v-else>
-              <el-select
-                v-model="value"
-                multiple
-                filterable
-                clearable
-                :collapse-tags="false"
-                placeholder="请选择"
-              >
-                <el-option
-                  v-for="item in cities"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                  <span style="float: left">{{ item.label }}</span>
-                  <span style="float: right; color: #8492a6; font-size: 13px">{{
-                    item.value
-                  }}</span>
-                </el-option>
-              </el-select>
+              <div class="relate-ipt-box">
+                <el-input
+                  class="ipt"
+                  v-model="value"
+                  clearable
+                  @focus="relateIptFocus"
+                ></el-input>
+                <div class="result-panel" :class="{ active: openFilterPanel }">
+                  <div class="list" v-infinite-scroll="relateDepartLoad">
+                    <el-checkbox-group v-model="checkList">
+                      <el-checkbox
+                        :label="'复选框' + index"
+                        v-for="(item, index) in 20"
+                        :key="index"
+                      ></el-checkbox>
+                    </el-checkbox-group>
+                  </div>
+                  <div class="bottom">
+                    <button>添加</button>
+                  </div>
+                </div>
+              </div>
+              <div class="relate-list">
+                <div class="column" v-for="(item, index) in 0" :key="index">
+                  <span class="title">绿色鑫家园-事业部</span>
+                  <span class="btn el-icon-delete-solid"></span>
+                </div>
+                <div class="no-data">
+                  <img
+                    src="@/assets//images/clockRule_add_ralate_no_data.svg"
+                    alt=""
+                  />
+                  <p>暂无关联人员</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <!-- 加入58房源库提示弹窗 -->
+    <set-clock-date
+      :dialogVisible.sync="dialogClockDateVisible"
+    ></set-clock-date>
   </div>
 </template>
 <script>
+import setClockDate from "./components/setClockDate.vue";
 export default {
+  components: { setClockDate },
   data() {
     return {
+      dialogClockDateVisible: true,
       name: "",
       company: "",
       introduction: "",
@@ -233,35 +273,18 @@ export default {
           name: "second"
         }
       ],
+      openFilterPanel: false,
       value: "",
-      cities: [
-        {
-          value: "Beijing",
-          label: "北京"
-        },
-        {
-          value: "Shanghai",
-          label: "上海"
-        },
-        {
-          value: "Nanjing",
-          label: "南京"
-        },
-        {
-          value: "Chengdu",
-          label: "成都"
-        },
-        {
-          value: "Shenzhen",
-          label: "深圳"
-        },
-        {
-          value: "Guangzhou",
-          label: "广州"
-        }
-      ],
       checkList: ["复选框1"]
     };
+  },
+  mounted() {
+    console.log("1111111111111111111");
+    document.addEventListener("click", this.relateInpBlur);
+  },
+  beforeDestroy() {
+    console.log("2222222222222222222");
+    document.removeEventListener("click", this.relateInpBlur);
   },
   methods: {
     save() {
@@ -278,12 +301,30 @@ export default {
       console.log(this.ruleTime);
       //this.$set(this, this.ruleTime[index]);
     },
+    openDateDialog() {
+      this.dialogClockDateVisible = true;
+    },
     /**
-     * @description: 楼栋信息/车位信息切换
+     * @description: 部门/人员切换
      * @return {*}
      */
     switchTab() {
       console.log(this.activeTabName, "=========");
+    },
+    relateIptFocus() {
+      this.openFilterPanel = true;
+    },
+    relateInpBlur(e) {
+      console.log(e.target);
+      let tp = document.querySelector(".relate-ipt-box");
+      if (tp) {
+        if (!tp.contains(e.target)) {
+          this.openFilterPanel = false;
+        }
+      }
+    },
+    relateDepartLoad() {
+      console.log("aaaaaaaaaa");
     }
   }
 };
@@ -338,14 +379,29 @@ export default {
   flex: 1;
   display: flex;
   justify-content: center;
+  height: 0;
   background: #f0f7f7;
-  overflow: scroll;
+  overflow: auto;
   &::-webkit-scrollbar {
     display: none;
+  }
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background-color: rgba(0, 0, 0, 0);
+  }
+  *::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    background-color: #bbb;
+  }
+  *::-webkit-scrollbar-track {
+    // box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #fff;
   }
   .center {
     display: flex;
     padding: 0 24px 32px 24px;
+    overflow: auto;
     .topic {
       padding: 24px 0;
       line-height: 1;
@@ -372,7 +428,13 @@ export default {
       }
     }
     .main {
+      display: flex;
+      flex-direction: column;
       width: 730px;
+      overflow: auto;
+      &::-webkit-scrollbar {
+        display: none;
+      }
       .rule {
         /deep/.ipt-box {
           margin-bottom: 24px;
@@ -573,8 +635,11 @@ export default {
     }
     .sidebar {
       width: 414px;
-      height: 500px;
       margin-left: 24px;
+      overflow: auto;
+      &::-webkit-scrollbar {
+        display: none;
+      }
       .right {
         padding: 24px 0;
         height: 634px;
@@ -604,10 +669,11 @@ export default {
           }
         }
         .content {
-          padding: 16px 24px 0;
+          padding: 16px 0 0;
           .tabpanel {
             /deep/.relate-ipt-box {
               position: relative;
+              margin: 0 24px;
               .ipt {
                 .el-input__inner {
                   height: 46px;
@@ -629,20 +695,33 @@ export default {
                 box-shadow: 0px 8px 13px 0px rgba(0, 0, 0, 0.1);
                 border-radius: 6px;
                 box-sizing: border-box;
+                opacity: 0;
+                transition-duration: 0.3s;
+                z-index: -2;
+                &.active {
+                  opacity: 1;
+                  z-index: 9;
+                }
                 .list {
                   overflow: auto;
-                  &::-webkit-scrollbar {
-                    width: 6px;
-                    height: 6px;
-                    background-color: rgba(0, 0, 0, 0);
-                  }
-                  &::-webkit-scrollbar-thumb {
-                    border-radius: 6px;
-                    background-color: #bbb;
-                  }
-                  &::-webkit-scrollbar-track {
-                    // box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-                    background: #fff;
+                  .el-checkbox {
+                    display: flex;
+                    align-items: center;
+                    height: 62px;
+                    padding-left: 24px;
+                    .el-checkbox__inner {
+                      width: 14px;
+                      height: 14px;
+                    }
+                    .el-checkbox__inner::after {
+                      height: 7px;
+                      left: 4px;
+                    }
+                    .el-checkbox__label {
+                      padding-left: 16px;
+                      font-size: @font14;
+                      color: #303133;
+                    }
                   }
                 }
                 .bottom {
@@ -665,6 +744,43 @@ export default {
                     outline: none;
                     cursor: pointer;
                   }
+                }
+              }
+            }
+            .relate-list {
+              width: 100%;
+              height: 476px;
+              padding: 0 24px;
+              margin-top: 16px;
+              overflow: auto;
+              box-sizing: border-box;
+              .column {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 62px;
+                .title {
+                  font-size: @font14;
+                  color: #303133;
+                }
+                .btn {
+                  font-size: @font16;
+                  color: #909399;
+                  cursor: pointer;
+                }
+              }
+              .no-data {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding-top: 115px;
+                img {
+                  width: 114px;
+                  margin-bottom: 24px;
+                }
+                p {
+                  font-size: @font14;
+                  color: #606266;
                 }
               }
             }
