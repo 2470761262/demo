@@ -1319,6 +1319,7 @@ export default V2Init({
   },
   data() {
     return {
+      currentNavIndex: 0,
       subNavs: [
         {
           name: "我的日志",

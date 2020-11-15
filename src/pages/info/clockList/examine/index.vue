@@ -25,7 +25,6 @@
             {{ item.name }}
           </div>
         </div>
-        <button class="btn-add" @click="navigateToAdd()">新增考勤规则</button>
       </div>
     </div>
     <div class="scroll">
@@ -55,13 +54,9 @@
                           <el-select
                             v-model="buildOptData"
                             placeholder="楼盘名称"
-                            class="input-content  anchor-point"
                             clearable
                             filterable
                             remote
-                            popper-class="options-myhouse-custom-item anchor-point"
-                            data-anchor="我的验真楼盘 => select"
-                            @click.native="log_socket.sendUserActionData"
                             @focus="remoteBuildInput"
                             @change="remoteBuildChange"
                             :remote-method="buildRemoteMethod"
@@ -70,12 +65,6 @@
                           >
                             <el-option
                               v-for="item in buildForList"
-                              class="anchor-point"
-                              :data-anchor="
-                                '我的验真列表楼盘 => select => option:' +
-                                  item.name
-                              "
-                              @click.native="log_socket.sendUserActionData"
                               :key="item.value"
                               :label="item.name"
                               :value="item"
@@ -89,10 +78,6 @@
                             placeholder="栋座"
                             clearable
                             filterable
-                            class="input-content  anchor-point"
-                            popper-class="options-myhouse-custom-item anchor-point"
-                            data-anchor="我的验真栋座 => select"
-                            @click.native="log_socket.sendUserActionData"
                             value-key="value"
                             remote
                             :remote-method="queryRoomNo"
@@ -101,12 +86,6 @@
                           >
                             <el-option
                               v-for="item in towerForList"
-                              class="anchor-point"
-                              :data-anchor="
-                                '我的验真列表栋座 => select => option:' +
-                                  item.name
-                              "
-                              @click.native="log_socket.sendUserActionData"
                               :key="item.value"
                               :label="item.name"
                               :value="item"
@@ -120,10 +99,6 @@
                             placeholder="房间号"
                             clearable
                             filterable
-                            popper-class="options-myhouse-custom-item anchor-point"
-                            class="input-content  anchor-point"
-                            data-anchor="我的验真房号 => select"
-                            @click.native="log_socket.sendUserActionData"
                             remote
                             :remote-method="queryRoomData"
                             :loading="roomLoading"
@@ -132,12 +107,6 @@
                           >
                             <el-option
                               v-for="item in roomForList"
-                              class="anchor-point"
-                              :data-anchor="
-                                '我的验真列表房号 => select => option:' +
-                                  item.name
-                              "
-                              @click.native="log_socket.sendUserActionData"
                               :key="item.value"
                               :label="item.name"
                               :value="item"
@@ -153,7 +122,7 @@
                       <el-form-item label="申请类型">
                         <el-col :span="12">
                           <el-select
-                            class="serch-item-select"
+                            class="width100 serch-item-select"
                             popper-class="options-item"
                             v-model="input2"
                             placeholder="选择申请类型"
@@ -187,7 +156,7 @@
                   <el-col :span="6">
                     <el-form-item label="审批状态">
                       <el-select
-                        class="serch-item-select"
+                        class="width100 serch-item-select"
                         popper-class="options-item"
                         v-model="input4"
                         placeholder="请选择"
@@ -232,7 +201,7 @@
           </div>
           <div class="wrapper">
             <div class="right"></div>
-            <div class="content">
+            <div class="center">
               <div class="table">
                 <el-table
                   :data="tableData"
@@ -241,30 +210,54 @@
                   ref="tableList"
                 >
                   <el-table-column
-                    fixed="left"
-                    label="房屋信息"
-                    width="230"
-                    align="left"
+                    type="index"
+                    width="60"
+                    label="序号"
+                  ></el-table-column>
+                  <el-table-column
+                    min-width="120"
+                    prop="addTime1"
+                    label="申请人"
+                    align="right"
                     show-overflow-tooltip
                   >
-                    <template v-slot="scope">
-                      <div class="tab-house-box">
-                        <div class="tab-house-title">
-                          {{ scope.row.communityName
-                          }}{{
-                            scope.row.buildingName
-                              ? "-" + scope.row.buildingName
-                              : ""
-                          }}{{ scope.row.roomNo ? "-" + scope.row.roomNo : "" }}
-                        </div>
-                        <div class="tab-house-no">{{ scope.row.houseNo }}</div>
-                      </div>
-                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    min-width="200"
+                    prop="addTime2"
+                    label="类型"
+                    align="right"
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    min-width="200"
+                    prop="addTime3"
+                    label="类型"
+                    align="right"
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    min-width="200"
+                    prop="addTime"
+                    label="申请时间"
+                    align="right"
+                    show-overflow-tooltip
+                  >
+                  </el-table-column>
+                  <el-table-column
+                    min-width="200"
+                    prop="addTime3"
+                    label="审批人"
+                    align="right"
+                    show-overflow-tooltip
+                  >
                   </el-table-column>
                   <el-table-column
                     min-width="130"
                     prop="checkStatus"
-                    label="验真状态"
+                    label="日志批阅"
                     align="right"
                     show-overflow-tooltip
                   >
@@ -288,99 +281,6 @@
                         v-if="scope.row.checkStatusStr == '无效'"
                         class="span_info"
                         >{{ scope.row.checkStatusStr }}</span
-                      >
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    label="售价"
-                    align="right"
-                    show-overflow-tooltip
-                  >
-                    <template v-slot="scope">
-                      <span>{{ scope.row.price }}万</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    label="面积"
-                    align="right"
-                    show-overflow-tooltip
-                  >
-                    <template v-slot="scope">
-                      <span>{{ scope.row.inArea }}㎡</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    label="户型"
-                    align="right"
-                    show-overflow-tooltip
-                  >
-                    <template v-slot="scope">
-                      <span
-                        >{{ scope.row.rooms || 0 }}-{{ scope.row.hall || 0 }}-{{
-                          scope.row.toilet || 0
-                        }}-{{ scope.row.balcony || 0 }}</span
-                      >
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    prop="addPerName"
-                    label="录入人"
-                    align="right"
-                    show-overflow-tooltip
-                  >
-                    <template v-slot="scope">
-                      <div class="tab-house-box">
-                        <div class="tab-house-title">
-                          {{ scope.row.addPerName }}
-                        </div>
-                        <div class="tab-house-no">{{ scope.row.deptName }}</div>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    label="验真类型"
-                    align="right"
-                    show-overflow-tooltip
-                  >
-                    <template v-slot="scope">
-                      <span>{{ scope.row.sourceStr }}</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    min-width="200"
-                    prop="addTime"
-                    label="提交时间"
-                    align="right"
-                    show-overflow-tooltip
-                  >
-                  </el-table-column>
-
-                  <el-table-column
-                    fixed="right"
-                    label="操作"
-                    align="right"
-                    width="300"
-                  >
-                    <template v-slot="scope">
-                      <el-button
-                        @click="handleCallClick(scope.row)"
-                        type="text"
-                        size="small"
-                        :disabled="scope.row.checkStatusStr != '待验真'"
-                        >一键拨号</el-button
-                      >
-                      <el-button
-                        @click="handleTestClick(scope.row)"
-                        type="text"
-                        size="small"
-                        :disabled="scope.row.checkStatusStr != '待验真'"
-                        >房源验真</el-button
-                      >
-                      <el-button
-                        @click="handleRecordClick(scope.row)"
-                        type="text"
-                        size="small"
-                        >验真记录</el-button
                       >
                     </template>
                   </el-table-column>
@@ -411,6 +311,7 @@ export default {
   mixins: [clockRuleHead, cascadeHouse],
   data() {
     return {
+      currentNavIndex: 0,
       loading: false,
       subNavs: [
         {
@@ -431,7 +332,22 @@ export default {
       input3: "",
       input4: "",
       time: [],
-      tableData: [],
+      tableData: [
+        { id: 1 },
+        { id: 2 },
+        { id: 2 },
+        { id: 2 },
+        { id: 2 },
+        { id: 2 },
+        { id: 2 },
+        { id: 2 },
+        { id: 2 },
+        { id: 2 },
+        { id: 2 },
+        { id: 2 },
+        { id: 2 },
+        { id: 2 }
+      ],
       pageJson: {
         page: 1,
         limit: 10,
@@ -466,6 +382,11 @@ export default {
   }
 };
 </script>
+<style lang="less">
+.children-page {
+  height: 100%;
+}
+</style>
 <style lang="less" scoped>
 /*** element下拉选择面板 ***/
 .el-select-dropdown__item {
@@ -499,9 +420,8 @@ export default {
     line-height: inherit;
   }
   .el-form-item__label {
-    padding: 0;
+    padding-right: 8px;
     line-height: 36px;
-    text-align: left;
     font-size: @font14;
     color: #303133;
   }
@@ -685,26 +605,36 @@ export default {
           .right {
             height: 100%;
           }
-          /deep/.content {
+          /deep/.center {
             flex: 1;
             display: flex;
             flex-direction: column;
             width: 100%;
+            *::-webkit-scrollbar {
+              width: 6px;
+              height: 6px;
+              background-color: rgba(0, 0, 0, 0);
+            }
+            *::-webkit-scrollbar-thumb {
+              border-radius: 6px;
+              background-color: #bbb;
+            }
+            *::-webkit-scrollbar-track {
+              // box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+              background: #fff;
+            }
             .table {
               flex: 1;
               display: flex;
+              overflow: auto;
               .caret-wrapper {
-                // prettier-ignore
-                width: 15PX;
-                // prettier-ignore
-                height: 14PX;
+                width: 15px;
+                height: 14px;
                 .sort-caret.ascending {
-                  // prettier-ignore
-                  top: -5PX;
+                  top: -5px;
                 }
                 .sort-caret.descending {
-                  // prettier-ignore
-                  bottom: -3PX;
+                  bottom: -3px;
                 }
               }
               .has-gutter:not(.is-group) {
@@ -712,14 +642,12 @@ export default {
                 tr:nth-child(1) {
                   th:nth-child(1) {
                     .cell {
-                      // prettier-ignore
-                      padding-left: 16PX;
+                      padding-left: 16px;
                     }
                   }
                   th:nth-last-child(2) {
                     .cell {
-                      // prettier-ignore
-                      padding-right: 16PX;
+                      padding-right: 16px;
                     }
                   }
                 }
@@ -728,14 +656,12 @@ export default {
                 tr {
                   td:nth-child(1) {
                     .cell {
-                      // prettier-ignore
-                      padding-left: 16PX;
+                      padding-left: 16px;
                     }
                   }
                   td:last-child {
                     .cell {
-                      // prettier-ignore
-                      padding-right: 16PX;
+                      padding-right: 16px;
                     }
                   }
                 }
@@ -749,10 +675,9 @@ export default {
                   }
                 }
                 th {
-                  // prettier-ignore
-                  height: 48PX;
+                  height: 48px;
                   padding: 0;
-                  background: #f0f5f4;
+                  background: #f6f6f6;
                   font-weight: normal;
                   font-size: @font16;
                   color: #303133;
@@ -764,26 +689,22 @@ export default {
               .el-table__fixed-right {
                 tr {
                   th:last-child {
-                    // prettier-ignore
-                    padding-right: 16PX;
+                    padding-right: 16px;
                   }
                 }
               }
               .el-table__body td {
-                // prettier-ignore
-                height: 64PX;
+                height: 64px;
               }
               .el-button--mini,
               .el-button--small {
-                // prettier-ignore
-                padding: 0 10PX;
+                padding: 0 10px;
                 font-size: @font16;
               }
 
               .tab-house-box {
                 .tab-house-title {
-                  // prettier-ignore
-                  margin-bottom: 8PX;
+                  margin-bottom: 8px;
                   font-size: @font16;
                   color: #606266;
                 }
@@ -797,8 +718,7 @@ export default {
               .span_warning,
               .span_info {
                 display: inline-block;
-                // prettier-ignore
-                padding: 6PX 13PX;
+                padding: 6px 13px;
                 border-radius: 2px;
                 line-height: 1;
                 text-align: center;
@@ -825,8 +745,7 @@ export default {
               }
             }
             .el-pagination {
-              // prettier-ignore
-              padding: 24PX 5PX 8PX;
+              padding: 24px 5px 8px;
               display: flex;
               justify-content: flex-end;
               align-items: center;
@@ -841,14 +760,11 @@ export default {
                 font-weight: normal;
               }
               .el-select .el-input {
-                // prettier-ignore
-                width: 80PX;
+                width: 80px;
               }
               .el-pagination__sizes .el-input .el-input__inner {
-                // prettier-ignore
-                height: 22PX;
-                // prettier-ignore
-                line-height: 20PX;
+                height: 22px;
+                line-height: 20px;
                 font-size: @font14;
               }
               .el-pager .more::before {
@@ -857,8 +773,7 @@ export default {
               .el-pagination__editor {
                 height: auto;
                 .el-input__inner {
-                  // prettier-ignore
-                  height: 22PX;
+                  height: 22px;
                 }
               }
               .el-input--mini .el-input__icon {
