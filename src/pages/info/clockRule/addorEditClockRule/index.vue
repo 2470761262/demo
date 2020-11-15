@@ -646,18 +646,21 @@ export default {
         /deep/.sub-nav {
           display: flex;
           flex-direction: row;
+          width: 100%;
           padding: 0 24px;
+          box-sizing: border-box;
           .el-tabs__header {
+            width: 100%;
             margin: 0;
           }
           .el-tabs__item {
             height: 32px;
             line-height: 1;
             font-size: @font18;
-            font-weight: bold;
             color: #303133;
             &.is-active {
               color: @backgroud;
+              font-weight: bold;
             }
           }
           .el-tabs__active-bar {

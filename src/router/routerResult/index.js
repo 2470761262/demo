@@ -63,11 +63,11 @@ export default [
       isMapNav: true, //不需要导航
       isPad: true //不需要el-main padding
     },
-    component: () =>
-      import(
-        /* webpackChunkName: "clockList" */ "@/pages/info/clockList/index.vue"
-      ),
-
+    // component: () =>
+    //   import(
+    //     /* webpackChunkName: "clockList" */ "@/pages/info/clockList/index.vue"
+    //   ),
+    component: { render: e => e("router-view") },
     //考勤系统我的日志
     redirect: "/clockList/myInfo",
     children: [

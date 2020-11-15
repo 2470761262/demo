@@ -119,7 +119,7 @@
   </div>
 </template>
 <script>
-import clockRuleHead from "../mixins/clockRuleHead.js";
+import clockRuleHead from "@/pages/info/mixins/clockRuleHead.js";
 export default {
   mixins: [clockRuleHead],
   data() {
