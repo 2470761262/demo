@@ -106,11 +106,11 @@ export default [
       isMapNav: true, //不需要导航
       isPad: true //不需要el-main padding
     },
-    component: () =>
-      import(
-        /* webpackChunkName: "clockList" */ "@/pages/info/clockList/index.vue"
-      ),
-
+    // component: () =>
+    //   import(
+    //     /* webpackChunkName: "clockList" */ "@/pages/info/clockList/index.vue"
+    //   ),
+    component: { render: e => e("router-view") },
     //考勤系统我的日志
     redirect: "/clockList/myInfo",
     children: [
@@ -186,6 +186,34 @@ export default [
           )
       },
       {
+        path: "/clockRule/add",
+        meta: {
+          keepAlive: true,
+          title: "添加考勤规则",
+          // isScrollTop: true, //是否需要记录坐标
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockRuleAdd" */ "@/pages/info/clockRule/addorEditClockRule/index.vue"
+          )
+      },
+      {
+        path: "/clockRule/edit",
+        meta: {
+          keepAlive: true,
+          title: "编辑考勤规则",
+          // isScrollTop: true, //是否需要记录坐标
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockRuleEdit" */ "@/pages/info/clockRule/addorEditClockRule/index.vue"
+          )
+      },
+      {
         path: "/clockRule/quotes",
         meta: {
           keepAlive: true,
@@ -200,6 +228,48 @@ export default [
           )
       }
     ]
+  },
+  {
+    path: "/askforLeave",
+    meta: {
+      keepAlive: true,
+      title: "请假申请",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "askforLeave" */ "@/pages/info/askforLeave/index.vue"
+      )
+  },
+  {
+    path: "/leaveDetail",
+    meta: {
+      keepAlive: true,
+      title: "请假申请详情页",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "leaveDetail" */ "@/pages/info/leaveDetail/index.vue"
+      )
+  },
+  {
+    path: "/repairDetail",
+    meta: {
+      keepAlive: true,
+      title: "补卡申请详情页",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "repairDetail" */ "@/pages/info/repairDetail/index.vue"
+      )
   },
   {
     //买卖系统房源列表

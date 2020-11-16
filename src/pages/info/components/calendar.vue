@@ -206,9 +206,6 @@ import util from "@/util/util";
 
 const Week = ["日", "一", "二", "三", "四", "五", "六"];
 
-//格子的总数
-const gridCount = 42;
-
 /**
  * @example: 获取当前月多少天
  */
@@ -304,6 +301,11 @@ export default {
     choice: {
       type: String,
       default: "single"
+    },
+    //格子的总数
+    gridCount: {
+      type: Number,
+      default: 42
     }
   },
   data() {
@@ -595,7 +597,7 @@ export default {
 
       //计算下个月填充多少
       const afterCount =
-        gridCount -
+        this.gridCount -
         (this.beforeMonthList.length + this.currentMonthList.length);
       this.afterMonthList = fill(afterCount, (v, i) => {
         const day = i + 1;
