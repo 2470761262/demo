@@ -212,7 +212,7 @@ export default {
           this.applyLoading = true;
           this.$api
             .post({
-              url: `agentHouse/collect/updateSendNotice`,
+              url: `/employee/bindBroker58`,
               headers: { "Content-Type": "application/json;charset=UTF-8" },
               data: {
                 accountId: this.accountId,
