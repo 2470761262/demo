@@ -58,8 +58,8 @@
           可一次性设置多个{{ activeTabName == "first" ? "上班" : "休息" }}日
         </div>
         <div class="btn-box">
-          <button class="cancel">取消</button>
-          <button class="confirm">确定</button>
+          <button class="cancel" @click="cancel">取消</button>
+          <button class="confirm" @click="confirm">确定</button>
         </div>
       </div>
     </div>
@@ -115,6 +115,9 @@ export default {
      */
     switchTab() {
       console.log(this.activeTabName, "=========");
+    },
+    confirm() {
+      console.log("confirm");
     }
   }
 };
@@ -219,7 +222,7 @@ export default {
       }
       .confirm {
         margin-left: 16px;
-        background: #247257;
+        background: @backgroud;
         color: #fff;
       }
     }

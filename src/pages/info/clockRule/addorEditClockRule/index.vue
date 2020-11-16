@@ -201,7 +201,7 @@
         </div>
       </div>
     </div>
-    <!-- 加入58房源库提示弹窗 -->
+    <!-- 设置特殊考勤日期弹窗 -->
     <set-clock-date
       :dialogVisible.sync="dialogClockDateVisible"
     ></set-clock-date>
@@ -597,8 +597,6 @@ export default {
         }
       }
       .bottom {
-        display: flex;
-        justify-content: space-between;
         margin-top: 24px;
         .bottom-btn {
           button {
@@ -612,6 +610,7 @@ export default {
             outline: none;
             box-sizing: border-box;
             cursor: pointer;
+            float: left;
           }
           .reset {
             margin-right: 16px;
@@ -624,12 +623,15 @@ export default {
           }
         }
         .del {
+          height: 40px;
           background: transparent;
           border: none;
+          line-height: 40px;
           font-size: @font16;
           color: #f56c6c;
           outline: none;
           cursor: pointer;
+          float: right;
         }
       }
     }
@@ -728,8 +730,6 @@ export default {
                   }
                 }
                 .bottom {
-                  display: flex;
-                  justify-content: flex-end;
                   width: 366px;
                   height: 58px;
                   padding: 9px;
@@ -746,6 +746,7 @@ export default {
                     color: #fff;
                     outline: none;
                     cursor: pointer;
+                    float: right;
                   }
                 }
               }

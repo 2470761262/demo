@@ -187,6 +187,48 @@ export default [
     ]
   },
   {
+    path: "/askforLeave",
+    meta: {
+      keepAlive: true,
+      title: "请假申请",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "askforLeave" */ "@/pages/info/askforLeave/index.vue"
+      )
+  },
+  {
+    path: "/leaveDetail",
+    meta: {
+      keepAlive: true,
+      title: "请假申请详情页",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "leaveDetail" */ "@/pages/info/leaveDetail/index.vue"
+      )
+  },
+  {
+    path: "/repairDetail",
+    meta: {
+      keepAlive: true,
+      title: "补卡申请详情页",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "repairDetail" */ "@/pages/info/repairDetail/index.vue"
+      )
+  },
+  {
     //买卖系统房源列表
     path: "/buySellSystem/houseList",
     meta: {
