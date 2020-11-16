@@ -8,10 +8,90 @@
   align-items: flex-start;
   .main {
     width: 852px;
-    .shadow-box;
+    .apply-type {
+      height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px 0 24px;
+      line-height: 1;
+      box-shadow: 0px 8px 13px 0px rgba(68, 163, 163, 0.1);
+      border-radius: 8px;
+      &.yellow-light {
+        background: linear-gradient(
+            266deg,
+            rgba(255, 150, 0, 0) 0%,
+            rgba(255, 150, 0, 0.1) 100%
+          )
+          #fff;
+        .apply-type-text {
+          color: #ff9600;
+        }
+        .apply-type-tips {
+          background: linear-gradient(133deg, #ff6900 0%, #ff9600 100%);
+          &::before {
+            font-size: @font20;
+            font-family: iconfont;
+            color: #fff;
+            content: "\e683";
+          }
+        }
+      }
+      &.red-light {
+        background: linear-gradient(
+            266deg,
+            rgba(255, 0, 0, 0) 0%,
+            rgba(255, 0, 0, 0.1) 100%
+          )
+          #fff;
+        .apply-type-text {
+          color: #ef5656;
+        }
+        .apply-type-tips {
+          background: linear-gradient(133deg, #f23c3c 0%, #de674e 100%);
+          &::before {
+            font-size: @font20;
+            font-family: iconfont;
+            color: #fff;
+            content: "\e684";
+          }
+        }
+      }
+      .apply-type-data {
+        .apply-type-title {
+          color: #303133;
+          font-size: @font16;
+          font-weight: bold;
+        }
+        .apply-type-text {
+          margin-top: 16px;
+          font-size: @font16;
+        }
+      }
+      .apply-type-tips {
+        width: 96px;
+        height: 64px;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        .type-tips-text {
+          color: #fff;
+          font-size: @font14;
+          font-weight: bold;
+          margin-top: 10px;
+        }
+      }
+    }
     .body {
+      .shadow-box;
+      margin-top: 24px;
+      overflow: hidden;
       padding: 24px;
       line-height: 1;
+      height: 485px;
+      box-sizing: border-box;
       .title {
         color: #303133;
         font-size: @font16;
@@ -33,15 +113,12 @@
           }
         }
       }
-      .tips {
-        width: 804px;
-        height: 36px;
-        line-height: 36px;
-        background: rgba(255, 150, 0, 0.07);
-        color: #ff9600;
+      .apply-text {
+        width: 400px;
+        margin-top: 8px;
         font-size: @font16;
-        text-indent: 16px;
-        margin-top: 16px;
+        color: #606266;
+        line-height: 26px;
       }
       .check {
         width: 579px;
@@ -126,34 +203,6 @@
             margin-top: 8px;
           }
         }
-      }
-    }
-    .foot {
-      display: flex;
-      height: 72px;
-      background: #ffffff;
-      box-shadow: 0px -2px 15px 0px rgba(0, 0, 0, 0.1);
-      align-items: center;
-      padding-left: 24px;
-      border-bottom-left-radius: 8px;
-      border-bottom-right-radius: 8px;
-      button {
-        width: 109px;
-        height: 40px;
-        border-radius: 4px;
-        border: 0;
-        outline: none;
-        margin-right: 16px;
-        cursor: pointer;
-      }
-      .reset {
-        background: #f4f4f5;
-        font-size: @font16;
-        color: #606266;
-      }
-      .submit {
-        background: @backgroud;
-        color: #fff;
       }
     }
   }
@@ -257,6 +306,20 @@
                     font-size: @font14;
                     color: #303133;
                     font-weight: bold;
+                    display: flex;
+                    align-items: center;
+                    .name-tag {
+                      height: 16px;
+                      border-radius: 2px;
+                      border: 1px solid #247257;
+                      padding: 0 4px;
+                      font-weight: normal;
+                      line-height: 14px;
+                      font-size: @font12;
+                      color: #247257;
+                      box-sizing: border-box;
+                      margin-left: 8px;
+                    }
                   }
                   .head-middle-dept {
                     color: #606266;
@@ -321,12 +384,18 @@
 <template>
   <div class="content">
     <div class="main">
-      <div class="body">
-        <div class="title is-require">
-          选择免考勤员工
+      <div class="apply-type yellow-light">
+        <div class="apply-type-data">
+          <div class="apply-type-title">审批情况</div>
+          <div class="apply-type-text">审核结束后才能提交下一名员工</div>
         </div>
-        <div class="tips">
-          每次仅能一名员工设置免考勤，审核结束后才能提交下一名员工
+        <div class="apply-type-tips">
+          <div class="type-tips-text">等待审核</div>
+        </div>
+      </div>
+      <div class="body">
+        <div class="title">
+          选择免考勤员工
         </div>
         <div class="check">
           <div class="check-item is-check">
@@ -336,47 +405,13 @@
             />
             <h3>胡彦斌</h3>
           </div>
-          <div class="check-item">
-            <img
-              src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1819216937,2118754409&fm=26&gp=0.jpg"
-              alt=""
-            />
-            <h3>胡彦斌</h3>
-          </div>
-          <div class="check-item">
-            <img
-              src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1819216937,2118754409&fm=26&gp=0.jpg"
-              alt=""
-            />
-            <h3>胡彦斌</h3>
-          </div>
-          <div class="check-item">
-            <img
-              src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1819216937,2118754409&fm=26&gp=0.jpg"
-              alt=""
-            />
-            <h3>胡彦斌</h3>
-          </div>
-          <div class="check-item">
-            <img
-              src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1819216937,2118754409&fm=26&gp=0.jpg"
-              alt=""
-            />
-            <h3>胡彦斌</h3>
-          </div>
         </div>
-        <div class="title is-require">
+        <div class="title">
           申请原因
         </div>
-        <div class="col-textarea">
-          <el-input
-            type="textarea"
-            placeholder="请输入明日计划"
-            maxlength="50"
-            show-word-limit
-            resize="none"
-          >
-          </el-input>
+        <div class="apply-text">
+          因为他很帅因为他很帅因为他很帅因为他很帅因为他很帅
+          因为他很帅因为他很帅因为他很帅因为他很帅因为他很帅
         </div>
         <div class="title">
           审批人员
@@ -391,10 +426,6 @@
             <div class="examine-dept">中诚片区（区域总监）</div>
           </div>
         </div>
-      </div>
-      <div class="foot">
-        <button class="reset">重置</button>
-        <button class="submit">提交申请</button>
       </div>
     </div>
     <div class="other">
@@ -424,7 +455,10 @@
                     alt=""
                   />
                   <div class="head-middle">
-                    <div class="head-middle-name">林俊杰</div>
+                    <div class="head-middle-name">
+                      <div class="name-text">林俊杰</div>
+                      <div class="name-tag">经纪人</div>
+                    </div>
                     <div class="head-middle-dept">中诚片区-中诚一店</div>
                   </div>
                 </div>
@@ -440,7 +474,10 @@
                     alt=""
                   />
                   <div class="head-middle">
-                    <div class="head-middle-name">林俊杰</div>
+                    <div class="head-middle-name">
+                      <div class="name-text">林俊杰</div>
+                      <div class="name-tag">经纪人</div>
+                    </div>
                     <div class="head-middle-dept">中诚片区-中诚一店</div>
                   </div>
                 </div>
@@ -456,7 +493,10 @@
                     alt=""
                   />
                   <div class="head-middle">
-                    <div class="head-middle-name">林俊杰</div>
+                    <div class="head-middle-name">
+                      <div class="name-text">林俊杰</div>
+                      <div class="name-tag">经纪人</div>
+                    </div>
                     <div class="head-middle-dept">中诚片区-中诚一店</div>
                   </div>
                 </div>

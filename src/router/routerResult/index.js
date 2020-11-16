@@ -26,6 +26,49 @@ export default [
       import(/* webpackChunkName: "noClock" */ "@/pages/info/noClock/index.vue")
   },
   {
+    //考勤系统免解锁
+    path: "/unLock",
+    meta: {
+      keepAlive: true,
+      title: "解锁",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(/* webpackChunkName: "unLock" */ "@/pages/info/unLock/index.vue")
+  },
+  {
+    //考勤系统免考勤审核
+    path: "/examineClock",
+    meta: {
+      keepAlive: true,
+      title: "免考勤审核",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "examineClock" */ "@/pages/info/examineClock/index.vue"
+      )
+  },
+  {
+    //考勤系统解锁审核
+    path: "/applyUnLock",
+    meta: {
+      keepAlive: true,
+      title: "解锁审核",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "applyUnLock" */ "@/pages/info/applyUnLock/index.vue"
+      )
+  },
+  {
     //考勤系统打卡
     path: "/clockIn",
     meta: {

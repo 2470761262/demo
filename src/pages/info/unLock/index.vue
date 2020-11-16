@@ -103,30 +103,6 @@
           }
         }
       }
-      .examine-per {
-        display: flex;
-        margin-top: 16px;
-        align-items: center;
-        line-height: 1;
-        img {
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          margin-right: 8px;
-        }
-        .examine-middle {
-          .examine-title {
-            color: #303133;
-            font-size: @font14;
-            font-weight: bold;
-          }
-          .examine-dept {
-            color: #909399;
-            font-size: @font12;
-            margin-top: 8px;
-          }
-        }
-      }
     }
     .foot {
       display: flex;
@@ -257,6 +233,20 @@
                     font-size: @font14;
                     color: #303133;
                     font-weight: bold;
+                    display: flex;
+                    align-items: center;
+                    .name-tag {
+                      height: 16px;
+                      border-radius: 2px;
+                      border: 1px solid #247257;
+                      padding: 0 4px;
+                      font-weight: normal;
+                      line-height: 14px;
+                      font-size: @font12;
+                      color: #247257;
+                      box-sizing: border-box;
+                      margin-left: 8px;
+                    }
                   }
                   .head-middle-dept {
                     color: #606266;
@@ -269,14 +259,6 @@
                 margin-top: 16px;
                 font-size: @font12;
                 color: #909399;
-              }
-              .unload-item {
-                position: absolute;
-                top: 12px;
-                right: 12px;
-                font-size: 16px;
-                color: #909399;
-                cursor: pointer;
               }
             }
           }
@@ -323,10 +305,10 @@
     <div class="main">
       <div class="body">
         <div class="title is-require">
-          选择免考勤员工
+          选择解锁员工
         </div>
         <div class="tips">
-          每次仅能一名员工设置免考勤，审核结束后才能提交下一名员工
+          每次仅能为一名员工提交解锁申请
         </div>
         <div class="check">
           <div class="check-item is-check">
@@ -366,30 +348,17 @@
           </div>
         </div>
         <div class="title is-require">
-          申请原因
+          申请解锁原因
         </div>
         <div class="col-textarea">
           <el-input
             type="textarea"
-            placeholder="请输入明日计划"
+            placeholder="请输入申请原因"
             maxlength="50"
             show-word-limit
             resize="none"
           >
           </el-input>
-        </div>
-        <div class="title">
-          审批人员
-        </div>
-        <div class="examine-per">
-          <img
-            src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1819216937,2118754409&fm=26&gp=0.jpg"
-            alt=""
-          />
-          <div class="examine-middle">
-            <div class="examine-title">林俊杰</div>
-            <div class="examine-dept">中诚片区（区域总监）</div>
-          </div>
         </div>
       </div>
       <div class="foot">
@@ -408,23 +377,25 @@
         <div class="split-line"></div>
         <div class="dept-num">
           <div class="dept-num-title">3</div>
-          <div class="dept-num-tips">剩余名额</div>
+          <div class="dept-num-tips">被锁定员工</div>
         </div>
       </div>
       <div class="staff-list">
-        <div class="list-title">免考勤员工（2）</div>
+        <div class="list-title">已锁定员工（2）</div>
         <div class="list-content">
           <el-scrollbar class="scrollbar">
             <div class="scrollbar-pad">
               <div class="list-item">
-                <div class="unload-item iconlajitong iconfont"></div>
                 <div class="item-head">
                   <img
                     src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1819216937,2118754409&fm=26&gp=0.jpg"
                     alt=""
                   />
                   <div class="head-middle">
-                    <div class="head-middle-name">林俊杰</div>
+                    <div class="head-middle-name">
+                      <div class="name-text">林俊杰</div>
+                      <div class="name-tag">经纪人</div>
+                    </div>
                     <div class="head-middle-dept">中诚片区-中诚一店</div>
                   </div>
                 </div>
@@ -433,14 +404,16 @@
                 </div>
               </div>
               <div class="list-item">
-                <div class="unload-item iconlajitong iconfont"></div>
                 <div class="item-head">
                   <img
                     src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1819216937,2118754409&fm=26&gp=0.jpg"
                     alt=""
                   />
                   <div class="head-middle">
-                    <div class="head-middle-name">林俊杰</div>
+                    <div class="head-middle-name">
+                      <div class="name-text">林俊杰</div>
+                      <div class="name-tag">经纪人</div>
+                    </div>
                     <div class="head-middle-dept">中诚片区-中诚一店</div>
                   </div>
                 </div>
@@ -449,14 +422,16 @@
                 </div>
               </div>
               <div class="list-item">
-                <div class="unload-item iconlajitong iconfont"></div>
                 <div class="item-head">
                   <img
                     src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1819216937,2118754409&fm=26&gp=0.jpg"
                     alt=""
                   />
                   <div class="head-middle">
-                    <div class="head-middle-name">林俊杰</div>
+                    <div class="head-middle-name">
+                      <div class="name-text">林俊杰</div>
+                      <div class="name-tag">经纪人</div>
+                    </div>
                     <div class="head-middle-dept">中诚片区-中诚一店</div>
                   </div>
                 </div>
@@ -470,26 +445,15 @@
       </div>
       <div class="nav-page">
         <div class="nav-page-title">
-          <div class="title-text">已锁定员工（3）</div>
+          <div class="title-text">免考勤员工（2）</div>
           <div class="nav-point el-icon-arrow-right"></div>
         </div>
         <div class="nav-page-tips">点击查看被锁定员工账号，并为其申请解锁</div>
       </div>
     </div>
-    <delete-pop :visible.sync="good" width="412px" title="确定删除" />
   </div>
 </template>
 
 <script>
-import deletePop from "../components/delete";
-export default {
-  components: {
-    deletePop
-  },
-  data() {
-    return {
-      good: true
-    };
-  }
-};
+export default {};
 </script>
