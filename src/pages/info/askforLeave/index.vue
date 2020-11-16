@@ -49,14 +49,23 @@
           </div>
           <div class="ipt-box">
             <label for="" class="label">请假原因</label>
+            <p class="tip">请假原因会影响到您的请假审批结果，请如实填写</p>
             <el-input
               class="textarea"
               type="textarea"
               :rows="2"
-              placeholder="请输入规则描述"
+              placeholder="请输入请假原因"
               v-model="introduction"
             >
             </el-input>
+          </div>
+          <div class="ipt-box">
+            <label for="" class="label noRequire">图片</label>
+            <p class="wran">最多可上传9张图，格式为JPG、JPEG，大小为600*600</p>
+            <div class="btn">
+              <span>上传图片</span>
+              <input class="upload" type="file" />
+            </div>
           </div>
         </div>
         <h2 class="topic">审批流</h2>
@@ -238,6 +247,7 @@ export default {
 <style lang="less" scoped>
 /* 时间范围选择器begin */
 /deep/.el-date-editor {
+  width: 160px;
   height: 48px;
   .el-range__icon {
     font-size: @font14;
@@ -321,6 +331,8 @@ export default {
       .rule {
         .ipt-gather {
           display: flex;
+          justify-content: space-between;
+          width: 336px;
         }
         /deep/.ipt-box {
           margin-bottom: 24px;
@@ -354,6 +366,16 @@ export default {
               border-radius: 8px;
             }
           }
+          .tip {
+            width: 336px;
+            height: 36px;
+            margin-bottom: 16px;
+            background: rgba(255, 150, 0, 0.07);
+            border-radius: 2px;
+            line-height: 36px;
+            font-size: @font12;
+            color: #ff9600;
+          }
           .ipt {
             .el-input__inner {
               width: 336px;
@@ -367,6 +389,9 @@ export default {
               .el-input__inner {
                 width: 160px;
               }
+            }
+            &.is-disabled .el-input__inner {
+              background-color: #f5f7fa;
             }
           }
           .textarea {
@@ -391,6 +416,33 @@ export default {
                 // box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
                 background: #fff;
               }
+            }
+          }
+          .wran {
+            margin-bottom: 16px;
+            font-size: @font12;
+            color: #f33a3a;
+          }
+          .btn {
+            position: relative;
+            width: 96px;
+            height: 40px;
+            background: #fff;
+            border: 1px solid @backgroud;
+            line-height: 38px;
+            border-radius: 4px;
+            text-align: center;
+            color: @backgroud;
+            outline: none;
+            cursor: pointer;
+            .upload {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              z-index: 9;
+              opacity: 0;
             }
           }
         }
