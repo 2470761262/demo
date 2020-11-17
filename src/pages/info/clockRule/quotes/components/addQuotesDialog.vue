@@ -11,30 +11,48 @@
     <div class="component-container">
       <div class="content">
         <div class="ipt-box">
-          <label for="" class="label">名人</label>
-          <el-input
-            class="ipt"
-            v-model="name"
-            placeholder="请输入名人姓名"
-          ></el-input>
+          <div
+            :class="{ 'after-tips': errorBags.has('authorFamous') }"
+            :data-tips="errorBags.first('authorFamous')"
+          >
+            <label for="" class="label">名人</label>
+            <el-input
+              class="ipt"
+              v-model="formData.authorFamous"
+              placeholder="请输入名人姓名"
+              v-validate="'required'"
+              data-vv-as="名人姓名"
+              data-vv-name="authorFamous"
+            ></el-input>
+          </div>
         </div>
         <div class="ipt-box">
-          <label for="" class="label">名言警句</label>
-          <el-input
-            class="textarea"
-            type="textarea"
-            placeholder="请输入不少于20字的点评"
-            v-model="introduction"
-            maxlength="50"
-            show-word-limit
+          <div
+            :class="{ 'after-tips': errorBags.has('contentFamous') }"
+            :data-tips="errorBags.first('contentFamous')"
           >
-          </el-input>
+            <label for="" class="label">名言警句</label>
+            <el-input
+              class="textarea"
+              type="textarea"
+              placeholder="请输入名言警句"
+              v-model="formData.contentFamous"
+              maxlength="50"
+              show-word-limit
+              v-validate="'required'"
+              data-vv-as="名言警句"
+              data-vv-name="contentFamous"
+            >
+            </el-input>
+          </div>
         </div>
       </div>
       <div class="bottom">
         <div class="btn-box">
           <button class="cancel" @click="cancel">取消</button>
-          <button class="confirm" @click="confirm">确定</button>
+          <button class="confirm" @click="confirm" v-loading="submitLoading">
+            确定
+          </button>
         </div>
       </div>
     </div>
@@ -42,6 +60,9 @@
 </template>
 <script>
 export default {
+  $_veeValidate: {
+    validator: "new" // give me my own validator scope.
+  },
   props: {
     dialogVisible: {
       type: Boolean,
@@ -51,8 +72,11 @@ export default {
   data() {
     return {
       visible: this.dialogVisible,
-      name: "",
-      introduction: ""
+      submitLoading: false,
+      formData: {
+        authorFamous: "",
+        contentFamous: ""
+      }
     };
   },
   watch: {
@@ -68,7 +92,32 @@ export default {
     cancel() {
       this.$emit("update:dialogVisible", false);
     },
-    confirm() {}
+    confirm() {
+      this.$validator.validateAll().then(e => {
+        if (e) {
+          this.submitLoading = true;
+          this.$api
+            .post({
+              url: "/attendance/famouseWork/save",
+              data: this.formData,
+              headers: { "Content-Type": "application/json" }
+            })
+            .then(e => {
+              let result = e.data;
+              this.$message({
+                message: result.message
+              }); //弹窗提示
+              if (result.code == 200) {
+                this.cancel();
+                this.$emit("add");
+              }
+            })
+            .finally(e => {
+              this.submitLoading = false;
+            });
+        }
+      });
+    }
   }
 };
 </script>
@@ -193,6 +242,13 @@ export default {
         background: @backgroud;
         color: #fff;
       }
+    }
+  }
+  .after-tips {
+    &:after {
+      content: attr(data-tips);
+      display: block;
+      color: red;
     }
   }
 }
