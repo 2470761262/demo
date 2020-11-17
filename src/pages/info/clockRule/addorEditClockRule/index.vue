@@ -636,7 +636,7 @@ export default {
       }
     }
     .sidebar {
-      width: 414px;
+      width: 292px;
       margin-left: 24px;
       overflow: auto;
       &::-webkit-scrollbar {

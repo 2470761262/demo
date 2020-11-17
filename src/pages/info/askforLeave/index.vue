@@ -69,7 +69,46 @@
           </div>
         </div>
         <h2 class="topic">审批流</h2>
-        <div class="panel"></div>
+        <div class="panel examine">
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="circle"></div>
+              <div class="line"></div>
+              <div class="timeline-title">审批人员</div>
+              <div class="timeline-content">
+                <div class="person-box">
+                  <div class="avatar">
+                    <el-image
+                      src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                      fit="cover"
+                    ></el-image>
+                  </div>
+                  <div class="name-box">
+                    <div class="name">林俊杰</div>
+                    <div class="job">店长</div>
+                  </div>
+                  <button class="btn">更换</button>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="circle"></div>
+              <div class="line"></div>
+              <div class="timeline-title">审批人员</div>
+              <div class="timeline-content">
+                <div class="send-box">
+                  <el-input
+                    v-model="input3"
+                    class="send-ipt"
+                    type="text"
+                    placeholder="请选择抄送人员"
+                  ></el-input>
+                  <span class="send-btn">添加</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="panel bottom">
           <div class="bottom-btn">
             <button class="reset">重置</button>
@@ -109,6 +148,7 @@ export default {
     return {
       name: "",
       input2: "",
+      input3: "",
       company: "",
       introduction: "",
       companyList: [
@@ -434,7 +474,6 @@ export default {
             text-align: center;
             color: @backgroud;
             outline: none;
-            cursor: pointer;
             .upload {
               position: absolute;
               top: 0;
@@ -443,6 +482,120 @@ export default {
               height: 100%;
               z-index: 9;
               opacity: 0;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+      .examine {
+        .timeline {
+          .timeline-item {
+            position: relative;
+            &:last-child {
+              .line {
+                display: none;
+              }
+            }
+            .circle {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 14px;
+              height: 14px;
+              background: @backgroud;
+              border: 5px solid @opacityBackground;
+              border-radius: 14px;
+            }
+            .line {
+              position: absolute;
+              top: 34px;
+              left: 12px;
+              bottom: 10px;
+              width: 1px;
+              background: #d8d8d8;
+            }
+            .timeline-title {
+              height: 24px;
+              padding-left: 41px;
+              margin-bottom: 12px;
+              line-height: 24px;
+              font-size: @font16;
+              font-weight: bold;
+              color: #303133;
+            }
+            .timeline-content {
+              padding-left: 41px;
+              .person-box {
+                display: flex;
+                align-items: center;
+                padding: 6px 0 18px;
+                .avatar {
+                  width: 36px;
+                  height: 36px;
+                  border-radius: 36px;
+                  overflow: hidden;
+                  .el-image {
+                    width: 100%;
+                    height: 100%;
+                  }
+                }
+                .name-box {
+                  margin: 0 18px 0 8px;
+                  .name {
+                    padding-top: 2px;
+                    margin-bottom: 8px;
+                    line-height: 1;
+                    font-size: @font14;
+                    font-weight: bold;
+                    color: #303133;
+                  }
+                  .job {
+                    line-height: 1;
+                    font-size: @font12;
+                    color: #909399;
+                  }
+                }
+                .btn {
+                  width: 52px;
+                  height: 24px;
+                  background: #ffffff;
+                  border-radius: 2px;
+                  border: 1px solid @backgroud;
+                  line-height: 22px;
+                  text-align: center;
+                  color: @backgroud;
+                  outline: none;
+                  cursor: pointer;
+                }
+              }
+              .send-box {
+                display: flex;
+                width: 336px;
+                padding: 6px;
+                border-radius: 4px;
+                border: 1px solid #cecece;
+                box-sizing: border-box;
+                /deep/.send-ipt {
+                  .el-input__inner {
+                    height: 36px;
+                    border: none;
+                    line-height: 36px;
+                    font-size: @font14;
+                  }
+                }
+                .send-btn {
+                  display: inline-block;
+                  width: 92px;
+                  height: 36px;
+                  background: @backgroud;
+                  border-radius: 2px;
+                  line-height: 35px;
+                  text-align: center;
+                  font-size: @font16;
+                  color: #fff;
+                  cursor: pointer;
+                }
+              }
             }
           }
         }
