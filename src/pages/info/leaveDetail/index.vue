@@ -9,82 +9,56 @@
               <div class="title">待审批</div>
               <p class="text">请对改请假申请进行审核</p>
             </div>
-            <button class="handle-btn">进行审核</button>
+            <button class="handle-btn" @click="openExamineDialog">
+              进行审核
+            </button>
           </div>
         </div>
-        <div class="panel rule">
-          <div class="ipt-box">
-            <label for="" class="label">请假类型</label>
-            <el-select class="ipt" v-model="company" placeholder="请选择">
-              <el-option
-                v-for="item in companyList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </div>
-          <div class="ipt-gather">
-            <div class="ipt-box">
-              <label for="" class="label">开始时间</label>
-              <el-date-picker
-                class="ipt gather"
-                v-model="value"
-                type="datetime"
-                placeholder="选择日期时间"
-              >
-              </el-date-picker>
-            </div>
-            <div class="ipt-box">
-              <label for="" class="label">结束时间</label>
-              <el-date-picker
-                class="ipt gather"
-                v-model="value"
-                type="datetime"
-                placeholder="选择日期时间"
-              >
-              </el-date-picker>
+        <div class="panel body">
+          <div class="row">
+            <div class="row-title">请假类型</div>
+            <div class="row-content">
+              <div class="row-around">事假</div>
             </div>
           </div>
-          <div class="ipt-box">
-            <label for="" class="label noRequire">总时长</label>
-            <el-input
-              class="ipt"
-              v-model="input2"
-              placeholder="请假时长根据请假时间自动计算"
-              :disabled="true"
-            ></el-input>
-          </div>
-          <div class="ipt-box">
-            <label for="" class="label">请假原因</label>
-            <p class="tip">请假原因会影响到您的请假审批结果，请如实填写</p>
-            <el-input
-              class="textarea"
-              type="textarea"
-              :rows="2"
-              placeholder="请输入请假原因"
-              v-model="introduction"
-            >
-            </el-input>
-          </div>
-          <div class="ipt-box">
-            <label for="" class="label noRequire">图片</label>
-            <p class="wran">最多可上传9张图，格式为JPG、JPEG，大小为600*600</p>
-            <div class="btn">
-              <span>上传图片</span>
-              <input class="upload" type="file" />
+          <div class="row">
+            <div class="row-title">请假时长</div>
+            <div class="row-content">
+              <div class="row-leave-duration">
+                开始时间：2020-11-09<span class="pre">至</span
+                >结束时间：2020-11-10下午
+              </div>
+              <div class="row-leave-duration">总时长： 2天</div>
             </div>
           </div>
-        </div>
-        <h2 class="topic">审批流</h2>
-        <div class="panel examine">
-          <div class="timeline">
-            <div class="timeline-item">
-              <div class="circle"></div>
-              <div class="line"></div>
-              <div class="timeline-title">审批人员</div>
-              <div class="timeline-content">
+          <div class="row">
+            <div class="row-title">请假原因</div>
+            <div class="row-content">
+              <div class="row-around">
+                这里是总结这里是总结这里是总结这里是总结这里是总结这这里
+                这里是总结这里是总结这里是总结这里是总结这里这里
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="row-title">图片</div>
+            <div class="row-content">
+              <div class="row-pic-box">
+                <el-image
+                  src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                  fit="cover"
+                ></el-image>
+                <el-image
+                  src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                  fit="cover"
+                ></el-image>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="row-title">审批人员</div>
+            <div class="row-content">
+              <div class="row-person-list">
                 <div class="person-box">
                   <div class="avatar">
                     <el-image
@@ -92,36 +66,26 @@
                       fit="cover"
                     ></el-image>
                   </div>
-                  <div class="name-box">
-                    <div class="name">林俊杰</div>
-                    <div class="job">店长</div>
+                  <div class="author-box">
+                    <div class="author">林俊杰</div>
+                    <div class="business">中诚片区（区域总监）</div>
                   </div>
-                  <button class="btn">更换</button>
+                  <span class="arrow"></span>
+                </div>
+                <div class="person-box">
+                  <div class="avatar">
+                    <el-image
+                      src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                      fit="cover"
+                    ></el-image>
+                  </div>
+                  <div class="author-box">
+                    <div class="author">林俊杰</div>
+                    <div class="business">中诚片区（区域总监）</div>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="timeline-item">
-              <div class="circle"></div>
-              <div class="line"></div>
-              <div class="timeline-title">审批人员</div>
-              <div class="timeline-content">
-                <div class="send-box">
-                  <el-input
-                    v-model="input3"
-                    class="send-ipt"
-                    type="text"
-                    placeholder="请选择抄送人员"
-                  ></el-input>
-                  <span class="send-btn">添加</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="panel bottom">
-          <div class="bottom-btn">
-            <button class="reset">重置</button>
-            <button class="save" @click="save">保存</button>
           </div>
         </div>
       </div>
@@ -196,125 +160,22 @@
         </div>
       </div>
     </div>
+    <!-- 审核弹窗 -->
+    <examine-dialog :dialogVisible.sync="examineDialogVisible"></examine-dialog>
   </div>
 </template>
 <script>
+import examineDialog from "./components/examineDialog.vue";
 export default {
+  components: { examineDialog },
   data() {
     return {
-      name: "",
-      input2: "",
-      input3: "",
-      company: "",
-      introduction: "",
-      companyList: [
-        {
-          value: "Beijing",
-          label: "北京"
-        },
-        {
-          value: "Shanghai",
-          label: "上海"
-        },
-        {
-          value: "Nanjing",
-          label: "南京"
-        }
-      ],
-      ruleTime: [
-        {
-          morningTs: "",
-          afternoonTs: ""
-        },
-        {
-          morningTs: "",
-          afternoonTs: ""
-        },
-        {
-          morningTs: "",
-          afternoonTs: ""
-        },
-        {
-          morningTs: "",
-          afternoonTs: ""
-        },
-        {
-          morningTs: "",
-          afternoonTs: ""
-        },
-        {
-          morningTs: "",
-          afternoonTs: ""
-        },
-        {
-          morningTs: "",
-          afternoonTs: ""
-        }
-      ],
-      duration: "",
-      activeTabName: "first",
-      sidebarNavs: [
-        {
-          label: "适用部门",
-          name: "first"
-        },
-        {
-          label: "适用人员",
-          name: "second"
-        }
-      ],
-      openFilterPanel: false,
-      value: "",
-      checkList: ["复选框1"]
+      examineDialogVisible: false
     };
   },
-  mounted() {
-    console.log("1111111111111111111");
-    document.addEventListener("click", this.relateInpBlur);
-  },
-  beforeDestroy() {
-    console.log("2222222222222222222");
-    document.removeEventListener("click", this.relateInpBlur);
-  },
   methods: {
-    save() {
-      console.log(this.ruleTime, "----");
-    },
-    /**
-     * @description: 复制前一天考勤时间
-     * @param {Number} index 当天考勤日
-     * @return {*}
-     */
-    copyPreDayTs(index) {
-      let preDayTimeArr = Object.assign({}, this.ruleTime[index - 1]);
-      this.ruleTime.splice(index, 1, preDayTimeArr);
-      console.log(this.ruleTime);
-      //this.$set(this, this.ruleTime[index]);
-    },
-    openDateDialog() {
-      this.dialogClockDateVisible = true;
-    },
-    /**
-     * @description: 部门/人员切换
-     * @return {*}
-     */
-    switchTab() {
-      console.log(this.activeTabName, "=========");
-    },
-    relateIptFocus() {
-      this.openFilterPanel = true;
-    },
-    relateInpBlur(e) {
-      console.log(e.target);
-      let tp = document.querySelector(".relate-ipt-box");
-      if (tp) {
-        if (!tp.contains(e.target)) {
-          this.openFilterPanel = false;
-        }
-      }
-    },
-    relateDepartLoad() {
-      console.log("aaaaaaaaaa");
+    openExamineDialog() {
+      this.examineDialogVisible = true;
     }
   }
 };
@@ -459,7 +320,7 @@ export default {
           .handle-btn {
             height: 32px;
             padding: 0 14px;
-            background: #247257;
+            background: @backgroud;
             border: none;
             border-radius: 4px;
             color: #fff;
@@ -468,262 +329,86 @@ export default {
           }
         }
       }
-      .rule {
-        .ipt-gather {
-          display: flex;
-          justify-content: space-between;
-          width: 336px;
-        }
-        /deep/.ipt-box {
-          margin-bottom: 24px;
+      .body {
+        .row {
           &:last-child {
-            margin-bottom: 0;
+            .row-content {
+              margin-bottom: 0;
+            }
           }
-          .label {
-            display: block;
-            position: relative;
-            padding-left: 16px;
+          .row-title {
             margin-bottom: 16px;
-            line-height: 1;
             font-size: @font16;
             font-weight: bold;
             color: #303133;
-            &.noRequire {
-              padding-left: 0;
-              &::before {
-                display: none;
-              }
-            }
-            &::before {
-              content: "";
-              position: absolute;
-              top: 50%;
-              left: 0;
-              transform: translateY(-50%);
-              width: 8px;
-              height: 8px;
-              background: #f62f2f;
-              border-radius: 8px;
-            }
           }
-          .tip {
-            width: 336px;
-            height: 36px;
-            margin-bottom: 16px;
-            background: rgba(255, 150, 0, 0.07);
-            border-radius: 2px;
-            line-height: 36px;
-            font-size: @font12;
-            color: #ff9600;
-          }
-          .ipt {
-            .el-input__inner {
-              width: 336px;
-              height: 48px;
-              background: #ffffff;
-              border-radius: 4px;
-              border: 1px solid #cecece;
+          .row-content {
+            margin-bottom: 24px;
+            .row-around {
+              line-height: 26px;
               font-size: @font16;
+              color: #606266;
             }
-            &.gather {
-              .el-input__inner {
-                width: 160px;
-              }
-            }
-            &.is-disabled .el-input__inner {
-              background-color: #f5f7fa;
-            }
-          }
-          .textarea {
-            .el-textarea__inner {
-              width: 336px;
-              height: 146px;
-              background: #ffffff;
-              border-radius: 4px;
-              border: 1px solid #cecece;
-              resize: none;
+            .row-leave-duration {
+              margin-bottom: 16px;
+              line-height: 1;
               font-size: @font16;
-              &::-webkit-scrollbar {
-                width: 6px;
-                height: 6px;
-                background-color: rgba(0, 0, 0, 0);
-              }
-              &::-webkit-scrollbar-thumb {
-                border-radius: 6px;
-                background-color: #bbb;
-              }
-              &::-webkit-scrollbar-track {
-                // box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-                background: #fff;
+              color: #606266;
+              .pre {
+                margin: 0 16px;
+                color: #303133;
               }
             }
-          }
-          .wran {
-            margin-bottom: 16px;
-            font-size: @font12;
-            color: #f33a3a;
-          }
-          .btn {
-            position: relative;
-            width: 96px;
-            height: 40px;
-            background: #fff;
-            border: 1px solid @backgroud;
-            line-height: 38px;
-            border-radius: 4px;
-            text-align: center;
-            color: @backgroud;
-            outline: none;
-            .upload {
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              z-index: 9;
-              opacity: 0;
-              cursor: pointer;
-            }
-          }
-        }
-      }
-      .examine {
-        .timeline {
-          .timeline-item {
-            position: relative;
-            &:last-child {
-              .line {
-                display: none;
+            .row-pic-box {
+              display: flex;
+              .el-image {
+                width: 72px;
+                height: 72px;
+                margin-right: 16px;
               }
             }
-            .circle {
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 14px;
-              height: 14px;
-              background: @backgroud;
-              border: 5px solid @opacityBackground;
-              border-radius: 14px;
-            }
-            .line {
-              position: absolute;
-              top: 34px;
-              left: 12px;
-              bottom: 10px;
-              width: 1px;
-              background: #d8d8d8;
-            }
-            .timeline-title {
-              height: 24px;
-              padding-left: 41px;
-              margin-bottom: 12px;
-              line-height: 24px;
-              font-size: @font16;
-              font-weight: bold;
-              color: #303133;
-            }
-            .timeline-content {
-              padding-left: 41px;
+            .row-person-list {
+              display: flex;
+              align-items: center;
               .person-box {
                 display: flex;
                 align-items: center;
-                padding: 6px 0 18px;
+                margin-right: 24px;
+                &:last-child {
+                  margin-right: 0;
+                }
                 .avatar {
                   width: 36px;
                   height: 36px;
+                  margin-right: 8px;
                   border-radius: 36px;
                   overflow: hidden;
                   .el-image {
-                    width: 100%;
-                    height: 100%;
+                    width: 36px;
+                    height: 36px;
                   }
                 }
-                .name-box {
-                  margin: 0 18px 0 8px;
-                  .name {
-                    padding-top: 2px;
-                    margin-bottom: 8px;
-                    line-height: 1;
+                .author-box {
+                  .author {
                     font-size: @font14;
                     font-weight: bold;
                     color: #303133;
                   }
-                  .job {
-                    line-height: 1;
+                  .business {
                     font-size: @font12;
                     color: #909399;
                   }
                 }
-                .btn {
-                  width: 52px;
-                  height: 24px;
-                  background: #ffffff;
-                  border-radius: 2px;
-                  border: 1px solid @backgroud;
-                  line-height: 22px;
-                  text-align: center;
-                  color: @backgroud;
-                  outline: none;
-                  cursor: pointer;
-                }
-              }
-              .send-box {
-                display: flex;
-                width: 336px;
-                padding: 6px;
-                border-radius: 4px;
-                border: 1px solid #cecece;
-                box-sizing: border-box;
-                /deep/.send-ipt {
-                  .el-input__inner {
-                    height: 36px;
-                    border: none;
-                    line-height: 36px;
-                    font-size: @font14;
-                  }
-                }
-                .send-btn {
-                  display: inline-block;
-                  width: 92px;
-                  height: 36px;
-                  background: @backgroud;
-                  border-radius: 2px;
-                  line-height: 35px;
-                  text-align: center;
-                  font-size: @font16;
-                  color: #fff;
-                  cursor: pointer;
+                .arrow {
+                  width: 26px;
+                  height: 18px;
+                  margin-left: 24px;
+                  background: url(~@/assets/images/leaveDetail_arrow.svg) center
+                    no-repeat;
+                  background-size: cover;
                 }
               }
             }
-          }
-        }
-      }
-      .bottom {
-        margin-top: 24px;
-        .bottom-btn {
-          button {
-            width: 109px;
-            height: 40px;
-            border: none;
-            border-radius: 4px;
-            text-align: center;
-            line-height: 40px;
-            font-size: @font16;
-            outline: none;
-            box-sizing: border-box;
-            cursor: pointer;
-            float: left;
-          }
-          .reset {
-            margin-right: 16px;
-            background: #f4f4f5;
-            color: #606266;
-          }
-          .save {
-            background: @backgroud;
-            color: #fff;
           }
         }
       }

@@ -86,6 +86,22 @@
       </template>
       <el-menu-item index="/buySellSystem/dictContrast">小区对标</el-menu-item>
     </el-submenu>
+    <el-submenu index="222">
+      <template slot="title">
+        <i class="el-icon-location"></i>
+        <span>考勤系统</span>
+      </template>
+      <el-menu-item index="/info">考勤首页</el-menu-item>
+      <el-menu-item index="/clockList/myInfo">我的日志</el-menu-item>
+      <el-menu-item index="/clockList/statistic">考勤统计</el-menu-item>
+      <el-menu-item index="/clockList/examine">考勤审批</el-menu-item>
+      <el-menu-item index="/clockRule/list">考勤规则管理</el-menu-item>
+      <el-menu-item index="/clockRule/add">添加考勤规则</el-menu-item>
+      <el-menu-item index="/clockRule/quotes">名言警句管理</el-menu-item>
+      <el-menu-item index="/askforLeave">请假申请</el-menu-item>
+      <el-menu-item index="/leaveDetail">请假申请详情</el-menu-item>
+      <el-menu-item index="/repairDetail">补卡申请详情</el-menu-item>
+    </el-submenu>
     <el-submenu
       :index="item.id + ''"
       :key="item.id"

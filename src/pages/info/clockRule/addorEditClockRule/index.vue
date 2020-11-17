@@ -279,11 +279,9 @@ export default {
     };
   },
   mounted() {
-    console.log("1111111111111111111");
     document.addEventListener("click", this.relateInpBlur);
   },
   beforeDestroy() {
-    console.log("2222222222222222222");
     document.removeEventListener("click", this.relateInpBlur);
   },
   methods: {
@@ -315,7 +313,6 @@ export default {
       this.openFilterPanel = true;
     },
     relateInpBlur(e) {
-      console.log(e.target);
       let tp = document.querySelector(".relate-ipt-box");
       if (tp) {
         if (!tp.contains(e.target)) {
