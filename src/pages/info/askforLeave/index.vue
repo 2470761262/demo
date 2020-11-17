@@ -140,12 +140,47 @@
         </div>
       </div>
     </div>
+    <el-dialog
+      :show-close="false"
+      :visible.sync="dialogVisible"
+      :modal="false"
+      width="30%"
+    >
+      <div>
+        <ls-calendar
+          :is-empty="true"
+          :current="restCurrent"
+          v-model="restCalendarTiem"
+          choice="single"
+        >
+          <template v-slot:dots="{ col }">
+            <div
+              class="calendar-dots"
+              :class="{ 'is-hide': restCalendarTiem == col.time }"
+              :style="{ 'background-color': color[col.type] }"
+            ></div>
+          </template>
+        </ls-calendar>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
+import lsCalendar from "@/pages/info/components/calendar";
 export default {
+  components: { lsCalendar },
   data() {
     return {
+      color: ["#0DA88B", "#F6A420", "#EF5656"],
+      restCurrent: "",
+      restCalendarTiem: "",
+      dialogVisible: true,
       name: "",
       input2: "",
       input3: "",
@@ -702,6 +737,16 @@ export default {
         }
       }
     }
+  }
+}
+.calendar-content {
+  box-shadow: none !important;
+  .calendar-data {
+    padding: 0;
+  }
+  .cell-item {
+    height: 58px !important;
+    line-height: 58px !important;
   }
 }
 </style>
