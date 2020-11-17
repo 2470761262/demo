@@ -3,6 +3,15 @@
   <div class="add-rule-container">
     <div class="center">
       <div class="main">
+        <div class="handle-box">
+          <div class="handle">
+            <div class="left">
+              <div class="title">待审批</div>
+              <p class="text">请对改请假申请进行审核</p>
+            </div>
+            <button class="handle-btn">进行审核</button>
+          </div>
+        </div>
         <div class="panel rule">
           <div class="ipt-box">
             <label for="" class="label">请假类型</label>
@@ -16,20 +25,99 @@
               </el-option>
             </el-select>
           </div>
+          <div class="ipt-gather">
+            <div class="ipt-box">
+              <label for="" class="label">开始时间</label>
+              <el-date-picker
+                class="ipt gather"
+                v-model="value"
+                type="datetime"
+                placeholder="选择日期时间"
+              >
+              </el-date-picker>
+            </div>
+            <div class="ipt-box">
+              <label for="" class="label">结束时间</label>
+              <el-date-picker
+                class="ipt gather"
+                v-model="value"
+                type="datetime"
+                placeholder="选择日期时间"
+              >
+              </el-date-picker>
+            </div>
+          </div>
+          <div class="ipt-box">
+            <label for="" class="label noRequire">总时长</label>
+            <el-input
+              class="ipt"
+              v-model="input2"
+              placeholder="请假时长根据请假时间自动计算"
+              :disabled="true"
+            ></el-input>
+          </div>
           <div class="ipt-box">
             <label for="" class="label">请假原因</label>
+            <p class="tip">请假原因会影响到您的请假审批结果，请如实填写</p>
             <el-input
               class="textarea"
               type="textarea"
               :rows="2"
-              placeholder="请输入规则描述"
+              placeholder="请输入请假原因"
               v-model="introduction"
             >
             </el-input>
           </div>
+          <div class="ipt-box">
+            <label for="" class="label noRequire">图片</label>
+            <p class="wran">最多可上传9张图，格式为JPG、JPEG，大小为600*600</p>
+            <div class="btn">
+              <span>上传图片</span>
+              <input class="upload" type="file" />
+            </div>
+          </div>
         </div>
         <h2 class="topic">审批流</h2>
-        <div class="panel"></div>
+        <div class="panel examine">
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="circle"></div>
+              <div class="line"></div>
+              <div class="timeline-title">审批人员</div>
+              <div class="timeline-content">
+                <div class="person-box">
+                  <div class="avatar">
+                    <el-image
+                      src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                      fit="cover"
+                    ></el-image>
+                  </div>
+                  <div class="name-box">
+                    <div class="name">林俊杰</div>
+                    <div class="job">店长</div>
+                  </div>
+                  <button class="btn">更换</button>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="circle"></div>
+              <div class="line"></div>
+              <div class="timeline-title">审批人员</div>
+              <div class="timeline-content">
+                <div class="send-box">
+                  <el-input
+                    v-model="input3"
+                    class="send-ipt"
+                    type="text"
+                    placeholder="请选择抄送人员"
+                  ></el-input>
+                  <span class="send-btn">添加</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="panel bottom">
           <div class="bottom-btn">
             <button class="reset">重置</button>
@@ -59,6 +147,53 @@
             </div>
           </div>
         </div>
+        <div class="panel applyer batch">
+          <div class="title">审批流</div>
+          <div class="timeline">
+            <div class="timeline-item pendding">
+              <div class="circle"></div>
+              <div class="line"></div>
+              <div class="timeline-title">
+                <span class="ts">2020-11-09 23:28:37</span>
+                <span class="status">等待审核</span>
+              </div>
+              <div class="timeline-content">
+                <div class="detail">
+                  <span class="row">审批人员：周杰伦（中诚门店）</span>
+                  <span class="row">审批情况：审核进行中请耐心等待</span>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item success">
+              <div class="circle"></div>
+              <div class="line"></div>
+              <div class="timeline-title">
+                <span class="ts">2020-11-09 23:28:37</span>
+                <span class="status">审核通过</span>
+              </div>
+              <div class="timeline-content">
+                <div class="detail">
+                  <span class="row">审批人员：周杰伦（中诚门店）</span>
+                  <span class="row">审批情况：审核已通过</span>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item fail">
+              <div class="circle"></div>
+              <div class="line"></div>
+              <div class="timeline-title">
+                <span class="ts">2020-11-09 23:28:37</span>
+                <span class="status">审核不通过</span>
+              </div>
+              <div class="timeline-content">
+                <div class="detail">
+                  <span class="row">审批人员：周杰伦（中诚门店）</span>
+                  <span class="row">审批情况：审核已通过</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -68,6 +203,8 @@ export default {
   data() {
     return {
       name: "",
+      input2: "",
+      input3: "",
       company: "",
       introduction: "",
       companyList: [
@@ -206,9 +343,8 @@ export default {
 <style lang="less" scoped>
 /* 时间范围选择器begin */
 /deep/.el-date-editor {
-  width: 190px;
-  height: 38px;
-  padding: 1px 8px;
+  width: 160px;
+  height: 48px;
   .el-range__icon {
     font-size: @font14;
   }
@@ -288,7 +424,56 @@ export default {
       &::-webkit-scrollbar {
         display: none;
       }
+      .handle-box {
+        width: 100%;
+        margin-bottom: 21px;
+        background: #fff;
+        box-shadow: 0px 8px 13px 0px rgba(68, 163, 163, 0.1);
+        border-radius: 8px;
+        box-sizing: border-box;
+        .handle {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 24px;
+          border-radius: 8px;
+          background: linear-gradient(
+            266deg,
+            rgba(255, 150, 0, 0) 0%,
+            rgba(255, 150, 0, 0.1) 100%
+          );
+          .left {
+            .title {
+              margin-bottom: 16px;
+              line-height: 1;
+              font-size: @font16;
+              font-weight: bold;
+              color: #303133;
+            }
+            .text {
+              line-height: 1;
+              color: #ff9600;
+              font-size: @font16;
+            }
+          }
+          .handle-btn {
+            height: 32px;
+            padding: 0 14px;
+            background: #247257;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            outline: none;
+            cursor: pointer;
+          }
+        }
+      }
       .rule {
+        .ipt-gather {
+          display: flex;
+          justify-content: space-between;
+          width: 336px;
+        }
         /deep/.ipt-box {
           margin-bottom: 24px;
           &:last-child {
@@ -303,6 +488,12 @@ export default {
             font-size: @font16;
             font-weight: bold;
             color: #303133;
+            &.noRequire {
+              padding-left: 0;
+              &::before {
+                display: none;
+              }
+            }
             &::before {
               content: "";
               position: absolute;
@@ -315,6 +506,16 @@ export default {
               border-radius: 8px;
             }
           }
+          .tip {
+            width: 336px;
+            height: 36px;
+            margin-bottom: 16px;
+            background: rgba(255, 150, 0, 0.07);
+            border-radius: 2px;
+            line-height: 36px;
+            font-size: @font12;
+            color: #ff9600;
+          }
           .ipt {
             .el-input__inner {
               width: 336px;
@@ -323,6 +524,14 @@ export default {
               border-radius: 4px;
               border: 1px solid #cecece;
               font-size: @font16;
+            }
+            &.gather {
+              .el-input__inner {
+                width: 160px;
+              }
+            }
+            &.is-disabled .el-input__inner {
+              background-color: #f5f7fa;
             }
           }
           .textarea {
@@ -346,6 +555,146 @@ export default {
               &::-webkit-scrollbar-track {
                 // box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
                 background: #fff;
+              }
+            }
+          }
+          .wran {
+            margin-bottom: 16px;
+            font-size: @font12;
+            color: #f33a3a;
+          }
+          .btn {
+            position: relative;
+            width: 96px;
+            height: 40px;
+            background: #fff;
+            border: 1px solid @backgroud;
+            line-height: 38px;
+            border-radius: 4px;
+            text-align: center;
+            color: @backgroud;
+            outline: none;
+            .upload {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              z-index: 9;
+              opacity: 0;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+      .examine {
+        .timeline {
+          .timeline-item {
+            position: relative;
+            &:last-child {
+              .line {
+                display: none;
+              }
+            }
+            .circle {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 14px;
+              height: 14px;
+              background: @backgroud;
+              border: 5px solid @opacityBackground;
+              border-radius: 14px;
+            }
+            .line {
+              position: absolute;
+              top: 34px;
+              left: 12px;
+              bottom: 10px;
+              width: 1px;
+              background: #d8d8d8;
+            }
+            .timeline-title {
+              height: 24px;
+              padding-left: 41px;
+              margin-bottom: 12px;
+              line-height: 24px;
+              font-size: @font16;
+              font-weight: bold;
+              color: #303133;
+            }
+            .timeline-content {
+              padding-left: 41px;
+              .person-box {
+                display: flex;
+                align-items: center;
+                padding: 6px 0 18px;
+                .avatar {
+                  width: 36px;
+                  height: 36px;
+                  border-radius: 36px;
+                  overflow: hidden;
+                  .el-image {
+                    width: 100%;
+                    height: 100%;
+                  }
+                }
+                .name-box {
+                  margin: 0 18px 0 8px;
+                  .name {
+                    padding-top: 2px;
+                    margin-bottom: 8px;
+                    line-height: 1;
+                    font-size: @font14;
+                    font-weight: bold;
+                    color: #303133;
+                  }
+                  .job {
+                    line-height: 1;
+                    font-size: @font12;
+                    color: #909399;
+                  }
+                }
+                .btn {
+                  width: 52px;
+                  height: 24px;
+                  background: #ffffff;
+                  border-radius: 2px;
+                  border: 1px solid @backgroud;
+                  line-height: 22px;
+                  text-align: center;
+                  color: @backgroud;
+                  outline: none;
+                  cursor: pointer;
+                }
+              }
+              .send-box {
+                display: flex;
+                width: 336px;
+                padding: 6px;
+                border-radius: 4px;
+                border: 1px solid #cecece;
+                box-sizing: border-box;
+                /deep/.send-ipt {
+                  .el-input__inner {
+                    height: 36px;
+                    border: none;
+                    line-height: 36px;
+                    font-size: @font14;
+                  }
+                }
+                .send-btn {
+                  display: inline-block;
+                  width: 92px;
+                  height: 36px;
+                  background: @backgroud;
+                  border-radius: 2px;
+                  line-height: 35px;
+                  text-align: center;
+                  font-size: @font16;
+                  color: #fff;
+                  cursor: pointer;
+                }
               }
             }
           }
@@ -380,7 +729,7 @@ export default {
       }
     }
     .sidebar {
-      width: 414px;
+      width: 292px;
       margin-left: 24px;
       overflow: auto;
       &::-webkit-scrollbar {
@@ -447,6 +796,106 @@ export default {
                 background: url(~@/assets/images/leaveDetail_call_phone.svg)
                   center no-repeat;
                 background-size: cover;
+              }
+            }
+          }
+        }
+      }
+      .batch {
+        margin-top: 24px;
+        .timeline {
+          .timeline-item {
+            position: relative;
+            &:last-child {
+              .line {
+                display: none;
+              }
+            }
+            &.pendding {
+              .circle {
+                background-image: url(~@/assets/images/leaveDetail_timeline_pending.svg);
+              }
+              .status {
+                background: rgba(246, 164, 32, 0.1);
+                color: #f6a420;
+              }
+            }
+            &.success {
+              .circle {
+                background-image: url(~@/assets/images/leaveDetail_timeline_success.svg);
+              }
+              .status {
+                background: rgba(13, 168, 139, 0.1);
+                color: #0da88b;
+              }
+            }
+            &.fail {
+              .circle {
+                background-image: url(~@/assets/images/leaveDetail_timeline_fail.svg);
+              }
+              .status {
+                background: rgba(239, 86, 86, 0.1);
+                color: #ef5656;
+              }
+            }
+            .circle {
+              position: absolute;
+              top: 2px;
+              left: 0;
+              width: 16px;
+              height: 16px;
+              background-position: center;
+              background-repeat: no-repeat;
+              background-size: cover;
+              border-radius: 14px;
+              box-sizing: border-box;
+            }
+            .line {
+              position: absolute;
+              top: 26px;
+              left: 8px;
+              bottom: 10px;
+              width: 1px;
+              background: #d8d8d8;
+            }
+            .timeline-title {
+              display: flex;
+              justify-content: space-between;
+              height: 20px;
+              padding-left: 32px;
+              margin-bottom: 12px;
+              line-height: 20px;
+              .ts {
+                font-size: @font14;
+                color: #303133;
+              }
+              .status {
+                width: 64px;
+                height: 20px;
+                border-radius: 2px;
+                line-height: 20px;
+                text-align: center;
+                font-size: @font12;
+              }
+            }
+            .timeline-content {
+              padding: 0 0 12px 32px;
+              .detail {
+                width: 100%;
+                padding: 18px 10px;
+                background: #f8f8f8;
+                border-radius: 4px;
+                box-sizing: border-box;
+                .row {
+                  display: inline-block;
+                  margin-bottom: 14px;
+                  line-height: 1;
+                  font-size: @font12;
+                  color: #606266;
+                  &:last-child {
+                    margin-bottom: 0;
+                  }
+                }
               }
             }
           }
