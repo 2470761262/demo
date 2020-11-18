@@ -269,6 +269,8 @@
         </div>
         <ls-select
           v-if="selectFlag"
+          key-id="accountId"
+          title-key="perName"
           @getRemote="getRemote"
           place-str="搜索经纪人"
           @close="changeSelectFlag"
@@ -495,6 +497,11 @@ export default {
           active.cacheList
         ].defaultBroker;
         this.$nextTick(() => {
+          this.renderEchart({
+            lease: this.refresh.defaultBroker.saleCommission,
+            deal: this.refresh.defaultBroker.rentCommission,
+            project: this.refresh.defaultBroker.projectCommission
+          });
           document
             .getElementById("broker")
             .querySelector(".el-scrollbar__wrap").scrollTop = 0;

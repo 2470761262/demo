@@ -65,6 +65,13 @@
       overflow-x: hidden;
     }
   }
+  .tips-text {
+    font-size: @font12;
+    color: #909399;
+    font-weight: normal;
+    text-indent: 11px;
+    padding-top: 16px;
+  }
 }
 </style>
 <template>
@@ -88,11 +95,17 @@
           class="select-data-item"
           @click="hideSelect(item)"
           v-for="item in list"
-          :key="item.accountId"
+          :key="item[keyId]"
         >
-          {{ item.perName }}
+          {{ item[titleKey] }}
         </div>
       </el-scrollbar>
+    </div>
+    <div v-if="loading" class="tips-text">
+      加载中
+    </div>
+    <div v-if="!loading && list.length == 0 && !once" class="tips-text">
+      暂无数据
     </div>
   </div>
 </template>
@@ -100,20 +113,28 @@
 <script>
 export default {
   props: {
-    placeStr: String
+    placeStr: String,
+    keyId: String,
+    titleKey: String
   },
   data() {
     return {
+      once: true,
       headValue: "",
-      list: []
+      list: [],
+      loading: false
     };
   },
   methods: {
     emitData() {
+      this.loading = true;
+      this.once = false;
       this.$emit("getRemote", this.getList, this.headValue);
     },
     getList(result) {
       if (result) this.list = result.list;
+
+      this.loading = false;
     },
     hideSelect(item) {
       this.$emit("close", item);

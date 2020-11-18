@@ -253,24 +253,26 @@
   <div class="rank-item">
     <div class="rank-head">
       <span class="head-title">
-        <span class="title-text">经纪人业绩</span>
+        <span class="title-text">门店业绩</span>
         <div
           class="after-content"
           @click="changeSelectFlag()"
           v-if="
-            parentInstance.roleConfig.indexRankBroker &&
-              refresh.defaultBroker.name
+            parentInstance.roleConfig.indexRankStore &&
+              refresh.defaultBroker.storeName
           "
         >
           <span class="after-text">{{
-            checkName || refresh.defaultBroker.name
+            checkName || refresh.defaultBroker.storeName
           }}</span>
           <span class="iconfont iconjuxing"></span>
         </div>
         <ls-select
+          key-id="deptId"
+          title-key="deptName"
           v-if="selectFlag"
           @getRemote="getRemote"
-          place-str="搜索经纪人"
+          place-str="搜索门店"
           @close="changeSelectFlag"
         />
       </span>
@@ -329,8 +331,8 @@
                 {{ item.prefix }}
               </div>
               <div class="rank-middle">
-                <img :src="item.userImage" alt="" />
-                <span class="per-name">{{ item.name }}</span>
+                <!-- <img :src="item.userImage" alt="" /> -->
+                <span class="per-name">{{ item.storeName }}</span>
               </div>
               <div class="rank-value">
                 <span>￥</span>
@@ -354,8 +356,10 @@
             {{ refresh.defaultBroker.rank }}
           </div>
           <div class="rank-middle">
-            <img :src="refresh.defaultBroker.userImage" alt="" />
-            <span class="per-name">{{ refresh.defaultBroker.name }}(我)</span>
+            <!-- <img :src="refresh.defaultBroker.userImage" alt="" /> -->
+            <span class="per-name"
+              >{{ refresh.defaultBroker.storeName }}(本店)</span
+            >
           </div>
           <div class="rank-value">
             <span>￥</span>
@@ -397,21 +401,21 @@ export default {
         shopList: {
           list: [],
           defaultBroker: {}
-        }, //缓存门店
+        },
         areaList: {
           list: [],
           defaultBroker: {}
-        }, //缓存区域
+        },
         companyList: {
           list: [],
           defaultBroker: {}
-        }, //缓存公司
+        },
         defaultBroker: {}
       },
       choiceList: [
-        { title: "门店排名", type: 4, cacheList: "shopList" },
-        { title: "区域排名", type: 3, cacheList: "areaList" },
-        { title: "公司排名", type: 2, cacheList: "companyList" }
+        { title: "公司排名", type: 2, cacheList: "shopList" },
+        // { title: "团队级别排名", type: 3, cacheList: "areaList" },
+        { title: "区域排名", type: 3, cacheList: "companyList" }
       ],
       loading: true,
       changeTime: true,
@@ -442,7 +446,7 @@ export default {
     getRemote(done, name) {
       this.$api
         .get({
-          url: "/statistics/index/rank/broker",
+          url: "/statistics/index/rank/store",
           data: {
             name: name || "", // this.checkName,
             limit: 30
@@ -495,6 +499,11 @@ export default {
           active.cacheList
         ].defaultBroker;
         this.$nextTick(() => {
+          this.renderEchart({
+            lease: this.refresh.defaultBroker.saleCommission,
+            deal: this.refresh.defaultBroker.rentCommission,
+            project: this.refresh.defaultBroker.projectCommission
+          });
           document
             .getElementById("broker")
             .querySelector(".el-scrollbar__wrap").scrollTop = 0;
@@ -504,7 +513,7 @@ export default {
       this.loading = true;
       this.$api
         .get({
-          url: "/statistics/index/rank-list/broker",
+          url: "/statistics/index/rank-list/store",
           data: {
             rankType: active.type,
             date: util.format(this.realTime, "yyyy-MM") + "-01",
@@ -513,26 +522,24 @@ export default {
           }
         })
         .then(({ data }) => {
-          const brokerRankList = (data.data.brokerRankList || []).map(
-            (v, i) => {
-              return {
-                ...v,
-                isTopThree: i <= 2 ? true : false,
-                prefix:
-                  i <= 2
-                    ? `https://img.0be.cn/pc/attence_bz_0${i}.svg`
-                    : comNum(i + 1),
-                sumCommission: util.regexNum(v.sumCommission)
-              };
-            }
-          );
+          const brokerRankList = (data.data.storeRankList || []).map((v, i) => {
+            return {
+              ...v,
+              isTopThree: i <= 2 ? true : false,
+              prefix:
+                i <= 2
+                  ? `https://img.0be.cn/pc/attence_bz_0${i}.svg`
+                  : comNum(i + 1),
+              sumCommission: util.regexNum(v.sumCommission)
+            };
+          });
           //缓存对应数据
           this.refresh[active.cacheList].list = brokerRankList;
           //赋值给渲染数组
           this.refresh.renderlist = this.refresh[active.cacheList].list;
 
           //显示底部默认经纪人
-          const defaultBroker = data.data.defaultBroker;
+          const defaultBroker = data.data.defaultStore;
 
           if (defaultBroker && Object.keys(defaultBroker).length > 0) {
             this.refresh[active.cacheList].defaultBroker = {
@@ -572,8 +579,8 @@ export default {
       this.selectFlag = !this.selectFlag;
 
       if (value) {
-        this.checkName = value.perName;
-        this.checkId = value.accountId;
+        this.checkName = value.deptName;
+        this.checkId = value.deptId;
         this.reLoadData();
       }
     },
