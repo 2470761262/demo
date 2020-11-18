@@ -19,23 +19,17 @@
           <div class="ipt-gather">
             <div class="ipt-box">
               <label for="" class="label">开始时间</label>
-              <el-date-picker
-                class="ipt gather"
-                v-model="value"
-                type="datetime"
-                placeholder="选择日期时间"
-              >
-              </el-date-picker>
+              <div class="half-ipt" @click="openDateDialog">
+                <span>请选择时间</span>
+                <i></i>
+              </div>
             </div>
             <div class="ipt-box">
               <label for="" class="label">结束时间</label>
-              <el-date-picker
-                class="ipt gather"
-                v-model="value"
-                type="datetime"
-                placeholder="选择日期时间"
-              >
-              </el-date-picker>
+              <div class="half-ipt" @click="openDateDialog">
+                <span>请选择时间</span>
+                <i></i>
+              </div>
             </div>
           </div>
           <div class="ipt-box">
@@ -141,10 +135,11 @@
       </div>
     </div>
     <el-dialog
+      class="date-dialog"
       :show-close="false"
       :visible.sync="dialogVisible"
       :modal="false"
-      width="30%"
+      width="292px"
     >
       <div>
         <ls-calendar
@@ -161,13 +156,22 @@
             ></div>
           </template>
         </ls-calendar>
+        <div class="bottom">
+          <span
+            :class="{ active: dayDuration == 0 }"
+            @click="selectDayDuration(0)"
+            >上午</span
+          >
+          <span
+            :class="{ active: dayDuration == 1 }"
+            @click="selectDayDuration(1)"
+            >下午</span
+          >
+        </div>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
-          >确 定</el-button
-        >
-      </span>
+      <div class="dialog-footer">
+        <button class="confirm" @click="confirmDayDuration">确定</button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -178,9 +182,9 @@ export default {
   data() {
     return {
       color: ["#0DA88B", "#F6A420", "#EF5656"],
-      restCurrent: "",
+      restCurrent: [],
       restCalendarTiem: "",
-      dialogVisible: true,
+      dialogVisible: false,
       name: "",
       input2: "",
       input3: "",
@@ -244,7 +248,8 @@ export default {
       ],
       openFilterPanel: false,
       value: "",
-      checkList: ["复选框1"]
+      checkList: ["复选框1"],
+      dayDuration: 0
     };
   },
   mounted() {
@@ -271,7 +276,7 @@ export default {
       //this.$set(this, this.ruleTime[index]);
     },
     openDateDialog() {
-      this.dialogClockDateVisible = true;
+      this.dialogVisible = true;
     },
     /**
      * @description: 部门/人员切换
@@ -294,6 +299,13 @@ export default {
     },
     relateDepartLoad() {
       console.log("aaaaaaaaaa");
+    },
+    selectDayDuration(val) {
+      this.dayDuration = val;
+    },
+    confirmDayDuration() {
+      console.log(this.dayDuration);
+      this.dialogVisible = false;
     }
   }
 };
@@ -320,6 +332,63 @@ export default {
 /* 时间范围选择器面板end */
 </style>
 <style lang="less" scoped>
+/deep/.date-dialog {
+  .el-dialog__header {
+    padding: 0;
+  }
+  .el-dialog__body {
+    padding: 0;
+  }
+  .bottom {
+    padding: 0 16px;
+    span {
+      display: inline-block;
+      width: 76px;
+      height: 32px;
+      margin-right: 10px;
+      background: #f0f2f5;
+      border-radius: 4px;
+      line-height: 32px;
+      text-align: center;
+      font-size: @font16;
+      color: #909399;
+      cursor: pointer;
+      &.active {
+        background: @backgroud;
+        color: #fff;
+      }
+    }
+  }
+  .dialog-footer {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    padding: 16px 16px;
+    margin-top: 16px;
+    box-sizing: border-box;
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 16px;
+      right: 16px;
+      height: 1px;
+      background: #f0f2f5;
+    }
+    .confirm {
+      width: 109px;
+      height: 40px;
+      background: @backgroud;
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      font-size: @font16;
+      outline: none;
+      cursor: pointer;
+    }
+  }
+}
 /* 时间范围选择器begin */
 /deep/.el-date-editor {
   width: 160px;
@@ -450,6 +519,33 @@ export default {
             line-height: 36px;
             font-size: @font12;
             color: #ff9600;
+          }
+          .half-ipt {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 160px;
+            height: 48px;
+            padding: 0 10px;
+            background: #ffffff;
+            border-radius: 4px;
+            border: 1px solid #cecece;
+            box-sizing: border-box;
+            cursor: pointer;
+            span {
+              display: inline-block;
+              width: 120px;
+              font-size: @font16;
+              color: #909399;
+            }
+            i {
+              display: inline-block;
+              width: 16px;
+              height: 16px;
+              background: url("../../../assets/images/askforLeave_date.svg")
+                center no-repeat;
+              background-size: cover;
+            }
           }
           .ipt {
             .el-input__inner {
