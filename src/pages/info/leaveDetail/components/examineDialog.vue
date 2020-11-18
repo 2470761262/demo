@@ -1,7 +1,7 @@
 <template>
   <!-- 新增名言警句弹窗 -->
   <el-dialog
-    title="总结点评"
+    title="审批"
     :visible.sync="visible"
     @close="close"
     :show="dialogVisible"
@@ -11,48 +11,34 @@
     <div class="component-container">
       <div class="content">
         <div class="ipt-box">
-          <div
-            :class="{ 'after-tips': errorBags.has('authorFamous') }"
-            :data-tips="errorBags.first('authorFamous')"
-          >
-            <label for="" class="label">名人</label>
-            <el-input
-              class="ipt"
-              v-model="formData.authorFamous"
-              placeholder="请输入名人姓名"
-              v-validate="'required'"
-              data-vv-as="名人姓名"
-              data-vv-name="authorFamous"
-            ></el-input>
+          <label for="" class="label">审批结果</label>
+          <div class="radio-group">
+            <span
+              v-for="(item, index) in examineList"
+              :key="index"
+              :class="{ active: item.value == isPass }"
+              @click="isPass = item.value"
+              >{{ item.label }}</span
+            >
           </div>
         </div>
-        <div class="ipt-box">
-          <div
-            :class="{ 'after-tips': errorBags.has('contentFamous') }"
-            :data-tips="errorBags.first('contentFamous')"
+        <div class="ipt-box" v-if="isPass == 0">
+          <label for="" class="label">不通过原因</label>
+          <el-input
+            class="textarea"
+            type="textarea"
+            placeholder="请输入不通过原因"
+            v-model="introduction"
+            maxlength="50"
+            show-word-limit
           >
-            <label for="" class="label">名言警句</label>
-            <el-input
-              class="textarea"
-              type="textarea"
-              placeholder="请输入名言警句"
-              v-model="formData.contentFamous"
-              maxlength="50"
-              show-word-limit
-              v-validate="'required'"
-              data-vv-as="名言警句"
-              data-vv-name="contentFamous"
-            >
-            </el-input>
-          </div>
+          </el-input>
         </div>
       </div>
       <div class="bottom">
         <div class="btn-box">
           <button class="cancel" @click="cancel">取消</button>
-          <button class="confirm" @click="confirm" v-loading="submitLoading">
-            确定
-          </button>
+          <button class="confirm" @click="confirm">确定</button>
         </div>
       </div>
     </div>
@@ -60,9 +46,6 @@
 </template>
 <script>
 export default {
-  $_veeValidate: {
-    validator: "new" // give me my own validator scope.
-  },
   props: {
     dialogVisible: {
       type: Boolean,
@@ -72,11 +55,19 @@ export default {
   data() {
     return {
       visible: this.dialogVisible,
-      submitLoading: false,
-      formData: {
-        authorFamous: "",
-        contentFamous: ""
-      }
+      radio1: 0,
+      introduction: "",
+      isPass: 1,
+      examineList: [
+        {
+          label: "通过",
+          value: 1
+        },
+        {
+          label: "不通过",
+          value: 0
+        }
+      ]
     };
   },
   watch: {
@@ -92,32 +83,7 @@ export default {
     cancel() {
       this.$emit("update:dialogVisible", false);
     },
-    confirm() {
-      this.$validator.validateAll().then(e => {
-        if (e) {
-          this.submitLoading = true;
-          this.$api
-            .post({
-              url: "/attendance/famouseWork/save",
-              data: this.formData,
-              headers: { "Content-Type": "application/json" }
-            })
-            .then(e => {
-              let result = e.data;
-              this.$message({
-                message: result.message
-              }); //弹窗提示
-              if (result.code == 200) {
-                this.cancel();
-                this.$emit("add");
-              }
-            })
-            .finally(e => {
-              this.submitLoading = false;
-            });
-        }
-      });
-    }
+    confirm() {}
   }
 };
 </script>
@@ -181,14 +147,23 @@ export default {
           border-radius: 8px;
         }
       }
-      .ipt {
-        .el-input__inner {
-          width: 336px;
-          height: 48px;
-          background: #ffffff;
+      .radio-group {
+        span {
+          display: inline-block;
+          width: 98px;
+          height: 42px;
+          margin-right: 16px;
+          background: #f0f2f5;
           border-radius: 4px;
-          border: 1px solid #cecece;
+          line-height: 42px;
+          text-align: center;
           font-size: @font16;
+          color: #909399;
+          cursor: pointer;
+          &.active {
+            background: @backgroud;
+            color: #fff;
+          }
         }
       }
       .textarea {
@@ -242,13 +217,6 @@ export default {
         background: @backgroud;
         color: #fff;
       }
-    }
-  }
-  .after-tips {
-    &:after {
-      content: attr(data-tips);
-      display: block;
-      color: red;
     }
   }
 }

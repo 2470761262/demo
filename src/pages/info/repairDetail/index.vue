@@ -3,37 +3,57 @@
   <div class="add-rule-container">
     <div class="center">
       <div class="main">
-        <div class="panel rule">
-          <div class="ipt-box">
-            <label for="" class="label">请假类型</label>
-            <el-select class="ipt" v-model="company" placeholder="请选择">
-              <el-option
-                v-for="item in companyList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </div>
-          <div class="ipt-box">
-            <label for="" class="label">请假原因</label>
-            <el-input
-              class="textarea"
-              type="textarea"
-              :rows="2"
-              placeholder="请输入规则描述"
-              v-model="introduction"
-            >
-            </el-input>
+        <div class="handle-box">
+          <div class="handle">
+            <div class="left">
+              <div class="title">待审批</div>
+              <p class="text">请对改补卡申请进行审核</p>
+            </div>
+            <button class="handle-btn" @click="openExamineDialog">
+              进行审核
+            </button>
           </div>
         </div>
-        <h2 class="topic">审批流</h2>
-        <div class="panel"></div>
-        <div class="panel bottom">
-          <div class="bottom-btn">
-            <button class="reset">重置</button>
-            <button class="save" @click="save">保存</button>
+        <div class="panel body">
+          <div class="row">
+            <div class="row-title">补卡时间</div>
+            <div class="row-content">
+              <div class="row-around">2020-11-10&nbsp;周三</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="row-title">补卡班次</div>
+            <div class="row-content">
+              <div class="row-leave-duration">
+                上午（08:59:00）迟到<span class="pre"></span
+                >上午（11:59:00）早退<span class="pre"></span
+                >下午（17:59:00）早退
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="row-title">补卡原因</div>
+            <div class="row-content">
+              <div class="row-around">
+                这里是总结这里是总结这里是总结这里是总结这里是总结这这里
+                这里是总结这里是总结这里是总结这里是总结这里这里
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="row-title">图片</div>
+            <div class="row-content">
+              <div class="row-pic-box">
+                <el-image
+                  src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                  fit="cover"
+                ></el-image>
+                <el-image
+                  src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                  fit="cover"
+                ></el-image>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -59,125 +79,71 @@
             </div>
           </div>
         </div>
+        <div class="panel applyer batch">
+          <div class="title">审批流</div>
+          <div class="timeline">
+            <div class="timeline-item pendding">
+              <div class="circle"></div>
+              <div class="line"></div>
+              <div class="timeline-title">
+                <span class="ts">2020-11-09 23:28:37</span>
+                <span class="status">等待审核</span>
+              </div>
+              <div class="timeline-content">
+                <div class="detail">
+                  <span class="row">审批人员：周杰伦（中诚门店）</span>
+                  <span class="row">审批情况：审核进行中请耐心等待</span>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item success">
+              <div class="circle"></div>
+              <div class="line"></div>
+              <div class="timeline-title">
+                <span class="ts">2020-11-09 23:28:37</span>
+                <span class="status">审核通过</span>
+              </div>
+              <div class="timeline-content">
+                <div class="detail">
+                  <span class="row">审批人员：周杰伦（中诚门店）</span>
+                  <span class="row">审批情况：审核已通过</span>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item fail">
+              <div class="circle"></div>
+              <div class="line"></div>
+              <div class="timeline-title">
+                <span class="ts">2020-11-09 23:28:37</span>
+                <span class="status">审核不通过</span>
+              </div>
+              <div class="timeline-content">
+                <div class="detail">
+                  <span class="row">审批人员：周杰伦（中诚门店）</span>
+                  <span class="row">审批情况：审核已通过</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+    <!-- 审核弹窗 -->
+    <examine-dialog :dialogVisible.sync="examineDialogVisible"></examine-dialog>
   </div>
 </template>
 <script>
+import examineDialog from "./components/examineDialog.vue";
 export default {
+  components: { examineDialog },
   data() {
     return {
-      name: "",
-      company: "",
-      introduction: "",
-      companyList: [
-        {
-          value: "Beijing",
-          label: "北京"
-        },
-        {
-          value: "Shanghai",
-          label: "上海"
-        },
-        {
-          value: "Nanjing",
-          label: "南京"
-        }
-      ],
-      ruleTime: [
-        {
-          morningTs: "",
-          afternoonTs: ""
-        },
-        {
-          morningTs: "",
-          afternoonTs: ""
-        },
-        {
-          morningTs: "",
-          afternoonTs: ""
-        },
-        {
-          morningTs: "",
-          afternoonTs: ""
-        },
-        {
-          morningTs: "",
-          afternoonTs: ""
-        },
-        {
-          morningTs: "",
-          afternoonTs: ""
-        },
-        {
-          morningTs: "",
-          afternoonTs: ""
-        }
-      ],
-      duration: "",
-      activeTabName: "first",
-      sidebarNavs: [
-        {
-          label: "适用部门",
-          name: "first"
-        },
-        {
-          label: "适用人员",
-          name: "second"
-        }
-      ],
-      openFilterPanel: false,
-      value: "",
-      checkList: ["复选框1"]
+      examineDialogVisible: false
     };
   },
-  mounted() {
-    console.log("1111111111111111111");
-    document.addEventListener("click", this.relateInpBlur);
-  },
-  beforeDestroy() {
-    console.log("2222222222222222222");
-    document.removeEventListener("click", this.relateInpBlur);
-  },
   methods: {
-    save() {
-      console.log(this.ruleTime, "----");
-    },
-    /**
-     * @description: 复制前一天考勤时间
-     * @param {Number} index 当天考勤日
-     * @return {*}
-     */
-    copyPreDayTs(index) {
-      let preDayTimeArr = Object.assign({}, this.ruleTime[index - 1]);
-      this.ruleTime.splice(index, 1, preDayTimeArr);
-      console.log(this.ruleTime);
-      //this.$set(this, this.ruleTime[index]);
-    },
-    openDateDialog() {
-      this.dialogClockDateVisible = true;
-    },
-    /**
-     * @description: 部门/人员切换
-     * @return {*}
-     */
-    switchTab() {
-      console.log(this.activeTabName, "=========");
-    },
-    relateIptFocus() {
-      this.openFilterPanel = true;
-    },
-    relateInpBlur(e) {
-      console.log(e.target);
-      let tp = document.querySelector(".relate-ipt-box");
-      if (tp) {
-        if (!tp.contains(e.target)) {
-          this.openFilterPanel = false;
-        }
-      }
-    },
-    relateDepartLoad() {
-      console.log("aaaaaaaaaa");
+    openExamineDialog() {
+      this.examineDialogVisible = true;
     }
   }
 };
@@ -206,9 +172,8 @@ export default {
 <style lang="less" scoped>
 /* 时间范围选择器begin */
 /deep/.el-date-editor {
-  width: 190px;
-  height: 38px;
-  padding: 1px 8px;
+  width: 160px;
+  height: 48px;
   .el-range__icon {
     font-size: @font14;
   }
@@ -288,99 +253,94 @@ export default {
       &::-webkit-scrollbar {
         display: none;
       }
-      .rule {
-        /deep/.ipt-box {
-          margin-bottom: 24px;
-          &:last-child {
-            margin-bottom: 0;
-          }
-          .label {
-            display: block;
-            position: relative;
-            padding-left: 16px;
-            margin-bottom: 16px;
-            line-height: 1;
-            font-size: @font16;
-            font-weight: bold;
-            color: #303133;
-            &::before {
-              content: "";
-              position: absolute;
-              top: 50%;
-              left: 0;
-              transform: translateY(-50%);
-              width: 8px;
-              height: 8px;
-              background: #f62f2f;
-              border-radius: 8px;
+      .handle-box {
+        width: 100%;
+        margin-bottom: 21px;
+        background: #fff;
+        box-shadow: 0px 8px 13px 0px rgba(68, 163, 163, 0.1);
+        border-radius: 8px;
+        box-sizing: border-box;
+        .handle {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 24px;
+          border-radius: 8px;
+          background: linear-gradient(
+            266deg,
+            rgba(255, 150, 0, 0) 0%,
+            rgba(255, 150, 0, 0.1) 100%
+          );
+          .left {
+            .title {
+              margin-bottom: 16px;
+              line-height: 1;
+              font-size: @font16;
+              font-weight: bold;
+              color: #303133;
             }
-          }
-          .ipt {
-            .el-input__inner {
-              width: 336px;
-              height: 48px;
-              background: #ffffff;
-              border-radius: 4px;
-              border: 1px solid #cecece;
+            .text {
+              line-height: 1;
+              color: #ff9600;
               font-size: @font16;
             }
           }
-          .textarea {
-            .el-textarea__inner {
-              width: 336px;
-              height: 146px;
-              background: #ffffff;
-              border-radius: 4px;
-              border: 1px solid #cecece;
-              resize: none;
-              font-size: @font16;
-              &::-webkit-scrollbar {
-                width: 6px;
-                height: 6px;
-                background-color: rgba(0, 0, 0, 0);
-              }
-              &::-webkit-scrollbar-thumb {
-                border-radius: 6px;
-                background-color: #bbb;
-              }
-              &::-webkit-scrollbar-track {
-                // box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-                background: #fff;
-              }
-            }
+          .handle-btn {
+            height: 32px;
+            padding: 0 14px;
+            background: @backgroud;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            outline: none;
+            cursor: pointer;
           }
         }
       }
-      .bottom {
-        margin-top: 24px;
-        .bottom-btn {
-          button {
-            width: 109px;
-            height: 40px;
-            border: none;
-            border-radius: 4px;
-            text-align: center;
-            line-height: 40px;
+      .body {
+        .row {
+          &:last-child {
+            .row-content {
+              margin-bottom: 0;
+            }
+          }
+          .row-title {
+            margin-bottom: 16px;
             font-size: @font16;
-            outline: none;
-            box-sizing: border-box;
-            cursor: pointer;
-            float: left;
+            font-weight: bold;
+            color: #303133;
           }
-          .reset {
-            margin-right: 16px;
-            background: #f4f4f5;
-            color: #606266;
-          }
-          .save {
-            background: @backgroud;
-            color: #fff;
+          .row-content {
+            margin-bottom: 24px;
+            .row-around {
+              line-height: 26px;
+              font-size: @font16;
+              color: #606266;
+            }
+            .row-leave-duration {
+              margin-bottom: 16px;
+              line-height: 1;
+              font-size: @font16;
+              color: #606266;
+              .pre {
+                margin: 0 16px;
+                color: #303133;
+              }
+            }
+            .row-pic-box {
+              display: flex;
+              .el-image {
+                width: 72px;
+                height: 72px;
+                margin-right: 16px;
+              }
+            }
           }
         }
       }
     }
     .sidebar {
-      width: 414px;
+      width: 292px;
       margin-left: 24px;
       overflow: auto;
       &::-webkit-scrollbar {
@@ -447,6 +407,106 @@ export default {
                 background: url(~@/assets/images/leaveDetail_call_phone.svg)
                   center no-repeat;
                 background-size: cover;
+              }
+            }
+          }
+        }
+      }
+      .batch {
+        margin-top: 24px;
+        .timeline {
+          .timeline-item {
+            position: relative;
+            &:last-child {
+              .line {
+                display: none;
+              }
+            }
+            &.pendding {
+              .circle {
+                background-image: url(~@/assets/images/leaveDetail_timeline_pending.svg);
+              }
+              .status {
+                background: rgba(246, 164, 32, 0.1);
+                color: #f6a420;
+              }
+            }
+            &.success {
+              .circle {
+                background-image: url(~@/assets/images/leaveDetail_timeline_success.svg);
+              }
+              .status {
+                background: rgba(13, 168, 139, 0.1);
+                color: #0da88b;
+              }
+            }
+            &.fail {
+              .circle {
+                background-image: url(~@/assets/images/leaveDetail_timeline_fail.svg);
+              }
+              .status {
+                background: rgba(239, 86, 86, 0.1);
+                color: #ef5656;
+              }
+            }
+            .circle {
+              position: absolute;
+              top: 2px;
+              left: 0;
+              width: 16px;
+              height: 16px;
+              background-position: center;
+              background-repeat: no-repeat;
+              background-size: cover;
+              border-radius: 14px;
+              box-sizing: border-box;
+            }
+            .line {
+              position: absolute;
+              top: 26px;
+              left: 8px;
+              bottom: 10px;
+              width: 1px;
+              background: #d8d8d8;
+            }
+            .timeline-title {
+              display: flex;
+              justify-content: space-between;
+              height: 20px;
+              padding-left: 32px;
+              margin-bottom: 12px;
+              line-height: 20px;
+              .ts {
+                font-size: @font14;
+                color: #303133;
+              }
+              .status {
+                width: 64px;
+                height: 20px;
+                border-radius: 2px;
+                line-height: 20px;
+                text-align: center;
+                font-size: @font12;
+              }
+            }
+            .timeline-content {
+              padding: 0 0 12px 32px;
+              .detail {
+                width: 100%;
+                padding: 18px 10px;
+                background: #f8f8f8;
+                border-radius: 4px;
+                box-sizing: border-box;
+                .row {
+                  display: inline-block;
+                  margin-bottom: 14px;
+                  line-height: 1;
+                  font-size: @font12;
+                  color: #606266;
+                  &:last-child {
+                    margin-bottom: 0;
+                  }
+                }
               }
             }
           }

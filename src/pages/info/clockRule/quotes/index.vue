@@ -1,5 +1,5 @@
 <template>
-  <!-- 考勤审批 -->
+  <!-- 名言警句 -->
   <div class="content">
     <div class="head">
       <div class="head-type">
@@ -40,7 +40,7 @@
                       <el-input
                         class="width100"
                         clearable
-                        v-model="input1"
+                        v-model="formData.authorFamous"
                         maxlength="5"
                         placeholder="名人姓名"
                         oninput="value = value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g, '')"
@@ -71,15 +71,17 @@
                   height="100%"
                   v-loading="loading"
                   ref="tableList"
+                  element-loading-text="正在加载"
                 >
                   <el-table-column
                     type="index"
                     width="60"
                     label="序号"
+                    prop="id"
                   ></el-table-column>
                   <el-table-column
                     min-width="280"
-                    prop="addTime1"
+                    prop="contentFamous"
                     label="激励语内容"
                     align="right"
                     show-overflow-tooltip
@@ -87,7 +89,7 @@
                   </el-table-column>
                   <el-table-column
                     min-width="200"
-                    prop="addTime2"
+                    prop="authorFamous"
                     label="名人"
                     align="right"
                     show-overflow-tooltip
@@ -101,13 +103,13 @@
                   >
                     <template v-slot="scope">
                       <el-button
-                        @click="handleTestClick(scope.row)"
+                        @click="navigateToEdit(scope.row.id)"
                         type="text"
                         size="small"
                         >编辑</el-button
                       >
                       <el-button
-                        @click="handleRecordClick(scope.row)"
+                        @click="deleteClick(scope.row.id)"
                         type="text"
                         size="small"
                         >删除</el-button
@@ -134,38 +136,77 @@
     <!-- 新增名言警句弹窗 -->
     <add-quotes-dialog
       :dialogVisible.sync="addQuotesDialogVisible"
+      @add="add"
     ></add-quotes-dialog>
+    <!-- 编辑名言警句弹窗 -->
+    <edit-quotes-dialog
+      :dialogVisible.sync="editQuotesDialogVisible"
+      :famousId="famousId"
+      v-if="editQuotesDialogVisible"
+      @edit="edit"
+    ></edit-quotes-dialog>
   </div>
 </template>
 <script>
 import clockRuleHead from "@/pages/info/mixins/clockRuleHead.js";
 import addQuotesDialog from "./components/addQuotesDialog.vue";
+import editQuotesDialog from "./components/editQuotesDialog.vue";
 export default {
   mixins: [clockRuleHead],
-  components: { addQuotesDialog },
+  components: { addQuotesDialog, editQuotesDialog },
   data() {
     return {
       addQuotesDialogVisible: false,
+      editQuotesDialogVisible: false,
       loading: false,
-      input1: "",
-      time: [],
-      tableData: [{ id: 1 }, { id: 2 }, { id: 2 }, { id: 2 }, { id: 2 }],
+      tableData: [],
       pageJson: {
         page: 1,
         limit: 10,
         total: 0,
         pageSum: 0
       },
-      sortColumn: "id", //排序字段
-      sortType: 1 //排序类型
+      formData: {
+        authorFamous: ""
+      }, //头部查询条件
+      famousId: 0
     };
   },
+  watch: {},
+  mounted() {
+    this.getData();
+  },
   methods: {
+    /**
+     * @example:添加弹窗
+     */
     navigateToAdd() {
       this.addQuotesDialogVisible = true;
     },
-    reset() {},
-    query() {},
+    /**
+     * @example:编辑弹窗
+     * @param {id} 名言id
+     */
+    navigateToEdit(id) {
+      this.famousId = id;
+      this.editQuotesDialogVisible = true;
+    },
+    /**
+     * @example：重置
+     */
+    reset() {
+      Object.keys(this.formData).forEach(e => {
+        this.formData[e] = "";
+      });
+      this.query();
+    },
+    /**
+     * @example:查询
+     */
+    query(page = 1) {
+      this.pageJson.page = page;
+      this.getData();
+    },
     /**
      * @example: 改变每页请求数据数量
      * @param {val} 请求数
@@ -183,6 +224,71 @@ export default {
     handleCurrentChange(val) {
       this.pageJson.page = val;
       this.query(val);
+    },
+    /**
+     * @example:获取列表数据
+     */
+    getData() {
+      let params = {
+        limit: this.pageJson.limit,
+        page: this.pageJson.page
+      };
+      Object.assign(params, JSON.parse(JSON.stringify(this.formData))); //合并查询条件
+      this.loading = true;
+      this.$api
+        .post({
+          url: "attendance/famouseWork/listFamousRemark",
+          data: params,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.tableData = result.data.list;
+            this.pageJson.total = result.data.totalCount;
+            this.pageJson.pageSum = result.data.totalPage;
+          }
+        })
+        .finally(e => {
+          this.loading = false;
+        });
+    },
+    /**
+     * @example:添加成功回显事件
+     */
+    add() {
+      this.query();
+    },
+    /**
+     * @example:编辑成功回显事件
+     */
+    edit() {
+      this.query();
+    },
+    /**
+     * @example:删除时间
+     * @param {id}  名言id
+     */
+    deleteClick(id) {
+      this.$confirm("您确定要删除选中的数据吗?删除后，数据将不可恢复", {
+        confirmButtonText: "扔要删除",
+        cancelButtonText: "我再想想",
+        title: "温馨提示",
+        center: true
+      }).then(() => {
+        this.$api
+          .post({
+            url: `/attendance/famouseWork/deleteById?id=${id}`
+          })
+          .then(e => {
+            this.$message({
+              message: e.data.message
+            });
+            if (e.data.code == 200) {
+              this.query();
+            }
+          });
+      });
     }
   }
 };

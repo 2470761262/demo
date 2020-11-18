@@ -114,6 +114,16 @@
             </div>
           </div>
         </div>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageJson.page"
+          :page-sizes="[5, 10, 15, 20]"
+          :page-size="pageJson.limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="pageJson.total"
+        >
+        </el-pagination>
       </div>
     </div>
   </div>
@@ -146,7 +156,13 @@ export default {
           value: 2
         }
       ],
-      value: ""
+      value: "",
+      pageJson: {
+        page: 1,
+        limit: 10,
+        total: 0,
+        pageSum: 0
+      }
     };
   },
   methods: {
@@ -157,7 +173,25 @@ export default {
       });
     },
     reset() {},
-    query() {}
+    query() {},
+    /**
+     * @example: 改变每页请求数据数量
+     * @param {val} 请求数
+     * @param {type} 分页类型
+     */
+    handleSizeChange(val) {
+      this.pageJson.limit = val;
+      this.query();
+    },
+    /**
+     * @example: 改变分页当前页码
+     * @param {val} 页码
+     * @param {type} 分页类型
+     */
+    handleCurrentChange(val) {
+      this.pageJson.page = val;
+      this.query(val);
+    }
   }
 };
 </script>
@@ -436,6 +470,42 @@ export default {
               }
             }
           }
+        }
+      }
+      .el-pagination {
+        padding: 5px 5px 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .el-pager li,
+        .btn-next .el-icon,
+        .btn-prev .el-icon,
+        button,
+        span:not([class*="suffix"]) {
+          height: auto;
+          line-height: 1;
+          font-size: @font16;
+          font-weight: normal;
+        }
+        .el-select .el-input {
+          width: 80px;
+        }
+        .el-pagination__sizes .el-input .el-input__inner {
+          height: 22px;
+          line-height: 20px;
+          font-size: @font14;
+        }
+        .el-pager .more::before {
+          line-height: 1;
+        }
+        .el-pagination__editor {
+          height: auto;
+          .el-input__inner {
+            height: 22px;
+          }
+        }
+        .el-input--mini .el-input__icon {
+          line-height: 1;
         }
       }
     }

@@ -24,7 +24,7 @@
             :current="workCurrent"
             v-model="workCalendarTiem"
             choice="multiple"
-            :gridCount="35"
+            :gridCount="42"
           >
             <template v-slot:dots="{ col }">
               <div
@@ -41,7 +41,7 @@
             :current="restCurrent"
             v-model="restCalendarTiem"
             choice="multiple"
-            :gridCount="35"
+            :gridCount="42"
           >
             <template v-slot:dots="{ col }">
               <div
@@ -90,7 +90,7 @@ export default {
         }
       ],
       color: ["#0DA88B", "#F6A420", "#EF5656"],
-      workCalendarTiem: "",
+      workCalendarTiem: ["2020-11-01", "2020-11-02", "2020-11-10"],
       workCurrent: [],
       restCalendarTiem: "2020-11-05",
       restCurrent: []
@@ -117,7 +117,11 @@ export default {
       console.log(this.activeTabName, "=========");
     },
     confirm() {
-      console.log("confirm");
+      console.log(
+        this.workCalendarTiem,
+        this.restCalendarTiem,
+        "-------------confirm"
+      );
     }
   }
 };
@@ -192,8 +196,8 @@ export default {
           padding: 0;
         }
         .cell-item {
-          height: 64px !important;
-          line-height: 64px !important;
+          height: 58px !important;
+          line-height: 58px !important;
         }
       }
     }
