@@ -6,6 +6,20 @@
   border-radius: 8px;
   flex: 1;
   margin-right: 16px;
+  &.small-height {
+    height: 406px;
+    .normal-scroll {
+      height: 340px;
+      &::before {
+        display: none;
+      }
+      .scrollbar-pad {
+        &::after {
+          display: none;
+        }
+      }
+    }
+  }
   &:last-child {
     margin-right: 0px;
   }
@@ -118,171 +132,31 @@
 </style>
 
 <template>
-  <div class="normal-content">
+  <div class="normal-content" :class="{ 'small-height': list.length < 6 }">
     <div class="normal-title">
       <div class="title-text">门店业绩</div>
-      <div class="title-btn">
+      <div class="title-btn" @click="getData">
         <div class="btn-prefix el-icon-refresh-right"></div>
         <div class="btn-title">更新数据</div>
       </div>
     </div>
-    <div class="normal-scroll">
+    <div class="normal-scroll" v-loading="loading">
       <el-scrollbar class="scrollbar">
         <div class="scrollbar-pad">
-          <div class="data-item">
-            <div class="rank-img">
-              <img src="https://img.0be.cn/pc/attence_bz_00.svg" alt="" />
+          <div class="data-item" v-for="item in list" :key="item.accountId">
+            <div class="rank-img" v-if="item.isTopThree">
+              <img :src="item.prefix" alt="" />
+            </div>
+            <div v-else class="rank-icon">
+              {{ item.prefix }}
             </div>
             <div class="rank-middle">
-              <span class="per-name">Empty House</span>
+              <!-- <img :src="item.userImage" alt="" /> -->
+              <span class="per-name">{{ item.deptName }}</span>
             </div>
             <div class="rank-value">
               <span>￥</span>
-              <span>21,391</span>
-            </div>
-          </div>
-          <div class="data-item">
-            <div class="rank-img">
-              <img src="https://img.0be.cn/pc/attence_bz_01.svg" alt="" />
-            </div>
-            <div class="rank-middle">
-              <span class="per-name">Empty House</span>
-            </div>
-            <div class="rank-value">
-              <span>￥</span>
-              <span>21,391</span>
-            </div>
-          </div>
-          <div class="data-item">
-            <div class="rank-img">
-              <img src="https://img.0be.cn/pc/attence_bz_02.svg" alt="" />
-            </div>
-            <div class="rank-middle">
-              <span class="per-name">Empty House</span>
-            </div>
-            <div class="rank-value">
-              <span>￥</span>
-              <span>21,391</span>
-            </div>
-          </div>
-          <div class="data-item">
-            <div class="rank-icon">
-              05.
-            </div>
-            <div class="rank-middle">
-              <span class="per-name">Empty House</span>
-            </div>
-            <div class="rank-value">
-              <span>￥</span>
-              <span>21,391</span>
-            </div>
-          </div>
-          <div class="data-item">
-            <div class="rank-icon">
-              06.
-            </div>
-            <div class="rank-middle">
-              <span class="per-name">Empty House</span>
-            </div>
-            <div class="rank-value">
-              <span>￥</span>
-              <span>21,391</span>
-            </div>
-          </div>
-          <div class="data-item">
-            <div class="rank-icon">
-              07.
-            </div>
-            <div class="rank-middle">
-              <span class="per-name">Empty House</span>
-            </div>
-            <div class="rank-value">
-              <span>￥</span>
-              <span>21,391</span>
-            </div>
-          </div>
-          <div class="data-item">
-            <div class="rank-icon">
-              08.
-            </div>
-            <div class="rank-middle">
-              <span class="per-name">Empty House</span>
-            </div>
-            <div class="rank-value">
-              <span>￥</span>
-              <span>21,391</span>
-            </div>
-          </div>
-          <div class="data-item">
-            <div class="rank-icon">
-              09.
-            </div>
-            <div class="rank-middle">
-              <span class="per-name">Empty House</span>
-            </div>
-            <div class="rank-value">
-              <span>￥</span>
-              <span>21,391</span>
-            </div>
-          </div>
-          <div class="data-item">
-            <div class="rank-icon">
-              10.
-            </div>
-            <div class="rank-middle">
-              <span class="per-name">Empty House</span>
-            </div>
-            <div class="rank-value">
-              <span>￥</span>
-              <span>21,391</span>
-            </div>
-          </div>
-          <div class="data-item">
-            <div class="rank-icon">
-              11.
-            </div>
-            <div class="rank-middle">
-              <span class="per-name">Empty House</span>
-            </div>
-            <div class="rank-value">
-              <span>￥</span>
-              <span>21,391</span>
-            </div>
-          </div>
-          <div class="data-item">
-            <div class="rank-icon">
-              12.
-            </div>
-            <div class="rank-middle">
-              <span class="per-name">Empty House</span>
-            </div>
-            <div class="rank-value">
-              <span>￥</span>
-              <span>21,391</span>
-            </div>
-          </div>
-          <div class="data-item">
-            <div class="rank-icon">
-              13.
-            </div>
-            <div class="rank-middle">
-              <span class="per-name">Empty House</span>
-            </div>
-            <div class="rank-value">
-              <span>￥</span>
-              <span>21,391</span>
-            </div>
-          </div>
-          <div class="data-item">
-            <div class="rank-icon">
-              14.
-            </div>
-            <div class="rank-middle">
-              <span class="per-name">Empty House</span>
-            </div>
-            <div class="rank-value">
-              <span>￥</span>
-              <span>21,391</span>
+              <span>{{ item.sumCommission }}</span>
             </div>
           </div>
         </div>
@@ -292,5 +166,51 @@
 </template>
 
 <script>
-export default {};
+import util from "@/util/util";
+
+function comNum(num) {
+  if (num < 10) {
+    return `0${num}.`;
+  }
+  return `${num}.`;
+}
+export default {
+  data() {
+    return {
+      list: [],
+      loading: true
+    };
+  },
+  created() {
+    this.getData();
+  },
+  methods: {
+    getData() {
+      this.loading = true;
+      this.$api
+        .get({
+          url: "/statistics/index/rank/support/store",
+          data: {
+            limit: 20
+          }
+        })
+        .then(({ data }) => {
+          this.list = data.data.storeRankList.map((v, i) => {
+            return {
+              ...v,
+              isTopThree: i <= 2 ? true : false,
+              prefix:
+                i <= 2
+                  ? `https://img.0be.cn/pc/attence_bz_0${i}.svg`
+                  : comNum(i + 1),
+              sumCommission: util.regexNum(v.sumCommission)
+            };
+          });
+        })
+        .then(() => {
+          this.loading = false;
+        });
+    }
+  }
+};
 </script>

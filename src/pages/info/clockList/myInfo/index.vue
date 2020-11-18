@@ -1283,7 +1283,7 @@
                         <div class="scrollbar-warp">
                           <div class="is-empty">
                             <img
-                              src="https://xinjiawang-b.oss-cn-shenzhen.aliyuncs.com/static/imgs/f6793f303f0d0e64ebce24a08b968d2.png?Expires=1605184162&OSSAccessKeyId=TMP.3KjvtPmTKjs5xV3yosmiBqADWPdmWSwuvwXAVeztEdAJhN2VkqF2CHmm5QmBCngekA2fno1bFvZyV7XavJHv8FS9191QXh&Signature=3M8aLei%2FoB9mP3fgMZqW9xDkCIU%3D&versionId=CAEQHBiBgMCZ4.7wrRciIDVhNmY2ODAxYjcwMjQ0ZmE5NjMzNzI3YTgzNzIwZGFi&response-content-type=application%2Foctet-stream"
+                              src="https://sysimgs.oss-cn-shenzhen.aliyuncs.com/Background/kong.png"
                               alt=""
                             />
                             <div>暂无数据</div>

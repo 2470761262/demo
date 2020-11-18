@@ -31,12 +31,12 @@
   }
   .notice-list {
     margin-top: 28px;
+    height: 166px;
     .notice-list-item {
       display: flex;
-
-      margin-bottom: 24px;
-      &:last-child {
-        margin-bottom: 0px;
+      margin-top: 24px;
+      &:first-child {
+        margin-top: 0px;
       }
       font-size: @font14;
       color: #606266;
@@ -56,6 +56,22 @@
         flex: 1;
         text-align: right;
         color: #909399;
+      }
+    }
+    .is-empty {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      img {
+        width: 114px;
+        height: 94px;
+      }
+      div {
+        font-size: @font14;
+        color: #606266;
+        margin-top: 24px;
       }
     }
   }
@@ -92,43 +108,49 @@
 <template>
   <div class="notice-content">
     <div class="notice-head">
-      <div class="head-item active">
+      <div
+        class="head-item"
+        :class="{ active: root.activeIndex == 0 }"
+        @click="setActiveIndex(0)"
+      >
         系统公告
       </div>
-      <div class="head-item ">
+      <div
+        class="head-item "
+        :class="{ active: root.activeIndex == 1 }"
+        @click="setActiveIndex(1)"
+      >
         规则文档
       </div>
-      <div class="head-more">
+      <div class="head-more" @click="navToMoer">
         <span>更多</span>
       </div>
     </div>
-    <div class="notice-list">
-      <div class="notice-list-item">
-        <div class="notice-item-text">
-          系统公告系统公告系统公告系统公告系统公告系统公告系统公
-        </div>
-        <div class="notice-item-time">04-12</div>
+    <div class="notice-list" v-loading="root.loading">
+      <div
+        class="notice-list-item"
+        v-for="item in root.activeList"
+        :key="item.id"
+        @click="navTouch(item)"
+      >
+        <div class="notice-item-text" :title="item.title">{{ item.title }}</div>
+        <div class="notice-item-time">{{ item.date }}</div>
       </div>
-      <div class="notice-list-item">
-        <div class="notice-item-text">系统公告系统公告系统公</div>
-        <div class="notice-item-time">04-12</div>
-      </div>
-      <div class="notice-list-item">
-        <div class="notice-item-text">系统公告系统公告系统公</div>
-        <div class="notice-item-time">04-12</div>
-      </div>
-      <div class="notice-list-item">
-        <div class="notice-item-text">系统公告系统公告系统公</div>
-        <div class="notice-item-time">04-12</div>
-      </div>
-      <div class="notice-list-item">
-        <div class="notice-item-text">系统公告系统公告系统公</div>
-        <div class="notice-item-time">04-12</div>
+      <div v-if="cd.isEmpty" class="is-empty">
+        <img
+          src="https://sysimgs.oss-cn-shenzhen.aliyuncs.com/Background/kong.png"
+          alt=""
+        />
+        <div>暂无数据</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { enter } from "./realization/notice";
+import { V2Init } from "vcomposition2";
+export default V2Init({
+  created: [enter]
+});
 </script>

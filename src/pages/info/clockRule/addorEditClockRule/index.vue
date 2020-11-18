@@ -14,12 +14,12 @@
           </div>
           <div class="ipt-box">
             <label for="" class="label">适用公司</label>
-            <el-select class="ipt" v-model="company" placeholder="请选择">
+            <el-select class="ipt" v-model="companyId" placeholder="请选择">
               <el-option
                 v-for="item in companyList"
                 :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                :label="item.name"
+                :value="item.nameId"
               >
               </el-option>
             </el-select>
@@ -31,7 +31,7 @@
               type="textarea"
               :rows="2"
               placeholder="请输入规则描述"
-              v-model="introduction"
+              v-model="description"
             >
             </el-input>
           </div>
@@ -213,24 +213,11 @@ export default {
   components: { setClockDate },
   data() {
     return {
-      dialogClockDateVisible: true,
+      dialogClockDateVisible: false,
       name: "",
-      company: "",
-      introduction: "",
-      companyList: [
-        {
-          value: "Beijing",
-          label: "北京"
-        },
-        {
-          value: "Shanghai",
-          label: "上海"
-        },
-        {
-          value: "Nanjing",
-          label: "南京"
-        }
-      ],
+      companyId: "",
+      description: "",
+      companyList: [],
       ruleTime: [
         {
           morningTs: "",
@@ -278,6 +265,9 @@ export default {
       checkList: ["复选框1"]
     };
   },
+  created() {
+    this.queryCompany();
+  },
   mounted() {
     document.addEventListener("click", this.relateInpBlur);
   },
@@ -285,8 +275,50 @@ export default {
     document.removeEventListener("click", this.relateInpBlur);
   },
   methods: {
+    queryCompany() {
+      this.$api
+        .get({
+          url: "/attendance/rule/auth/company",
+          data: {},
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            console.log(e.data, "aaa");
+            this.companyList = e.data.data;
+          }
+        });
+    },
     save() {
       console.log(this.ruleTime, "----");
+      let doChecking = [];
+      this.ruleTime.forEach((item, index) => {
+        doChecking.push({
+          type: index + 1,
+          morningStartTime: item.morningTs[0],
+          morningEndTime: item.morningTs[1],
+          afternoonStartTime: item.afternoonTs[0],
+          afternoonEndTime: item.afternoonTs[1]
+        });
+      });
+      let params = {
+        name: this.name,
+        companyId: this.companyId,
+        description: this.description,
+        doChecking: this.doChecking
+      };
+      this.$api
+        .post({
+          url: "/attendance/rule",
+          data: params,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            console.log(e.data, "aaa");
+            this.companyList = e.data.data;
+          }
+        });
     },
     /**
      * @description: 复制前一天考勤时间

@@ -55,7 +55,7 @@
         <div class="row-data-title">本月工资</div>
         <div class="row-data-value">
           <span class="value-after">￥</span>
-          <span class="value-data">7,900</span>
+          <span class="value-data">{{ base.salary }}</span>
         </div>
       </div>
     </div>
@@ -65,10 +65,10 @@
         <img src="https://img.0be.cn/pc/attence_18.svg" alt="" />
       </div>
       <div class="row-item-data">
-        <div class="row-data-title">业绩核算</div>
+        <div class="row-data-title">业绩核算(万)</div>
         <div class="row-data-value">
           <span class="value-after">￥</span>
-          <span class="value-data">21,900</span>
+          <span class="value-data">{{ base.allCommission }}</span>
         </div>
       </div>
     </div>
@@ -81,7 +81,7 @@
         <div class="row-data-title">品牌分</div>
         <div class="row-data-value">
           <!-- <span class="value-after">￥</span> -->
-          <span class="value-data">50000</span>
+          <span class="value-data">{{ base.brandScore }}</span>
         </div>
       </div>
     </div>
@@ -94,7 +94,7 @@
         <div class="row-data-title">级别</div>
         <div class="row-data-value">
           <!-- <span class="value-after">￥</span> -->
-          <span class="value-data">F3</span>
+          <span class="value-data">{{ base.levelCode }}</span>
         </div>
       </div>
     </div>
@@ -102,5 +102,36 @@
 </template>
 
 <script>
-export default {};
+import util from "@/util/util";
+export default {
+  data() {
+    return {
+      base: {}
+    };
+  },
+  created() {
+    this.getBase();
+  },
+  methods: {
+    /**
+     * @example: 获取基础信息
+     */
+    getBase() {
+      this.$api
+        .get({
+          url: "/statistics/index/base"
+        })
+        .then(({ data }) => {
+          this.base = {
+            salary: util.regexNum(Number(data.data.salary)),
+            allCommission: util.regexNum(
+              Number.parseInt(data.data.allCommission / 100) / 100
+            ),
+            brandScore: util.regexNum(Number(data.data.brandScore)),
+            levelCode: data.data.levelCode || "暂无"
+          };
+        });
+    }
+  }
+};
 </script>
