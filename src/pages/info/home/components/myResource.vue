@@ -1,20 +1,15 @@
 <style lang="less" scoped>
 .resource {
   background: #ffffff;
-
   box-shadow: 0px 8px 13px 0px rgba(68, 163, 163, 0.1);
-
   border-radius: 8px;
-
   padding: 24px;
-
   margin-top: 24px;
   .head {
     display: flex;
     align-items: center;
     justify-content: space-between;
     line-height: 1;
-
     margin-bottom: 24px;
     .head-title {
       color: #303133;
@@ -35,16 +30,12 @@
   .layout-content {
     display: flex;
     flex-wrap: wrap;
-
     margin: 0 -8px;
     .layout-item {
       flex: 0 0 calc((100% - 48px) / 3);
-
       margin: 0 8px;
-
       height: 98px;
       background: #f7f7f9;
-
       border-radius: 4px;
       box-sizing: border-box;
       line-height: 1;
@@ -53,11 +44,9 @@
       }
       .item-title {
         padding-top: 22px;
-
         text-indent: 22px;
         font-size: @font14;
         color: #606266;
-
         margin-bottom: 16px;
       }
       .item-data {
@@ -76,37 +65,65 @@
   <div class="resource">
     <div class="head">
       <span class="head-title">我的资源</span>
-      <span class="head-more">查看更多</span>
+      <span class="head-more" @click="navToPage">查看更多</span>
     </div>
     <div class="layout-content">
       <div class="layout-item">
         <div class="item-title">跟单房源量（套）</div>
-        <div class="item-data">482</div>
+        <div class="item-data">{{ resouce.agentNum }}</div>
       </div>
       <div class="layout-item">
         <div class="item-title">独家委托量（套）</div>
-        <div class="item-data">29</div>
+        <div class="item-data">{{ resouce.onlyNum }}</div>
       </div>
       <div class="layout-item">
         <div class="item-title">房源实勘量（套）</div>
-        <div class="item-data">274</div>
+        <div class="item-data">{{ resouce.realNum }}</div>
       </div>
       <div class="layout-item">
         <div class="item-title">钥匙委托量（套）</div>
-        <div class="item-data">784</div>
+        <div class="item-data">{{ resouce.keyNum }}</div>
       </div>
       <div class="layout-item">
         <div class="item-title">房源录入量（套）</div>
-        <div class="item-data">341</div>
+        <div class="item-data">{{ resouce.addNum }}</div>
       </div>
       <div class="layout-item">
         <div class="item-title">客户量（套）</div>
-        <div class="item-data">3</div>
+        <div class="item-data">{{ resouce.custNum }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  created() {
+    this.getDate();
+  },
+  data() {
+    return {
+      resouce: {}
+    };
+  },
+  methods: {
+    navToPage() {
+      this.$router.push({
+        path: "/managementEntrance/business"
+      });
+    },
+    /**
+     * @example: 获取数据
+     */
+    getDate() {
+      this.$api
+        .get({
+          url: "/statistics/index/resouce"
+        })
+        .then(({ data }) => {
+          this.resouce = data.data;
+        });
+    }
+  }
+};
 </script>

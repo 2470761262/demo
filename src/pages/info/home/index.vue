@@ -41,15 +41,17 @@
         <!-- 工资信息 -->
         <salaryinfo />
         <!-- 我的资源 -->
-        <!-- <my-resource /> -->
+        <my-resource v-if="configDiff.myResource" />
         <!-- echart -->
         <div class="visual">
           <!-- 左侧Echart -->
-          <!-- <left-echart /> -->
+          <left-echart v-if="configDiff.leftEchart" />
           <!-- 右侧Echart -->
-          <!-- <right-echart /> -->
-          <anget-normal />
-          <dept-normal />
+          <right-echart v-if="configDiff.rightEchart" />
+          <!-- 非业务线经纪人 -->
+          <anget-normal v-if="configDiff.angetNormal" />
+          <!-- 非业务线门店 -->
+          <dept-normal v-if="configDiff.deptNormal" />
         </div>
       </div>
       <div class="right">
@@ -67,26 +69,33 @@
 </template>
 
 <script>
-//头部
-import infoHead from "./components/infoHead";
-//工资信息
-import salaryinfo from "./components/salaryinfo";
-//我的资源
-import myResource from "./components/myResource";
-//左侧Echart
-import leftEchart from "./components/leftEchart";
-//右侧Echart
-import rightEchart from "./components/rightEchart";
-//签到
-import signIn from "./components/signIn";
-//合伙人
-import partner from "./components/partner";
-//通知
-import notice from "./components/notice";
-//普通员工经纪人业绩
-import angetNormal from "./components/angetNormal";
-//普通员工门店业绩
-import deptNormal from "./components/deptNormal";
+import {
+  infoHead, //头部
+  salaryinfo, //工资信息
+  myResource, //我的资源
+  leftEchart, //左侧Echart
+  rightEchart, //右侧Echart
+  signIn, //签到
+  partner, //合伙人
+  notice, //通知
+  angetNormal, //普通员工经纪人业绩
+  deptNormal //普通员工门店业绩
+} from "./components/index";
+//工具
+import util from "@/util/util";
+//常量
+import { LOGINDATA } from "@/util/constMap";
+
+function initConfig() {
+  return {
+    leftEchart: false,
+    rightEchart: false,
+    myResource: false,
+    angetNormal: false,
+    deptNormal: false
+  };
+}
+
 export default {
   components: {
     infoHead,
@@ -99,6 +108,46 @@ export default {
     notice,
     angetNormal,
     deptNormal
+  },
+  data() {
+    return {
+      configDiff: initConfig()
+    };
+  },
+  created() {
+    this.getLoginData();
+  },
+  methods: {
+    /**
+     * @example: 合并属性
+     */
+    megerConfigDiff(config) {
+      this.configDiff = {
+        ...initConfig(),
+        ...config
+      };
+    },
+    /**
+     * @example: 显示对应的界面
+     */
+    getLoginData() {
+      switch (util.localStorageGet(LOGINDATA).deptType) {
+        case 2:
+        case 4:
+          this.megerConfigDiff({
+            leftEchart: true,
+            rightEchart: true,
+            myResource: true
+          });
+          break;
+        default:
+          this.megerConfigDiff({
+            angetNormal: true,
+            deptNormal: true
+          });
+          break;
+      }
+    }
   }
 };
 </script>
