@@ -36,70 +36,57 @@
               <el-form label-position="right" label-width="64px">
                 <el-col :span="6">
                   <el-form-item label="规则名称">
-                    <el-select
-                      class="width100"
-                      v-model="ruleName"
-                      filterable
+                    <el-input
                       clearable
-                      placeholder="请选择"
-                    >
-                      <el-option
-                        v-for="item in ruleNameList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      >
-                      </el-option>
-                    </el-select>
+                      placeholder="考勤规则名称"
+                      class="width100"
+                      v-model="formData.ruleName"
+                      @blur="query(1)"
+                    ></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="启用状态">
                     <el-select
                       class="width100"
-                      v-model="status"
+                      v-model="formData.status"
                       clearable
                       placeholder="请选择"
+                      @change="query(1)"
                     >
                       <el-option
                         v-for="item in statusList"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value"
-                      >
-                      </el-option>
+                      ></el-option>
                     </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6" class="fr">
                   <div class="conditions-btn">
-                    <div class="btn" @click="reset">
-                      重置
-                    </div>
-                    <div class="btn active" @click="query(1)">
-                      搜索
-                    </div>
+                    <div class="btn" @click="reset">重置</div>
+                    <div class="btn active" @click="query(1)">搜索</div>
                   </div>
                 </el-col>
               </el-form>
             </el-row>
           </div>
         </div>
-        <div class="wrapper">
-          <div class="column" v-for="(item, index) in 80" :key="index">
-            <div class="title">无考勤规则</div>
+        <div
+          class="wrapper"
+          v-loading="loading"
+          element-loading-text="正在加载"
+        >
+          <div class="column" v-for="(item, index) in tableData" :key="index">
+            <div class="title">{{ item.name }}</div>
             <div class="text-box">
-              <div class="text">
-                该考勤规则适用文员考勤，该考勤规则适用文员考勤
-                该考勤规则适用文员考勤，该考勤规则适用文员考勤
-                该考勤规则适用文员考勤，该考勤规则适用文员考勤
-              </div>
+              <div class="text">{{ item.description }}</div>
             </div>
             <div class="btn-wrapper">
               <div class="btn-box">
                 <button @click="navigateToAdd(1)">编辑</button>
-                <button>删除</button>
-                <button>关联考勤部门</button>
+                <button @click="deleteClick(item.id)">删除</button>
               </div>
               <!-- <div class="status-box">
                 <span class="text">状态</span>
@@ -110,9 +97,10 @@
                   inactive-color="#ebebeb"
                 >
                 </el-switch>
-              </div> -->
+              </div>-->
             </div>
           </div>
+          <div v-if="tableData.length == 0">暂无数据</div>
         </div>
         <el-pagination
           @size-change="handleSizeChange"
@@ -122,8 +110,7 @@
           :page-size="pageJson.limit"
           layout="total, sizes, prev, pager, next, jumper"
           :total="pageJson.total"
-        >
-        </el-pagination>
+        ></el-pagination>
       </div>
     </div>
   </div>
@@ -145,25 +132,23 @@ export default {
           value: 0
         }
       ],
-      ruleName: "",
-      ruleNameList: [
-        {
-          label: "测试名称1",
-          value: 1
-        },
-        {
-          label: "测试名称2",
-          value: 2
-        }
-      ],
       value: "",
       pageJson: {
         page: 1,
         limit: 10,
         total: 0,
         pageSum: 0
-      }
+      },
+      formData: {
+        ruleName: "",
+        status: ""
+      },
+      loading: false,
+      tableData: []
     };
+  },
+  created() {
+    this.getData();
   },
   methods: {
     navigateToAdd(id) {
@@ -172,8 +157,23 @@ export default {
         query: { id: id }
       });
     },
-    reset() {},
-    query() {},
+    /**
+     * @example:重置
+     */
+    reset() {
+      Object.keys(this.formData).forEach(item => {
+        this.formData[item] = "";
+      });
+      this.query();
+    },
+    /**
+     * @example:查询
+     */
+    query(page = 1) {
+      this.pageJson.page = page;
+      this.tableData = [];
+      this.getData();
+    },
     /**
      * @example: 改变每页请求数据数量
      * @param {val} 请求数
@@ -189,8 +189,60 @@ export default {
      * @param {type} 分页类型
      */
     handleCurrentChange(val) {
-      this.pageJson.page = val;
       this.query(val);
+    },
+    /**
+     * @example：获取列表数据
+     */
+    getData() {
+      let params = {
+        limit: this.pageJson.limit,
+        page: this.pageJson.page
+      };
+      Object.assign(params, JSON.parse(JSON.stringify(this.formData))); //合并查询条件
+      this.loading = true;
+      this.$api
+        .post({
+          url: "/attendance/rule/list",
+          data: params,
+          qs: true
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.tableData = result.data.list;
+            this.pageJson.total = result.data.totalCount;
+            this.pageJson.pageSum = result.data.totalPage;
+          }
+        })
+        .finally(e => {
+          this.loading = false;
+        });
+    },
+    /**
+     * @example:删除事件
+     * @param {id}  规则id
+     */
+    deleteClick(id) {
+      this.$confirm("您确定要删除选中的数据吗?删除后，数据将不可恢复", {
+        confirmButtonText: "扔要删除",
+        cancelButtonText: "我再想想",
+        title: "温馨提示",
+        center: true
+      }).then(() => {
+        this.$api
+          .delete({
+            url: `/attendance/rule/${id}`
+          })
+          .then(e => {
+            this.$message({
+              message: e.data.message
+            });
+            if (e.data.code == 200) {
+              this.query();
+            }
+          });
+      });
     }
   }
 };
@@ -383,6 +435,7 @@ export default {
       box-shadow: 0px 8px 13px 0px rgba(68, 163, 163, 0.1);
       border-radius: 8px;
       .wrapper {
+        min-height: 189px;
         padding: 0 24px;
         margin: 24px 0 27px;
         display: grid;

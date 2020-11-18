@@ -44,7 +44,7 @@
                         maxlength="5"
                         placeholder="名人姓名"
                         oninput="value = value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g, '')"
-                        @blur="query"
+                        @blur="query(1)"
                       ></el-input>
                     </el-form-item>
                   </el-col>
@@ -205,6 +205,7 @@ export default {
      */
     query(page = 1) {
       this.pageJson.page = page;
+      this.tableData = [];
       this.getData();
     },
     /**
@@ -222,7 +223,6 @@ export default {
      * @param {type} 分页类型
      */
     handleCurrentChange(val) {
-      this.pageJson.page = val;
       this.query(val);
     },
     /**
@@ -266,7 +266,7 @@ export default {
       this.query();
     },
     /**
-     * @example:删除时间
+     * @example:删除事件
      * @param {id}  名言id
      */
     deleteClick(id) {

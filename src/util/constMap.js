@@ -21,6 +21,17 @@ export const HOUSEBELONGLIST = [
   }
 ];
 
+export const APPLYTYPE = [
+  {
+    key: "请假",
+    value: 1
+  },
+  {
+    key: "补卡",
+    value: 2
+  }
+];
+
 export const TREMEPACKERS = "tremePackers"; //默认皮肤缓存
 export const TREMEDEFTULTCOLOR = "#0d824b"; //默认皮肤颜色
 export const FONTSIZEBASE = 12; //基础字体大小
