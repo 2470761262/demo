@@ -4,8 +4,8 @@
   background: #ffffff;
   box-shadow: 0px 8px 13px 0px rgba(68, 163, 163, 0.1);
   border-radius: 8px;
-  flex: 1;
-  margin-right: 16px;
+  flex: 0 0 calc((100% - 32px) / 2);
+  margin: 0 8px;
   &.small-height {
     height: 406px;
     .normal-scroll {
@@ -19,9 +19,6 @@
         }
       }
     }
-  }
-  &:last-child {
-    margin-right: 0px;
   }
   .normal-title {
     margin: 0 24px;
@@ -125,6 +122,22 @@
             }
           }
         }
+        .is-empty {
+          margin-top: 50px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          img {
+            width: 114px;
+            height: 94px;
+          }
+          div {
+            font-size: @font14;
+            color: #606266;
+            margin-top: 24px;
+          }
+        }
       }
     }
   }
@@ -159,6 +172,13 @@
               <span>{{ item.sumCommission }}</span>
             </div>
           </div>
+          <div v-if="isEmpty" class="is-empty">
+            <img
+              src="https://sysimgs.oss-cn-shenzhen.aliyuncs.com/Background/kong.png"
+              alt=""
+            />
+            <div>暂无数据</div>
+          </div>
         </div>
       </el-scrollbar>
     </div>
@@ -175,6 +195,11 @@ function comNum(num) {
   return `${num}.`;
 }
 export default {
+  computed: {
+    isEmpty() {
+      return !this.loading && this.list.length == 0;
+    }
+  },
   data() {
     return {
       list: [],

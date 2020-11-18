@@ -5,16 +5,13 @@
   right: -4px;
   transform: translateY(100%);
   width: 156px;
-  height: 237px;
   z-index: 20;
   background: #ffffff;
   box-shadow: 0px 8px 13px 0px rgba(0, 0, 0, 0.1);
   border-radius: 2px;
   border: 1px solid #f5f5f5;
-  padding-top: 16px;
+  padding: 16px 0;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
   .select-pad {
     padding: 0 11px;
     .select-head {
@@ -43,12 +40,12 @@
         color: #fff;
         line-height: 1;
         font-size: @font12;
+        cursor: pointer;
       }
     }
   }
   .select-data {
-    flex: 1;
-    height: 0;
+    height: 175px;
     .scrollbar {
       height: 100%;
       .select-data-item {
@@ -74,22 +71,27 @@
   <div class="select-content">
     <div class="select-pad">
       <div class="select-head">
-        <input type="text" v-model="headValue" :placeholder="placeStr" />
-        <button>
+        <input
+          type="text"
+          v-model="headValue"
+          @keydown.enter="emitData"
+          :placeholder="placeStr"
+        />
+        <button @click="emitData">
           <span class="el-icon-search"></span>
         </button>
       </div>
     </div>
-    <div class="select-data">
+    <div class="select-data" v-if="list.length > 0">
       <el-scrollbar class="scrollbar">
-        <div class="select-data-item" @click="hideSelect">湖滨一里店</div>
-        <div class="select-data-item">湖滨一里店</div>
-        <div class="select-data-item">湖滨一里店</div>
-        <div class="select-data-item">湖滨一里店</div>
-        <div class="select-data-item">湖滨一里店</div>
-        <div class="select-data-item">湖滨一里店</div>
-        <div class="select-data-item">湖滨一里店</div>
-        <div class="select-data-item">湖滨一里店</div>
+        <div
+          class="select-data-item"
+          @click="hideSelect(item)"
+          v-for="item in list"
+          :key="item.accountId"
+        >
+          {{ item.perName }}
+        </div>
       </el-scrollbar>
     </div>
   </div>
@@ -98,17 +100,23 @@
 <script>
 export default {
   props: {
-    placeStr: String,
-    keyValue: String
+    placeStr: String
   },
   data() {
     return {
-      headValue: ""
+      headValue: "",
+      list: []
     };
   },
   methods: {
-    hideSelect() {
-      this.$emit("close", this.keyValue, false);
+    emitData() {
+      this.$emit("getRemote", this.getList, this.headValue);
+    },
+    getList(result) {
+      if (result) this.list = result.list;
+    },
+    hideSelect(item) {
+      this.$emit("close", item);
     }
   }
 };
