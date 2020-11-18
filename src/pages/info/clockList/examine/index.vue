@@ -36,20 +36,32 @@
                 <el-form label-position="right" label-width="64px">
                   <el-col :span="6">
                     <el-form-item label="申请人">
-                      <el-input
+                      <el-select
                         class="width100"
+                        v-model="buildOptData"
+                        placeholder="楼盘名称"
                         clearable
-                        v-model="input1"
-                        maxlength="5"
-                        placeholder="员工姓名"
-                        oninput="value = value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g, '')"
-                        @blur="query"
-                      ></el-input>
+                        filterable
+                        remote
+                        @focus="remoteBuildInput"
+                        @change="remoteBuildChange"
+                        :remote-method="buildRemoteMethod"
+                        :loading="buildLoading"
+                        value-key="value"
+                      >
+                        <el-option
+                          v-for="item in buildForList"
+                          :key="item.value"
+                          :label="item.name"
+                          :value="item"
+                        >
+                        </el-option>
+                      </el-select>
                     </el-form-item>
                   </el-col>
                   <el-col :span="10">
                     <el-row :gutter="8">
-                      <el-form-item label="房屋坐落">
+                      <el-form-item label="所在部门">
                         <el-col :span="8">
                           <el-select
                             v-model="buildOptData"
@@ -124,30 +136,32 @@
                           <el-select
                             class="width100 serch-item-select"
                             popper-class="options-item"
-                            v-model="input2"
+                            v-model="formData.applyType"
                             placeholder="选择申请类型"
+                            @change="applyTypeChange"
                           >
-                            <el-option value="">全部</el-option>
-                            <el-option value="正常考勤">正常考勤</el-option>
-                            <el-option value="迟到">迟到</el-option>
-                            <el-option value="早退">早退</el-option>
-                            <el-option value="旷工">旷工</el-option>
-                            <el-option value="请假">请假</el-option>
+                            <el-option
+                              v-for="(item, index) in applyTypeList"
+                              :key="index"
+                              :label="item.key"
+                              :value="item.value"
+                            ></el-option>
                           </el-select>
                         </el-col>
                         <el-col :span="12">
                           <el-select
                             class="width100"
-                            v-model="input3"
+                            v-model="formData.applySubType"
                             clearable
                             placeholder="选择具体类型"
+                            @change="query(1)"
                           >
-                            <el-option value="">全部</el-option>
-                            <el-option value="正常考勤">正常考勤</el-option>
-                            <el-option value="迟到">迟到</el-option>
-                            <el-option value="早退">早退</el-option>
-                            <el-option value="旷工">旷工</el-option>
-                            <el-option value="请假">请假</el-option>
+                            <el-option
+                              v-for="(item, index) in applySubTypeList"
+                              :key="index"
+                              :label="item.key"
+                              :value="item.value"
+                            ></el-option>
                           </el-select>
                         </el-col>
                       </el-form-item>
@@ -158,22 +172,23 @@
                       <el-select
                         class="width100 serch-item-select"
                         popper-class="options-item"
-                        v-model="input4"
-                        placeholder="请选择"
+                        v-model="formData.status"
+                        placeholder="请选择审批状态"
+                        @change="query(1)"
                       >
-                        <el-option value="">全部</el-option>
-                        <el-option value="正常考勤">正常考勤</el-option>
-                        <el-option value="迟到">迟到</el-option>
-                        <el-option value="早退">早退</el-option>
-                        <el-option value="旷工">旷工</el-option>
-                        <el-option value="请假">请假</el-option>
+                        <el-option
+                          v-for="(item, index) in statusList"
+                          :key="index"
+                          :label="item.key"
+                          :value="item.value"
+                        ></el-option>
                       </el-select>
                     </el-form-item>
                   </el-col>
                   <el-col :span="8">
                     <el-form-item label="申请时间">
                       <el-date-picker
-                        v-model="time"
+                        v-model="applyTime"
                         type="daterange"
                         range-separator="至"
                         start-placeholder="开始日期"
@@ -181,6 +196,7 @@
                         :default-time="['00:00:00', '23:59:59']"
                         value-format="yyyy-MM-dd HH:mm:ss"
                         class="anchor-point"
+                        @change="applyTimeChange"
                       >
                       </el-date-picker>
                     </el-form-item>
@@ -213,34 +229,41 @@
                     type="index"
                     width="60"
                     label="序号"
+                    prop="id"
                   ></el-table-column>
                   <el-table-column
                     min-width="120"
-                    prop="addTime1"
                     label="申请人"
                     align="right"
                     show-overflow-tooltip
+                    prop="applyName"
                   >
                   </el-table-column>
                   <el-table-column
                     min-width="200"
-                    prop="addTime2"
+                    prop="applyType"
                     label="类型"
                     align="right"
                     show-overflow-tooltip
                   >
+                    <template v-slot="scope">
+                      <span>{{ scope.row.applyType | applyTypeFilter }}</span>
+                    </template>
                   </el-table-column>
                   <el-table-column
                     min-width="200"
-                    prop="addTime3"
-                    label="类型"
+                    prop="applyDuration"
+                    label="时长"
                     align="right"
                     show-overflow-tooltip
                   >
+                    <template v-slot="scope">
+                      <span>{{ scope.row.applyDuration }}天</span>
+                    </template>
                   </el-table-column>
                   <el-table-column
                     min-width="200"
-                    prop="addTime"
+                    prop="createTime"
                     label="申请时间"
                     align="right"
                     show-overflow-tooltip
@@ -248,40 +271,26 @@
                   </el-table-column>
                   <el-table-column
                     min-width="200"
-                    prop="addTime3"
+                    prop="auditorName"
                     label="审批人"
                     align="right"
                     show-overflow-tooltip
                   >
+                    <template v-slot="scope">
+                      <span>{{ scope.row.auditorName | emptyRead }}</span>
+                    </template>
                   </el-table-column>
                   <el-table-column
                     min-width="130"
-                    prop="checkStatus"
-                    label="日志批阅"
+                    prop="status"
+                    label="审批结果"
                     align="right"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      <span
-                        v-if="scope.row.checkStatusStr == '待验真'"
-                        class="span_warning"
-                        >{{ scope.row.checkStatusStr }}</span
-                      >
-                      <span
-                        v-if="scope.row.checkStatusStr == '验真成功'"
-                        class="span_success"
-                        >{{ scope.row.checkStatusStr }}</span
-                      >
-                      <span
-                        v-if="scope.row.checkStatusStr == '验真失败'"
-                        class="span_danger"
-                        >{{ scope.row.checkStatusStr }}</span
-                      >
-                      <span
-                        v-if="scope.row.checkStatusStr == '无效'"
-                        class="span_info"
-                        >{{ scope.row.checkStatusStr }}</span
-                      >
+                      <span :class="statusClass(scope.row.status)">{{
+                        scope.row.status | statusFilter
+                      }}</span>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -307,6 +316,18 @@
 //楼盘 楼栋 房间号 级联 mixins
 import cascadeHouse from "@/minxi/cascadeHouse";
 import clockRuleHead from "@/pages/info/mixins/clockRuleHead.js";
+import util from "@/util/util.js";
+import { APPLYTYPE } from "@/util/constMap.js";
+let statusMap = new Map([
+  [0, "未审核"],
+  [1, "通过"],
+  [2, "不通过"]
+]);
+let statusClassMap = new Map([
+  [0, "span_warning"],
+  [1, "span_success"],
+  [2, "span_danger"]
+]);
 export default {
   mixins: [clockRuleHead, cascadeHouse],
   data() {
@@ -327,40 +348,106 @@ export default {
           path: "/clockList/examine"
         }
       ],
-      input1: "",
-      input2: "",
-      input3: "",
-      input4: "",
-      time: [],
-      tableData: [
-        { id: 1 },
-        { id: 2 },
-        { id: 2 },
-        { id: 2 },
-        { id: 2 },
-        { id: 2 },
-        { id: 2 },
-        { id: 2 },
-        { id: 2 },
-        { id: 2 },
-        { id: 2 },
-        { id: 2 },
-        { id: 2 },
-        { id: 2 }
-      ],
+      applyTime: [], //申请时间
+      tableData: [],
       pageJson: {
         page: 1,
         limit: 10,
         total: 0,
         pageSum: 0
       },
-      sortColumn: "id", //排序字段
-      sortType: 1 //排序类型
+      formData: {
+        applyId: "",
+        companyId: "",
+        departmentId: "",
+        applyType: "",
+        applySubType: "",
+        status: "",
+        applyStartTime: "",
+        applyEndTime: ""
+      },
+      applyTypeList: APPLYTYPE, //审核类型
+      applySubTypeList: [], //审核子类型
+      leaveSubTypeList: [
+        {
+          key: "事假",
+          value: 11
+        },
+        {
+          key: "病假",
+          value: 12
+        },
+        {
+          key: "婚嫁",
+          value: 13
+        },
+        {
+          key: "产假",
+          value: 14
+        },
+        {
+          key: "丧假",
+          value: 15
+        },
+        {
+          key: "公休",
+          value: 16
+        }
+      ], //请假子类型
+      cardSubTypeList: [
+        {
+          key: "补卡",
+          value: 21
+        }
+      ], //补卡子类型
+      statusList: [
+        {
+          key: "未审核",
+          value: 0
+        },
+        {
+          key: "通过",
+          value: 1
+        },
+        {
+          key: "不通过",
+          value: 2
+        }
+      ], //审批状态
+      companyList: [] //公司列表
     };
   },
+  mounted() {
+    this.getData();
+  },
+  computed: {},
+  filters: {
+    applyTypeFilter(value) {
+      return util.countMapFilter(value, "APPLYTYPE", "暂无");
+    },
+    statusFilter(value) {
+      return statusMap.get(value) ? statusMap.get(value) : "暂无";
+    }
+  },
   methods: {
-    reset() {},
-    query() {},
+    /**
+     * @example:重置
+     */
+    reset() {
+      Object.keys(this.formData).forEach(item => {
+        this.formData[item] = "";
+      });
+      this.applyTime = "";
+      this.query();
+    },
+    /**
+     * @example:查询
+     */
+    query(page = 1) {
+      this.pageJson.page = page;
+      this.tableData = [];
+      this.getData();
+    },
     /**
      * @example: 改变每页请求数据数量
      * @param {val} 请求数
@@ -376,8 +463,66 @@ export default {
      * @param {type} 分页类型
      */
     handleCurrentChange(val) {
-      this.pageJson.page = val;
       this.query(val);
+    },
+    /**
+     * @example:获取审批结果样式
+     */
+    statusClass(value) {
+      return statusClassMap.get(value);
+    },
+    /**
+     * @example:获取列表数据
+     */
+    getData() {
+      let params = {
+        limit: this.pageJson.limit,
+        page: this.pageJson.page
+      };
+      Object.assign(params, JSON.parse(JSON.stringify(this.formData)));
+      this.loading = true;
+      this.$api
+        .post({
+          url: "/attendance/apply/list",
+          data: params,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.tableData = result.data.list;
+            this.pageJson.total = result.data.totalCount;
+            this.pageJson.pageSum = result.data.totalPage;
+          }
+        })
+        .finally(e => {
+          this.loading = false;
+        });
+    },
+    /**
+     * @example:审核类型改变事件
+     */
+    applyTypeChange(value) {
+      let subKeyMap = new Map([
+        [1, "leaveSubTypeList"],
+        [2, "cardSubTypeList"]
+      ]);
+      this.applySubTypeList = this[subKeyMap.get(value)];
+      this.formData.applySubType = "";
+      this.query();
+    },
+    /**
+     * @example: 申请时间改变事件
+     */
+    applyTimeChange() {
+      if (this.applyTime) {
+        this.formData.applyStartTime = this.applyTime[0];
+        this.formData.applyEndTime = this.applyTime[1];
+      } else {
+        this.formData.applyStartTime = "";
+        this.formData.applyEndTime = "";
+      }
+      this.query();
     }
   }
 };
