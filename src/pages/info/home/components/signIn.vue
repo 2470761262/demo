@@ -213,7 +213,7 @@
         </div>
       </div>
       <div class="help-btn-item">
-        <div class="click-area">
+        <div class="click-area" @click="jumpToNoClock">
           <img src="https://img.0be.cn/pc/attence_23.svg" alt="" />
           <div>免考勤</div>
         </div>
@@ -223,5 +223,11 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    jumpToNoClock() {
+      this.$router.push({ path: "/noClock" });
+    }
+  }
+};
 </script>
