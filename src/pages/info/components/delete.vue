@@ -20,7 +20,9 @@
 <script>
 export default {
   methods: {
-    submit() {}
+    submit() {
+      this.$parent.delHandel();
+    }
   }
 };
 </script>

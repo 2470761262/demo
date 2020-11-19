@@ -76,6 +76,10 @@
             font-size: @font16;
             font-weight: normal;
           }
+          &:hover {
+            background: @backgroud;
+            color: #fff;
+          }
         }
       }
       .col-textarea {
@@ -100,6 +104,30 @@
             bottom: 16px;
             right: 16px;
             font-size: @font16;
+          }
+        }
+      }
+      .examine-per {
+        display: flex;
+        margin-top: 16px;
+        align-items: center;
+        line-height: 1;
+        img {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          margin-right: 8px;
+        }
+        .examine-middle {
+          .examine-title {
+            color: #303133;
+            font-size: @font14;
+            font-weight: bold;
+          }
+          .examine-dept {
+            color: #909399;
+            font-size: @font12;
+            margin-top: 8px;
           }
         }
       }
@@ -302,7 +330,7 @@
 </style>
 <template>
   <div class="content">
-    <div class="main">
+    <div class="main" v-if="!isApplying">
       <div class="body">
         <div class="title is-require">
           选择解锁员工
@@ -311,41 +339,21 @@
           每次仅能为一名员工提交解锁申请
         </div>
         <div class="check">
-          <div class="check-item is-check">
-            <img
-              src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1819216937,2118754409&fm=26&gp=0.jpg"
-              alt=""
-            />
-            <h3>胡彦斌</h3>
+          <!--循环开始 is-check-->
+          <div
+            :class="
+              currentAccountId == value.accountId
+                ? 'check-item is-check'
+                : 'check-item'
+            "
+            v-for="value in infoData.unFreedomHumans"
+            :key="value.accountId"
+            @click="checkAccount(value.accountId)"
+          >
+            <img :src="value.headImg | defaultImg" alt="" />
+            <h3>{{ value.name }}</h3>
           </div>
-          <div class="check-item">
-            <img
-              src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1819216937,2118754409&fm=26&gp=0.jpg"
-              alt=""
-            />
-            <h3>胡彦斌</h3>
-          </div>
-          <div class="check-item">
-            <img
-              src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1819216937,2118754409&fm=26&gp=0.jpg"
-              alt=""
-            />
-            <h3>胡彦斌</h3>
-          </div>
-          <div class="check-item">
-            <img
-              src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1819216937,2118754409&fm=26&gp=0.jpg"
-              alt=""
-            />
-            <h3>胡彦斌</h3>
-          </div>
-          <div class="check-item">
-            <img
-              src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1819216937,2118754409&fm=26&gp=0.jpg"
-              alt=""
-            />
-            <h3>胡彦斌</h3>
-          </div>
+          <!--循环结束-->
         </div>
         <div class="title is-require">
           申请解锁原因
@@ -354,106 +362,245 @@
           <el-input
             type="textarea"
             placeholder="请输入申请原因"
-            maxlength="50"
+            maxlength="250"
             show-word-limit
             resize="none"
+            v-model="reason"
           >
           </el-input>
         </div>
       </div>
       <div class="foot">
-        <button class="reset">重置</button>
-        <button class="submit">提交申请</button>
+        <button class="reset" @click="reset">重置</button>
+        <button class="submit" @click="apply">提交申请</button>
+      </div>
+    </div>
+    <div class="main" v-if="isApplying">
+      <div class="body">
+        <div class="title is-require">
+          解锁定申请员工
+        </div>
+        <div class="tips">
+          审核结束后才能提交下一名员工
+        </div>
+        <div class="check">
+          <div class="check-item  is-check">
+            <img :src="this.applyData.userImg | defaultImg" alt="" />
+            <h3>{{ this.applyData.userName }}</h3>
+          </div>
+        </div>
+        <div class="title is-require">
+          申请原因
+        </div>
+        <div
+          style="color: #909399;font-size: var(--font--12);margin-top: 8px;line-height: 20px;"
+        >
+          {{ this.applyData.reason }}
+        </div>
+        <div class="title">
+          审批人员
+        </div>
+        <div class="examine-per">
+          <img :src="this.applyData.upUserImg | defaultImg" alt="" />
+          <div class="examine-middle">
+            <div class="examine-title">{{ this.applyData.upUserName }}</div>
+            <div class="examine-dept">
+              {{ this.applyData.upDeptName }}（{{ this.applyData.upRoleName }}）
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="foot">
+        <el-tag type="warning" effect="dark">{{
+          this.applyData.statusName
+        }}</el-tag>
       </div>
     </div>
     <div class="other">
       <div class="dept-msg">
         <div class="dept-data">
           <div class="center">
-            <div class="dept-title">中诚一店</div>
-            <div class="dept-per">店长：林俊杰</div>
+            <div class="dept-title">{{ this.infoData.deptName }}</div>
+            <div class="dept-per">
+              {{ this.infoData.postName }}：{{ this.infoData.name }}
+            </div>
           </div>
         </div>
         <div class="split-line"></div>
         <div class="dept-num">
-          <div class="dept-num-title">3</div>
+          <div class="dept-num-title">
+            {{
+              this.infoData.freedomHumans && this.infoData.freedomHumans.length
+            }}
+          </div>
           <div class="dept-num-tips">被锁定员工</div>
         </div>
       </div>
       <div class="staff-list">
-        <div class="list-title">已锁定员工（2）</div>
+        <div class="list-title">
+          已锁定员工（{{
+            this.infoData.freedomHumans && this.infoData.freedomHumans.length
+          }}）
+        </div>
         <div class="list-content">
           <el-scrollbar class="scrollbar">
             <div class="scrollbar-pad">
-              <div class="list-item">
+              <!--循环开始-->
+              <div
+                class="list-item"
+                v-for="value in infoData.freedomHumans"
+                :key="value.accountId"
+              >
                 <div class="item-head">
-                  <img
-                    src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1819216937,2118754409&fm=26&gp=0.jpg"
-                    alt=""
-                  />
+                  <img :src="value.headImg | defaultImg" alt="" />
                   <div class="head-middle">
                     <div class="head-middle-name">
-                      <div class="name-text">林俊杰</div>
-                      <div class="name-tag">经纪人</div>
+                      <div class="name-text">{{ value.name }}</div>
+                      <div class="name-tag">{{ value.postName }}</div>
                     </div>
-                    <div class="head-middle-dept">中诚片区-中诚一店</div>
+                    <div class="head-middle-dept">
+                      {{ value.upDeptName }}-{{ value.deptName }}
+                    </div>
                   </div>
                 </div>
                 <div class="item-foot">
-                  2020-11-05 16:54:17 成为免考勤员工
+                  {{ value.inTime }} {{ value.lockDesc }}
                 </div>
               </div>
-              <div class="list-item">
-                <div class="item-head">
-                  <img
-                    src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1819216937,2118754409&fm=26&gp=0.jpg"
-                    alt=""
-                  />
-                  <div class="head-middle">
-                    <div class="head-middle-name">
-                      <div class="name-text">林俊杰</div>
-                      <div class="name-tag">经纪人</div>
-                    </div>
-                    <div class="head-middle-dept">中诚片区-中诚一店</div>
-                  </div>
-                </div>
-                <div class="item-foot">
-                  2020-11-05 16:54:17 成为免考勤员工
-                </div>
-              </div>
-              <div class="list-item">
-                <div class="item-head">
-                  <img
-                    src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1819216937,2118754409&fm=26&gp=0.jpg"
-                    alt=""
-                  />
-                  <div class="head-middle">
-                    <div class="head-middle-name">
-                      <div class="name-text">林俊杰</div>
-                      <div class="name-tag">经纪人</div>
-                    </div>
-                    <div class="head-middle-dept">中诚片区-中诚一店</div>
-                  </div>
-                </div>
-                <div class="item-foot">
-                  2020-11-05 16:54:17 成为免考勤员工
-                </div>
-              </div>
+              <!--循环结束-->
             </div>
           </el-scrollbar>
         </div>
       </div>
       <div class="nav-page">
-        <div class="nav-page-title">
-          <div class="title-text">免考勤员工（2）</div>
+        <div class="nav-page-title" @click="jumpNoClock">
+          <div class="title-text">免考勤员工（{{ infoData.otherCount }}）</div>
           <div class="nav-point el-icon-arrow-right"></div>
         </div>
-        <div class="nav-page-tips">点击查看被锁定员工账号，并为其申请解锁</div>
+        <div class="nav-page-tips">点击查看当前免考勤的员工</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      isApplying: true,
+      applyData: [],
+      infoData: [],
+      currentAccountId: null,
+      reason: null
+    };
+  },
+  methods: {
+    /**
+     * 获取待审核的申请
+     */
+    getApplyInfo() {
+      this.$api
+        .get({
+          url: "/attendance/lock/apply/info"
+        })
+        .then(e => {
+          let data = e.data.data;
+          console.log("data", data);
+          if (data != null && data.status == 0) {
+            this.isApplying = true;
+            this.applyData = data;
+          } else {
+            this.isApplying = false;
+          }
+        });
+    },
+    /**
+     * 获取申请信息
+     */
+    getInfo() {
+      this.$api
+        .get({
+          url: "/attendance/lock/info"
+        })
+        .then(e => {
+          let data = e.data.data;
+          console.log("data", data);
+          this.infoData = data;
+        });
+    },
+    /**
+     * 跳转
+     */
+    jumpNoClock() {
+      this.$router.push({ path: "/noClock" });
+    },
+    /**
+     * 选择人员
+     */
+    checkAccount(accountId) {
+      this.currentAccountId = accountId;
+      console.log("this.currentAccountId", this.currentAccountId);
+    },
+    /**
+     * 重置
+     */
+    reset() {
+      this.currentAccountId = null;
+      this.reason = null;
+    },
+    /**
+     * 提交申请
+     */
+    apply() {
+      if (this.currentAccountId == null) {
+        this.$message({
+          message: "请选择员工",
+          type: "warning"
+        });
+        return;
+      }
+      if (this.reason == null || this.reason.length == 0) {
+        this.$message({
+          message: "请填写申请原因",
+          type: "warning"
+        });
+        return;
+      }
+      let params = {};
+      params.applyPersonId = this.currentAccountId;
+      params.reason = this.reason;
+      this.$api
+        .post({
+          url: "/attendance/lock/apply",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: params
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.$message({
+              message: result.message,
+              type: "success"
+            });
+          } else {
+            this.$message({
+              message: result.message,
+              type: "warning"
+            });
+          }
+        })
+        .catch(e => {
+          console.log(e, "查询失败");
+        })
+        .finally(e => {
+          this.getApplyInfo();
+          this.getInfo();
+        });
+    }
+  },
+  mounted() {
+    this.getApplyInfo();
+    this.getInfo();
+  }
+};
 </script>
