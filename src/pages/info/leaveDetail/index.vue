@@ -166,7 +166,11 @@
       </div>
     </div>
     <!-- 审核弹窗 -->
-    <examine-dialog :dialogVisible.sync="examineDialogVisible"></examine-dialog>
+    <examine-dialog
+      :dialogVisible.sync="examineDialogVisible"
+      :applyId="applyId"
+      @checkEnd="checkEnd"
+    ></examine-dialog>
   </div>
 </template>
 <script>
@@ -211,14 +215,14 @@ export default {
   created() {
     let params = this.$route.query;
     if (params.id) {
-      this.applyId = params.id;
+      this.applyId = parseInt(params.id);
     }
-    this.loading = true;
-    Promise.all([this.getBaseDetails(), this.getMoreDetails()]).then(e => {
-      this.loading = false;
-    });
+    this.getData();
   },
   computed: {
+    /**
+     * 是否显示审核按钮
+     */
     checkButtoonShow() {
       let perId = util.localStorageGet("logindata").accountId;
       if (this.moreDetails.attendanceApprovalProcessVos.length > 0) {
@@ -255,10 +259,31 @@ export default {
      * 审批结果
      */
     checkCaseFilter(value) {
-      return value.status == 0 ? "审核进行中请耐心等待" : value.reason;
+      let reasonMap = new Map([
+        [0, "审核进行中请耐心等待"],
+        [1, "审批通过"],
+        [2, value.reason]
+      ]);
+      return reasonMap.get(value.status);
     }
   },
   methods: {
+    /**
+     * @example:获取数据
+     *
+     */
+    getData() {
+      this.loading = true;
+      Promise.all([this.getBaseDetails(), this.getMoreDetails()]).then(e => {
+        this.loading = false;
+      });
+    },
+    /**
+     * @example: 审核结束
+     */
+    checkEnd() {
+      this.getData();
+    },
     /**
      * @example:获取审核样式
      */

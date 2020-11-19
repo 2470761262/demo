@@ -609,7 +609,6 @@ export default {
      * @example:双击事件
      */
     rowDblclick(row) {
-      console.log("object :>> ", row);
       let detailsMap = new Map([
         [1, "/leaveDetail"],
         [2, "/repairDetail"]

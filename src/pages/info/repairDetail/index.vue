@@ -3,13 +3,20 @@
   <div class="add-rule-container">
     <div class="center">
       <div class="main">
-        <div class="handle-box">
+        <div
+          class="handle-box"
+          v-if="baseDetails.status == 0 && checkButtoonShow"
+        >
           <div class="handle">
             <div class="left">
               <div class="title">待审批</div>
               <p class="text">请对改补卡申请进行审核</p>
             </div>
-            <button class="handle-btn" @click="openExamineDialog">
+            <button
+              class="handle-btn"
+              @click="openExamineDialog"
+              v-if="checkButtoonShow"
+            >
               进行审核
             </button>
           </div>
@@ -18,16 +25,22 @@
           <div class="row">
             <div class="row-title">补卡时间</div>
             <div class="row-content">
-              <div class="row-around">2020-11-10&nbsp;周三</div>
+              <div class="row-around">
+                {{ baseDetails.repairAbnormalDay }}&nbsp;{{
+                  baseDetails.repairAbnormalDay | repairAbnormalDayFilter
+                }}
+              </div>
             </div>
           </div>
           <div class="row">
             <div class="row-title">补卡班次</div>
             <div class="row-content">
               <div class="row-leave-duration">
-                上午（08:59:00）迟到<span class="pre"></span
-                >上午（11:59:00）早退<span class="pre"></span
-                >下午（17:59:00）早退
+                {{ baseDetails.repairAbnormalDate | repairAbnormalDateFilter }}
+                {{ baseDetails.repairAbnormalDate | emptyRead(")", "(")
+                }}{{
+                  baseDetails.repairAbnormalType | repairAbnormalTypeFilter
+                }}
               </div>
             </div>
           </div>
@@ -35,8 +48,7 @@
             <div class="row-title">补卡原因</div>
             <div class="row-content">
               <div class="row-around">
-                这里是总结这里是总结这里是总结这里是总结这里是总结这这里
-                这里是总结这里是总结这里是总结这里是总结这里这里
+                {{ baseDetails.applyReason | emptyRead }}
               </div>
             </div>
           </div>
@@ -45,11 +57,9 @@
             <div class="row-content">
               <div class="row-pic-box">
                 <el-image
-                  src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-                  fit="cover"
-                ></el-image>
-                <el-image
-                  src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                  v-for="(item, index) in baseDetails.applyMediaList"
+                  :key="index"
+                  :src="item.url"
                   fit="cover"
                 ></el-image>
               </div>
@@ -63,17 +73,25 @@
           <div class="detail-box">
             <div class="avatar">
               <el-image
-                src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                :src="
+                  moreDetails.headImageUrl ||
+                    'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+                "
                 fit="cover"
               ></el-image>
             </div>
             <div class="detail">
               <div class="author-box">
-                <div class="author">林俊杰</div>
-                <div class="tag">经纪人</div>
+                <div class="author">{{ moreDetails.name | emptyRead }}</div>
+                <div class="tag">
+                  {{ moreDetails.positionName | emptyRead }}
+                </div>
               </div>
               <div class="business-box">
-                <div class="business">中诚片区-中诚门店</div>
+                <div class="business">
+                  {{ moreDetails.superiorDepartmentName | emptyRead }}
+                  {{ moreDetails.departmentName | emptyRead("", "-") }}
+                </div>
                 <div class="icon"></div>
               </div>
             </div>
@@ -82,45 +100,28 @@
         <div class="panel applyer batch">
           <div class="title">审批流</div>
           <div class="timeline">
-            <div class="timeline-item pendding">
+            <div
+              :class="['timeline-item', statusClass(item.status)]"
+              v-for="(item, index) in moreDetails.attendanceApprovalProcessVos"
+              :key="index"
+            >
               <div class="circle"></div>
               <div class="line"></div>
               <div class="timeline-title">
-                <span class="ts">2020-11-09 23:28:37</span>
-                <span class="status">等待审核</span>
+                <span class="ts">{{ item | approvalProcessTimeFilter }}</span>
+                <span class="status">{{ item.status | statusFilter }}</span>
               </div>
               <div class="timeline-content">
                 <div class="detail">
-                  <span class="row">审批人员：周杰伦（中诚门店）</span>
-                  <span class="row">审批情况：审核进行中请耐心等待</span>
-                </div>
-              </div>
-            </div>
-            <div class="timeline-item success">
-              <div class="circle"></div>
-              <div class="line"></div>
-              <div class="timeline-title">
-                <span class="ts">2020-11-09 23:28:37</span>
-                <span class="status">审核通过</span>
-              </div>
-              <div class="timeline-content">
-                <div class="detail">
-                  <span class="row">审批人员：周杰伦（中诚门店）</span>
-                  <span class="row">审批情况：审核已通过</span>
-                </div>
-              </div>
-            </div>
-            <div class="timeline-item fail">
-              <div class="circle"></div>
-              <div class="line"></div>
-              <div class="timeline-title">
-                <span class="ts">2020-11-09 23:28:37</span>
-                <span class="status">审核不通过</span>
-              </div>
-              <div class="timeline-content">
-                <div class="detail">
-                  <span class="row">审批人员：周杰伦（中诚门店）</span>
-                  <span class="row">审批情况：审核已通过</span>
+                  <span class="row"
+                    >审批人员：{{ item.auditorName | emptyRead
+                    }}{{
+                      item.auditorDepartmentName | emptyRead(")", "(")
+                    }}</span
+                  >
+                  <span class="row"
+                    >审批情况：{{ item | checkCaseFilter }}</span
+                  >
                 </div>
               </div>
             </div>
@@ -129,21 +130,201 @@
       </div>
     </div>
     <!-- 审核弹窗 -->
-    <examine-dialog :dialogVisible.sync="examineDialogVisible"></examine-dialog>
+    <examine-dialog
+      :dialogVisible.sync="examineDialogVisible"
+      :applyId="applyId"
+      @checkEnd="checkEnd"
+    ></examine-dialog>
   </div>
 </template>
 <script>
 import examineDialog from "./components/examineDialog.vue";
+import util from "@/util/util.js";
 export default {
   components: { examineDialog },
   data() {
     return {
-      examineDialogVisible: false
+      examineDialogVisible: false,
+      applyId: 0,
+      baseDetails: {
+        applySubType: "",
+        applySubTypeStr: "",
+        applyType: "",
+        applyStartTime: "",
+        applyStartTimeStr: "",
+        applyEndTime: "",
+        applyEndTimeStr: "",
+        applyDuration: "",
+        applyReason: "",
+        status: "",
+        repairAbnormalTime: "",
+        repairAbnormalDay: "",
+        repairAbnormalDate: "",
+        repairAbnormalType: "",
+        applyMediaList: [],
+        auditorList: []
+      }, //基础信息
+      moreDetails: {
+        name: "",
+        headImageUrl: "",
+        departmentName: "",
+        positionName: "",
+        superiorDepartmentName: "",
+        tel: "",
+        attendanceApprovalProcessVos: []
+      }, //更多信息
+      loading: false
     };
   },
+  created() {
+    let params = this.$route.query;
+    if (params.id) {
+      this.applyId = parseInt(params.id);
+    }
+    this.getData();
+  },
+  filters: {
+    /**
+     * 审批流时间
+     */
+    approvalProcessTimeFilter(value) {
+      return value.status == 0 ? value.createTime : value.approveTime;
+    },
+    /**
+     * 审批流类型
+     */
+    statusFilter(value) {
+      let statusMap = new Map([
+        [0, "等待审核"],
+        [1, "审核通过"],
+        [2, "审核不通过"]
+      ]);
+      return statusMap.get(value);
+    },
+    /**
+     * 审批结果
+     */
+    checkCaseFilter(value) {
+      let reasonMap = new Map([
+        [0, "审核进行中请耐心等待"],
+        [1, "审批通过"],
+        [2, value.reason]
+      ]);
+      return reasonMap.get(value.status);
+    },
+    /**
+     * 补卡异常日期换算成星期
+     */
+    repairAbnormalDayFilter(value) {
+      let date = new Date(value);
+      return util.countMapFilter(date.getDay(), "WEEK", "暂无");
+    },
+    /**
+     * 补卡异常类型
+     */
+    repairAbnormalTypeFilter(value) {
+      return util.countMapFilter(value, "REPAIRABNORMALTYPE", "暂无");
+    },
+    /**
+     * @example:补卡异常日期换算成 上午/下午
+     */
+    repairAbnormalDateFilter(value) {
+      let date = new Date(value);
+      let hours = date.getHours();
+      return hours ? (hours >= 6 && hours <= 12 ? "上午" : "下午") : "暂无";
+    }
+  },
+  computed: {
+    /**
+     * 是否显示审核按钮
+     */
+    checkButtoonShow() {
+      let perId = util.localStorageGet("logindata").accountId;
+      if (this.moreDetails.attendanceApprovalProcessVos.length > 0) {
+        if (
+          this.baseDetails.status == 0 &&
+          perId == this.moreDetails.attendanceApprovalProcessVos[0].personId
+        ) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+  },
   methods: {
+    /**
+     * @example:获取数据
+     *
+     */
+    getData() {
+      this.loading = true;
+      Promise.all([this.getBaseDetails(), this.getMoreDetails()]).then(e => {
+        this.loading = false;
+      });
+    },
+    /**
+     * @example: 审核结束
+     */
+    checkEnd() {
+      this.getData();
+    },
+    /**
+     * @example:获取审核样式
+     */
+    statusClass(status) {
+      let statusClassMap = new Map([
+        [0, "pendding"],
+        [1, "success"],
+        [2, "fail"]
+      ]);
+      return statusClassMap.get(status);
+    },
     openExamineDialog() {
       this.examineDialogVisible = true;
+    },
+    /**
+     * @example:获取基础信息
+     */
+    getBaseDetails() {
+      return this.$api
+        .get({
+          url: `/attendance/apply/base/details/${this.applyId}`
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.baseDetails = result.data;
+          }
+        });
+    },
+    /**
+     * @example:获取更多信息
+     */
+    getMoreDetails() {
+      return this.$api
+        .get({
+          url: `/attendance/apply/more/details/${this.applyId}`
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.moreDetails = result.data;
+            //解析审批流
+            let attendanceApprovalProcessVos = [];
+            this.moreDetails.attendanceApprovalProcessVos.forEach(
+              (item, index) => {
+                if (index != 0) {
+                  item.createTime = this.moreDetails.attendanceApprovalProcessVos[
+                    index - 1
+                  ].approveTime;
+                }
+                attendanceApprovalProcessVos.unshift(item);
+              }
+            );
+            this.moreDetails.attendanceApprovalProcessVos = attendanceApprovalProcessVos;
+          }
+        });
     }
   }
 };
