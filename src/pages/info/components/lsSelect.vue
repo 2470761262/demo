@@ -5,16 +5,13 @@
   right: -4px;
   transform: translateY(100%);
   width: 156px;
-  height: 237px;
   z-index: 20;
   background: #ffffff;
   box-shadow: 0px 8px 13px 0px rgba(0, 0, 0, 0.1);
   border-radius: 2px;
   border: 1px solid #f5f5f5;
-  padding-top: 16px;
+  padding: 16px 0;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
   .select-pad {
     padding: 0 11px;
     .select-head {
@@ -43,12 +40,12 @@
         color: #fff;
         line-height: 1;
         font-size: @font12;
+        cursor: pointer;
       }
     }
   }
   .select-data {
-    flex: 1;
-    height: 0;
+    height: 175px;
     .scrollbar {
       height: 100%;
       .select-data-item {
@@ -68,29 +65,47 @@
       overflow-x: hidden;
     }
   }
+  .tips-text {
+    font-size: @font12;
+    color: #909399;
+    font-weight: normal;
+    text-indent: 11px;
+    padding-top: 16px;
+  }
 }
 </style>
 <template>
   <div class="select-content">
     <div class="select-pad">
       <div class="select-head">
-        <input type="text" v-model="headValue" :placeholder="placeStr" />
-        <button>
+        <input
+          type="text"
+          v-model="headValue"
+          @keydown.enter="emitData"
+          :placeholder="placeStr"
+        />
+        <button @click="emitData">
           <span class="el-icon-search"></span>
         </button>
       </div>
     </div>
-    <div class="select-data">
+    <div class="select-data" v-if="list.length > 0">
       <el-scrollbar class="scrollbar">
-        <div class="select-data-item" @click="hideSelect">湖滨一里店</div>
-        <div class="select-data-item">湖滨一里店</div>
-        <div class="select-data-item">湖滨一里店</div>
-        <div class="select-data-item">湖滨一里店</div>
-        <div class="select-data-item">湖滨一里店</div>
-        <div class="select-data-item">湖滨一里店</div>
-        <div class="select-data-item">湖滨一里店</div>
-        <div class="select-data-item">湖滨一里店</div>
+        <div
+          class="select-data-item"
+          @click="hideSelect(item)"
+          v-for="item in list"
+          :key="item[keyId]"
+        >
+          {{ item[titleKey] }}
+        </div>
       </el-scrollbar>
+    </div>
+    <div v-if="loading" class="tips-text">
+      加载中
+    </div>
+    <div v-if="!loading && list.length == 0 && !once" class="tips-text">
+      暂无数据
     </div>
   </div>
 </template>
@@ -99,16 +114,30 @@
 export default {
   props: {
     placeStr: String,
-    keyValue: String
+    keyId: String,
+    titleKey: String
   },
   data() {
     return {
-      headValue: ""
+      once: true,
+      headValue: "",
+      list: [],
+      loading: false
     };
   },
   methods: {
-    hideSelect() {
-      this.$emit("close", this.keyValue, false);
+    emitData() {
+      this.loading = true;
+      this.once = false;
+      this.$emit("getRemote", this.getList, this.headValue);
+    },
+    getList(result) {
+      if (result) this.list = result.list;
+
+      this.loading = false;
+    },
+    hideSelect(item) {
+      this.$emit("close", item);
     }
   }
 };

@@ -70,27 +70,27 @@
     <div class="layout-content">
       <div class="layout-item">
         <div class="item-title">跟单房源量（套）</div>
-        <div class="item-data">{{ resouce.agentNum }}</div>
+        <div class="item-data">{{ resouce.agentNum || 0 }}</div>
       </div>
       <div class="layout-item">
         <div class="item-title">独家委托量（套）</div>
-        <div class="item-data">{{ resouce.onlyNum }}</div>
+        <div class="item-data">{{ resouce.onlyNum || 0 }}</div>
       </div>
       <div class="layout-item">
         <div class="item-title">房源实勘量（套）</div>
-        <div class="item-data">{{ resouce.realNum }}</div>
+        <div class="item-data">{{ resouce.realNum || 0 }}</div>
       </div>
       <div class="layout-item">
         <div class="item-title">钥匙委托量（套）</div>
-        <div class="item-data">{{ resouce.keyNum }}</div>
+        <div class="item-data">{{ resouce.keyNum || 0 }}</div>
       </div>
       <div class="layout-item">
         <div class="item-title">房源录入量（套）</div>
-        <div class="item-data">{{ resouce.addNum }}</div>
+        <div class="item-data">{{ resouce.addNum || 0 }}</div>
       </div>
       <div class="layout-item">
         <div class="item-title">客户量（套）</div>
-        <div class="item-data">{{ resouce.custNum }}</div>
+        <div class="item-data">{{ resouce.custNum || 0 }}</div>
       </div>
     </div>
   </div>

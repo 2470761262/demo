@@ -41,7 +41,7 @@ export default echartData => {
       data: ["买卖", "租赁", "项目"]
     },
     silent: true,
-    // animation: false,
+    //animation: false,
     series: [
       {
         color: ["#FBC04C", "#FA8988", "#658FF3"],
@@ -68,18 +68,28 @@ export default echartData => {
           fontSize: 24,
           color: "#303133"
         },
-        data: list
-          .map(v => [
-            v,
-            {
-              value: total / 50,
-              //name: "",
-              itemStyle: {
-                color: "#fff"
+        data: (function(arr) {
+          //计算是否需要添加区间
+          const isGap = arr.filter(v => v.value > 0).length;
+          return arr
+            .map(v => {
+              if (isGap > 0) {
+                return [
+                  v,
+                  {
+                    value: isGap > 1 ? (v.value > 0 ? total / 50 : 0) : 0,
+                    //name: "",
+                    itemStyle: {
+                      color: "#fff"
+                    }
+                  }
+                ];
+              } else {
+                return v;
               }
-            }
-          ])
-          .flat()
+            })
+            .flat();
+        })(list)
       }
     ]
   };

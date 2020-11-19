@@ -3,8 +3,8 @@
   background: #ffffff;
   box-shadow: 0px 8px 13px 0px rgba(68, 163, 163, 0.1);
   border-radius: 8px;
-  flex: 1;
-  margin-right: 16px;
+  flex: 0 0 calc((100% - 32px) / 2);
+  margin: 0 8px;
   background: #fff;
   padding: 24px 0;
   .rank-head {
@@ -84,6 +84,22 @@
         cursor: pointer;
       }
     }
+    .is-empty {
+      height: 213px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      img {
+        width: 114px;
+        height: 94px;
+      }
+      div {
+        font-size: @font14;
+        color: #606266;
+        margin-top: 24px;
+      }
+    }
   }
   .rank-list {
     margin-top: 24px;
@@ -116,6 +132,7 @@
       height: 58px;
       box-shadow: 0px 3px 13px 0px rgba(147, 147, 147, 0.1);
       .scrollbar> .data-item;
+      margin-bottom: 0;
     }
     .scrollbar {
       height: 100%;
@@ -124,6 +141,22 @@
       }
       .scroll-pad {
         padding: 0 24px;
+        .is-empty {
+          height: 300px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          img {
+            width: 114px;
+            height: 94px;
+          }
+          div {
+            font-size: @font14;
+            color: #606266;
+            margin-top: 24px;
+          }
+        }
         &.is-emplt-split {
           &::after {
             content: "";
@@ -186,9 +219,6 @@
       }
     }
   }
-  &:last-child {
-    margin-right: 0;
-  }
 }
 .head-item-f(@color:@backgroud,@font:@font16) {
   cursor: pointer;
@@ -224,164 +254,114 @@
     <div class="rank-head">
       <span class="head-title">
         <span class="title-text">经纪人业绩</span>
-        <div class="after-content" @click="changeSelectFlag">
-          <span class="after-text">林俊杰</span>
+        <div
+          class="after-content"
+          @click="changeSelectFlag()"
+          v-if="
+            parentInstance.roleConfig.indexRankBroker &&
+              refresh.defaultBroker.name
+          "
+        >
+          <span class="after-text">{{
+            checkName || refresh.defaultBroker.name
+          }}</span>
           <span class="iconfont iconjuxing"></span>
         </div>
         <ls-select
           v-if="selectFlag"
-          key-value="agentSelectFlag"
+          key-id="accountId"
+          title-key="perName"
+          @getRemote="getRemote"
           place-str="搜索经纪人"
           @close="changeSelectFlag"
         />
       </span>
-      <span class="head-btn el-icon-refresh">更新数据</span>
+      <span class="head-btn el-icon-refresh" @click="reLoadData()"
+        >更新数据</span
+      >
     </div>
     <div class="echart-content">
-      <div id="chart" ref="echart"></div>
+      <template v-if="!loading && !isDefaultBroker">
+        <div class="is-empty">
+          <img
+            src="https://sysimgs.oss-cn-shenzhen.aliyuncs.com/Background/kong.png"
+            alt=""
+          />
+          <div>暂无数据</div>
+        </div>
+      </template>
+      <template v-else>
+        <div id="chart" ref="echart"></div>
+      </template>
       <div class="cheart-foot">
-        <span>更新时间：2020-11-04</span>
-        <button>查看上月</button>
+        <span>更新时间：{{ nowTime }}</span>
+        <button @click="headleChangeTime">
+          {{ changeTime ? "查看上月" : "回到本月" }}
+        </button>
       </div>
     </div>
     <div class="rank-list">
       <div class="rank-list-head">
-        <div class="head-item active">门店排名</div>
-        <div class="head-item">区域排名</div>
-        <div class="head-item">公司排名</div>
+        <div
+          class="head-item"
+          :class="{ active: index == refresh.rankType }"
+          v-for="(item, index) in choiceList"
+          :key="item.type"
+          @click="setActiveType(index)"
+        >
+          {{ item.title }}
+        </div>
       </div>
-      <div class="rank-list-data">
-        <el-scrollbar class="scrollbar">
+      <div class="rank-list-data" v-loading="loading">
+        <el-scrollbar class="scrollbar" id="broker">
           <!-- 如果需要显示is-fixed 则需要加上这个样式is-emplt-split -->
-          <div class="scroll-pad is-emplt-split">
-            <div class="data-item">
-              <div class="rank-img">
-                <img src="https://img.0be.cn/pc/attence_bz_00.svg" alt="" />
+          <div
+            class="scroll-pad"
+            :class="{ 'is-emplt-split': isDefaultBroker }"
+          >
+            <div
+              class="data-item"
+              v-for="item in refresh.renderlist"
+              :key="item.accountId"
+            >
+              <div class="rank-img" v-if="item.isTopThree">
+                <img :src="item.prefix" alt="" />
+              </div>
+              <div class="rank-icon" v-else>
+                {{ item.prefix }}
               </div>
               <div class="rank-middle">
-                <img
-                  src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=222251486,3350228821&fm=11&gp=0.jpg"
-                  alt=""
-                />
-                <span class="per-name">Empty House</span>
+                <img :src="item.userImage" alt="" />
+                <span class="per-name">{{ item.name }}</span>
               </div>
               <div class="rank-value">
                 <span>￥</span>
-                <span>21,391</span>
+                <span>{{ item.sumCommission }}</span>
               </div>
             </div>
-            <div class="data-item">
-              <div class="rank-img">
-                <img src="https://img.0be.cn/pc/attence_bz_01.svg" alt="" />
-              </div>
-              <div class="rank-middle">
-                <img
-                  src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=222251486,3350228821&fm=11&gp=0.jpg"
-                  alt=""
-                />
-                <span class="per-name">Au Volant</span>
-              </div>
-              <div class="rank-value">
-                <span>￥</span>
-                <span>21,391</span>
-              </div>
-            </div>
-            <div class="data-item">
-              <div class="rank-img">
-                <img src="https://img.0be.cn/pc/attence_bz_02.svg" alt="" />
-              </div>
-              <div class="rank-middle">
-                <img
-                  src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=222251486,3350228821&fm=11&gp=0.jpg"
-                  alt=""
-                />
-                <span class="per-name">Hero</span>
-              </div>
-              <div class="rank-value">
-                <span>￥</span>
-                <span>21,391</span>
-              </div>
-            </div>
-            <div class="data-item">
-              <div class="rank-icon">
-                04.
-              </div>
-              <div class="rank-middle">
-                <img
-                  src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=222251486,3350228821&fm=11&gp=0.jpg"
-                  alt=""
-                />
-                <span class="per-name">I Took A Pill In Ibiza</span>
-              </div>
-              <div class="rank-value">
-                <span>￥</span>
-                <span>21,391</span>
-              </div>
-            </div>
-            <div class="data-item">
-              <div class="rank-icon">
-                05.
-              </div>
-              <div class="rank-middle">
-                <img
-                  src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=222251486,3350228821&fm=11&gp=0.jpg"
-                  alt=""
-                />
-                <span class="per-name">Creep</span>
-              </div>
-              <div class="rank-value">
-                <span>￥</span>
-                <span>21,391</span>
-              </div>
-            </div>
-            <div class="data-item">
-              <div class="rank-icon">
-                06.
-              </div>
-              <div class="rank-middle">
-                <img
-                  src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=222251486,3350228821&fm=11&gp=0.jpg"
-                  alt=""
-                />
-                <span class="per-name">空姐陷阱</span>
-              </div>
-              <div class="rank-value">
-                <span>￥</span>
-                <span>21,391</span>
-              </div>
-            </div>
-            <div class="data-item">
-              <div class="rank-icon">
-                07.
-              </div>
-              <div class="rank-middle">
-                <img
-                  src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=222251486,3350228821&fm=11&gp=0.jpg"
-                  alt=""
-                />
-                <span class="per-name">Outside</span>
-              </div>
-              <div class="rank-value">
-                <span>￥</span>
-                <span>21,391</span>
-              </div>
+            <div
+              class="is-empty"
+              v-if="refresh.renderlist.length == 0 && !loading"
+            >
+              <img
+                src="https://sysimgs.oss-cn-shenzhen.aliyuncs.com/Background/kong.png"
+                alt=""
+              />
+              <div>暂无数据</div>
             </div>
           </div>
         </el-scrollbar>
-        <div class="is-fixed">
+        <div class="is-fixed" v-if="isDefaultBroker">
           <div class="rank-icon">
-            21.
+            {{ refresh.defaultBroker.rank }}
           </div>
           <div class="rank-middle">
-            <img
-              src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=222251486,3350228821&fm=11&gp=0.jpg"
-              alt=""
-            />
-            <span class="per-name">Contact(我)</span>
+            <img :src="refresh.defaultBroker.userImage" alt="" />
+            <span class="per-name">{{ refresh.defaultBroker.name }}(我)</span>
           </div>
           <div class="rank-value">
             <span>￥</span>
-            <span>21,391</span>
+            <span>{{ refresh.defaultBroker.sumCommission }}</span>
           </div>
         </div>
       </div>
@@ -395,39 +375,231 @@ import lsSelect from "../../components/lsSelect";
 import config from "../config/echartConfig";
 //echarts
 import echarts from "@/util/echartsConfig";
+//工具
+import util from "@/util/util";
+function comNum(num) {
+  if (num < 10) {
+    return `0${num}.`;
+  }
+  return `${num}.`;
+}
 export default {
+  inject: ["parentInstance"],
   components: {
     lsSelect
   },
   data() {
     return {
+      realTime: new Date(),
       selectFlag: false,
-      echartInstance: null
+      refresh: {
+        echartInstance: null, //图标实例
+        rankType: 0, //激活下标
+        renderlist: [], //激活
+        shopList: {
+          list: [],
+          defaultBroker: {}
+        }, //缓存门店
+        areaList: {
+          list: [],
+          defaultBroker: {}
+        }, //缓存区域
+        companyList: {
+          list: [],
+          defaultBroker: {}
+        }, //缓存公司
+        defaultBroker: {}
+      },
+      choiceList: [
+        { title: "门店排名", type: 4, cacheList: "shopList" },
+        { title: "区域排名", type: 3, cacheList: "areaList" },
+        { title: "公司排名", type: 2, cacheList: "companyList" }
+      ],
+      loading: true,
+      changeTime: true,
+      checkName: "", //经纪人名称
+      checkId: null //经纪人ID
     };
   },
-  mounted() {
-    this.renderEchart({
-      lease: 335,
-      deal: 310,
-      project: 234
-    });
+  computed: {
+    nowTime() {
+      return util.format(new Date(), "yyyy-MM-dd");
+    },
+    /**
+     * @example: 是否存在默认
+     */
+
+    isDefaultBroker() {
+      return Object.keys(this.refresh.defaultBroker).length > 0;
+    }
+  },
+  created() {
+    this.getList();
   },
   methods: {
-    changeSelectFlag(keyValue, bool) {
+    /**
+     * @example: 获取经纪人数据
+     */
+
+    getRemote(done, name) {
+      this.$api
+        .get({
+          url: "/statistics/index/rank/broker",
+          data: {
+            name: name || "", // this.checkName,
+            limit: 30
+          }
+        })
+        .then(({ data }) => {
+          done(data.data);
+        });
+    },
+    /**
+     * @example: 切换时间
+     */
+
+    headleChangeTime() {
+      const changeTime = this.changeTime;
+      if (this.changeTime) this.realTime.setMonth(this.realTime.getMonth() - 1);
+      else this.realTime.setMonth(this.realTime.getMonth() + 1);
+
+      this.changeTime = !this.changeTime;
+      this.reLoadData();
+    },
+    /**
+     * @example: 重置
+     */
+
+    reLoadData() {
+      //清除画布
+      this.refresh.echartInstance && this.refresh.echartInstance.clear();
+      //重置属性
+      Object.assign(this.$data.refresh, this.$options.data.call(this).refresh);
+      //获取接口
+      this.getList();
+    },
+    /**
+     * @example: 切换当前选择类型
+     */
+
+    setActiveType(index) {
+      this.refresh.rankType = index;
+      this.getList();
+    },
+    /**
+     * @example:  获取列表数据
+     */
+    getList() {
+      const active = this.choiceList[this.refresh.rankType];
+      if (this.refresh[active.cacheList].list.length > 0) {
+        this.refresh.renderlist = this.refresh[active.cacheList].list;
+        this.refresh.defaultBroker = this.refresh[
+          active.cacheList
+        ].defaultBroker;
+        this.$nextTick(() => {
+          this.renderEchart({
+            lease: this.refresh.defaultBroker.saleCommission,
+            deal: this.refresh.defaultBroker.rentCommission,
+            project: this.refresh.defaultBroker.projectCommission
+          });
+          document
+            .getElementById("broker")
+            .querySelector(".el-scrollbar__wrap").scrollTop = 0;
+        });
+        return;
+      }
+      this.loading = true;
+      this.$api
+        .get({
+          url: "/statistics/index/rank-list/broker",
+          data: {
+            rankType: active.type,
+            date: util.format(this.realTime, "yyyy-MM") + "-01",
+            limit: 20,
+            id: this.checkId
+          }
+        })
+        .then(({ data }) => {
+          const brokerRankList = (data.data.brokerRankList || []).map(
+            (v, i) => {
+              return {
+                ...v,
+                isTopThree: i <= 2 ? true : false,
+                prefix:
+                  i <= 2
+                    ? `https://img.0be.cn/pc/attence_bz_0${i}.svg`
+                    : comNum(i + 1),
+                sumCommission: util.regexNum(v.sumCommission)
+              };
+            }
+          );
+          //缓存对应数据
+          this.refresh[active.cacheList].list = brokerRankList;
+          //赋值给渲染数组
+          this.refresh.renderlist = this.refresh[active.cacheList].list;
+
+          //显示底部默认经纪人
+          const defaultBroker = data.data.defaultBroker;
+
+          if (defaultBroker && Object.keys(defaultBroker).length > 0) {
+            this.refresh[active.cacheList].defaultBroker = {
+              ...defaultBroker,
+              ...{
+                rank: comNum(defaultBroker.rank),
+                sumCommission: util.regexNum(defaultBroker.sumCommission)
+              }
+            };
+            this.refresh.defaultBroker = this.refresh[
+              active.cacheList
+            ].defaultBroker;
+            this.$nextTick(() => {
+              this.renderEchart({
+                lease: defaultBroker.saleCommission,
+                deal: defaultBroker.rentCommission,
+                project: defaultBroker.projectCommission
+              });
+              document
+                .getElementById("broker")
+                .querySelector(".el-scrollbar__wrap").scrollTop = 0;
+            });
+          } else {
+            this.refresh.echartInstance &&
+              this.refresh.echartInstance.dispose();
+          }
+          this.loading = false;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    },
+    /**
+     * @example: 切换查询下拉框状态
+     */
+    changeSelectFlag(value) {
       this.selectFlag = !this.selectFlag;
+
+      if (value) {
+        this.checkName = value.perName;
+        this.checkId = value.accountId;
+        this.reLoadData();
+      }
     },
     /**
      * @example: 初始化Echart
      */
     initEchart() {
-      this.echartInstance = echarts.init(this.$refs.echart);
+      this.$nextTick(() => {
+        this.refresh.echartInstance = echarts.init(this.$refs.echart);
+      });
     },
     /**
      * @example: 渲染Echart
      */
     renderEchart(echartData) {
-      if (!this.echartInstance) this.initEchart();
-      this.echartInstance.setOption(config(echartData));
+      if (!this.refresh.echartInstance) this.initEchart();
+      Promise.resolve().then(() => {
+        this.refresh.echartInstance.setOption(config(echartData));
+      });
     }
   }
 };
