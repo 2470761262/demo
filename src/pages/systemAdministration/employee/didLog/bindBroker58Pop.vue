@@ -153,7 +153,7 @@
         </div>
         <div class="question-box">
           <span class="dd">Q：</span>
-          <p class="dt">我能支付将房源发布到58的外网吗？</p>
+          <p class="dt">我能直接将房源发布到58的外网吗？</p>
         </div>
         <div class="question-box">
           <span class="dd">A：</span>
