@@ -1,20 +1,38 @@
 <template>
   <div class="add-rule-container">
     <div class="center">
-      <div class="main">
+      <div class="main" v-loading="mainLoading">
         <h2 class="topic">考勤规则</h2>
         <div class="panel rule">
           <div class="ipt-box">
-            <label for="" class="label">考勤名称</label>
+            <label for="" class="label" :data-tips="errorBags.first('name')"
+              >考勤名称</label
+            >
             <el-input
               class="ipt"
               v-model="name"
+              name="name"
               placeholder="请输入考勤名称"
+              v-validate="'required'"
+              data-vv-name="name"
+              data-vv-as="考勤名称"
             ></el-input>
           </div>
           <div class="ipt-box">
-            <label for="" class="label">适用公司</label>
-            <el-select class="ipt" v-model="companyId" placeholder="请选择">
+            <label
+              for=""
+              class="label"
+              :data-tips="errorBags.first('companyId')"
+              >适用公司</label
+            >
+            <el-select
+              class="ipt"
+              v-model="companyId"
+              placeholder="请选择"
+              v-validate="'required'"
+              data-vv-name="companyId"
+              data-vv-as="适用公司"
+            >
               <el-option
                 v-for="item in companyList"
                 :key="item.value"
@@ -25,13 +43,21 @@
             </el-select>
           </div>
           <div class="ipt-box">
-            <label for="" class="label">考勤描述</label>
+            <label
+              for=""
+              class="label"
+              :data-tips="errorBags.first('description')"
+              >考勤描述</label
+            >
             <el-input
               class="textarea"
               type="textarea"
               :rows="2"
               placeholder="请输入规则描述"
               v-model="description"
+              v-validate="'required'"
+              data-vv-name="description"
+              data-vv-as="适用公司"
             >
             </el-input>
           </div>
@@ -45,7 +71,7 @@
               v-for="(item, index) in ruleTime"
               :key="index"
             >
-              <span class="prefix">周一，早上</span>
+              <span class="prefix">{{ item.day }}，早上</span>
               <el-time-picker
                 is-range
                 format="HH:mm"
@@ -77,7 +103,7 @@
               <span class="prefix">弹性卡时长</span>
               <div class="duration">
                 <el-input
-                  v-model.number="duration"
+                  v-model.number="elasticityNumber"
                   type="number"
                   :min="0"
                   placeholder="请输入时长"
@@ -91,9 +117,24 @@
         <h2 class="topic">特殊日期设置</h2>
         <div class="panel set">
           <div class="tip">要到特殊日期，可在此处配置特殊考勤日期</div>
-          <div class="info">
-            <p class="red">已将2020年11月8日设置为上班日</p>
-            <p class="green">已将2020年11月10日、11日、12日设置为休息日</p>
+          <div
+            class="info"
+            v-if="workCalendarDays.length != 0 || workCalendarDays.length != 0"
+          >
+            <p class="red" v-if="workCalendarDays.length != 0">
+              已将{{
+                typeof workCalendarDays == "string"
+                  ? workCalendarDays
+                  : workCalendarDays.join("、")
+              }}设置为上班日
+            </p>
+            <p class="green" v-if="restCalendarDays.length != 0">
+              已将{{
+                typeof restCalendarDays == "string"
+                  ? restCalendarDays
+                  : restCalendarDays.join("、")
+              }}设置为休息日
+            </p>
           </div>
           <button class="set-btn" @click="openDateDialog">
             设置特殊考勤日期
@@ -101,180 +142,149 @@
         </div>
         <div class="panel bottom">
           <div class="bottom-btn">
-            <button class="reset">重置</button>
+            <button class="reset" @click="reset">重置</button>
             <button class="save" @click="save">保存</button>
           </div>
-          <button class="del">删除</button>
+          <button class="del" v-if="ruleId" @click="deleteClick">删除</button>
         </div>
       </div>
       <div class="sidebar">
         <h2 class="topic">关联考勤部门/人员</h2>
-        <div class="panel right">
-          <el-tabs
-            class="sub-nav"
-            v-model="activeTabName"
-            @tab-click="switchTab"
-          >
-            <el-tab-pane
-              v-for="(item, index) in sidebarNavs"
-              :key="index"
-              :label="item.label"
-              :name="item.name"
-            ></el-tab-pane>
-          </el-tabs>
-          <div class="content">
-            <div class="tabpanel" v-if="activeTabName == 'first'">
-              <div class="relate-ipt-box">
-                <el-input
-                  class="ipt"
-                  v-model="value"
-                  clearable
-                  @focus="relateIptFocus"
-                ></el-input>
-                <div class="result-panel" :class="{ active: openFilterPanel }">
-                  <div class="list" v-infinite-scroll="relateDepartLoad">
-                    <el-checkbox-group v-model="checkList">
-                      <el-checkbox
-                        :label="'复选框' + index"
-                        v-for="(item, index) in 20"
-                        :key="index"
-                      ></el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                  <div class="bottom">
-                    <button>添加</button>
-                  </div>
-                </div>
-              </div>
-              <div class="relate-list">
-                <div class="column" v-for="(item, index) in 20" :key="index">
-                  <span class="title">绿色鑫家园-事业部</span>
-                  <span class="btn el-icon-delete-solid"></span>
-                </div>
-                <div class="no-data" v-if="false">
-                  <img
-                    src="@/assets//images/clockRule_add_ralate_no_data.svg"
-                    alt=""
-                  />
-                  <p>暂无关联部门</p>
-                </div>
-              </div>
-            </div>
-            <div class="tabpanel" v-else>
-              <div class="relate-ipt-box">
-                <el-input
-                  class="ipt"
-                  v-model="value"
-                  clearable
-                  @focus="relateIptFocus"
-                ></el-input>
-                <div class="result-panel" :class="{ active: openFilterPanel }">
-                  <div class="list" v-infinite-scroll="relateDepartLoad">
-                    <el-checkbox-group v-model="checkList">
-                      <el-checkbox
-                        :label="'复选框' + index"
-                        v-for="(item, index) in 20"
-                        :key="index"
-                      ></el-checkbox>
-                    </el-checkbox-group>
-                  </div>
-                  <div class="bottom">
-                    <button>添加</button>
-                  </div>
-                </div>
-              </div>
-              <div class="relate-list">
-                <div class="column" v-for="(item, index) in 0" :key="index">
-                  <span class="title">绿色鑫家园-事业部</span>
-                  <span class="btn el-icon-delete-solid"></span>
-                </div>
-                <div class="no-data">
-                  <img
-                    src="@/assets//images/clockRule_add_ralate_no_data.svg"
-                    alt=""
-                  />
-                  <p>暂无关联人员</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <attendance-relation
+          :ruleId="ruleId"
+          :companyId="relateCompanyId"
+          ref="relationRef"
+        ></attendance-relation>
       </div>
     </div>
     <!-- 设置特殊考勤日期弹窗 -->
     <set-clock-date
       :dialogVisible.sync="dialogClockDateVisible"
+      :workCalendarDays="workCalendarDays"
+      :restCalendarDays="restCalendarDays"
+      @setClockSuccess="setClockSuccess"
     ></set-clock-date>
   </div>
 </template>
 <script>
 import setClockDate from "./components/setClockDate.vue";
+import attendanceRelation from "./components/attendanceRelation.vue";
 export default {
-  components: { setClockDate },
+  components: { setClockDate, attendanceRelation },
+  $_veeValidate: {
+    validator: "new"
+  },
   data() {
     return {
+      mainLoading: false,
+      ruleId: null,
       dialogClockDateVisible: false,
+      workCalendarDays: [],
+      restCalendarDays: [],
       name: "",
       companyId: "",
       description: "",
       companyList: [],
       ruleTime: [
         {
-          morningTs: "",
-          afternoonTs: ""
+          day: "周一",
+          morningTs: ["", ""],
+          afternoonTs: ["", ""]
         },
         {
-          morningTs: "",
-          afternoonTs: ""
+          day: "周二",
+          morningTs: ["", ""],
+          afternoonTs: ["", ""]
         },
         {
-          morningTs: "",
-          afternoonTs: ""
+          day: "周三",
+          morningTs: ["", ""],
+          afternoonTs: ["", ""]
         },
         {
-          morningTs: "",
-          afternoonTs: ""
+          day: "周四",
+          morningTs: ["", ""],
+          afternoonTs: ["", ""]
         },
         {
-          morningTs: "",
-          afternoonTs: ""
+          day: "周五",
+          morningTs: ["", ""],
+          afternoonTs: ["", ""]
         },
         {
-          morningTs: "",
-          afternoonTs: ""
+          day: "周六",
+          morningTs: ["", ""],
+          afternoonTs: ["", ""]
         },
         {
-          morningTs: "",
-          afternoonTs: ""
+          day: "周日",
+          morningTs: ["", ""],
+          afternoonTs: ["", ""]
         }
       ],
-      duration: "",
-      activeTabName: "first",
-      sidebarNavs: [
-        {
-          label: "适用部门",
-          name: "first"
-        },
-        {
-          label: "适用人员",
-          name: "second"
-        }
-      ],
-      openFilterPanel: false,
-      value: "",
-      checkList: ["复选框1"]
+      elasticityNumber: "",
+      relateCompanyId: null
     };
   },
   created() {
+    if (this.$route.query.id) {
+      this.ruleId = this.$route.query.id;
+      this.getRuleDetail();
+    }
     this.queryCompany();
   },
-  mounted() {
-    document.addEventListener("click", this.relateInpBlur);
-  },
-  beforeDestroy() {
-    document.removeEventListener("click", this.relateInpBlur);
-  },
   methods: {
+    /**
+     * @description: 获取考勤规则详情
+     * @param {*}
+     * @return {*}
+     */
+    getRuleDetail() {
+      this.mainLoading = true;
+      this.$api
+        .get({
+          url: `/attendance/rule/${this.ruleId}`,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let data = e.data;
+          if (data.code == 200) {
+            this.relateCompanyId = data.data.companyId;
+            this.name = data.data.name;
+            this.companyId = data.data.companyId;
+            this.companyName = data.data.companyName;
+            this.description = data.data.description;
+            this.elasticityNumber = data.data.elasticityNumber;
+            // 特殊日期时间转化
+            let specialDoChecking = data.data.specialDoChecking.map(item => {
+              return item.replace(" 00:00:00", "");
+            });
+            let specialNoChecking = data.data.specialNoChecking.map(item => {
+              return item.replace(" 00:00:00", "");
+            });
+            this.workCalendarDays = specialDoChecking;
+            this.restCalendarDays = specialNoChecking;
+            data.data.doChecking.map(item => {
+              this.ruleTime[item.type - 1].morningTs = [
+                item.morningStartTime,
+                item.morningEndTime
+              ];
+              this.ruleTime[item.type - 1].afternoonTs = [
+                item.afternoonStartTime,
+                item.afternoonEndTime
+              ];
+            });
+          }
+        })
+        .finally(e => {
+          this.mainLoading = false;
+        });
+    },
+    /**
+     * @description: 获取适用公司列表
+     * @param {*}
+     * @return {*}
+     */
     queryCompany() {
       this.$api
         .get({
@@ -284,38 +294,6 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
-            console.log(e.data, "aaa");
-            this.companyList = e.data.data;
-          }
-        });
-    },
-    save() {
-      console.log(this.ruleTime, "----");
-      let doChecking = [];
-      this.ruleTime.forEach((item, index) => {
-        doChecking.push({
-          type: index + 1,
-          morningStartTime: item.morningTs[0],
-          morningEndTime: item.morningTs[1],
-          afternoonStartTime: item.afternoonTs[0],
-          afternoonEndTime: item.afternoonTs[1]
-        });
-      });
-      let params = {
-        name: this.name,
-        companyId: this.companyId,
-        description: this.description,
-        doChecking: this.doChecking
-      };
-      this.$api
-        .post({
-          url: "/attendance/rule",
-          data: params,
-          headers: { "Content-Type": "application/json" }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            console.log(e.data, "aaa");
             this.companyList = e.data.data;
           }
         });
@@ -328,32 +306,113 @@ export default {
     copyPreDayTs(index) {
       let preDayTimeArr = Object.assign({}, this.ruleTime[index - 1]);
       this.ruleTime.splice(index, 1, preDayTimeArr);
-      console.log(this.ruleTime);
-      //this.$set(this, this.ruleTime[index]);
     },
     openDateDialog() {
       this.dialogClockDateVisible = true;
     },
+    setClockSuccess(date1, date2) {
+      this.workCalendarDays = date1;
+      this.restCalendarDays = date2;
+      this.dialogClockDateVisible = false;
+    },
     /**
-     * @description: 部门/人员切换
+     * @description: 重置
+     * @param {*}
      * @return {*}
      */
-    switchTab() {
-      console.log(this.activeTabName, "=========");
+    reset() {
+      Object.assign(this.$data, this.$options.data(), {
+        ruleId: this.$data.ruleId,
+        companyList: this.$data.companyList
+      });
     },
-    relateIptFocus() {
-      this.openFilterPanel = true;
-    },
-    relateInpBlur(e) {
-      let tp = document.querySelector(".relate-ipt-box");
-      if (tp) {
-        if (!tp.contains(e.target)) {
-          this.openFilterPanel = false;
+    /**
+     * @description: 保存
+     * @param {*}
+     * @return {*}
+     */
+    save() {
+      this.$validator.validateAll().then(result => {
+        if (!result) {
+          this.$message.error("请先填写完整考勤规则内容！");
+        } else {
+          let doChecking = [];
+          this.ruleTime.forEach((item, index) => {
+            doChecking.push({
+              type: index + 1,
+              morningStartTime: item.morningTs[0],
+              morningEndTime: item.morningTs[1],
+              afternoonStartTime: item.afternoonTs[0],
+              afternoonEndTime: item.afternoonTs[1]
+            });
+          });
+          let specialDoChecking = this.workCalendarDays.map(item => {
+            return item + " 00:00:00";
+          });
+          let specialNoChecking = this.restCalendarDays.map(item => {
+            return item + " 00:00:00";
+          });
+          let currentCompanyIndex = this.companyList.findIndex(row => {
+            return row.nameId == this.companyId;
+          });
+          let params = {
+            name: this.name,
+            companyId: this.companyId,
+            companyName: this.companyList[currentCompanyIndex].name,
+            description: this.description,
+            doChecking: doChecking,
+            specialDoChecking: specialDoChecking,
+            specialNoChecking: specialNoChecking,
+            elasticityNumber: this.elasticityNumber
+          };
+          if (this.ruleId) {
+            params.id = this.ruleId;
+          }
+          this.$api
+            .post({
+              url: "/attendance/rule",
+              data: params,
+              headers: { "Content-Type": "application/json" }
+            })
+            .then(e => {
+              if (e.data.code == 200) {
+                this.$message({
+                  message: "保存成功",
+                  type: "success"
+                });
+                this.ruleId = e.data.data;
+                this.relateCompanyId = this.companyId;
+              }
+            });
         }
-      }
+      });
     },
-    relateDepartLoad() {
-      console.log("aaaaaaaaaa");
+    /**
+     * @description: 删除
+     * @param {*}
+     * @return {*}
+     */
+    deleteClick() {
+      this.$confirm("您确定要删除选中的数据吗?删除后，数据将不可恢复", {
+        confirmButtonText: "扔要删除",
+        cancelButtonText: "我再想想",
+        title: "温馨提示",
+        center: true
+      }).then(() => {
+        this.$api
+          .delete({
+            url: `/attendance/rule/${this.ruleId}`
+          })
+          .then(e => {
+            if (e.data.code == 200) {
+              this.$message({
+                message: "删除成功",
+                type: "success"
+              });
+              this.$router.go(-1);
+            }
+          });
+      });
     }
   }
 };
@@ -489,6 +548,12 @@ export default {
               height: 8px;
               background: #f62f2f;
               border-radius: 8px;
+            }
+            &::after {
+              content: attr(data-tips);
+              font-size: @font14;
+              margin-left: 20px;
+              color: red;
             }
           }
           .ipt {
@@ -665,160 +730,11 @@ export default {
       }
     }
     .sidebar {
-      width: 292px;
+      width: 414px;
       margin-left: 24px;
       overflow: auto;
       &::-webkit-scrollbar {
         display: none;
-      }
-      .right {
-        padding: 24px 0;
-        height: 634px;
-        /deep/.sub-nav {
-          display: flex;
-          flex-direction: row;
-          width: 100%;
-          padding: 0 24px;
-          box-sizing: border-box;
-          .el-tabs__header {
-            width: 100%;
-            margin: 0;
-          }
-          .el-tabs__item {
-            height: 32px;
-            line-height: 1;
-            font-size: @font18;
-            color: #303133;
-            &.is-active {
-              color: @backgroud;
-              font-weight: bold;
-            }
-          }
-          .el-tabs__active-bar {
-            height: 4px;
-            border-radius: 4px;
-          }
-          .el-tabs__nav-wrap::after {
-            background: rgba(0, 0, 0, 0);
-          }
-        }
-        .content {
-          padding: 16px 0 0;
-          .tabpanel {
-            /deep/.relate-ipt-box {
-              position: relative;
-              margin: 0 24px;
-              .ipt {
-                .el-input__inner {
-                  height: 46px;
-                  background: #ffffff;
-                  border-radius: 4px;
-                  border: 1px solid #cecece;
-                  font-size: @font16;
-                }
-              }
-              .result-panel {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                position: absolute;
-                top: 62px;
-                width: 100%;
-                height: 456px;
-                background: #fff;
-                box-shadow: 0px 8px 13px 0px rgba(0, 0, 0, 0.1);
-                border-radius: 6px;
-                box-sizing: border-box;
-                opacity: 0;
-                transition-duration: 0.3s;
-                z-index: -2;
-                &.active {
-                  opacity: 1;
-                  z-index: 9;
-                }
-                .list {
-                  overflow: auto;
-                  .el-checkbox {
-                    display: flex;
-                    align-items: center;
-                    height: 62px;
-                    padding-left: 24px;
-                    .el-checkbox__inner {
-                      width: 14px;
-                      height: 14px;
-                    }
-                    .el-checkbox__inner::after {
-                      height: 7px;
-                      left: 4px;
-                    }
-                    .el-checkbox__label {
-                      padding-left: 16px;
-                      font-size: @font14;
-                      color: #303133;
-                    }
-                  }
-                }
-                .bottom {
-                  width: 366px;
-                  height: 58px;
-                  padding: 9px;
-                  background: #fff;
-                  box-shadow: 0px -2px 15px 0px rgba(0, 0, 0, 0.1);
-                  box-sizing: border-box;
-                  button {
-                    width: 109px;
-                    height: 40px;
-                    background: #247257;
-                    border: none;
-                    border-radius: 4px;
-                    font-size: @font16;
-                    color: #fff;
-                    outline: none;
-                    cursor: pointer;
-                    float: right;
-                  }
-                }
-              }
-            }
-            .relate-list {
-              width: 100%;
-              height: 476px;
-              padding: 0 24px;
-              margin-top: 16px;
-              overflow: auto;
-              box-sizing: border-box;
-              .column {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                height: 62px;
-                .title {
-                  font-size: @font14;
-                  color: #303133;
-                }
-                .btn {
-                  font-size: @font16;
-                  color: #909399;
-                  cursor: pointer;
-                }
-              }
-              .no-data {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding-top: 115px;
-                img {
-                  width: 114px;
-                  margin-bottom: 24px;
-                }
-                p {
-                  font-size: @font14;
-                  color: #606266;
-                }
-              }
-            }
-          }
-        }
       }
     }
   }

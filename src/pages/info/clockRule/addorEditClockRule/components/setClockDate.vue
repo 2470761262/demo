@@ -20,16 +20,17 @@
       <div class="content">
         <div class="panel" v-if="activeTabName == 'first'">
           <ls-calendar
+            v-if="activeTabName == 'first'"
             :is-empty="true"
             :current="workCurrent"
-            v-model="workCalendarTiem"
+            v-model="workCalendarTime"
             choice="multiple"
             :gridCount="42"
           >
             <template v-slot:dots="{ col }">
               <div
                 class="calendar-dots"
-                :class="{ 'is-hide': workCalendarTiem == col.time }"
+                :class="{ 'is-hide': workCalendarTime == col.time }"
                 :style="{ 'background-color': color[col.type] }"
               ></div>
             </template>
@@ -37,16 +38,16 @@
         </div>
         <div class="panel" v-else>
           <ls-calendar
+            v-if="activeTabName == 'second'"
             :is-empty="true"
-            :current="restCurrent"
-            v-model="restCalendarTiem"
+            v-model="restCalendarTime"
             choice="multiple"
             :gridCount="42"
           >
             <template v-slot:dots="{ col }">
               <div
                 class="calendar-dots"
-                :class="{ 'is-hide': restCalendarTiem == col.time }"
+                :class="{ 'is-hide': restCalendarTime == col.time }"
                 :style="{ 'background-color': color[col.type] }"
               ></div>
             </template>
@@ -72,6 +73,14 @@ export default {
     dialogVisible: {
       type: Boolean,
       default: false
+    },
+    workCalendarDays: {
+      type: [String, Array],
+      default: () => []
+    },
+    restCalendarDays: {
+      type: [String, Array],
+      default: () => []
     }
   },
   components: { lsCalendar },
@@ -90,15 +99,21 @@ export default {
         }
       ],
       color: ["#0DA88B", "#F6A420", "#EF5656"],
-      workCalendarTiem: ["2020-11-01", "2020-11-02", "2020-11-10"],
+      workCalendarTime: this.workCalendarDays,
       workCurrent: [],
-      restCalendarTiem: "2020-11-05",
+      restCalendarTime: this.restCalendarDays,
       restCurrent: []
     };
   },
   watch: {
     dialogVisible() {
       this.visible = this.dialogVisible;
+    },
+    workCalendarDays(newVal) {
+      this.workCalendarTime = newVal;
+    },
+    restCalendarDays(newVal) {
+      this.restCalendarTime = newVal;
     }
   },
   mounted() {},
@@ -113,14 +128,12 @@ export default {
      * @description: nav切换
      * @return {*}
      */
-    switchTab() {
-      console.log(this.activeTabName, "=========");
-    },
+    switchTab() {},
     confirm() {
-      console.log(
-        this.workCalendarTiem,
-        this.restCalendarTiem,
-        "-------------confirm"
+      this.$emit(
+        "setClockSuccess",
+        this.workCalendarTime,
+        this.restCalendarTime
       );
     }
   }
