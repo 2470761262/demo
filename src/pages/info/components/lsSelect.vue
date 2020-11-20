@@ -75,7 +75,7 @@
 }
 </style>
 <template>
-  <div class="select-content">
+  <div class="select-content" @click.stop>
     <div class="select-pad">
       <div class="select-head">
         <input
@@ -126,7 +126,16 @@ export default {
       loading: false
     };
   },
+  created() {
+    document.addEventListener("click", this.eventClose);
+  },
+  beforeDestroy() {
+    document.removeEventListener("click", this.eventClose);
+  },
   methods: {
+    eventClose() {
+      this.$emit("close");
+    },
     emitData() {
       this.loading = true;
       this.once = false;

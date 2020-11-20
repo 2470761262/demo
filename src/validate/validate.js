@@ -169,7 +169,11 @@ Validator.extend("arrGTLength", {
     }
   },
   validate: (value, compare) => {
-    return value > parseInt(compare[0]);
+    if (typeof value == "string") {
+      return value.length > parseInt(compare[0]);
+    } else {
+      return value > parseInt(compare[0]);
+    }
   }
 });
 

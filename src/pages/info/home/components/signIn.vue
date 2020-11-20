@@ -234,7 +234,7 @@
           <div class="summary-tips">
             忙碌一日总是非常短暂，不妨写一写今天都做了些什么吧！
           </div>
-          <button>去写总结</button>
+          <button @click="navToPage">去写总结</button>
         </div>
       </div>
     </div>
@@ -322,6 +322,9 @@ export default {
 
     getLocatData() {
       this.loginData = util.localStorageGet(LOGINDATA);
+    },
+    navToPage() {
+      this.$router.push({ path: "/clockIn" });
     },
     /**
      * @example: 显示二维化
