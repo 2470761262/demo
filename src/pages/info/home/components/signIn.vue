@@ -202,7 +202,11 @@
     <div class="help-btn-group">
       <div class="help-btn-item">
         <div class="click-area">
-          <img src="https://img.0be.cn/pc/attence_22.svg" alt="" />
+          <img
+            src="https://img.0be.cn/pc/attence_22.svg"
+            alt=""
+            @click="toAskforLeave"
+          />
           <div>请假</div>
         </div>
       </div>
@@ -227,6 +231,9 @@ export default {
   methods: {
     jumpToNoClock() {
       this.$router.push({ path: "/noClock" });
+    },
+    toAskforLeave() {
+      this.$router.push({ path: "/askforLeave" });
     }
   }
 };
