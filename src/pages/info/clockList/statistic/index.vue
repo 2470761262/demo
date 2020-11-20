@@ -918,19 +918,28 @@ export default {
         })
         .then(e => {})
         .catch(e => {
-          let content = e.data;
-          let filename = `考勤统计数据报表.xlsx`;
-          var eleLink = document.createElement("a");
-          eleLink.download = filename;
-          eleLink.style.display = "none";
-          // 字符内容转变成blob地址
-          var blob = new Blob([content]);
-          eleLink.href = URL.createObjectURL(blob);
-          // 自动触发点击
-          document.body.appendChild(eleLink);
-          eleLink.click();
-          // 然后移除
-          document.body.removeChild(eleLink);
+          console.log(e);
+          // let content = e.data;
+          // let filename = `考勤统计数据报表.xlsx`;
+          // var eleLink = document.createElement("a");
+          // eleLink.download = filename;
+          // eleLink.style.display = "none";
+          // // 字符内容转变成blob地址
+          // var blob = new Blob([content]);
+          // eleLink.href = URL.createObjectURL(blob);
+          // // 自动触发点击
+          // document.body.appendChild(eleLink);
+          // eleLink.click();
+          // // 然后移除
+          // document.body.removeChild(eleLink);
+
+          const link = document.createElement("a");
+          let blob = new Blob([e.data], { type: "application/vnd.ms-excel" });
+          let objectUrl = URL.createObjectURL(blob); // 创建URL
+          link.href = objectUrl;
+          link.download = "考勤统计数据报表.xlsx"; // 自定义文件名
+          link.click(); // 下载文件
+          URL.revokeObjectURL(objectUrl); // 释放内存
         })
         .finally(e => {
           this.pageLoading = false;
