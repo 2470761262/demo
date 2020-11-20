@@ -65,11 +65,20 @@
         <h4>我要成为合伙人</h4>
         <h5>让杰出的你更成功</h5>
       </div>
-      <button>立即申请</button>
+      <button @click="loadingFun">立即申请</button>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    loadingFun() {
+      this.$message({
+        message: "功能升级中.",
+        type: "success"
+      });
+    }
+  }
+};
 </script>

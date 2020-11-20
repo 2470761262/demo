@@ -4,7 +4,8 @@
   box-shadow: 0px 8px 13px 0px rgba(68, 163, 163, 0.1);
   border-radius: 8px;
   position: relative;
-  height: 518px;
+  // height: 518px;
+  padding-bottom: 16px;
   overflow: hidden;
   line-height: 1;
   &::after {
@@ -22,6 +23,7 @@
   }
   .clock-posi {
     position: relative;
+    padding-bottom: 24px;
     .clock-qr {
       position: absolute;
       top: 0;
@@ -35,17 +37,43 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-top: 58px;
+      padding-top: 25px;
       box-sizing: border-box;
+      .refresh-qr {
+        color: @backgroud;
+        text-align: center;
+        margin-top: 24px;
+        cursor: pointer;
+        font-size: 0;
+        div {
+          font-size: @font14;
+          display: inline-block;
+          span {
+            margin-right: 8px;
+          }
+        }
+      }
+      .close-qr {
+        position: absolute;
+        font-size: @font18;
+        top: 24px;
+        right: 24px;
+        color: #606266;
+        cursor: pointer;
+      }
       .clock-qr-image {
-        width: 184px;
-        height: 184px;
+        width: 168px;
+        height: 168px;
+        &.is-small {
+          width: 112px;
+          height: 112px;
+        }
       }
       .clock-qr-tips {
         font-size: @font18;
         color: #303133;
         font-weight: bold;
-        margin-top: 25px;
+        margin-top: 18px;
       }
     }
     .change-clock {
@@ -67,6 +95,15 @@
         position: relative;
         font-size: @font12;
         color: #303133;
+        animation: loopImg 1s infinite alternate;
+        @keyframes loopImg {
+          0% {
+            right: 0;
+          }
+          100% {
+            right: -6px;
+          }
+        }
         &::after {
           content: "";
           position: absolute;
@@ -130,12 +167,12 @@
           cursor: pointer;
         }
       }
-      .split-line {
-        margin-top: 24px;
-        height: 1px;
-        background: #f0f2f5;
-      }
     }
+  }
+  .split-line {
+    margin: 0px 24px 0;
+    height: 1px;
+    background: #f0f2f5;
   }
   .help-title {
     color: #303133;
@@ -166,37 +203,43 @@
 <template>
   <div class="clock-in">
     <div class="clock-posi">
-      <div class="clock-qr">
+      <div class="clock-qr" v-if="showQr">
+        <div class="close-qr el-icon-close" @click="changeQr(false)"></div>
         <img
           class="clock-qr-image"
-          src="https://lsxjytestimgs.oss-cn-shenzhen.aliyuncs.com/scanUpload/96cd92a9348246b78d5b812c63567e0e.jpg"
+          :class="{ 'is-small': !isShowWordBtn }"
+          :src="qrUrl"
           alt=""
         />
         <div class="clock-qr-tips">手机微信扫码签到</div>
+        <div class="refresh-qr">
+          <div @click="getWorkEndTime(true)">
+            <span class="el-icon-refresh"></span>刷新二维码
+          </div>
+        </div>
       </div>
       <div class="change-clock">
         <div class="qr-tips">提前打卡，点这里</div>
-        <div class="qr-change">
+        <div class="qr-change" @click="getWorkEndTime(true)">
           <img src="https://img.0be.cn/pc/attence_bz_03.svg" alt="" />
         </div>
       </div>
       <div class="per-data">
-        <img
-          src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3226010111,403035871&fm=11&gp=0.jpg"
-          alt=""
-        />
-        <h3>史泰龙</h3>
-        <h4>国贸一店-中诚片区</h4>
+        <img :src="loginData.headImgUrl" alt="" />
+        <h3>{{ loginData.userName }}</h3>
+        <h4>{{ loginData.deptName }}</h4>
       </div>
-      <div class="clock-pad">
+      <div class="clock-pad" v-if="isShowWordBtn">
         <div class="navto-color">
           <div class="summary-tips">
             忙碌一日总是非常短暂，不妨写一写今天都做了些什么吧！
           </div>
           <button>去写总结</button>
         </div>
-        <div class="split-line"></div>
       </div>
+    </div>
+    <div>
+      <div class="split-line"></div>
     </div>
     <h3 class="help-title">自助申请</h3>
     <div class="help-btn-group">
@@ -206,7 +249,7 @@
           <div>请假</div>
         </div>
       </div>
-      <div class="help-btn-item">
+      <div class="help-btn-item" @click="loadingFun">
         <div class="click-area">
           <img src="https://img.0be.cn/pc/attence_21.svg" alt="" />
           <div>保薪酬</div>
@@ -223,5 +266,71 @@
 </template>
 
 <script>
-export default {};
+import util from "@/util/util";
+import { LOGINDATA } from "@/util/constMap";
+export default {
+  data() {
+    return {
+      showQr: false,
+      loginData: {},
+      qrUrl: null,
+      isShowWordBtn: false
+    };
+  },
+  created() {
+    this.getLocatData();
+    this.getWorkEndTime();
+  },
+  methods: {
+    loadingFun() {
+      this.$message({
+        message: "功能升级中.",
+        type: "success"
+      });
+    },
+    getWorkEndTime(isShow = false) {
+      if (isShow) {
+        this.$message({
+          message: "二维码加载中.",
+          type: "success"
+        });
+      }
+      this.$api
+        .post({
+          url: "/attendance/apply/checking/qrcode",
+          data: {
+            isShow
+          },
+          qs: true
+        })
+        .then(({ data }) => {
+          const result = data.data;
+          if (result.qrcode) {
+            this.showQr = true;
+            this.qrUrl = result.qrcode;
+            this.$message({
+              message: "二维码加载完成.",
+              type: "success"
+            });
+          }
+          this.isShowWordBtn = result.isShowWorkSummary;
+        });
+    },
+    /**
+     * @example: 获取登录人信息
+     */
+
+    getLocatData() {
+      this.loginData = util.localStorageGet(LOGINDATA);
+    },
+    /**
+     * @example: 显示二维化
+     */
+
+    changeQr(bool) {
+      console.log(111111);
+      this.showQr = bool;
+    }
+  }
+};
 </script>

@@ -80,6 +80,7 @@
       <div class="select-head">
         <input
           type="text"
+          autofocus
           v-model="headValue"
           @keydown.enter="emitData"
           :placeholder="placeStr"

@@ -1,6 +1,10 @@
 import util from "@/util/util";
 export default echartData => {
-  const total = echartData.lease + echartData.deal + echartData.project;
+  const total = (
+    echartData.lease +
+    echartData.deal +
+    echartData.project
+  ).toFixed(2);
   const list = [
     { value: echartData.lease, name: "买卖" },
     { value: echartData.deal, name: "租赁" },
