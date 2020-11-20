@@ -85,7 +85,7 @@
             </div>
             <div class="btn-wrapper">
               <div class="btn-box">
-                <button @click="navigateToAdd(1)">编辑</button>
+                <button @click="navigateToAdd(item.id)">编辑</button>
                 <button @click="deleteClick(item.id)">删除</button>
               </div>
               <!-- <div class="status-box">

@@ -38,90 +38,69 @@
                     <el-form-item label="申请人">
                       <el-select
                         class="width100"
-                        v-model="buildOptData"
-                        placeholder="楼盘名称"
+                        v-model="formData.applyId"
+                        placeholder="人员姓名"
                         clearable
                         filterable
                         remote
-                        @focus="remoteBuildInput"
-                        @change="remoteBuildChange"
-                        :remote-method="buildRemoteMethod"
-                        :loading="buildLoading"
+                        @focus="personnelFocus"
+                        @change="query(1)"
+                        :remote-method="getPersonnelData"
+                        :loading="personnel.loading"
                         value-key="value"
                       >
                         <el-option
-                          v-for="item in buildForList"
-                          :key="item.value"
-                          :label="item.name"
-                          :value="item"
+                          v-for="item in personnel.list"
+                          :key="item.accountId"
+                          :label="item.name + '(' + item.departmentName + ')'"
+                          :value="item.accountId"
                         >
                         </el-option>
                       </el-select>
                     </el-form-item>
                   </el-col>
-                  <el-col :span="10">
+                  <el-col :span="9">
                     <el-row :gutter="8">
                       <el-form-item label="所在部门">
-                        <el-col :span="8">
+                        <el-col :span="12">
                           <el-select
-                            v-model="buildOptData"
-                            placeholder="楼盘名称"
+                            v-model="formData.companyId"
+                            placeholder="公司名称"
                             clearable
                             filterable
                             remote
-                            @focus="remoteBuildInput"
-                            @change="remoteBuildChange"
-                            :remote-method="buildRemoteMethod"
-                            :loading="buildLoading"
+                            @focus="companyFocus"
+                            @change="companyChange"
+                            :loading="company.loading"
                             value-key="value"
                           >
                             <el-option
-                              v-for="item in buildForList"
-                              :key="item.value"
-                              :label="item.name"
-                              :value="item"
+                              v-for="item in company.list"
+                              :key="item.id"
+                              :label="item.companyName"
+                              :value="item.id"
                             >
                             </el-option>
                           </el-select>
                         </el-col>
-                        <el-col :span="8">
+                        <el-col :span="12">
                           <el-select
-                            v-model="towerOptData"
-                            placeholder="栋座"
-                            clearable
-                            filterable
-                            value-key="value"
-                            remote
-                            :remote-method="queryRoomNo"
-                            @change="remoteRoomNoChange"
-                            :loading="towerLoading"
-                          >
-                            <el-option
-                              v-for="item in towerForList"
-                              :key="item.value"
-                              :label="item.name"
-                              :value="item"
-                            >
-                            </el-option>
-                          </el-select>
-                        </el-col>
-                        <el-col :span="8">
-                          <el-select
-                            v-model="roomOptData"
-                            placeholder="房间号"
+                            v-model="formData.departmentId"
+                            placeholder="部门"
                             clearable
                             filterable
                             remote
-                            :remote-method="queryRoomData"
-                            :loading="roomLoading"
+                            :remote-method="getDepartmentData"
+                            :loading="department.loading"
                             value-key="value"
-                            @change="queryRoomDataChange"
+                            @change="query(1)"
+                            class="width100 serch-item-select"
                           >
                             <el-option
-                              v-for="item in roomForList"
-                              :key="item.value"
-                              :label="item.name"
-                              :value="item"
+                              v-for="item in department.list"
+                              :key="item.id"
+                              :label="item.deptName"
+                              :value="item.id"
                             >
                             </el-option>
                           </el-select>
@@ -129,7 +108,7 @@
                       </el-form-item>
                     </el-row>
                   </el-col>
-                  <el-col :span="8">
+                  <el-col :span="9">
                     <el-row :gutter="8">
                       <el-form-item label="申请类型">
                         <el-col :span="12">
@@ -185,7 +164,7 @@
                       </el-select>
                     </el-form-item>
                   </el-col>
-                  <el-col :span="8">
+                  <el-col :span="9">
                     <el-form-item label="申请时间">
                       <el-date-picker
                         v-model="applyTime"
@@ -224,6 +203,7 @@
                   height="100%"
                   v-loading="loading"
                   ref="tableList"
+                  @row-dblclick="rowDblclick"
                 >
                   <el-table-column
                     type="index"
@@ -313,8 +293,6 @@
   </div>
 </template>
 <script>
-//楼盘 楼栋 房间号 级联 mixins
-import cascadeHouse from "@/minxi/cascadeHouse";
 import clockRuleHead from "@/pages/info/mixins/clockRuleHead.js";
 import util from "@/util/util.js";
 import { APPLYTYPE } from "@/util/constMap.js";
@@ -329,7 +307,7 @@ let statusClassMap = new Map([
   [2, "span_danger"]
 ]);
 export default {
-  mixins: [clockRuleHead, cascadeHouse],
+  mixins: [clockRuleHead],
   data() {
     return {
       currentNavIndex: 0,
@@ -414,7 +392,18 @@ export default {
           value: 2
         }
       ], //审批状态
-      companyList: [] //公司列表
+      company: {
+        loading: false,
+        list: []
+      }, //公司json
+      department: {
+        loading: false,
+        list: []
+      }, //部门json
+      personnel: {
+        loading: false,
+        list: []
+      }
     };
   },
   mounted() {
@@ -523,6 +512,111 @@ export default {
         this.formData.applyEndTime = "";
       }
       this.query();
+    },
+    /**
+     * @example:公司获取焦点事件
+     */
+    companyFocus() {
+      if (this.company.list.length == 0) {
+        this.company.loading = true;
+        this.$api
+          .post({
+            url: "/company/attendance/apply/list"
+          })
+          .then(e => {
+            let result = e.data;
+            if (result.code == 200) {
+              this.company.list = result.data;
+            }
+          })
+          .finally(e => {
+            this.company.loading = false;
+          });
+      }
+    },
+    /**
+     * @example:公司改变事件
+     */
+    companyChange() {
+      this.formData.departmentId = "";
+      this.getDepartmentData();
+      this.query();
+    },
+    /**
+     * @example:部门搜索事件
+     */
+    getDepartmentData(keyWord = "") {
+      this.department.list = [];
+      if (this.formData.companyId) {
+        this.department.loading = true;
+        this.$api
+          .post({
+            url: "/department/attendance/check/list",
+            data: {
+              limit: 50,
+              page: 1,
+              keyWord: keyWord,
+              companyId: this.formData.companyId
+            },
+            headers: { "Content-Type": "application/json" }
+          })
+          .then(e => {
+            let result = e.data;
+            if (result.code == 200) {
+              this.department.list = result.data.list;
+            }
+          })
+          .finally(e => {
+            this.department.loading = false;
+          });
+      }
+    },
+    /**
+     * @example:人员获取焦点事件
+     */
+    personnelFocus() {
+      if (this.personnel.list.length == 0) {
+        this.getPersonnelData();
+      }
+    },
+    /**
+     * @example:获取人员数据
+     */
+    getPersonnelData(keyWord) {
+      this.personnel.list = [];
+      this.personnel.loading = true;
+      this.$api
+        .post({
+          url: "/employee/attendance/check/list",
+          data: {
+            limit: 50,
+            page: 1,
+            keyWord: keyWord
+          },
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.personnel.list = result.data.list;
+          }
+        })
+        .finally(e => {
+          this.personnel.loading = false;
+        });
+    },
+    /**
+     * @example:双击事件
+     */
+    rowDblclick(row) {
+      let detailsMap = new Map([
+        [1, "/leaveDetail"],
+        [2, "/repairDetail"]
+      ]);
+      this.$router.push({
+        path: detailsMap.get(row.applyType),
+        query: { id: row.id }
+      });
     }
   }
 };

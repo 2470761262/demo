@@ -244,7 +244,7 @@
     <h3 class="help-title">自助申请</h3>
     <div class="help-btn-group">
       <div class="help-btn-item">
-        <div class="click-area">
+        <div class="click-area" @click="jumpToAskForLeave">
           <img src="https://img.0be.cn/pc/attence_22.svg" alt="" />
           <div>请假</div>
         </div>
@@ -256,7 +256,7 @@
         </div>
       </div>
       <div class="help-btn-item">
-        <div class="click-area">
+        <div class="click-area" @click="jumpToNoClock">
           <img src="https://img.0be.cn/pc/attence_23.svg" alt="" />
           <div>免考勤</div>
         </div>
@@ -326,10 +326,14 @@ export default {
     /**
      * @example: 显示二维化
      */
-
     changeQr(bool) {
-      console.log(111111);
       this.showQr = bool;
+    },
+    jumpToNoClock() {
+      this.$router.push({ path: "/noClock" });
+    },
+    jumpToAskForLeave() {
+      this.$router.push({ path: "/askforLeave" });
     }
   }
 };

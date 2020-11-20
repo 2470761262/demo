@@ -16,29 +16,39 @@
             <span
               v-for="(item, index) in examineList"
               :key="index"
-              :class="{ active: item.value == isPass }"
-              @click="isPass = item.value"
+              :class="{ active: item.value == formData.statusSwitch }"
+              @click="formData.statusSwitch = item.value"
               >{{ item.label }}</span
             >
           </div>
         </div>
-        <div class="ipt-box" v-if="isPass == 0">
-          <label for="" class="label">不通过原因</label>
-          <el-input
-            class="textarea"
-            type="textarea"
-            placeholder="请输入不通过原因"
-            v-model="introduction"
-            maxlength="50"
-            show-word-limit
-          >
-          </el-input>
+        <div
+          :class="{ 'after-tips': errorBags.has('reason') }"
+          :data-tips="errorBags.first('reason')"
+        >
+          <div class="ipt-box" v-if="!formData.statusSwitch">
+            <label for="" class="label">不通过原因</label>
+            <el-input
+              class="textarea"
+              type="textarea"
+              placeholder="请输入不通过原因"
+              v-model="formData.reason"
+              maxlength="50"
+              show-word-limit
+              v-validate="'required'"
+              data-vv-as="不通过原因"
+              data-vv-name="reason"
+            >
+            </el-input>
+          </div>
         </div>
       </div>
       <div class="bottom">
         <div class="btn-box">
           <button class="cancel" @click="cancel">取消</button>
-          <button class="confirm" @click="confirm">确定</button>
+          <button class="confirm" @click="confirm" v-loading="submitLoading">
+            确定
+          </button>
         </div>
       </div>
     </div>
@@ -46,28 +56,37 @@
 </template>
 <script>
 export default {
+  $_veeValidate: {
+    validator: "new" // give me my own validator scope.
+  },
   props: {
     dialogVisible: {
       type: Boolean,
       default: false
+    },
+    applyId: {
+      type: Number,
+      defalut: 0
     }
   },
   data() {
     return {
       visible: this.dialogVisible,
-      radio1: 0,
-      introduction: "",
-      isPass: 1,
       examineList: [
         {
           label: "通过",
-          value: 1
+          value: true
         },
         {
           label: "不通过",
-          value: 0
+          value: false
         }
-      ]
+      ],
+      formData: {
+        reason: "",
+        statusSwitch: true
+      }, //请求参数
+      submitLoading: false
     };
   },
   watch: {
@@ -83,7 +102,38 @@ export default {
     cancel() {
       this.$emit("update:dialogVisible", false);
     },
-    confirm() {}
+    /**
+     * @example:确定时间
+     */
+    confirm() {
+      this.$validator.validateAll().then(e => {
+        if (e) {
+          let params = {
+            id: this.applyId
+          };
+          Object.assign(params, JSON.parse(JSON.stringify(this.formData)));
+          this.submitLoading = true;
+          this.$api
+            .post({
+              url: "/attendance/apply/audit",
+              data: params,
+              qs: true
+            })
+            .then(e => {
+              this.$message({
+                message: e.data.message
+              });
+              if (e.data.code == 200) {
+                this.cancel();
+                this.$emit("checkEnd");
+              }
+            })
+            .finally(e => {
+              this.submitLoading = false;
+            });
+        }
+      });
+    }
   }
 };
 </script>
@@ -217,6 +267,13 @@ export default {
         background: @backgroud;
         color: #fff;
       }
+    }
+  }
+  .after-tips {
+    &:after {
+      content: attr(data-tips);
+      display: block;
+      color: red;
     }
   }
 }
