@@ -201,7 +201,7 @@
     <h3 class="help-title">自助申请</h3>
     <div class="help-btn-group">
       <div class="help-btn-item">
-        <div class="click-area">
+        <div class="click-area" @click="jumpToAskForLeave">
           <img src="https://img.0be.cn/pc/attence_22.svg" alt="" />
           <div>请假</div>
         </div>
@@ -227,6 +227,9 @@ export default {
   methods: {
     jumpToNoClock() {
       this.$router.push({ path: "/noClock" });
+    },
+    jumpToAskForLeave() {
+      this.$router.push({ path: "/askforLeave" });
     }
   }
 };
