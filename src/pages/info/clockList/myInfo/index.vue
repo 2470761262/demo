@@ -636,6 +636,7 @@
                   class="tab-body-row"
                   v-for="(item, index) in refresh.renderList"
                   :key="index"
+                  @click="gotoDetail(item)"
                 >
                   <div class="tab-body-cell">
                     <div class="clock-day">
@@ -988,6 +989,13 @@ export default {
     }
   },
   methods: {
+    /**
+     * @example: 前往日志详情
+     */
+
+    gotoDetail(item) {
+      this.$router.push({ path: "/logDetail", query: { id: item.summaryId } });
+    },
     /**
      * @example:我的管理点击查询
      */

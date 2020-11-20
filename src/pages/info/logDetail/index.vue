@@ -81,6 +81,10 @@
               color: #fff;
               width: 84px;
               cursor: pointer;
+              &.sumit {
+                background: @backgroud;
+                color: #fff;
+              }
             }
           }
         }
@@ -251,24 +255,46 @@
 </style>
 
 <template>
-  <div class="content">
+  <div class="content" v-loading="loading">
     <div class="content-left">
       <div class="evaluate">
         <div class="self-evaluate">
           <div class="self-title">员工自评分</div>
-          <div class="self-point-value point-after">5</div>
+          <div
+            class="self-point-value "
+            :class="{ 'point-after': detailt.selfScore != null }"
+          >
+            {{ detailt.selfScore }}
+          </div>
         </div>
         <div class="other-evaluate">
           <div class="other-point">
             <div class="other-point-title">上级评分</div>
-            <div class="other-point-value">暂无</div>
+            <div
+              class="other-point-value"
+              :class="{ 'point-after': detailt.checkScore != null }"
+            >
+              {{ detailt.checkScore }}
+            </div>
           </div>
           <div class="split-line"></div>
           <div class="other-evaluate-right">
             <div class="other-evaluate-title">上级评价</div>
             <div class="other-evaluate-tips">
-              <div>好像还没点评哦！可以适当的提醒一下</div>
-              <button @click="setvisible(true)">提醒</button>
+              <div v-if="isShowRemindBtn">
+                好像还没点评哦！可以适当的提醒一下
+              </div>
+              <div v-else>{{ detailt.checkContent }}</div>
+              <button v-if="isShowRemindBtn">
+                提醒
+              </button>
+              <button
+                class="sumit"
+                @click="setvisible(true)"
+                v-if="isShowRemark"
+              >
+                开始点评
+              </button>
             </div>
           </div>
         </div>
@@ -277,25 +303,25 @@
         <div class="cell-item">
           <h3>今日挖掘优质房源</h3>
           <p>
-            今日挖掘优质房源今日挖掘优质房源今日挖掘优质房源今日挖掘优质房源今日挖掘优质房源今日挖掘优质房源今日挖掘优质房源今日挖掘优质房源今日挖掘优质房源今日挖掘优质房源今日挖掘优质房
+            {{ detailt.excavateHouseToday }}
           </p>
         </div>
         <div class="cell-item">
           <h3>急购客户需求</h3>
           <p>
-            急购客户需求急购客户需求急购客户需求急购客户需求
+            {{ detailt.urgentCustomerRequire || "暂无" }}
           </p>
         </div>
         <div class="cell-item">
           <h3>今日总结</h3>
           <p>
-            今日总结今日总结今日总结今日总结今日总结今日总结今日总结今日总结今日总结今日总结今日总结今日总结今日总结今日总结今日总结
+            {{ detailt.summaryToday || "暂无" }}
           </p>
         </div>
         <div class="cell-item">
           <h3>明日计划</h3>
           <p>
-            明日计划明日计划明日计划明日计划明日计划明日计划明日计划明日计划
+            {{ detailt.planTomorrow || "暂无" }}
           </p>
         </div>
       </div>
@@ -303,26 +329,28 @@
     <div class="content-righ">
       <clock-time />
       <div class="check-detail-box">
-        <div class="per-warp">
-          <img
-            src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1452306654,1920718983&fm=26&gp=0.jpg"
-            alt=""
-          />
-          <div class="per-data">
-            <div class="per-data-head">
-              <div class="per-data-name">大好河山</div>
-              <div class="per-data-type">经纪人</div>
+        <template v-if="!detailt.isMyAddSummary && !loading">
+          <div class="per-warp">
+            <img
+              src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1452306654,1920718983&fm=26&gp=0.jpg"
+              alt=""
+            />
+            <div class="per-data">
+              <div class="per-data-head">
+                <div class="per-data-name">大好河山</div>
+                <div class="per-data-type">经纪人</div>
+              </div>
+              <div class="per-data-phone">17720819921</div>
             </div>
-            <div class="per-data-phone">17720819921</div>
           </div>
-        </div>
-        <div class="log-time">
-          <div class="log-time-title">日志提交时间</div>
-          <div class="log-operate-warp">
-            <div>2020-11-09 11:51:09</div>
-            <button>去点评</button>
+          <div class="log-time">
+            <div class="log-time-title">日志提交时间</div>
+            <div class="log-operate-warp">
+              <div>2020-11-09 11:51:09</div>
+              <button>去点评</button>
+            </div>
           </div>
-        </div>
+        </template>
         <div class="check-detail-time">
           <div class="detail-item-title">考勤时间</div>
           <div class="detail-flex">
@@ -344,27 +372,74 @@
     <summary-comment-pop
       title="总结点评"
       width="608px"
-      :visible.sync="root.visible"
-      v-if="root.visible"
+      :visible.sync="visible"
+      v-if="visible"
     />
   </div>
 </template>
 
 <script>
-import { V2Init } from "vcomposition2";
 import clockTime from "../components/clockTime";
 import summaryCommentPop from "./compoents/summaryCommentPop";
-import { enter } from "./realization/index";
-export default V2Init({
+export default {
   components: {
     clockTime,
     summaryCommentPop
   },
-  created: [enter],
+  computed: {
+    //是否显示提醒按钮
+    isShowRemindBtn() {
+      if (!this.loading) {
+        if (this.detailt.isMyAddSummary && this.detailt.checkStatus == 0) {
+          return true;
+        }
+      }
+      return false;
+    },
+    //不是自己的写的就显示去点评 未批阅状态
+    isShowRemark() {
+      if (!this.loading) {
+        if (!this.detailt.isMyAddSummary && this.detailt.checkStatus == 0) {
+          return true;
+        }
+      }
+      return false;
+    }
+  },
   data() {
     return {
-      visible: true
+      visible: false,
+      loading: true,
+      detailt: {}
     };
+  },
+  created() {
+    this.getDetailSummary();
+  },
+  methods: {
+    setvisible(bool) {
+      this.visible = bool;
+    },
+    /**
+     * @example: 获取详情
+     */
+    getDetailSummary() {
+      this.loading = true;
+      this.$api
+        .post({
+          url: "/attendance/attendanceWorkSummary/detailSummary",
+          data: {
+            id: this.$route.query.id
+          },
+          qs: true
+        })
+        .then(({ data }) => {
+          this.detailt = data.data;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    }
   }
-});
+};
 </script>
