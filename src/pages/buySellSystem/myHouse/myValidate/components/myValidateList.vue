@@ -497,11 +497,11 @@ export default {
           prop: "addPerName",
           label: "录入人"
         },
-        // {
-        //   prop: "addTime",
-        //   label: "录入时间",
-        //   order: "custom"
-        // },
+        {
+          prop: "addTime",
+          label: "提交时间",
+          order: "custom"
+        },
         {
           label: "操作",
           formart: row => this.operation(row),
