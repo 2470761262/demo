@@ -92,7 +92,7 @@
                   {{ moreDetails.superiorDepartmentName | emptyRead }}
                   {{ moreDetails.departmentName | emptyRead("", "-") }}
                 </div>
-                <div class="icon"></div>
+                <!-- <div class="icon"></div> -->
               </div>
             </div>
           </div>
@@ -575,7 +575,8 @@ export default {
               display: flex;
               justify-content: space-between;
               align-items: center;
-              margin-top: 4px;
+              // margin-top: 4px;
+              margin-top: 7px;
               .business {
                 font-size: @font14;
                 color: #303133;

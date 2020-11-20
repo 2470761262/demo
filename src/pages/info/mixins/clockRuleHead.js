@@ -5,7 +5,7 @@ export default {
       currentSubNavIndex: 0,
       navs: [
         {
-          name: "考勤统计",
+          name: "考勤汇总",
           path: "/clockList"
         },
         {
