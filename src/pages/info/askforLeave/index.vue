@@ -446,7 +446,7 @@ export default {
       if (
         this.applyStartTime &&
         this.applyEndTime &&
-        this.applyStartTime >= this.applyEndTime
+        this.applyStartTime > this.applyEndTime
       ) {
         this.$message({
           message: "开始时间不能大于结束时间",
