@@ -306,12 +306,14 @@ export default {
                   text: this.qrUrl,
                   width: this.isShowWordBtn ? 168 : 112, //二维码的宽度
                   height: this.isShowWordBtn ? 168 : 112, //二维码的高度
+                  colorDark: "#008778",
                   correctLevel: qrjs2.CorrectLevel.H
-                  //	src: 'scy917.png'
                 });
+                this.qrInstance._el.title = "";
               } else {
                 this.qrInstance.clear(); // 清除代码
                 this.qrInstance.makeCode(this.qrUrl);
+                this.qrInstance._el.title = "";
               }
             });
             this.$message({
