@@ -63,8 +63,8 @@
       <div class="time-tips">{{ currentTime }}</div>
     </div>
     <div class="clock-foot">
-      <div class="paragraph">“Stay hungry、Stay foolish”</div>
-      <div class="affiliation">——史蒂夫·乔布斯</div>
+      <div class="paragraph">{{ FamousText }}</div>
+      <div class="affiliation">——{{ authorFamous }}</div>
     </div>
   </div>
 </template>
@@ -75,16 +75,33 @@ export default {
   created() {
     this.getCurrentTime();
     this.getWeekHead();
+    this.famouseWork();
   },
   data() {
     return {
       currentTime: util.format(new Date(), "hh:mm:ss"),
       timeId: null,
       weekHead: "",
-      backImage: "https://img.0be.cn/pc/day.png"
+      backImage: "https://img.0be.cn/pc/day.png",
+      FamousText: "",
+      authorFamous: ""
     };
   },
   methods: {
+    /**
+     * @example: 获取鸡汤
+     */
+
+    famouseWork() {
+      this.$api
+        .post({
+          url: "/attendance/famouseWork/random"
+        })
+        .then(({ data }) => {
+          this.FamousText = data.data.contentFamous;
+          this.authorFamous = data.data.authorFamous;
+        });
+    },
     getCurrentTime() {
       this.currentTime = util.format(new Date(), "hh:mm:ss");
       this.timeId = setTimeout(this.getCurrentTime, 1000);

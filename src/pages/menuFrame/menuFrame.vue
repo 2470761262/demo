@@ -46,7 +46,9 @@
   .el-main {
     padding: 0;
     /deep/.nav-breadcrumb {
-      margin-top: 20px;
+      // prettier-ignore
+      margin: 10PX 0;
+      line-height: 1;
     }
   }
 }
@@ -136,7 +138,7 @@ export default {
     },
     isMapNavStyle() {
       if (this.isMapNav) {
-        return { "min-height": "calc(100% - .29rem)" };
+        return { "min-height": "calc(100% - 34px)" };
       } else {
         return { "min-height": "100%" };
       }

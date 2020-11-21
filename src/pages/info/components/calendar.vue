@@ -517,6 +517,7 @@ export default {
         nowData.setFullYear(nowData.getFullYear() + 1);
         nowData.setMonth(0);
       }
+      this.yearChange();
       this.getDate(nowData);
     },
     /**
@@ -529,7 +530,14 @@ export default {
         nowData.setFullYear(nowData.getFullYear() - 1);
         nowData.setMonth(11);
       }
+      this.yearChange();
       this.getDate(nowData);
+    },
+    /**
+     * @example: 月份change
+     */
+    yearChange() {
+      this.$emit("headChange", new Date(nowData));
     },
     /**
      * @example: 获得今天的日期

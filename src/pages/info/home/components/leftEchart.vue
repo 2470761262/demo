@@ -256,7 +256,7 @@
         <span class="title-text">经纪人业绩</span>
         <div
           class="after-content"
-          @click="changeSelectFlag()"
+          @click.stop="changeSelectFlag()"
           v-if="
             parentInstance.roleConfig.indexRankBroker &&
               refresh.defaultBroker.name

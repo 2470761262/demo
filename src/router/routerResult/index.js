@@ -19,7 +19,7 @@ export default [
       keepAlive: true,
       title: "免考勤",
       // isScrollTop: true, //是否需要记录坐标
-      isMapNav: true, //不需要导航
+      //  isMapNav: true, //不需要导航
       isPad: true //不需要el-main padding
     },
     component: () =>
@@ -32,7 +32,7 @@ export default [
       keepAlive: true,
       title: "解锁",
       // isScrollTop: true, //是否需要记录坐标
-      isMapNav: true, //不需要导航
+      // isMapNav: true, //不需要导航
       isPad: true //不需要el-main padding
     },
     component: () =>
@@ -45,7 +45,7 @@ export default [
       keepAlive: true,
       title: "免考勤审核",
       // isScrollTop: true, //是否需要记录坐标
-      isMapNav: true, //不需要导航
+      // isMapNav: true, //不需要导航
       isPad: true //不需要el-main padding
     },
     component: () =>
@@ -60,7 +60,7 @@ export default [
       keepAlive: true,
       title: "解锁审核",
       // isScrollTop: true, //是否需要记录坐标
-      isMapNav: true, //不需要导航
+      // isMapNav: true, //不需要导航
       isPad: true //不需要el-main padding
     },
     component: () =>
@@ -75,7 +75,7 @@ export default [
       keepAlive: true,
       title: "打卡",
       // isScrollTop: true, //是否需要记录坐标
-      isMapNav: true, //不需要导航
+      // isMapNav: true, //不需要导航
       isPad: true //不需要el-main padding
     },
     component: () =>
@@ -88,7 +88,7 @@ export default [
       keepAlive: true,
       title: "日志详情",
       // isScrollTop: true, //是否需要记录坐标
-      isMapNav: true, //不需要导航
+      //isMapNav: true, //不需要导航
       isPad: true //不需要el-main padding
     },
     component: () =>
@@ -103,7 +103,7 @@ export default [
       keepAlive: true,
       title: "考勤",
       // isScrollTop: true, //是否需要记录坐标
-      isMapNav: true, //不需要导航
+      //  isMapNav: true, //不需要导航
       isPad: true //不需要el-main padding
     },
     // component: () =>
@@ -121,7 +121,7 @@ export default [
           keepAlive: true,
           title: "我的日志",
           // isScrollTop: true, //是否需要记录坐标
-          isMapNav: true, //不需要导航
+          //isMapNav: true, //不需要导航
           isPad: true //不需要el-main padding
         },
         component: () =>
@@ -135,7 +135,7 @@ export default [
           keepAlive: true,
           title: "考勤统计",
           // isScrollTop: true, //是否需要记录坐标
-          isMapNav: true, //不需要导航
+          //  isMapNav: true, //不需要导航
           isPad: true //不需要el-main padding
         },
         component: () =>
@@ -149,7 +149,7 @@ export default [
           keepAlive: true,
           title: "考勤审批",
           // isScrollTop: true, //是否需要记录坐标
-          isMapNav: true, //不需要导航
+          //  isMapNav: true, //不需要导航
           isPad: true //不需要el-main padding
         },
         component: () =>
@@ -177,7 +177,7 @@ export default [
           keepAlive: true,
           title: "考勤规则管理",
           // isScrollTop: true, //是否需要记录坐标
-          isMapNav: true, //不需要导航
+          // isMapNav: true, //不需要导航
           isPad: true //不需要el-main padding
         },
         component: () =>
@@ -191,7 +191,7 @@ export default [
           keepAlive: true,
           title: "添加考勤规则",
           // isScrollTop: true, //是否需要记录坐标
-          isMapNav: true, //不需要导航
+          // isMapNav: true, //不需要导航
           isPad: true //不需要el-main padding
         },
         component: () =>
@@ -205,7 +205,7 @@ export default [
           keepAlive: true,
           title: "编辑考勤规则",
           // isScrollTop: true, //是否需要记录坐标
-          isMapNav: true, //不需要导航
+          // isMapNav: true, //不需要导航
           isPad: true //不需要el-main padding
         },
         component: () =>
@@ -219,7 +219,7 @@ export default [
           keepAlive: true,
           title: "名言警句管理",
           // isScrollTop: true, //是否需要记录坐标
-          isMapNav: true, //不需要导航
+          // isMapNav: true, //不需要导航
           isPad: true //不需要el-main padding
         },
         component: () =>
@@ -235,7 +235,7 @@ export default [
       keepAlive: true,
       title: "请假申请",
       // isScrollTop: true, //是否需要记录坐标
-      isMapNav: true, //不需要导航
+      // isMapNav: true, //不需要导航
       isPad: true //不需要el-main padding
     },
     component: () =>
@@ -249,7 +249,7 @@ export default [
       keepAlive: true,
       title: "请假申请详情页",
       // isScrollTop: true, //是否需要记录坐标
-      isMapNav: true, //不需要导航
+      //  isMapNav: true, //不需要导航
       isPad: true //不需要el-main padding
     },
     component: () =>
@@ -263,7 +263,7 @@ export default [
       keepAlive: true,
       title: "补卡申请详情页",
       // isScrollTop: true, //是否需要记录坐标
-      isMapNav: true, //不需要导航
+      // isMapNav: true, //不需要导航
       isPad: true //不需要el-main padding
     },
     component: () =>

@@ -128,7 +128,7 @@
 </style>
 <template>
   <div class="content">
-    <div class="center" v-loading="root.loading">
+    <div class="center" v-loading="loading">
       <h3 class="clock-title">忙碌一日后，不妨写一点什么记录一下今天！</h3>
       <div class="layout-warper">
         <div class="clock-content">
@@ -142,13 +142,13 @@
             <div class="col-check">
               <label
                 class="col-check-item"
-                v-for="item in root.score"
+                v-for="item in score"
                 :key="item"
-                :class="{ active: root.form.activeScore == item }"
+                :class="{ active: form.activeScore == item }"
               >
                 <input
                   type="radio"
-                  v-model="root.form.activeScore"
+                  v-model="form.activeScore"
                   :value="item"
                   name="activeScore"
                   v-validate="'required'"
@@ -159,10 +159,10 @@
               </label>
             </div>
           </div>
-          <template v-if="root.config.growth">
+          <template v-if="config.growth">
             <div
               class="col-title is-require"
-              :data-tips="errorBags.first('summary')"
+              :data-tips="errorBags.first('growth')"
             >
               今日成长与问题
             </div>
@@ -171,10 +171,11 @@
                 <el-input
                   type="textarea"
                   placeholder="请输入今日总结"
-                  v-model="root.form.summary"
+                  v-model="form.growth"
                   maxlength="50"
-                  v-validate="'required'"
-                  data-vv-name="summary"
+                  data-vv-validate-on="change"
+                  v-validate="'required|arrGTLength:20'"
+                  data-vv-name="growth"
                   data-vv-as="今日总结"
                   show-word-limit
                   resize="none"
@@ -183,7 +184,7 @@
               </div>
             </div>
           </template>
-          <template v-if="root.config.share">
+          <template v-if="config.share">
             <div
               class="col-title is-require"
               :data-tips="errorBags.first('share')"
@@ -195,11 +196,12 @@
                 <el-input
                   type="textarea"
                   placeholder="请输入今日案例分享"
-                  v-model="root.form.share"
+                  v-model="form.share"
                   maxlength="50"
                   show-word-limit
                   resize="none"
-                  v-validate="'required'"
+                  data-vv-validate-on="change"
+                  v-validate="'required|arrGTLength:20'"
                   data-vv-name="share"
                   data-vv-as="今日案例分享"
                 >
@@ -207,14 +209,14 @@
               </div>
             </div>
           </template>
-          <template v-if="root.config.excavate">
+          <template v-if="config.excavate">
             <div class="col-title">今日挖掘优质房源</div>
             <div class="col-content">
               <div class="col-textarea">
                 <el-input
                   type="textarea"
                   placeholder="请输入今日挖掘优质房源"
-                  v-model="root.form.excavate"
+                  v-model="form.excavate"
                   maxlength="50"
                   show-word-limit
                   resize="none"
@@ -223,14 +225,14 @@
               </div>
             </div>
           </template>
-          <template v-if="root.config.clientDemand">
+          <template v-if="config.clientDemand">
             <div class="col-title ">急购客户需求</div>
             <div class="col-content">
               <div class="col-textarea">
                 <el-input
                   type="textarea"
                   placeholder="请输入急购客户需求"
-                  v-model="root.form.clientDemand"
+                  v-model="form.clientDemand"
                   maxlength="50"
                   show-word-limit
                   resize="none"
@@ -239,14 +241,14 @@
               </div>
             </div>
           </template>
-          <template v-if="root.config.plan">
+          <template v-if="config.plan">
             <div class="col-title">明日计划</div>
             <div class="col-content">
               <div class="col-textarea">
                 <el-input
                   type="textarea"
                   placeholder="请输入明日计划"
-                  v-model="root.form.plan"
+                  v-model="form.plan"
                   maxlength="50"
                   show-word-limit
                   resize="none"
@@ -270,16 +272,123 @@
 </template>
 
 <script>
-import { V2Init } from "vcomposition2";
-import { enter } from "./realization/index";
 import clockTime from "../components/clockTime";
-export default V2Init({
-  created: [enter],
+export default {
   $_veeValidate: {
     validator: "new"
   },
   components: {
     clockTime
+  },
+  data() {
+    return {
+      loading: true,
+      score: [1, 2, 3, 4, 5],
+      form: {
+        activeScore: "",
+        plan: "", //明日计划 >> (普通,经纪人,店长)
+        growth: "", //今日成长与问题 >> (普通,经纪人,店长)
+        excavate: "", //今日挖掘优质房源 >> (经纪人,店长)
+        clientDemand: "", //急购客户需求 >> (经纪人,店长)
+        share: "" //案例分享 >> (店长)
+      },
+      config: {
+        plan: false,
+        growth: false,
+        excavate: false,
+        clientDemand: false,
+        share: false
+      }
+    };
+  },
+  created() {
+    this.getPerType();
+  },
+  methods: {
+    /**
+     * @example: 获取人员显示权限
+     */
+    getPerType() {
+      this.loading = true;
+      this.$api
+        .post({
+          url: "/attendance/attendanceWorkSummary/judgeSummaryType"
+        })
+        .then(({ data }) => {
+          switch (data.data.type) {
+            case 1: //普通员工
+              this.setConfig({
+                growth: true,
+                plan: true
+              });
+              break;
+            case 2: //经纪人
+              this.setConfig({
+                growth: true,
+                plan: true,
+                excavate: true,
+                clientDemand: true
+              });
+              break;
+            case 3: //店长
+              this.setConfig({
+                growth: true,
+                plan: true,
+                excavate: true,
+                clientDemand: true,
+                share: true
+              });
+              break;
+            default:
+              //默认普通员工
+              this.setConfig({
+                growth: true,
+                plan: true
+              });
+              break;
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    //重置
+    resetForm() {
+      this.$router.go();
+    },
+    //显示界面
+    setConfig(options) {
+      this.config = { ...this.config, ...options };
+    },
+    //表单验证
+    validateForm() {
+      this.$validator.validate().then(e => {
+        if (e) {
+          this.submitForm();
+        }
+      });
+    },
+    submitForm() {
+      this.$api
+        .post({
+          url: "/attendance/attendanceWorkSummary/saveSummary",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            selfScore: this.form.activeScore,
+            planTomorrow: this.form.plan,
+            caseShareToday: this.form.share,
+            excavateHouseToday: this.form.excavate,
+            urgentCustomerRequire: this.form.clientDemand,
+            summaryToday: this.form.growth
+          }
+        })
+        .then(({ data }) => {
+          this.$message.success(data.message);
+          setTimeout(() => {
+            this.$router.go(-1);
+          }, 500);
+        });
+    }
   }
-});
+};
 </script>

@@ -256,7 +256,7 @@
         <span class="title-text">门店业绩</span>
         <div
           class="after-content"
-          @click="changeSelectFlag()"
+          @click.stop="changeSelectFlag()"
           v-if="
             parentInstance.roleConfig.indexRankStore &&
               refresh.defaultBroker.storeName

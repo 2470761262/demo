@@ -64,6 +64,7 @@
                       <el-form-item label="所在部门">
                         <el-col :span="12">
                           <el-select
+                            class="width100"
                             v-model="formData.companyId"
                             placeholder="公司名称"
                             clearable
@@ -94,7 +95,7 @@
                             :loading="department.loading"
                             value-key="value"
                             @change="query(1)"
-                            class="width100 serch-item-select"
+                            class="width100"
                           >
                             <el-option
                               v-for="item in department.list"
@@ -113,7 +114,7 @@
                       <el-form-item label="申请类型">
                         <el-col :span="12">
                           <el-select
-                            class="width100 serch-item-select"
+                            class="width100"
                             popper-class="options-item"
                             v-model="formData.applyType"
                             placeholder="选择申请类型"
@@ -149,7 +150,7 @@
                   <el-col :span="6">
                     <el-form-item label="审批状态">
                       <el-select
-                        class="width100 serch-item-select"
+                        class="width100"
                         popper-class="options-item"
                         v-model="formData.status"
                         placeholder="请选择审批状态"
@@ -207,23 +208,23 @@
                 >
                   <el-table-column
                     type="index"
-                    width="60"
+                    width="72"
                     label="序号"
                     prop="id"
                   ></el-table-column>
                   <el-table-column
-                    min-width="120"
+                    min-width="119"
                     label="申请人"
-                    align="right"
+                    align="left"
                     show-overflow-tooltip
                     prop="applyName"
                   >
                   </el-table-column>
                   <el-table-column
-                    min-width="200"
+                    min-width="177"
                     prop="applyType"
                     label="类型"
-                    align="right"
+                    align="left"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
@@ -231,29 +232,32 @@
                     </template>
                   </el-table-column>
                   <el-table-column
-                    min-width="200"
+                    min-width="142"
                     prop="applyDuration"
                     label="时长"
-                    align="right"
+                    align="left"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      <span>{{ scope.row.applyDuration }}天</span>
+                      <span v-if="scope.row.applyDuration"
+                        >{{ scope.row.applyDuration }}天</span
+                      >
+                      <span v-else>-</span>
                     </template>
                   </el-table-column>
                   <el-table-column
-                    min-width="200"
+                    min-width="286"
                     prop="createTime"
                     label="申请时间"
-                    align="right"
+                    align="left"
                     show-overflow-tooltip
                   >
                   </el-table-column>
                   <el-table-column
-                    min-width="200"
+                    min-width="166"
                     prop="auditorName"
                     label="审批人"
-                    align="right"
+                    align="left"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
@@ -261,10 +265,10 @@
                     </template>
                   </el-table-column>
                   <el-table-column
-                    min-width="130"
+                    min-width="140"
                     prop="status"
                     label="审批结果"
-                    align="right"
+                    align="left"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
@@ -312,18 +316,34 @@ export default {
     return {
       currentNavIndex: 0,
       loading: false,
+      currentSubNavIndex: 2,
       subNavs: [
         {
           name: "我的日志",
-          path: "/clockList/myInfo"
+          path: "/clockList/myInfo",
+          rUrl: "workSummary"
         },
         {
           name: "考勤统计",
-          path: "/clockList/statistic"
+          path: "/clockList/statistic",
+          rUrl: "statistics"
         },
         {
           name: "考勤审批",
-          path: "/clockList/examine"
+          path: "/clockList/examine",
+          rUrl: "audit"
+        }
+      ],
+      subSecondNavs: [
+        {
+          name: "考勤规则管理",
+          path: "/clockRule/list",
+          rUrl: "rule"
+        },
+        {
+          name: "名言警句配置",
+          path: "/clockRule/quotes",
+          rUrl: "famous"
         }
       ],
       applyTime: [], //申请时间
