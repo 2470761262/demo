@@ -953,9 +953,9 @@ export default {
 };
 </script>
 <style lang="less">
-.children-page {
-  height: 100%;
-}
+// .children-page {
+//   height: 100%;
+// }
 </style>
 <style lang="less" scoped>
 /*** element下拉选择面板 ***/
