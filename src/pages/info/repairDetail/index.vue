@@ -26,21 +26,26 @@
             <div class="row-title">补卡时间</div>
             <div class="row-content">
               <div class="row-around">
-                {{ baseDetails.repairAbnormalDay }}&nbsp;{{
-                  baseDetails.repairAbnormalDay | repairAbnormalDayFilter
+                {{
+                  baseDetails.attendanceReissueList[0].repairAbnormalDay
+                }}&nbsp;{{
+                  baseDetails.attendanceReissueList[0].repairAbnormalDay
+                    | repairAbnormalDayFilter
                 }}
               </div>
             </div>
           </div>
           <div class="row">
             <div class="row-title">补卡班次</div>
-            <div class="row-content">
+            <div
+              class="row-content"
+              v-for="(item, index) in baseDetails.attendanceReissueList"
+              :key="index"
+            >
               <div class="row-leave-duration">
-                {{ baseDetails.repairAbnormalDate | repairAbnormalDateFilter }}
-                {{ baseDetails.repairAbnormalDate | emptyRead(")", "(")
-                }}{{
-                  baseDetails.repairAbnormalType | repairAbnormalTypeFilter
-                }}
+                {{ item.repairAbnormalTime | repairAbnormalDateFilter }}
+                {{ item.repairAbnormalDate | emptyRead(")", "(")
+                }}{{ item.repairAbnormalType | repairAbnormalTypeFilter }}
               </div>
             </div>
           </div>
@@ -157,10 +162,12 @@ export default {
         applyDuration: "",
         applyReason: "",
         status: "",
-        repairAbnormalTime: "",
-        repairAbnormalDay: "",
-        repairAbnormalDate: "",
-        repairAbnormalType: "",
+        attendanceReissueList: [
+          {
+            repairAbnormalDate: "",
+            repairAbnormalType: ""
+          }
+        ],
         applyMediaList: [],
         auditorList: []
       }, //基础信息
@@ -230,6 +237,7 @@ export default {
      */
     repairAbnormalDateFilter(value) {
       let date = new Date(value);
+      console.log(value, date.getHours());
       let hours = date.getHours();
       return hours ? (hours >= 6 && hours <= 12 ? "上午" : "下午") : "暂无";
     }
