@@ -112,6 +112,7 @@
       <div class="col-textarea">
         <el-input
           type="textarea"
+          data-vv-validate-on="change"
           placeholder="请输入不少于20字的点评"
           v-model="form.comment"
           v-validate="'required'"
@@ -137,14 +138,36 @@ export default {
      */
 
     submit() {
-      console.log(1111);
-      this.$validator.validate().then(e => {});
+      this.$validator.validate().then(e => {
+        if (e) {
+          this.submitForm();
+        }
+      });
     },
     /**
      * @example: 关闭
      */
     hidePop() {
       this.$emit("update:visible", false);
+    },
+    /**
+     * @example: 提交点评
+     */
+    submitForm() {
+      this.$api
+        .post({
+          url: "/attendance/attendanceWorkSummary/checkSummary",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            id: this.$route.query.id,
+            checkContent: this.form.comment, //点评类容
+            checkScore: this.form.activeScore //点评评分
+          }
+        })
+        .finally(() => {
+          this.hidePop();
+          this.$emit("hideChange");
+        });
     }
   },
   data() {

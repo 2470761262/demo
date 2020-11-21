@@ -309,6 +309,7 @@ export default {
      * @example: 获取人员显示权限
      */
     getPerType() {
+      this.loading = true;
       this.$api
         .post({
           url: "/attendance/attendanceWorkSummary/judgeSummaryType"
