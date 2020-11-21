@@ -219,7 +219,7 @@
               font-weight: bold;
             }
             .per-data-type {
-              width: 44px;
+              padding: 0 4px;
               height: 16px;
               border-radius: 2px;
               border: 1px solid @backgroud;
@@ -264,7 +264,7 @@
             class="self-point-value "
             :class="{ 'point-after': detailt.selfScore != null }"
           >
-            {{ detailt.selfScore }}
+            {{ detailt.selfScore | isNull }}
           </div>
         </div>
         <div class="other-evaluate">
@@ -274,7 +274,7 @@
               class="other-point-value"
               :class="{ 'point-after': detailt.checkScore != null }"
             >
-              {{ detailt.checkScore }}
+              {{ detailt.checkScore | isNull }}
             </div>
           </div>
           <div class="split-line"></div>
@@ -284,7 +284,7 @@
               <div v-if="isShowRemindBtn">
                 好像还没点评哦！可以适当的提醒一下
               </div>
-              <div v-else>{{ detailt.checkContent }}</div>
+              <div v-else>{{ detailt.checkContent | isNull }}</div>
               <button v-if="isShowRemindBtn">
                 提醒
               </button>
@@ -331,23 +331,22 @@
       <div class="check-detail-box">
         <template v-if="!detailt.isMyAddSummary && !loading">
           <div class="per-warp">
-            <img
-              src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1452306654,1920718983&fm=26&gp=0.jpg"
-              alt=""
-            />
+            <img :src="detailt.personImageUrl" alt="" />
             <div class="per-data">
               <div class="per-data-head">
-                <div class="per-data-name">大好河山</div>
-                <div class="per-data-type">经纪人</div>
+                <div class="per-data-name">{{ detailt.personName }}</div>
+                <div class="per-data-type">{{ detailt.roleName }}</div>
               </div>
-              <div class="per-data-phone">17720819921</div>
+              <div class="per-data-phone">{{ detailt.tel }}</div>
             </div>
           </div>
           <div class="log-time">
             <div class="log-time-title">日志提交时间</div>
             <div class="log-operate-warp">
-              <div>2020-11-09 11:51:09</div>
-              <button>去点评</button>
+              <div>{{ detailt.addSummaryTime }}</div>
+              <button v-if="isShowRemark" @click="setvisible(true)">
+                去点评
+              </button>
             </div>
           </div>
         </template>
@@ -356,14 +355,22 @@
           <div class="detail-flex">
             <div class="flex-item">
               <div class="itme-title">上班</div>
-              <div class="item-time">08:22:20</div>
-              <div class="item-type" data-type="normal">正常</div>
+              <div class="item-time">
+                {{ detailt.morningCheckInTime || "暂无" }}
+              </div>
+              <div class="item-type" data-type="normal">
+                {{ detailt.morningCheckInResult | getText }}
+              </div>
             </div>
             <div>/</div>
             <div class="flex-item">
               <div class="itme-title">上班</div>
-              <div class="item-time">17:22:20</div>
-              <div class="item-type" data-type="error">早退</div>
+              <div class="item-time">
+                {{ detailt.afternoonCheckInTime || "暂无" }}
+              </div>
+              <div class="item-type" data-type="error">
+                {{ detailt.afternoonCheckInResult | getText }}
+              </div>
             </div>
           </div>
         </div>
@@ -381,10 +388,36 @@
 <script>
 import clockTime from "../components/clockTime";
 import summaryCommentPop from "./compoents/summaryCommentPop";
+
+function textColor(type) {
+  switch (type) {
+    case 0:
+      return "normal";
+    case 1: //迟到
+    case 2: //早退
+    case 4: //请假
+    case 5: //迟到请假
+      return "warning";
+    case 3: //旷工
+      return "error";
+    default:
+      return "warning";
+  }
+}
 export default {
   components: {
     clockTime,
     summaryCommentPop
+  },
+  filters: {
+    getText(value) {
+      if (value == null || value == "") return "暂无";
+      const text = ["正常", "迟到", "早退", "旷工", "请假", "迟到早退"];
+      return text[value];
+    },
+    isNull(value) {
+      return value == null ? "暂无" : value;
+    }
   },
   computed: {
     //是否显示提醒按钮
@@ -434,7 +467,11 @@ export default {
           qs: true
         })
         .then(({ data }) => {
-          this.detailt = data.data;
+          this.detailt = {
+            ...data.data,
+            morningCheckInType: textColor(data.data.morningCheckInResult),
+            afternoonCheckInType: textColor(data.data.afternoonCheckInResult)
+          };
         })
         .finally(() => {
           this.loading = false;

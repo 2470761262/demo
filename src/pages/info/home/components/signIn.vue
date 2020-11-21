@@ -61,14 +61,7 @@
         color: #606266;
         cursor: pointer;
       }
-      .clock-qr-image {
-        width: 168px;
-        height: 168px;
-        &.is-small {
-          width: 112px;
-          height: 112px;
-        }
-      }
+
       .clock-qr-tips {
         font-size: @font18;
         color: #303133;
@@ -205,12 +198,7 @@
     <div class="clock-posi">
       <div class="clock-qr" v-if="showQr">
         <div class="close-qr el-icon-close" @click="changeQr(false)"></div>
-        <img
-          class="clock-qr-image"
-          :class="{ 'is-small': !isShowWordBtn }"
-          :src="qrUrl"
-          alt=""
-        />
+        <div id="qr"></div>
         <div class="clock-qr-tips">手机微信扫码签到</div>
         <div class="refresh-qr">
           <div @click="getWorkEndTime(true)">
@@ -268,13 +256,15 @@
 <script>
 import util from "@/util/util";
 import { LOGINDATA } from "@/util/constMap";
+import qrjs2 from "qrcodejs2";
 export default {
   data() {
     return {
       showQr: false,
       loginData: {},
       qrUrl: null,
-      isShowWordBtn: false
+      isShowWordBtn: false,
+      qrInstance: null
     };
   },
   created() {
@@ -308,6 +298,20 @@ export default {
           if (result.qrcode) {
             this.showQr = true;
             this.qrUrl = result.qrcode;
+            this.$nextTick(() => {
+              if (!this.qrInstance) {
+                this.qrInstance = new qrjs2("qr", {
+                  text: this.qrUrl,
+                  width: this.isShowWordBtn ? 168 : 112, //二维码的宽度
+                  height: this.isShowWordBtn ? 168 : 112, //二维码的高度
+                  correctLevel: qrjs2.CorrectLevel.H
+                  //	src: 'scy917.png'
+                });
+              } else {
+                this.qrInstance.clear(); // 清除代码
+                this.qrInstance.makeCode(this.qrUrl);
+              }
+            });
             this.$message({
               message: "二维码加载完成.",
               type: "success"
@@ -331,6 +335,9 @@ export default {
      */
     changeQr(bool) {
       this.showQr = bool;
+      if (!this.showQr) {
+        this.qrInstance = null;
+      }
     },
     jumpToNoClock() {
       this.$router.push({ path: "/noClock" });
