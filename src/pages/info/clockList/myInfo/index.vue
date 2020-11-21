@@ -99,6 +99,12 @@
         flex-shrink: 0;
         display: flex;
         flex-direction: column;
+        @media screen and(min-width:1440px) and (max-width: 1920px) {
+          width: calc(100vw / 1440 * 852);
+        }
+        @media screen and(min-width:1921px) {
+          width: calc(1920px / 1440 * 852);
+        }
         .list-serch {
           display: flex;
           flex-wrap: wrap;
@@ -132,7 +138,12 @@
             align-items: center;
             margin-right: 16px;
             margin-bottom: 16px;
-            &:nth-child(4n -1) {
+            @media screen and(max-width: 1470px) {
+              &:nth-child(4n -1) {
+                margin-right: 0 !important;
+              }
+            }
+            &:nth-child(5n -1) {
               margin-right: 0;
             }
             .serch-item-text {
