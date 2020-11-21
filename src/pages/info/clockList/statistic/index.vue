@@ -276,7 +276,7 @@
                         迟到：{{ scope.row.beLateNum }}次
                       </div>
                       <div class="item" v-if="scope.row.absenceNum != 0">
-                        旷工：{{ scope.row.absenceNum }}次
+                        旷工：{{ scope.row.absenceNum }}天
                       </div>
                       <div class="item" v-if="scope.row.leaveEarlyNum != 0">
                         早退：{{ scope.row.leaveEarlyNum }}次
@@ -318,7 +318,7 @@
                 >
                   <template v-slot="scope">
                     <span v-if="scope.row.casualLeaveNum == 0">满勤</span>
-                    <span v-else>{{ scope.row.casualLeaveNum }}次</span>
+                    <span v-else>{{ scope.row.casualLeaveNum }}天</span>
                   </template>
                 </el-table-column>
               </el-table>
@@ -402,7 +402,7 @@
                         迟到：{{ scope.row.beLateNum }}次
                       </div>
                       <div class="item" v-if="scope.row.absenceNum != 0">
-                        旷工：{{ scope.row.absenceNum }}次
+                        旷工：{{ scope.row.absenceNum }}天
                       </div>
                       <div class="item" v-if="scope.row.leaveEarlyNum != 0">
                         早退：{{ scope.row.leaveEarlyNum }}次
