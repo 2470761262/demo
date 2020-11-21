@@ -46,7 +46,8 @@
   .el-main {
     padding: 0;
     /deep/.nav-breadcrumb {
-      margin-top: 20px;
+      margin: 10px 0;
+      line-height: 1;
     }
   }
 }

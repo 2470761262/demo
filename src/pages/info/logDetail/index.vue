@@ -436,10 +436,14 @@ export default {
       }
       return false;
     },
-    //不是自己的写的就显示去点评 未批阅状态
+    //不是自己的写的就显示去点评 未批阅状态 canCheck(true)
     isShowRemark() {
       if (!this.loading) {
-        if (!this.detailt.isMyAddSummary && this.detailt.checkStatus == 0) {
+        if (
+          !this.detailt.isMyAddSummary &&
+          this.detailt.checkStatus == 0 &&
+          this.detailt.canCheck
+        ) {
           return true;
         }
       }
