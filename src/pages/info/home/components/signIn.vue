@@ -255,7 +255,7 @@
           <div>保薪酬</div>
         </div>
       </div>
-      <div class="help-btn-item">
+      <div class="help-btn-item" v-if="visitFreedom">
         <div class="click-area" @click="jumpToNoClock">
           <img src="https://img.0be.cn/pc/attence_23.svg" alt="" />
           <div>免考勤</div>
@@ -274,12 +274,14 @@ export default {
       showQr: false,
       loginData: {},
       qrUrl: null,
-      isShowWordBtn: false
+      isShowWordBtn: false,
+      visitFreedom: false
     };
   },
   created() {
     this.getLocatData();
     this.getWorkEndTime();
+    this.getIsManager();
   },
   methods: {
     loadingFun() {
@@ -337,6 +339,19 @@ export default {
     },
     jumpToAskForLeave() {
       this.$router.push({ path: "/askforLeave" });
+    },
+    getIsManager() {
+      this.$api
+        .get({
+          url: "/attendance/freedom/manager"
+        })
+        .then(e => {
+          let data = e.data.data;
+          console.log("data", data);
+          if (data != null && parseInt(data) > 0) {
+            this.visitFreedom = true;
+          }
+        });
     }
   }
 };
