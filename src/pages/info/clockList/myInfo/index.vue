@@ -940,18 +940,34 @@ export default {
       activeCollapse: "calendar",
       color: ["#0DA88B", "#F6A420", "#EF5656"],
       currentNavIndex: 0,
+      currentSubNavIndex: 0,
       subNavs: [
         {
           name: "我的日志",
-          path: "/clockList/myInfo"
+          path: "/clockList/myInfo",
+          rUrl: "workSummary"
         },
         {
           name: "考勤统计",
-          path: "/clockList/statistic"
+          path: "/clockList/statistic",
+          rUrl: "statistics"
         },
         {
           name: "考勤审批",
-          path: "/clockList/examine"
+          path: "/clockList/examine",
+          rUrl: "audit"
+        }
+      ],
+      subSecondNavs: [
+        {
+          name: "考勤规则管理",
+          path: "/clockRule/list",
+          rUrl: "rule"
+        },
+        {
+          name: "名言警句配置",
+          path: "/clockRule/quotes",
+          rUrl: "famous"
         }
       ],
       refresh: {
