@@ -121,6 +121,24 @@ export default {
   mixins: [clockRuleHead],
   data() {
     return {
+      currentSubNavIndex: 0,
+      subSecondNavs: [
+        {
+          name: "我的日志",
+          path: "/clockList/myInfo",
+          rUrl: "workSummary"
+        },
+        {
+          name: "考勤统计",
+          path: "/clockList/statistic",
+          rUrl: "statistics"
+        },
+        {
+          name: "考勤审批",
+          path: "/clockList/examine",
+          rUrl: "audit"
+        }
+      ],
       status: "",
       statusList: [
         {
