@@ -20,9 +20,29 @@
       line-height: 1;
       .row-data-title {
         color: #909399;
-        font-size: @font14;
-
         margin-bottom: 16px;
+        line-height: 1;
+        font-size: 0;
+        display: flex;
+        span {
+          font-size: @font14;
+          line-height: 1;
+        }
+        .iconfont {
+          margin-left: 12px;
+          cursor: pointer;
+          color: #606266;
+          &.iconyincang {
+            font-size: @font14;
+          }
+          &.iconyincang {
+            display: block;
+            font-size: @font18;
+            height: 9px;
+            transform: scale(0.5);
+            transform-origin: left center;
+          }
+        }
       }
       .row-data-value {
         display: flex;
@@ -52,10 +72,19 @@
         <img src="https://img.0be.cn/pc/attence_17.svg" alt="" />
       </div>
       <div class="row-item-data">
-        <div class="row-data-title">本月工资</div>
+        <div class="row-data-title">
+          <span>本月工资</span>
+          <span
+            class="iconfont"
+            @click="setHidePirce"
+            :class="isHidePirce ? 'iconxianshi' : 'iconyincang'"
+          ></span>
+        </div>
         <div class="row-data-value">
           <span class="value-after">￥</span>
-          <span class="value-data">{{ base.salary }}</span>
+          <span class="value-data">{{
+            isHidePirce ? "****" : base.salary
+          }}</span>
         </div>
       </div>
     </div>
@@ -106,16 +135,21 @@ import util from "@/util/util";
 export default {
   data() {
     return {
-      base: {}
+      base: {},
+      isHidePirce: true
     };
   },
   created() {
     this.getBase();
   },
   methods: {
+    setHidePirce() {
+      this.isHidePirce = !this.isHidePirce;
+    },
     /**
      * @example: 获取基础信息
      */
+
     getBase() {
       this.$api
         .get({
