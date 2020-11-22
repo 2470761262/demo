@@ -486,21 +486,21 @@ export default {
                 plan: true
               });
               break;
-            case 2: //经纪人
-              this.setConfig({
-                growth: true,
-                plan: true,
-                excavate: true,
-                clientDemand: true
-              });
-              break;
-            case 3: //店长
+            case 2: //店长
               this.setConfig({
                 growth: true,
                 plan: true,
                 excavate: true,
                 clientDemand: true,
                 share: true
+              });
+              break;
+            case 3: //经纪人
+              this.setConfig({
+                growth: true,
+                plan: true,
+                excavate: true,
+                clientDemand: true
               });
               break;
             default:

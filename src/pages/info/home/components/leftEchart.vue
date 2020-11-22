@@ -222,7 +222,7 @@
 }
 .head-item-f(@color:@backgroud,@font:@font16) {
   cursor: pointer;
-  color: @color;
+  color: #303133;
   font-size: @font;
 
   margin-right: 24px;
@@ -529,7 +529,9 @@ export default {
                   i <= 2
                     ? `https://img.0be.cn/pc/attence_bz_0${i}.svg`
                     : comNum(i + 1),
-                sumCommission: util.regexNum(v.sumCommission)
+                sumCommission: util.regexNum(
+                  v.sumCommission ? v.sumCommission.toFixed(2) : 0
+                )
               };
             }
           );
@@ -546,7 +548,9 @@ export default {
               ...defaultBroker,
               ...{
                 rank: comNum(defaultBroker.rank),
-                sumCommission: util.regexNum(defaultBroker.sumCommission)
+                sumCommission: util.regexNum(
+                  defaultBroker.sumCommission.toFixed(2)
+                )
               }
             };
             this.refresh.defaultBroker = this.refresh[

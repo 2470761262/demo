@@ -2,6 +2,11 @@ import util from "@/util/util";
 //import {getColor} from '@/themePackers/getSkin';
 import { TOKEN, LOGINDATA } from "@/util/constMap";
 export default {
+  data() {
+    return {
+      loginDataRemoteMixin: {}
+    };
+  },
   beforeCreate() {
     if (process.env.NODE_ENV == "development") {
       util.localStorageSet("nest", true);
@@ -10,6 +15,7 @@ export default {
     }
   },
   created() {
+    console.log("created mixin");
     //console.log(window.location.href);
     //console.log(window.location.hash);
     var url = window.location.href; //获取url中"?"符后的字串
@@ -28,6 +34,8 @@ export default {
     ) {
       //util.localStorageSet("logindata",{sessionId:null});
       this.getLoginData(token);
+    } else {
+      this.loginDataRemoteMixin = util.localStorageGet("logindata");
     }
     //getColor();
     console.log("getUrlToken---->" + token);
@@ -63,6 +71,7 @@ export default {
           } else {
             console.log("-------->", e);
           }
+          this.loginDataRemoteMixin = util.localStorageGet("logindata");
         })
         .catch(e => {
           console.log("catch-------->", e);

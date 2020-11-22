@@ -34,11 +34,17 @@ export default echartData => {
       formatter: e => {
         switch (e) {
           case "买卖":
-            return `${e}:{value|￥${util.regexNum(echartData.lease)}}`;
+            return `${e}:{value|￥${util.regexNum(
+              echartData.lease.toFixed(2)
+            )}}`;
           case "租赁":
-            return `${e}:{value|￥${util.regexNum(echartData.deal)}}`;
+            return `${e}:{value|￥${util.regexNum(
+              echartData.deal.toFixed(2)
+            )}}`;
           case "项目":
-            return `${e}:{value|￥${util.regexNum(echartData.project)}}`;
+            return `${e}:{value|￥${util.regexNum(
+              echartData.project.toFixed(2)
+            )}}`;
         }
       },
 

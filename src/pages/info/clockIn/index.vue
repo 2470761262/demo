@@ -172,9 +172,9 @@
                   type="textarea"
                   placeholder="请输入今日总结"
                   v-model="form.growth"
-                  maxlength="50"
+                  maxlength="200"
                   data-vv-validate-on="change"
-                  v-validate="'required|arrGTLength:20'"
+                  v-validate="'required|arrGTLength:10'"
                   data-vv-name="growth"
                   data-vv-as="今日总结"
                   show-word-limit
@@ -197,11 +197,11 @@
                   type="textarea"
                   placeholder="请输入今日案例分享"
                   v-model="form.share"
-                  maxlength="50"
+                  maxlength="200"
                   show-word-limit
                   resize="none"
                   data-vv-validate-on="change"
-                  v-validate="'required|arrGTLength:20'"
+                  v-validate="'required|arrGTLength:10'"
                   data-vv-name="share"
                   data-vv-as="今日案例分享"
                 >
@@ -217,7 +217,7 @@
                   type="textarea"
                   placeholder="请输入今日挖掘优质房源"
                   v-model="form.excavate"
-                  maxlength="50"
+                  maxlength="200"
                   show-word-limit
                   resize="none"
                 >
@@ -233,7 +233,7 @@
                   type="textarea"
                   placeholder="请输入急购客户需求"
                   v-model="form.clientDemand"
-                  maxlength="50"
+                  maxlength="200"
                   show-word-limit
                   resize="none"
                 >
@@ -249,7 +249,7 @@
                   type="textarea"
                   placeholder="请输入明日计划"
                   v-model="form.plan"
-                  maxlength="50"
+                  maxlength="200"
                   show-word-limit
                   resize="none"
                 >
@@ -322,21 +322,21 @@ export default {
                 plan: true
               });
               break;
-            case 2: //经纪人
-              this.setConfig({
-                growth: true,
-                plan: true,
-                excavate: true,
-                clientDemand: true
-              });
-              break;
-            case 3: //店长
+            case 2: //店长
               this.setConfig({
                 growth: true,
                 plan: true,
                 excavate: true,
                 clientDemand: true,
                 share: true
+              });
+              break;
+            case 3: //经纪人
+              this.setConfig({
+                growth: true,
+                plan: true,
+                excavate: true,
+                clientDemand: true
               });
               break;
             default:
