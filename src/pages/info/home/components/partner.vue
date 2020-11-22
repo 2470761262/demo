@@ -75,7 +75,7 @@ export default {
   methods: {
     loadingFun() {
       this.$message({
-        message: "功能升级中.",
+        message: "功能升级中，敬请期待...",
         type: "success"
       });
     }

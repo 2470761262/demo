@@ -264,7 +264,7 @@ export default {
     return {
       showQr: false,
       qrUrl: null,
-      isShowWordBtn: false,
+      isShowWordBtn: true,
       qrInstance: null,
       visitFreedom: false
     };
@@ -276,17 +276,17 @@ export default {
   methods: {
     loadingFun() {
       this.$message({
-        message: "功能升级中.",
+        message: "功能升级中，敬请期待...",
         type: "success"
       });
     },
     getWorkEndTime(isShow = false) {
-      if (isShow) {
-        this.$message({
-          message: "二维码加载中.",
-          type: "success"
-        });
-      }
+      // if (isShow) {
+      //   this.$message({
+      //     message: "二维码加载中.",
+      //     type: "success"
+      //   });
+      // }
       this.$api
         .post({
           url: "/attendance/apply/checking/qrcode",
@@ -321,7 +321,7 @@ export default {
               type: "success"
             });
           }
-          this.isShowWordBtn = result.isShowWorkSummary;
+          // this.isShowWordBtn = result.isShowWorkSummary;
         });
     },
     navToPage() {
