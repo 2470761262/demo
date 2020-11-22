@@ -213,9 +213,9 @@
         </div>
       </div>
       <div class="per-data">
-        <img :src="loginDataRemoteMixin.headImgUrl" alt="" />
-        <h3>{{ loginDataRemoteMixin.userName }}</h3>
-        <h4>{{ loginDataRemoteMixin.deptName }}</h4>
+        <img :src="loginDataRemoteMixin.data.headImgUrl" alt="" />
+        <h3>{{ loginDataRemoteMixin.data.userName }}</h3>
+        <h4>{{ loginDataRemoteMixin.data.deptName }}</h4>
       </div>
       <div class="clock-pad" v-if="isShowWordBtn">
         <div class="navto-color">
@@ -257,9 +257,8 @@
 import util from "@/util/util";
 import { LOGINDATA } from "@/util/constMap";
 import qrjs2 from "qrcodejs2";
-import getUrlToken from "@/minxi/getUrlToken";
 export default {
-  mixins: [getUrlToken],
+  inject: ["loginDataRemoteMixin"],
   data() {
     return {
       showQr: false,

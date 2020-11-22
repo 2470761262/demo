@@ -2,6 +2,11 @@ import util from "@/util/util";
 //import {getColor} from '@/themePackers/getSkin';
 import { TOKEN, LOGINDATA } from "@/util/constMap";
 export default {
+  provide() {
+    return {
+      loginDataRemoteMixin: this.loginDataRemoteMixin
+    };
+  },
   data() {
     return {
       loginDataRemoteMixin: {}
@@ -35,7 +40,11 @@ export default {
       //util.localStorageSet("logindata",{sessionId:null});
       this.getLoginData(token);
     } else {
-      this.loginDataRemoteMixin = util.localStorageGet("logindata");
+      this.$set(
+        this.loginDataRemoteMixin,
+        "data",
+        util.localStorageGet("logindata")
+      );
     }
     //getColor();
     console.log("getUrlToken---->" + token);
@@ -71,7 +80,11 @@ export default {
           } else {
             console.log("-------->", e);
           }
-          this.loginDataRemoteMixin = util.localStorageGet("logindata");
+          this.$set(
+            this.loginDataRemoteMixin,
+            "data",
+            util.localStorageGet("logindata")
+          );
         })
         .catch(e => {
           console.log("catch-------->", e);

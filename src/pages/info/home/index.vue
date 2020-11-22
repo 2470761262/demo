@@ -59,7 +59,7 @@
   <div class="back">
     <div class="content">
       <div class="main">
-        <!-- <info-head /> -->
+        <info-head />
         <!-- 工资信息 -->
         <salaryinfo />
         <template v-if="!loading">
