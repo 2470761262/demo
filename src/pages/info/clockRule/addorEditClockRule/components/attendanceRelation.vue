@@ -438,9 +438,9 @@ export default {
           if (e.data.code == 200) {
             this.perRelateList = e.data.data;
             // 已关联数据添加默认勾选数据中
-            this.perCheckList = this.perRelateList.map(item => {
-              return item.nameId;
-            });
+            // this.perCheckList = this.perRelateList.map(item => {
+            //   return item.nameId;
+            // });
           }
         })
         .finally(e => {

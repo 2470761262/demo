@@ -222,7 +222,7 @@
 }
 .head-item-f(@color:@backgroud,@font:@font16) {
   cursor: pointer;
-  color: @color;
+  color: #303133;
   font-size: @font;
 
   margin-right: 24px;
@@ -313,7 +313,7 @@
         </div>
       </div>
       <div class="rank-list-data" v-loading="loading">
-        <el-scrollbar class="scrollbar" id="broker">
+        <el-scrollbar class="scrollbar" id="store">
           <!-- 如果需要显示is-fixed 则需要加上这个样式is-emplt-split -->
           <div
             class="scroll-pad"
@@ -505,7 +505,7 @@ export default {
             project: this.refresh.defaultBroker.projectCommission
           });
           document
-            .getElementById("broker")
+            .getElementById("store")
             .querySelector(".el-scrollbar__wrap").scrollTop = 0;
         });
         return;
@@ -517,12 +517,27 @@ export default {
           data: {
             rankType: active.type,
             date: util.format(this.realTime, "yyyy-MM") + "-01",
-            limit: 20,
+            limit: 10,
             id: this.checkId
           }
         })
         .then(({ data }) => {
           const brokerRankList = (data.data.storeRankList || []).map((v, i) => {
+            let sumCommission = "****";
+
+            switch (
+              this.refresh.rankType //激活下标
+            ) {
+              case 0: //公司 只显示第一名的真实数据
+              case 1: //区域  只显示前3名的真实数据
+                if (i == 0) {
+                  sumCommission = util.regexNum(
+                    v.sumCommission ? v.sumCommission.toFixed(2) : 0
+                  );
+                }
+                break;
+            }
+
             return {
               ...v,
               isTopThree: i <= 2 ? true : false,
@@ -530,7 +545,7 @@ export default {
                 i <= 2
                   ? `https://img.0be.cn/pc/attence_bz_0${i}.svg`
                   : comNum(i + 1),
-              sumCommission: util.regexNum(v.sumCommission)
+              sumCommission
             };
           });
           //缓存对应数据
@@ -546,7 +561,9 @@ export default {
               ...defaultBroker,
               ...{
                 rank: comNum(defaultBroker.rank),
-                sumCommission: util.regexNum(defaultBroker.sumCommission)
+                sumCommission: util.regexNum(
+                  defaultBroker.sumCommission.toFixed(2)
+                )
               }
             };
             this.refresh.defaultBroker = this.refresh[
@@ -559,7 +576,7 @@ export default {
                 project: defaultBroker.projectCommission
               });
               document
-                .getElementById("broker")
+                .getElementById("store")
                 .querySelector(".el-scrollbar__wrap").scrollTop = 0;
             });
           } else {

@@ -14,11 +14,38 @@
 </style>
 <template>
   <div class="main-head">
-    <h3 class="head-title">宜昌杨秀芹,中午好</h3>
+    <h3 class="head-title">
+      {{ loginDataRemoteMixin.data.userName }},{{ time }}
+    </h3>
     <div class="head-titps">Welcome to XinJia</div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  inject: ["loginDataRemoteMixin"],
+  data() {
+    return {
+      time: ""
+    };
+  },
+  created() {
+    this.getTime();
+  },
+  methods: {
+    getTime() {
+      const nowTime = new Date();
+      const hour = nowTime.getHours();
+      if (hour > 4 && hour < 12) {
+        this.time = "早上好";
+      } else if (hour > 12 && hour < 14) {
+        this.time = "中午好";
+      } else if (hour >= 14 && hour < 18) {
+        this.time = "下午好";
+      } else {
+        this.time = "晚上好";
+      }
+    }
+  }
+};
 </script>

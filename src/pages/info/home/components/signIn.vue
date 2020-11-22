@@ -213,9 +213,9 @@
         </div>
       </div>
       <div class="per-data">
-        <img :src="loginData.headImgUrl" alt="" />
-        <h3>{{ loginData.userName }}</h3>
-        <h4>{{ loginData.deptName }}</h4>
+        <img :src="loginDataRemoteMixin.data.headImgUrl" alt="" />
+        <h3>{{ loginDataRemoteMixin.data.userName }}</h3>
+        <h4>{{ loginDataRemoteMixin.data.deptName }}</h4>
       </div>
       <div class="clock-pad" v-if="isShowWordBtn">
         <div class="navto-color">
@@ -258,25 +258,24 @@ import util from "@/util/util";
 import { LOGINDATA } from "@/util/constMap";
 import qrjs2 from "qrcodejs2";
 export default {
+  inject: ["loginDataRemoteMixin"],
   data() {
     return {
       showQr: false,
-      loginData: {},
       qrUrl: null,
-      isShowWordBtn: false,
+      isShowWordBtn: true,
       qrInstance: null,
       visitFreedom: false
     };
   },
   created() {
-    this.getLocatData();
     this.getWorkEndTime();
     this.getIsManager();
   },
   methods: {
     loadingFun() {
       this.$message({
-        message: "功能升级中.",
+        message: "功能升级中，敬请期待...",
         type: "success"
       });
     },
@@ -321,15 +320,8 @@ export default {
               type: "success"
             });
           }
-          this.isShowWordBtn = result.isShowWorkSummary;
+          // this.isShowWordBtn = result.isShowWorkSummary;
         });
-    },
-    /**
-     * @example: 获取登录人信息
-     */
-
-    getLocatData() {
-      this.loginData = util.localStorageGet(LOGINDATA);
     },
     navToPage() {
       this.$router.push({ path: "/clockIn" });
