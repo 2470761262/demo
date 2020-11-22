@@ -85,7 +85,7 @@
           }
           &.disabled {
             background: #f5f7fa;
-            color: #c0c4cc;
+            color: #c0c4cc !important;
             cursor: not-allowed;
           }
           &.highlight {
@@ -271,6 +271,10 @@ export default {
     loadingText: {
       type: String,
       default: "加载中..."
+    },
+    //禁止选择时间区间
+    disabledInterval: {
+      type: Array
     },
     before: Array, //之前合并属性
     current: Array, //当前合并属性
@@ -570,6 +574,7 @@ export default {
             )
           : {};
         if (!filterMerge.class) filterMerge.class = [];
+
         return {
           day,
           time: computedTime(this.year, this.month - 1, day),
@@ -580,6 +585,7 @@ export default {
       //填充当前月
       this.currentMonthList = fill(getDate(this.year, this.month), (v, i) => {
         const day = i + 1;
+        const time = computedTime(this.year, this.month, day);
         //合并传递属性
         let filterMerge = this.current
           ? JSON.parse(
@@ -596,9 +602,27 @@ export default {
         ) {
           filterMerge.class.push("highlight");
         }
+
+        if (this.disabledInterval) {
+          this.disabledInterval.forEach((dv, di) => {
+            if (filterMerge.class.includes("disabled")) return;
+
+            if (!Array.isArray(dv)) {
+              console.Error("disabledInterval item is need Array");
+            } else {
+              if (
+                compareTime(time, dv[0], false) &&
+                compareTime(time, dv[1], true)
+              ) {
+                filterMerge.class.push("disabled");
+                filterMerge.disabled = true;
+              }
+            }
+          });
+        }
         return {
           day,
-          time: computedTime(this.year, this.month, day),
+          time,
           ...filterMerge
         };
       });
