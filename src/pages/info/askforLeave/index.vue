@@ -240,6 +240,7 @@
           :current="restCurrent"
           v-model="restCalendarTiem"
           choice="single"
+          :disabledInterval="disabledInterval"
         >
           <template v-slot:dots="{ col }">
             <div
@@ -351,7 +352,13 @@ export default {
         list: [],
         loading: false
       }, //抄送json
-      submitLoding: false
+      submitLoding: false,
+      disabledInterval: [
+        [
+          "1970-01-01",
+          util.format(new Date().getTime() - 24 * 60 * 60 * 1000, "yyyy-MM-dd")
+        ]
+      ]
     };
   },
   filters: {
@@ -391,6 +398,7 @@ export default {
       this.pictureList = [];
       this.applyStartTime = "";
       this.applyEndTime = "";
+      this.duplicate.value = "";
     },
     /**
      * 提交申请
@@ -472,6 +480,14 @@ export default {
       if (this.restCalendarTiem.length == 0) {
         this.$message({
           message: "时间未选择",
+          type: "error"
+        });
+        return;
+      }
+      let nowDate = util.format(new Date(), "yyyy-MM-dd");
+      if (this.restCalendarTiem < nowDate) {
+        this.$message({
+          message: "时间不能小于当前时间",
           type: "error"
         });
         return;

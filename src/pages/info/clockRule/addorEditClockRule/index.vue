@@ -304,7 +304,9 @@ export default {
      * @return {*}
      */
     copyPreDayTs(index) {
-      let preDayTimeArr = Object.assign({}, this.ruleTime[index - 1]);
+      let preDayTimeArr = Object.assign({}, this.ruleTime[index - 1], {
+        day: this.ruleTime[index].day
+      });
       this.ruleTime.splice(index, 1, preDayTimeArr);
     },
     openDateDialog() {
