@@ -527,14 +527,13 @@ export default {
               switch (
                 this.refresh.rankType //激活下标
               ) {
+                case 1: //区域  只显示前3名的真实数据
                 case 2: //公司 显示前3名以外的真实数据
-                  if (i > 2) {
+                  if (i <= 2) {
                     sumCommission = util.regexNum(
                       v.sumCommission ? v.sumCommission.toFixed(2) : 0
                     );
                   }
-                  break;
-                case 1: //区域  只显示前3名的真实数据
                   if (i <= 2) {
                     sumCommission = util.regexNum(
                       v.sumCommission ? v.sumCommission.toFixed(2) : 0
