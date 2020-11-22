@@ -89,7 +89,7 @@
         <div class="item-data">{{ resouce.addNum || 0 }}</div>
       </div>
       <div class="layout-item">
-        <div class="item-title">客户量（套）</div>
+        <div class="item-title">客户量（人）</div>
         <div class="item-data">{{ resouce.custNum || 0 }}</div>
       </div>
     </div>

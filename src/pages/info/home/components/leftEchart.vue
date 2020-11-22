@@ -394,7 +394,7 @@ export default {
       selectFlag: false,
       refresh: {
         echartInstance: null, //图标实例
-        rankType: 0, //激活下标
+        rankType: 2, //激活下标
         renderlist: [], //激活
         shopList: {
           list: [],
@@ -515,13 +515,39 @@ export default {
           data: {
             rankType: active.type,
             date: util.format(this.realTime, "yyyy-MM") + "-01",
-            limit: 20,
+            limit: 10,
             id: this.checkId
           }
         })
         .then(({ data }) => {
           const brokerRankList = (data.data.brokerRankList || []).map(
             (v, i) => {
+              let sumCommission = "****";
+
+              switch (
+                this.refresh.rankType //激活下标
+              ) {
+                case 2: //公司 显示前3名以外的真实数据
+                  if (i > 2) {
+                    sumCommission = util.regexNum(
+                      v.sumCommission ? v.sumCommission.toFixed(2) : 0
+                    );
+                  }
+                  break;
+                case 1: //区域  只显示前3名的真实数据
+                  if (i <= 2) {
+                    sumCommission = util.regexNum(
+                      v.sumCommission ? v.sumCommission.toFixed(2) : 0
+                    );
+                  }
+                  break;
+                default:
+                  sumCommission = util.regexNum(
+                    v.sumCommission ? v.sumCommission.toFixed(2) : 0
+                  );
+                  break;
+              }
+
               return {
                 ...v,
                 isTopThree: i <= 2 ? true : false,
@@ -529,9 +555,7 @@ export default {
                   i <= 2
                     ? `https://img.0be.cn/pc/attence_bz_0${i}.svg`
                     : comNum(i + 1),
-                sumCommission: util.regexNum(
-                  v.sumCommission ? v.sumCommission.toFixed(2) : 0
-                )
+                sumCommission
               };
             }
           );
