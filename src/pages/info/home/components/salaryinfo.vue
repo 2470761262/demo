@@ -1,7 +1,7 @@
 <style lang="less" scoped>
 .icon-row {
   display: flex;
-  margin: 24px -8px 0;
+  // margin: 24px -8px 0;
   .row-item {
     background: #ffffff;
     box-shadow: 0px 8px 13px 0px rgba(68, 163, 163, 0.1);

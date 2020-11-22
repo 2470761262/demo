@@ -263,7 +263,7 @@ export default {
       showQr: false,
       loginData: {},
       qrUrl: null,
-      isShowWordBtn: false,
+      isShowWordBtn: true,
       qrInstance: null,
       visitFreedom: false
     };
@@ -276,7 +276,7 @@ export default {
   methods: {
     loadingFun() {
       this.$message({
-        message: "功能升级中.",
+        message: "功能升级中，敬请期待...",
         type: "success"
       });
     },
@@ -321,7 +321,7 @@ export default {
               type: "success"
             });
           }
-          this.isShowWordBtn = result.isShowWorkSummary;
+          // this.isShowWordBtn = result.isShowWorkSummary;
         });
     },
     /**
