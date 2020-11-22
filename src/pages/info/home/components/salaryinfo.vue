@@ -94,7 +94,7 @@
         <img src="https://img.0be.cn/pc/attence_18.svg" alt="" />
       </div>
       <div class="row-item-data">
-        <div class="row-data-title">业绩核算(万)</div>
+        <div class="row-data-title"><span>业绩核算(万)</span></div>
         <div class="row-data-value">
           <span class="value-after">￥</span>
           <span class="value-data">{{ base.allCommission }}</span>
@@ -107,7 +107,7 @@
         <img src="https://img.0be.cn/pc/attence_16.svg" alt="" />
       </div>
       <div class="row-item-data">
-        <div class="row-data-title">品牌分</div>
+        <div class="row-data-title"><span>品牌分</span></div>
         <div class="row-data-value">
           <!-- <span class="value-after">￥</span> -->
           <span class="value-data">{{ base.brandScore }}</span>
@@ -120,7 +120,7 @@
         <img src="https://img.0be.cn/pc/attence_19.svg" alt="" />
       </div>
       <div class="row-item-data">
-        <div class="row-data-title">级别</div>
+        <div class="row-data-title"><span>级别</span></div>
         <div class="row-data-value">
           <!-- <span class="value-after">￥</span> -->
           <span class="value-data">{{ base.levelCode }}</span>
