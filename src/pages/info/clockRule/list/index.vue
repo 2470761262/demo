@@ -85,7 +85,7 @@
             </div>
             <div class="btn-wrapper">
               <div class="btn-box">
-                <button @click="navigateToAdd(item.id)">编辑</button>
+                <button @click="navigateToEdit(item.id)">编辑</button>
                 <button @click="deleteClick(item.id)">删除</button>
               </div>
               <!-- <div class="status-box">
@@ -169,9 +169,14 @@ export default {
     this.getData();
   },
   methods: {
-    navigateToAdd(id) {
+    navigateToAdd() {
       this.$router.push({
-        path: "/clockRule/add",
+        path: "/clockRule/add"
+      });
+    },
+    navigateToEdit(id) {
+      this.$router.push({
+        path: "/clockRule/edit",
         query: { id: id }
       });
     },

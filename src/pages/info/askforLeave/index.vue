@@ -240,6 +240,7 @@
           :current="restCurrent"
           v-model="restCalendarTiem"
           choice="single"
+          :disabledInterval="disabledInterval"
         >
           <template v-slot:dots="{ col }">
             <div
@@ -351,7 +352,13 @@ export default {
         list: [],
         loading: false
       }, //抄送json
-      submitLoding: false
+      submitLoding: false,
+      disabledInterval: [
+        [
+          "1970-01-01",
+          util.format(new Date().getTime() - 24 * 60 * 60 * 1000, "yyyy-MM-dd")
+        ]
+      ]
     };
   },
   filters: {
