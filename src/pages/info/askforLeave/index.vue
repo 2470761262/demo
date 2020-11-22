@@ -220,7 +220,7 @@
                   {{ userInfo.parentDeptName | emptyRead
                   }}{{ userInfo.deptName | emptyRead("", "-") }}
                 </div>
-                <div class="icon"></div>
+                <!-- <div class="icon"></div> -->
               </div>
             </div>
           </div>
@@ -446,7 +446,7 @@ export default {
       if (
         this.applyStartTime &&
         this.applyEndTime &&
-        this.applyStartTime >= this.applyEndTime
+        this.applyStartTime > this.applyEndTime
       ) {
         this.$message({
           message: "开始时间不能大于结束时间",
@@ -1048,11 +1048,19 @@ export default {
               }
               .send-box {
                 display: flex;
+                justify-content: space-between;
+                align-items: center;
                 width: 336px;
                 padding: 6px;
                 border-radius: 4px;
                 border: 1px solid #cecece;
                 box-sizing: border-box;
+                /deep/.el-select {
+                  flex: 1;
+                  .el-input__inner {
+                    border: none;
+                  }
+                }
                 /deep/.send-ipt {
                   .el-input__inner {
                     height: 36px;
@@ -1161,7 +1169,8 @@ export default {
               display: flex;
               justify-content: space-between;
               align-items: center;
-              margin-top: 4px;
+              // margin-top: 4px;
+              margin-top: 7px;
               .business {
                 font-size: @font14;
                 color: #303133;

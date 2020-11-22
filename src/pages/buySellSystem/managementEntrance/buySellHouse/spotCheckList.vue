@@ -240,9 +240,9 @@
 }
 </style>
 <style lang="less">
-.children-page {
-  height: 100%;
-}
+// .children-page {
+//   height: 100%;
+// }
 </style>
 <template>
   <!--买卖房源-抽检列表-->

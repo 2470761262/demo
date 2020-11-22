@@ -41,13 +41,14 @@
             <el-row :gutter="16">
               <el-form label-position="right" label-width="64px">
                 <el-col
-                  :span="12"
+                  :span="10"
                   v-if="functionRuleObj.company && functionRuleObj.department"
                 >
                   <el-row :gutter="8">
                     <el-form-item label="所在部门">
                       <el-col :span="12" v-if="functionRuleObj.company">
                         <el-select
+                          class="width100"
                           v-model="companyId"
                           placeholder="公司名称"
                           clearable
@@ -79,7 +80,7 @@
                           :loading="department.loading"
                           value-key="value"
                           @change="query(1)"
-                          class="width100 serch-item-select"
+                          class="width100"
                           @blur="query()"
                         >
                           <el-option
@@ -94,10 +95,10 @@
                     </el-form-item>
                   </el-row>
                 </el-col>
-                <el-col :span="6" v-if="functionRuleObj.employee">
+                <el-col :span="7" v-if="functionRuleObj.employee">
                   <el-form-item label="员工姓名">
                     <el-select
-                      class="width100 serch-item-select"
+                      class="width100"
                       popper-class="options-item"
                       v-model="employeeId"
                       placeholder="请选择"
@@ -118,10 +119,10 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="6" v-if="functionRuleObj.status">
+                <el-col :span="7" v-if="functionRuleObj.status">
                   <el-form-item label="在职状态">
                     <el-select
-                      class="width100 serch-item-select"
+                      class="width100"
                       popper-class="options-item"
                       v-model="status"
                       placeholder="请选择"
@@ -139,7 +140,7 @@
                 <el-col :span="8" v-if="functionRuleObj.position">
                   <el-form-item label="岗位">
                     <el-select
-                      class="width100 serch-item-select"
+                      class="width100"
                       popper-class="options-item"
                       v-model="positionId"
                       placeholder="请选择"
@@ -275,7 +276,7 @@
                         迟到：{{ scope.row.beLateNum }}次
                       </div>
                       <div class="item" v-if="scope.row.absenceNum != 0">
-                        旷工：{{ scope.row.absenceNum }}次
+                        旷工：{{ scope.row.absenceNum }}天
                       </div>
                       <div class="item" v-if="scope.row.leaveEarlyNum != 0">
                         早退：{{ scope.row.leaveEarlyNum }}次
@@ -317,7 +318,7 @@
                 >
                   <template v-slot="scope">
                     <span v-if="scope.row.casualLeaveNum == 0">满勤</span>
-                    <span v-else>{{ scope.row.casualLeaveNum }}次</span>
+                    <span v-else>{{ scope.row.casualLeaveNum }}天</span>
                   </template>
                 </el-table-column>
               </el-table>
@@ -401,7 +402,7 @@
                         迟到：{{ scope.row.beLateNum }}次
                       </div>
                       <div class="item" v-if="scope.row.absenceNum != 0">
-                        旷工：{{ scope.row.absenceNum }}次
+                        旷工：{{ scope.row.absenceNum }}天
                       </div>
                       <div class="item" v-if="scope.row.leaveEarlyNum != 0">
                         早退：{{ scope.row.leaveEarlyNum }}次
@@ -495,19 +496,35 @@ export default {
     return {
       pageLoading: false,
       currentNavIndex: 0,
+      currentSubNavIndex: 1,
       loading: false,
       subNavs: [
         {
           name: "我的日志",
-          path: "/clockList/myInfo"
+          path: "/clockList/myInfo",
+          rUrl: "workSummary"
         },
         {
           name: "考勤统计",
-          path: "/clockList/statistic"
+          path: "/clockList/statistic",
+          rUrl: "statistics"
         },
         {
           name: "考勤审批",
-          path: "/clockList/examine"
+          path: "/clockList/examine",
+          rUrl: "audit"
+        }
+      ],
+      subSecondNavs: [
+        {
+          name: "考勤规则管理",
+          path: "/clockRule/list",
+          rUrl: "rule"
+        },
+        {
+          name: "名言警句配置",
+          path: "/clockRule/quotes",
+          rUrl: "famous"
         }
       ],
       functionRuleObj: {
@@ -936,9 +953,9 @@ export default {
 };
 </script>
 <style lang="less">
-.children-page {
-  height: 100%;
-}
+// .children-page {
+//   height: 100%;
+// }
 </style>
 <style lang="less" scoped>
 /*** element下拉选择面板 ***/
@@ -1120,6 +1137,7 @@ export default {
       display: none;
     }
     .main {
+      flex: 1;
       display: flex;
       flex-direction: column;
       width: 852px;

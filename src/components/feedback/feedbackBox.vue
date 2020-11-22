@@ -25,7 +25,7 @@
   margin-left: 30px;
   font-size: 18px;
   color: #666;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .is-nav-pad {
   padding: 0 10px;

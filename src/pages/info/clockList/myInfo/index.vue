@@ -99,6 +99,12 @@
         flex-shrink: 0;
         display: flex;
         flex-direction: column;
+        @media screen and(min-width:1440px) and (max-width: 1920px) {
+          width: calc(100vw / 1440 * 852);
+        }
+        @media screen and(min-width:1921px) {
+          width: calc(1920px / 1440 * 852);
+        }
         .list-serch {
           display: flex;
           flex-wrap: wrap;
@@ -132,7 +138,12 @@
             align-items: center;
             margin-right: 16px;
             margin-bottom: 16px;
-            &:nth-child(4n -1) {
+            @media screen and(max-width: 1470px) {
+              &:nth-child(4n -1) {
+                margin-right: 0 !important;
+              }
+            }
+            &:nth-child(5n -1) {
               margin-right: 0;
             }
             .serch-item-text {
@@ -929,18 +940,34 @@ export default {
       activeCollapse: "calendar",
       color: ["#0DA88B", "#F6A420", "#EF5656"],
       currentNavIndex: 0,
+      currentSubNavIndex: 0,
       subNavs: [
         {
           name: "我的日志",
-          path: "/clockList/myInfo"
+          path: "/clockList/myInfo",
+          rUrl: "workSummary"
         },
         {
           name: "考勤统计",
-          path: "/clockList/statistic"
+          path: "/clockList/statistic",
+          rUrl: "statistics"
         },
         {
           name: "考勤审批",
-          path: "/clockList/examine"
+          path: "/clockList/examine",
+          rUrl: "audit"
+        }
+      ],
+      subSecondNavs: [
+        {
+          name: "考勤规则管理",
+          path: "/clockRule/list",
+          rUrl: "rule"
+        },
+        {
+          name: "名言警句配置",
+          path: "/clockRule/quotes",
+          rUrl: "famous"
         }
       ],
       refresh: {

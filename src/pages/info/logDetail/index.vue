@@ -285,7 +285,7 @@
                 好像还没点评哦！可以适当的提醒一下
               </div>
               <div v-else>{{ detailt.checkContent | isNull }}</div>
-              <button v-if="isShowRemindBtn">
+              <button v-if="isShowRemindBtn" @click="remindLog">
                 提醒
               </button>
               <button
@@ -300,28 +300,34 @@
         </div>
       </div>
       <div class="layout-contnet">
-        <div class="cell-item">
+        <div class="cell-item" v-if="config.excavate">
           <h3>今日挖掘优质房源</h3>
           <p>
             {{ detailt.excavateHouseToday }}
           </p>
         </div>
-        <div class="cell-item">
+        <div class="cell-item" v-if="config.clientDemand">
           <h3>急购客户需求</h3>
           <p>
             {{ detailt.urgentCustomerRequire || "暂无" }}
           </p>
         </div>
-        <div class="cell-item">
+        <div class="cell-item" v-if="config.growth">
           <h3>今日总结</h3>
           <p>
             {{ detailt.summaryToday || "暂无" }}
           </p>
         </div>
-        <div class="cell-item">
+        <div class="cell-item" v-if="config.plan">
           <h3>明日计划</h3>
           <p>
             {{ detailt.planTomorrow || "暂无" }}
+          </p>
+        </div>
+        <div class="cell-item" v-if="config.share">
+          <h3>今日案例分享</h3>
+          <p>
+            {{ detailt.caseShareToday || "暂无" }}
           </p>
         </div>
       </div>
@@ -379,6 +385,7 @@
     <summary-comment-pop
       title="总结点评"
       width="608px"
+      @hideChange="getDetailSummary"
       :visible.sync="visible"
       v-if="visible"
     />
@@ -429,10 +436,14 @@ export default {
       }
       return false;
     },
-    //不是自己的写的就显示去点评 未批阅状态
+    //不是自己的写的就显示去点评 未批阅状态 canCheck(true)
     isShowRemark() {
       if (!this.loading) {
-        if (!this.detailt.isMyAddSummary && this.detailt.checkStatus == 0) {
+        if (
+          !this.detailt.isMyAddSummary &&
+          this.detailt.checkStatus == 0 &&
+          this.detailt.canCheck
+        ) {
           return true;
         }
       }
@@ -443,13 +454,85 @@ export default {
     return {
       visible: false,
       loading: true,
-      detailt: {}
+      detailt: {},
+      config: {
+        plan: false,
+        growth: false,
+        excavate: false,
+        clientDemand: false,
+        share: false
+      }
     };
   },
   created() {
-    this.getDetailSummary();
+    Promise.all([this.getPerType(), this.getDetailSummary()]).finally(() => {
+      this.loading = false;
+    });
   },
   methods: {
+    /**
+     * @example: 获取人员显示权限
+     */
+    getPerType() {
+      this.$api
+        .post({
+          url: "/attendance/attendanceWorkSummary/judgeSummaryType"
+        })
+        .then(({ data }) => {
+          switch (data.data.type) {
+            case 1: //普通员工
+              this.setConfig({
+                growth: true,
+                plan: true
+              });
+              break;
+            case 2: //经纪人
+              this.setConfig({
+                growth: true,
+                plan: true,
+                excavate: true,
+                clientDemand: true
+              });
+              break;
+            case 3: //店长
+              this.setConfig({
+                growth: true,
+                plan: true,
+                excavate: true,
+                clientDemand: true,
+                share: true
+              });
+              break;
+            default:
+              //默认普通员工
+              this.setConfig({
+                growth: true,
+                plan: true
+              });
+              break;
+          }
+        });
+    },
+    /**
+     * @example: 提醒批阅日志
+     */
+    remindLog() {
+      this.$api
+        .post({
+          url: "/attendance/attendanceWorkSummary/remindCheckSummary",
+          data: {
+            id: this.$route.query.id
+          },
+          qs: true
+        })
+        .then(({ data }) => {
+          this.$message.success(data.message);
+        });
+    },
+    //显示界面
+    setConfig(options) {
+      this.config = { ...this.config, ...options };
+    },
     setvisible(bool) {
       this.visible = bool;
     },
@@ -457,7 +540,6 @@ export default {
      * @example: 获取详情
      */
     getDetailSummary() {
-      this.loading = true;
       this.$api
         .post({
           url: "/attendance/attendanceWorkSummary/detailSummary",
@@ -472,9 +554,6 @@ export default {
             morningCheckInType: textColor(data.data.morningCheckInResult),
             afternoonCheckInType: textColor(data.data.afternoonCheckInResult)
           };
-        })
-        .finally(() => {
-          this.loading = false;
         });
     }
   }
