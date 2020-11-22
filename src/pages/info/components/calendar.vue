@@ -245,9 +245,9 @@ function computedTime(year, month, day) {
  */
 function compareTime(after, before, bool) {
   if (!bool) {
-    return Date.parse(after, before) > Date.parse(before);
+    return Date.parse(after) > Date.parse(before);
   }
-  return Date.parse(after, before) < Date.parse(before);
+  return Date.parse(after) < Date.parse(before);
 }
 //保存当前日期实例
 const nowData = new Date();
