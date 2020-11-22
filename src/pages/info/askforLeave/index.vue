@@ -391,6 +391,7 @@ export default {
       this.pictureList = [];
       this.applyStartTime = "";
       this.applyEndTime = "";
+      this.duplicate.value = "";
     },
     /**
      * 提交申请
@@ -472,6 +473,14 @@ export default {
       if (this.restCalendarTiem.length == 0) {
         this.$message({
           message: "时间未选择",
+          type: "error"
+        });
+        return;
+      }
+      let nowDate = util.format(new Date(), "yyyy-MM-dd");
+      if (this.restCalendarTiem < nowDate) {
+        this.$message({
+          message: "时间不能小于当前时间",
           type: "error"
         });
         return;

@@ -620,7 +620,7 @@ export const LEAVESUBTYPE = [
     value: 12
   },
   {
-    key: "婚嫁",
+    key: "婚假",
     value: 13
   },
   {
@@ -634,5 +634,9 @@ export const LEAVESUBTYPE = [
   {
     key: "公休",
     value: 16
+  },
+  {
+    key: "年休假",
+    value: 17
   }
 ];

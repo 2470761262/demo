@@ -27,10 +27,7 @@
             <div class="row-content">
               <div class="row-around">
                 {{
-                  baseDetails.attendanceReissueList[0].repairAbnormalDay
-                }}&nbsp;{{
-                  baseDetails.attendanceReissueList[0].repairAbnormalDay
-                    | repairAbnormalDayFilter
+                  baseDetails.attendanceReissueList | repairAbnormalDayFilter
                 }}
               </div>
             </div>
@@ -43,9 +40,10 @@
               :key="index"
             >
               <div class="row-leave-duration">
-                {{ item.repairAbnormalTime | repairAbnormalDateFilter }}
-                {{ item.repairAbnormalDate | emptyRead(")", "(")
-                }}{{ item.repairAbnormalType | repairAbnormalTypeFilter }}
+                {{ item.repairAbnormalTime | repairAbnormalDateFilter }}&nbsp;
+                {{ item.repairAbnormalDate | emptyRead(")", "(") }}&nbsp;{{
+                  item.repairAbnormalType | repairAbnormalTypeFilter
+                }}
               </div>
             </div>
           </div>
@@ -223,8 +221,20 @@ export default {
      * 补卡异常日期换算成星期
      */
     repairAbnormalDayFilter(value) {
-      let date = new Date(value);
-      return util.countMapFilter(date.getDay(), "WEEK", "暂无");
+      if (value && value.length > 0) {
+        let time = value.filter(
+          item =>
+            item.repairAbnormalTime != null && item.repairAbnormalTime != ""
+        );
+        if (time.length > 0) {
+          let day = time[0].repairAbnormalDay;
+          let date = new Date(time[0].repairAbnormalDay);
+          let week = util.countMapFilter(date.getDay(), "WEEK", "暂无");
+          return day + " " + week;
+        }
+        return "暂无";
+      }
+      return "暂无";
     },
     /**
      * 补卡异常类型

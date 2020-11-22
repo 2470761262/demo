@@ -599,16 +599,23 @@ export default {
      * 提交申请
      */
     apply() {
-      if (this.currentAccountId == null) {
+      // if (this.currentAccountId == null) {
+      //   this.$message({
+      //     message: "请选择员工",
+      //     type: "warning"
+      //   });
+      //   return;
+      // }
+      if (this.reason == null || this.reason.length == 0) {
         this.$message({
-          message: "请选择员工",
+          message: "请填写申请原因",
           type: "warning"
         });
         return;
       }
-      if (this.reason == null || this.reason.length == 0) {
+      if (this.reason.length < 10) {
         this.$message({
-          message: "请填写申请原因",
+          message: "申请原因最少10个字",
           type: "warning"
         });
         return;
