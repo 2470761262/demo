@@ -281,12 +281,12 @@ export default {
       });
     },
     getWorkEndTime(isShow = false) {
-      if (isShow) {
-        this.$message({
-          message: "二维码加载中.",
-          type: "success"
-        });
-      }
+      // if (isShow) {
+      //   this.$message({
+      //     message: "二维码加载中.",
+      //     type: "success"
+      //   });
+      // }
       this.$api
         .post({
           url: "/attendance/apply/checking/qrcode",
