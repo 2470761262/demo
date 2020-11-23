@@ -403,6 +403,13 @@ export default {
           let params = {
             applyType: 1
           };
+          if (this.formData.auditorList.length == 0) {
+            this.$message({
+              message: "审核人员不能为空",
+              type: "error"
+            });
+            return;
+          }
           this.addFormDataPictuer();
           Object.assign(params, JSON.parse(JSON.stringify(this.formData)));
           params.applyEndTime = this.applyEndTime;
