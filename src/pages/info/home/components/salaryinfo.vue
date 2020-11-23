@@ -144,7 +144,8 @@ export default {
   },
   methods: {
     setHidePirce() {
-      this.isHidePirce = !this.isHidePirce;
+      this.$message.success("功能升级中。");
+      // this.isHidePirce = !this.isHidePirce;
     },
     /**
      * @example: 获取基础信息
