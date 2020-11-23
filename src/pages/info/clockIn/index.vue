@@ -174,7 +174,7 @@
                   v-model="form.growth"
                   maxlength="200"
                   data-vv-validate-on="change"
-                  v-validate="'required|arrGTLength:10'"
+                  v-validate="'required|arrGTLength:1'"
                   data-vv-name="growth"
                   data-vv-as="今日总结"
                   show-word-limit
@@ -201,7 +201,7 @@
                   show-word-limit
                   resize="none"
                   data-vv-validate-on="change"
-                  v-validate="'required|arrGTLength:10'"
+                  v-validate="'required|arrGTLength:1'"
                   data-vv-name="share"
                   data-vv-as="今日案例分享"
                 >
