@@ -34,7 +34,11 @@
           <div class="clock-rule-conditions">
             <div class="conditions-box">
               <el-row :gutter="32">
-                <el-form label-position="right" label-width="64px">
+                <el-form
+                  label-position="right"
+                  label-width="64px"
+                  @submit.native.prevent
+                >
                   <el-col :span="6">
                     <el-form-item label="名人姓名">
                       <el-input

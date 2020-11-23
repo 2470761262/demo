@@ -342,6 +342,8 @@ export default {
                 this.deptRelateList.push(this.deptObj.list[addIndex]);
               }
             });
+            // 清空已选部门
+            this.deptCheckList = [];
           }
         })
         .finally(e => {
@@ -385,6 +387,8 @@ export default {
                 this.perRelateList.push(this.perObj.list[addIndex]);
               }
             });
+            // 清空已选人员
+            this.perCheckList = [];
           }
         })
         .finally(e => {
@@ -410,9 +414,9 @@ export default {
           if (e.data.code == 200) {
             this.deptRelateList = e.data.data;
             // 已关联数据添加默认勾选数据中
-            this.deptCheckList = this.deptRelateList.map(item => {
-              return item.nameId;
-            });
+            // this.deptCheckList = this.deptRelateList.map(item => {
+            //   return item.nameId;
+            // });
           }
         })
         .finally(e => {

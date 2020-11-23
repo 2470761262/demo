@@ -41,10 +41,7 @@
                   <el-input
                     v-model="applyStartTime"
                     v-show="false"
-                    v-validate="{
-                      required: true,
-                      isGreaterDate: [applyEndTime, '结束时间']
-                    }"
+                    v-validate="'required'"
                     data-vv-as="请假开始时间"
                     data-vv-name="applyStartTime"
                   >
@@ -63,8 +60,8 @@
                   <i></i>
                   <el-input
                     v-model="applyEndTime"
-                    v-show="false"
                     v-validate="'required'"
+                    v-show="false"
                     data-vv-as="请假结束时间"
                     data-vv-name="applyEndTime"
                   >
@@ -282,7 +279,7 @@ export default {
     return {
       color: ["#0DA88B", "#F6A420", "#EF5656"],
       restCurrent: [],
-      restCalendarTiem: [],
+      restCalendarTiem: util.format(new Date().getTime(), "yyyy-MM-dd"),
       dialogVisible: false,
       leaveSubTypeList: LEAVESUBTYPE,
       ruleTime: [
@@ -354,10 +351,7 @@ export default {
       }, //抄送json
       submitLoding: false,
       disabledInterval: [
-        [
-          "1970-01-01",
-          util.format(new Date().getTime() - 24 * 60 * 60 * 1000, "yyyy-MM-dd")
-        ]
+        ["1970-01-01", util.format(new Date().getTime(), "yyyy-MM-dd")]
       ]
     };
   },
@@ -441,6 +435,22 @@ export default {
      *@example:打开时间组件弹窗
      */
     openDateDialog(key) {
+      // 设置已选时间
+      if (key == "applyStart" && this.formData.applyStartTime) {
+        this.restCalendarTiem = this.formData.applyStartTime;
+        if (this.applyStartTime.includes("08:00:00")) {
+          this.dayDuration = 0;
+        } else {
+          this.dayDuration = 1;
+        }
+      } else if (key == "applyEnd" && this.formData.applyEndTime) {
+        this.restCalendarTiem = this.formData.applyEndTime;
+        if (this.applyEndTime.includes("08:00:00")) {
+          this.dayDuration = 0;
+        } else {
+          this.dayDuration = 1;
+        }
+      }
       this.dialogVisible = true;
       this.selectTimeKey = key;
     },
@@ -534,7 +544,6 @@ export default {
      * @example:上传图片之前事件
      */
     getPicture(e) {
-      console.log(file);
       let file = e.target.files;
       let isImgType = ["image/jpeg", "image/png"];
       if (file.length > 9) {
@@ -618,7 +627,6 @@ export default {
       }
       let value = this.duplicate.list[this.duplicate.value];
       let list = JSON.parse(JSON.stringify(this.formData.auditorList)); //人员数组
-      console.log(value);
       //判断是否存在该人员
       let filterAccount = list.filter(item => item.personId == value.accountId);
       if (filterAccount.length > 0) {

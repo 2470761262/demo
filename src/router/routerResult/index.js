@@ -188,7 +188,7 @@ export default [
       {
         path: "/clockRule/add",
         meta: {
-          keepAlive: true,
+          keepAlive: false,
           title: "添加考勤规则",
           // isScrollTop: true, //是否需要记录坐标
           // isMapNav: true, //不需要导航
@@ -202,7 +202,7 @@ export default [
       {
         path: "/clockRule/edit",
         meta: {
-          keepAlive: true,
+          keepAlive: false,
           title: "编辑考勤规则",
           // isScrollTop: true, //是否需要记录坐标
           // isMapNav: true, //不需要导航
@@ -232,7 +232,7 @@ export default [
   {
     path: "/askforLeave",
     meta: {
-      keepAlive: true,
+      keepAlive: false,
       title: "请假申请",
       // isScrollTop: true, //是否需要记录坐标
       // isMapNav: true, //不需要导航
@@ -246,7 +246,7 @@ export default [
   {
     path: "/leaveDetail",
     meta: {
-      keepAlive: true,
+      keepAlive: false,
       title: "请假申请详情页",
       // isScrollTop: true, //是否需要记录坐标
       //  isMapNav: true, //不需要导航
@@ -260,7 +260,7 @@ export default [
   {
     path: "/repairDetail",
     meta: {
-      keepAlive: true,
+      keepAlive: false,
       title: "补卡申请详情页",
       // isScrollTop: true, //是否需要记录坐标
       // isMapNav: true, //不需要导航

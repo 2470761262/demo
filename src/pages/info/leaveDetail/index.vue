@@ -65,6 +65,7 @@
                   :key="index"
                   :src="item.url"
                   fit="cover"
+                  :preview-src-list="srcList"
                 ></el-image>
               </div>
             </div>
@@ -235,6 +236,11 @@ export default {
       }
 
       return false;
+    },
+    srcList() {
+      return this.baseDetails.applyMediaList.map(item => {
+        return item.url;
+      });
     }
   },
   filters: {

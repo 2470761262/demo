@@ -135,7 +135,7 @@ export default {
     console.log(to, "fullPath--------");
     next(vm => {
       vm.currentSubNavIndex = vm.subNavs.findIndex(item => {
-        return item.path == to.fullPath;
+        return item.path == to.path;
       });
     });
   }
