@@ -511,6 +511,8 @@ export default {
       }
       this.formData[timeKey + "Time"] = this.restCalendarTiem;
       this.formData[timeKey + "Status"] = this.dayDuration;
+      this.formData.applyDuration = "";
+      this.formData.auditorList = [];
       this.getApplyDuration();
       this.dialogVisible = false;
     },
@@ -704,6 +706,10 @@ export default {
 </style>
 <style lang="less" scoped>
 /deep/.date-dialog {
+  .el-dialog {
+    box-shadow: 0px 8px 13px 0px rgba(68, 163, 163, 0.1);
+    border-radius: 8px;
+  }
   .el-dialog__header {
     padding: 0;
   }
