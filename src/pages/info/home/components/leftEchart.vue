@@ -357,7 +357,7 @@
           </div>
           <div class="rank-middle">
             <img :src="refresh.defaultBroker.userImage" alt="" />
-            <span class="per-name">{{ refresh.defaultBroker.name }}(我)</span>
+            <span class="per-name">{{ refresh.defaultBroker.name }}</span>
           </div>
           <div class="rank-value">
             <span>￥</span>
@@ -529,11 +529,6 @@ export default {
               ) {
                 case 1: //区域  只显示前3名的真实数据
                 case 2: //公司 显示前3名以外的真实数据
-                  if (i <= 2) {
-                    sumCommission = util.regexNum(
-                      v.sumCommission ? v.sumCommission.toFixed(2) : 0
-                    );
-                  }
                   if (i <= 2) {
                     sumCommission = util.regexNum(
                       v.sumCommission ? v.sumCommission.toFixed(2) : 0

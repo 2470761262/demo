@@ -357,9 +357,7 @@
           </div>
           <div class="rank-middle">
             <!-- <img :src="refresh.defaultBroker.userImage" alt="" /> -->
-            <span class="per-name"
-              >{{ refresh.defaultBroker.storeName }}(本店)</span
-            >
+            <span class="per-name">{{ refresh.defaultBroker.storeName }}</span>
           </div>
           <div class="rank-value">
             <span>￥</span>

@@ -33,12 +33,12 @@
       z-index: 10;
       background: rgba(255, 255, 255, 0.8);
       border-radius: 8px 8px 0 0;
-      backdrop-filter: blur(2px);
       display: flex;
       flex-direction: column;
       align-items: center;
       padding-top: 25px;
       box-sizing: border-box;
+      backdrop-filter: blur(2px);
       .refresh-qr {
         color: @backgroud;
         text-align: center;
@@ -72,16 +72,17 @@
         position: relative;
         .tips-refresh {
           position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
+          top: -10px;
+          left: -10px;
+          right: -10px;
+          bottom: -10px;
           display: flex;
           justify-content: center;
           align-items: center;
           font-size: @font14;
           color: #606266;
           background: rgba(255, 255, 255, 0.8);
+          backdrop-filter: blur(2px);
         }
       }
     }
