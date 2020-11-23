@@ -68,6 +68,22 @@
         font-weight: bold;
         margin-top: 18px;
       }
+      .posi-center {
+        position: relative;
+        .tips-refresh {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: @font14;
+          color: #606266;
+          background: rgba(255, 255, 255, 0.8);
+        }
+      }
     }
     .change-clock {
       padding-top: 4px;
@@ -198,7 +214,10 @@
     <div class="clock-posi">
       <div class="clock-qr" v-if="showQr">
         <div class="close-qr el-icon-close" @click="changeQr(false)"></div>
-        <div id="qr"></div>
+        <div class="posi-center">
+          <div id="qr"></div>
+          <div class="tips-refresh" v-if="tipsRefresh">二维码过期,请刷新</div>
+        </div>
         <div class="clock-qr-tips">手机微信扫码签到</div>
         <div class="refresh-qr">
           <div @click="getWorkEndTime(true)">
@@ -265,12 +284,17 @@ export default {
       qrUrl: null,
       isShowWordBtn: true,
       qrInstance: null,
-      visitFreedom: false
+      visitFreedom: false,
+      tipsRefresh: false,
+      tipsRefreshID: null
     };
   },
   created() {
     this.getWorkEndTime();
     this.getIsManager();
+  },
+  beforeDestroy() {
+    this.clearTimeout();
   },
   methods: {
     loadingFun() {
@@ -296,6 +320,7 @@ export default {
         })
         .then(({ data }) => {
           const result = data.data;
+          this.clearTimeout();
           if (result.qrcode) {
             this.showQr = true;
             this.qrUrl = result.qrcode;
@@ -314,6 +339,9 @@ export default {
                 this.qrInstance.makeCode(this.qrUrl);
                 this.qrInstance._el.title = "";
               }
+              this.tipsRefreshID = setTimeout(() => {
+                this.tipsRefresh = true;
+              }, 20000);
             });
             this.$message({
               message: "二维码加载完成.",
@@ -322,6 +350,10 @@ export default {
           }
           // this.isShowWordBtn = result.isShowWorkSummary;
         });
+    },
+    clearTimeout() {
+      clearTimeout(this.tipsRefreshID);
+      this.tipsRefresh = false;
     },
     navToPage() {
       this.$router.push({ path: "/clockIn" });
@@ -333,6 +365,7 @@ export default {
       this.showQr = bool;
       if (!this.showQr) {
         this.qrInstance = null;
+        this.clearTimeout();
       }
     },
     jumpToNoClock() {
