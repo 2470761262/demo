@@ -342,10 +342,10 @@ export default {
           this.ruleTime.forEach((item, index) => {
             doChecking.push({
               type: index + 1,
-              morningStartTime: item.morningTs[0],
-              morningEndTime: item.morningTs[1],
-              afternoonStartTime: item.afternoonTs[0],
-              afternoonEndTime: item.afternoonTs[1]
+              morningStartTime: item.morningTs ? item.morningTs[0] : "",
+              morningEndTime: item.morningTs ? item.morningTs[1] : "",
+              afternoonStartTime: item.afternoonTs ? item.afternoonTs[0] : "",
+              afternoonEndTime: item.afternoonTs ? item.afternoonTs[1] : ""
             });
           });
           let specialDoChecking = this.workCalendarDays.map(item => {
