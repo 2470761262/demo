@@ -168,6 +168,9 @@
               }
             }
           }
+          .line {
+            margin-top: -24px;
+          }
         }
       }
       .log-time {
@@ -364,18 +367,30 @@
               <div class="item-time">
                 {{ detailt.morningCheckInTime || "暂无" }}
               </div>
-              <div class="item-type" data-type="normal">
-                {{ detailt.morningCheckInResult | getText }}
+              <div class="item-type" :data-type="detailt.morningCheckInTypeOn">
+                {{ detailt.morningOnDutyResult | getText }}
+              </div>
+              <div class="item-type" :data-type="detailt.morningCheckInTypeOff">
+                {{ detailt.morningOffDutyResult | getText }}
               </div>
             </div>
-            <div>/</div>
+            <div class="line">/</div>
             <div class="flex-item">
               <div class="itme-title">上班</div>
               <div class="item-time">
                 {{ detailt.afternoonCheckInTime || "暂无" }}
               </div>
-              <div class="item-type" data-type="error">
-                {{ detailt.afternoonCheckInResult | getText }}
+              <div
+                class="item-type"
+                :data-type="detailt.afternoonCheckInTypeOn"
+              >
+                {{ detailt.afternoonOnDutyResult | getText }}
+              </div>
+              <div
+                class="item-type"
+                :data-type="detailt.afternoonCheckInTypeOff"
+              >
+                {{ detailt.afternoonOffDutyResult | getText }}
               </div>
             </div>
           </div>
@@ -418,7 +433,7 @@ export default {
   },
   filters: {
     getText(value) {
-      if (value == null || value == "") return "暂无";
+      if (value == null || value === "") return "暂无";
       const text = ["正常", "迟到", "早退", "旷工", "请假", "迟到早退"];
       return text[value];
     },
@@ -551,8 +566,12 @@ export default {
         .then(({ data }) => {
           this.detailt = {
             ...data.data,
-            morningCheckInType: textColor(data.data.morningCheckInResult),
-            afternoonCheckInType: textColor(data.data.afternoonCheckInResult)
+            morningCheckInTypeOff: textColor(data.data.morningOffDutyResult), //早上颜色状态
+            morningCheckInTypeOn: textColor(data.data.morningOnDutyResult), //早上颜色状态
+            afternoonCheckInTypeOff: textColor(
+              data.data.afternoonOffDutyResult
+            ), //下午颜色状态
+            afternoonCheckInTypeOn: textColor(data.data.afternoonOnDutyResult) //下午颜色状态
           };
         });
     }

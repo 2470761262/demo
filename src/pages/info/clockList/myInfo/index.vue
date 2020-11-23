@@ -686,9 +686,15 @@
                       </div>
                       <div
                         class="clock-result-type"
-                        :data-type="item.morningCheckInType"
+                        :data-type="item.morningCheckInTypeOn"
                       >
-                        {{ item.morningCheckInResult | getText }}
+                        {{ item.morningOnDutyResult | getText }}
+                      </div>
+                      <div
+                        class="clock-result-type"
+                        :data-type="item.morningCheckInTypeOff"
+                      >
+                        {{ item.morningOffDutyResult | getText }}
                       </div>
                     </div>
                   </div>
@@ -700,9 +706,15 @@
                       </div>
                       <div
                         class="clock-result-type"
-                        :data-type="item.afternoonCheckInType"
+                        :data-type="item.afternoonCheckInTypeOn"
                       >
-                        {{ item.afternoonCheckInResult | getText }}
+                        {{ item.afternoonOnDutyResult | getText }}
+                      </div>
+                      <div
+                        class="clock-result-type"
+                        :data-type="item.afternoonCheckInTypeOff"
+                      >
+                        {{ item.afternoonOffDutyResult | getText }}
                       </div>
                     </div>
                   </div>
@@ -1010,7 +1022,7 @@ export default {
   },
   filters: {
     getText(value) {
-      if (value == null || value == "") return "暂无";
+      if (value == null || value === "") return "暂无";
       const text = ["正常", "迟到", "早退", "旷工", "请假", "迟到早退"];
       return text[value];
     }
@@ -1156,8 +1168,10 @@ export default {
         })
         .then(({ data }) => {
           refresh.renderList = data.data.list.map((v, i) => {
-            let morningCheckInType = textColor(v.morningCheckInResult); //早上颜色状态
-            let afternoonCheckInType = textColor(v.afternoonCheckInResult); //下午颜色状态
+            let morningCheckInTypeOff = textColor(v.morningOffDutyResult); //早上颜色状态
+            let morningCheckInTypeOn = textColor(v.morningOnDutyResult); //早上颜色状态
+            let afternoonCheckInTypeOff = textColor(v.afternoonOffDutyResult); //下午颜色状态
+            let afternoonCheckInTypeOn = textColor(v.afternoonOnDutyResult); //下午颜色状态
             let week = getDay(v.attendanceDate);
             let attendanceText = v.attendanceType ? "无需考勤" : "正常考勤";
             let summaryCheckStatusType = getSummaryCheckStatusType(
@@ -1166,8 +1180,10 @@ export default {
             return {
               ...v,
               ...{
-                morningCheckInType,
-                afternoonCheckInType,
+                morningCheckInTypeOff,
+                morningCheckInTypeOn,
+                afternoonCheckInTypeOff,
+                afternoonCheckInTypeOn,
                 week,
                 attendanceText,
                 summaryCheckStatusType
