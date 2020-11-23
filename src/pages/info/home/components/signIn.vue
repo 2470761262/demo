@@ -348,7 +348,7 @@ export default {
               type: "success"
             });
           }
-          // this.isShowWordBtn = result.isShowWorkSummary;
+          this.isShowWordBtn = result.isShowWorkSummary;
         });
     },
     clearTimeout() {
