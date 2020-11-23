@@ -98,6 +98,7 @@
 
 <script>
 export default {
+  inject: ["parentInstance"],
   created() {
     this.getDate();
   },
@@ -108,9 +109,15 @@ export default {
   },
   methods: {
     navToPage() {
-      this.$router.push({
-        path: "/managementEntrance/business"
-      });
+      if (this.parentInstance.roleConfig.isGoToManagementOnIndex) {
+        this.$router.push({
+          path: "/managementEntrance/business"
+        });
+      } else {
+        this.$router.push({
+          path: "/myHouse/myRole"
+        });
+      }
     },
     /**
      * @example: 获取数据
