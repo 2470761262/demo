@@ -764,32 +764,6 @@
         <div class="list-right">
           <div class="posi-sticky">
             <ls-collapse v-model="activeCollapse">
-              <ls-collapse-item sign="calendar" :title="collapseTile">
-                <!-- 
-                      :is-empty="false"
-                   -->
-                <ls-calendar
-                  choice="multiple"
-                  @change="setChangeList"
-                  @headChange="headChange"
-                  v-model="refresh.calendarTiem"
-                >
-                  <!-- <template v-slot:dots="{ col }">
-                    <div
-                      class="calendar-dots"
-                      :class="{ 'is-hide': refresh.calendarTiem == col.time }"
-                      :style="{ 'background-color': color[col.type] }"
-                    ></div>
-                  </template>
-                  <template v-slot:foot>
-                    <div class="calendar-foot">
-                      <div class="calendar-foot-item">考勤正常</div>
-                      <div class="calendar-foot-item">考勤异常</div>
-                      <div class="calendar-foot-item">无考勤</div>
-                    </div>
-                  </template> -->
-                </ls-calendar>
-              </ls-collapse-item>
               <ls-collapse-item
                 sign="calendar1"
                 :title="`我的管理(${mySlave.count})`"
@@ -885,6 +859,32 @@
                   </div>
                 </template>
               </ls-collapse-item>
+              <ls-collapse-item sign="calendar" :title="collapseTile">
+                <!-- 
+                      :is-empty="false"
+                   -->
+                <ls-calendar
+                  choice="multiple"
+                  @change="setChangeList"
+                  @headChange="headChange"
+                  v-model="refresh.calendarTiem"
+                >
+                  <!-- <template v-slot:dots="{ col }">
+                    <div
+                      class="calendar-dots"
+                      :class="{ 'is-hide': refresh.calendarTiem == col.time }"
+                      :style="{ 'background-color': color[col.type] }"
+                    ></div>
+                  </template>
+                  <template v-slot:foot>
+                    <div class="calendar-foot">
+                      <div class="calendar-foot-item">考勤正常</div>
+                      <div class="calendar-foot-item">考勤异常</div>
+                      <div class="calendar-foot-item">无考勤</div>
+                    </div>
+                  </template> -->
+                </ls-calendar>
+              </ls-collapse-item>
             </ls-collapse>
           </div>
         </div>
@@ -949,7 +949,7 @@ export default {
   },
   data() {
     return {
-      activeCollapse: "calendar",
+      activeCollapse: "calendar1",
       color: ["#0DA88B", "#F6A420", "#EF5656"],
       currentNavIndex: 0,
       currentSubNavIndex: 0,
