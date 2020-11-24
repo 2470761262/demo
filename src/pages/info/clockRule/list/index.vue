@@ -45,7 +45,7 @@
                     ></el-input>
                   </el-form-item>
                 </el-col>
-                <el-col :span="6">
+                <!-- <el-col :span="6">
                   <el-form-item label="启用状态">
                     <el-select
                       class="width100"
@@ -62,7 +62,7 @@
                       ></el-option>
                     </el-select>
                   </el-form-item>
-                </el-col>
+                </el-col> -->
                 <el-col :span="6" class="fr">
                   <div class="conditions-btn">
                     <div class="btn" @click="reset">重置</div>
