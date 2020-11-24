@@ -634,7 +634,7 @@
           <div class="list-flex">
             <div class="list-tab">
               <div class="list-tab-head">
-                <div class="list-tab-col">考勤日志</div>
+                <div class="list-tab-col">考勤日期</div>
                 <div class="list-tab-col">考勤人</div>
                 <div class="list-tab-col">上午考勤</div>
                 <div class="list-tab-col">下午考勤</div>
