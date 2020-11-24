@@ -1019,6 +1019,7 @@ export default {
   created() {
     this.getList();
     this.getMySlaveList();
+    this.getMyInterestList();
   },
   filters: {
     getText(value) {
