@@ -601,7 +601,6 @@ export default {
             ) {
               case 1: //区域  只显示前3名的真实数据
               case 2: //公司 显示前3名以外的真实数据
-                console.log(i, sumCommission, v.sumCommission);
                 if (i <= 2 && typeof v.sumCommission != "string") {
                   sumCommission = util.regexNum(
                     v.sumCommission ? v.sumCommission.toFixed(2) : 0
