@@ -201,7 +201,6 @@
               <div class="table">
                 <el-table
                   :data="tableData"
-                  height="100%"
                   v-loading="loading"
                   ref="tableList"
                   @row-dblclick="rowDblclick"
@@ -824,14 +823,14 @@ export default {
       display: none;
     }
     .container {
-      display: flex;
+      // display: flex;
       padding: 24px;
       overflow: auto;
       &::-webkit-scrollbar {
         display: none;
       }
       .main {
-        flex: 1;
+        // flex: 1;
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -839,7 +838,7 @@ export default {
         box-shadow: 0px 8px 13px 0px rgba(68, 163, 163, 0.1);
         border-radius: 8px;
         .wrapper {
-          flex: 1;
+          // flex: 1;
           display: flex;
           flex-direction: row;
           padding: 0 24px;

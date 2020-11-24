@@ -744,8 +744,8 @@ export default {
                 box-sizing: border-box;
                 .row {
                   display: inline-block;
-                  margin-bottom: 14px;
-                  line-height: 1;
+                  margin-bottom: 12px;
+                  line-height: 18px;
                   font-size: @font12;
                   color: #606266;
                   &:last-child {

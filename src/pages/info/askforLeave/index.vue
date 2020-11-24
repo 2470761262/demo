@@ -4,6 +4,19 @@
     <div class="center">
       <div class="main">
         <div class="panel rule">
+          <div class="tip-container" v-if="formData.applySubType">
+            <div class="tip-title">
+              温馨提示（{{ tipDetail[formData.applySubType].title }}）
+            </div>
+            <ul class="tip-detail">
+              <li
+                v-for="(item, index) in tipDetail[formData.applySubType].list"
+                :key="index"
+              >
+                {{ item }}
+              </li>
+            </ul>
+          </div>
           <div class="ipt-box">
             <div
               :class="{ 'after-tips': errorBags.has('applySubType') }"
@@ -71,7 +84,7 @@
             </div>
           </div>
           <div class="ipt-box">
-            <label for="" class="label noRequire">总时长</label>
+            <label for="" class="label noRequire">总时长（天）</label>
             <el-input
               class="ipt"
               v-model="formData.applyDuration"
@@ -267,6 +280,55 @@
   </div>
 </template>
 <script>
+const TIPDETAIL = {
+  11: {
+    title: "事假",
+    list: [
+      "业务人员请事假每半天敬畏扣分2.5分；",
+      "非业务人员请事假扣除对应的基础底薪；",
+      "事假超过3天，系统账号将锁定；",
+      "事假超过30天，产生的业绩抽成将不发放，事假结束后发放；"
+    ]
+  },
+  12: {
+    title: "病假",
+    list: [
+      "请病假请上传相关的凭证；",
+      "非业务人员请病假，对应天数的基础底薪发放60%；"
+    ]
+  },
+  13: {
+    title: "婚假",
+    list: ["本人结婚", "假期为3天"]
+  },
+  14: {
+    title: "产假",
+    list: [
+      "非业务人员产假，发放基础生活保障；",
+      "业务人员产假，产生抽成正常发放；",
+      "产假为90天；"
+    ]
+  },
+  15: {
+    title: "丧假",
+    list: ["直系亲属或旁系去世；", "假期为3天；"]
+  },
+  16: {
+    title: "公休",
+    list: [
+      "非业务人员为统一公休，无需请假；",
+      "非业务人员，因工作需求调整公休，可申请；",
+      "业务人员，每月4天公休假，最少0.5天计算；"
+    ]
+  },
+  17: {
+    title: "年假",
+    list: [
+      "工龄大于12个月，才享有年假；",
+      "年假为5天，本年度未休完不可累积到下一年度"
+    ]
+  }
+};
 import lsCalendar from "@/pages/info/components/calendar";
 import { LEAVESUBTYPE } from "@/util/constMap.js";
 import util from "@/util/util.js";
@@ -352,7 +414,8 @@ export default {
       submitLoding: false,
       disabledInterval: [
         ["1970-01-01", util.format(new Date().getTime(), "yyyy-MM-dd")]
-      ]
+      ],
+      tipDetail: TIPDETAIL
     };
   },
   filters: {
@@ -857,6 +920,40 @@ export default {
         display: none;
       }
       .rule {
+        position: relative;
+        .tip-container {
+          position: absolute;
+          top: 40px;
+          right: 24px;
+          width: 390px;
+          padding: 24px;
+          background: #fef4ea;
+          box-sizing: border-box;
+          border-radius: 4px;
+          .tip-title {
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: @font20;
+          }
+          .tip-detail li {
+            position: relative;
+            padding-left: 10px;
+            margin-bottom: 8px;
+            line-height: 20px;
+            color: #333;
+            font-size: @font14;
+            &::before {
+              content: "";
+              position: absolute;
+              top: 7px;
+              left: 0;
+              width: 6px;
+              height: 6px;
+              border-radius: 3px;
+              background: #f56c6c;
+            }
+          }
+        }
         .ipt-gather {
           display: flex;
           justify-content: space-between;
