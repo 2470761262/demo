@@ -317,6 +317,8 @@
           <!-- 如果需要显示is-fixed 则需要加上这个样式is-emplt-split -->
           <div
             class="scroll-pad"
+            v-infinite-scroll="loadPage"
+            infinite-scroll-immediate
             :class="{ 'is-emplt-split': isDefaultBroker }"
           >
             <div
@@ -349,6 +351,7 @@
               />
               <div>暂无数据</div>
             </div>
+            <div v-if="isEndPage">已经到底部了</div>
           </div>
         </el-scrollbar>
         <div class="is-fixed" v-if="isDefaultBroker">
@@ -396,6 +399,24 @@ export default {
         echartInstance: null, //图标实例
         rankType: 0, //激活下标
         renderlist: [], //激活
+        shopListPage: {
+          //门店分页
+          limit: 10,
+          currentPage: 1,
+          totalPage: 1
+        },
+        areaListPage: {
+          //区域分页
+          limit: 10,
+          currentPage: 1,
+          totalPage: 1
+        },
+        companyListPage: {
+          //公司分页
+          limit: 10,
+          currentPage: 1,
+          totalPage: 1
+        },
         shopList: {
           list: [],
           defaultBroker: {}
@@ -411,7 +432,12 @@ export default {
         defaultBroker: {}
       },
       choiceList: [
-        { title: "公司排名", type: 2, cacheList: "shopList" },
+        {
+          title: "公司排名",
+          type: 2,
+          cacheList: "shopList",
+          loadDisabled: true
+        },
         // { title: "团队级别排名", type: 3, cacheList: "areaList" },
         { title: "区域排名", type: 3, cacheList: "companyList" }
       ],
@@ -422,6 +448,22 @@ export default {
     };
   },
   computed: {
+    /**
+     * @example:
+     */
+
+    isEndPage() {
+      const active = this.choiceList[this.refresh.rankType];
+      const activePage = this.refresh[active.cacheList + "Page"];
+      if (
+        !active.loadDisabled &&
+        activePage.currentPage > 1 &&
+        activePage.currentPage > activePage.totalPage
+      ) {
+        return true;
+      }
+      return false;
+    },
     nowTime() {
       return util.format(new Date(), "yyyy-MM-dd");
     },
@@ -434,9 +476,25 @@ export default {
     }
   },
   created() {
-    this.getList();
+    this.loadPage();
   },
   methods: {
+    /**
+     * @example: 分页加载
+     */
+
+    loadPage() {
+      const active = this.choiceList[this.refresh.rankType];
+      const activePage = this.refresh[active.cacheList + "Page"];
+      const isFirst = this.refresh[active.cacheList].list.length == 0;
+      if (
+        (!active.loadDisabled &&
+          activePage.currentPage <= activePage.totalPage) ||
+        isFirst
+      ) {
+        this.getList(activePage.currentPage, isFirst);
+      }
+    },
     /**
      * @example: 获取经纪人数据
      */
@@ -489,9 +547,10 @@ export default {
     /**
      * @example:  获取列表数据
      */
-    getList() {
+    getList(page = 1, reset = true) {
       const active = this.choiceList[this.refresh.rankType];
-      if (this.refresh[active.cacheList].list.length > 0) {
+      const activePage = this.refresh[active.cacheList + "Page"];
+      if (this.refresh[active.cacheList].list.length > 0 && reset) {
         this.refresh.renderlist = this.refresh[active.cacheList].list;
         this.refresh.defaultBroker = this.refresh[
           active.cacheList
@@ -509,18 +568,24 @@ export default {
         return;
       }
       this.loading = true;
-      this.$api
+      return this.$api
         .get({
           url: "/statistics/index/rank-list/store",
           data: {
             rankType: active.type,
             date: util.format(this.realTime, "yyyy-MM") + "-01",
             limit: 10,
+            page,
             id: this.checkId
           }
         })
         .then(({ data }) => {
-          const brokerRankList = (data.data.storeRankList || []).map((v, i) => {
+          const brokerRankList = data.data.storeRankList.list || [];
+          //缓存对应数据
+          this.refresh[active.cacheList].list = [
+            ...this.refresh[active.cacheList].list,
+            ...brokerRankList
+          ].map((v, i) => {
             let sumCommission = "****";
 
             switch (
@@ -528,7 +593,7 @@ export default {
             ) {
               case 0: //公司 只显示第一名的真实数据
               case 1: //区域  只显示前3名的真实数据
-                if (i == 0) {
+                if (i == 0 && typeof v.sumCommission != "string") {
                   sumCommission = util.regexNum(
                     v.sumCommission ? v.sumCommission.toFixed(2) : 0
                   );
@@ -546,15 +611,13 @@ export default {
               sumCommission
             };
           });
-          //缓存对应数据
-          this.refresh[active.cacheList].list = brokerRankList;
           //赋值给渲染数组
           this.refresh.renderlist = this.refresh[active.cacheList].list;
 
           //显示底部默认经纪人
           const defaultBroker = data.data.defaultStore;
 
-          if (defaultBroker && Object.keys(defaultBroker).length > 0) {
+          if (defaultBroker && Object.keys(defaultBroker).length > 0 && reset) {
             this.refresh[active.cacheList].defaultBroker = {
               ...defaultBroker,
               ...{
@@ -579,11 +642,15 @@ export default {
             });
           } else {
             this.refresh.echartInstance &&
+              reset &&
               this.refresh.echartInstance.dispose();
           }
           this.loading = false;
+          activePage.totalPage = data.data.storeRankList.totalPage;
+          activePage.currentPage++;
         })
-        .catch(() => {
+        .catch(e => {
+          console.log(e);
           this.loading = false;
         });
     },
