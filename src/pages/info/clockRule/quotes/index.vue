@@ -149,6 +149,17 @@
       v-if="editQuotesDialogVisible"
       @edit="edit"
     ></edit-quotes-dialog>
+    <fixed-popup
+      style-type="0"
+      @confirmEmit="delSubmit"
+      :visible.sync="delVisit"
+      width="412px"
+      title="确认删除"
+    >
+      <div class="pop-content">
+        您确认要删除选中的数据吗？删除后，数据将不可恢复。
+      </div>
+    </fixed-popup>
   </div>
 </template>
 <script>
@@ -160,6 +171,7 @@ export default {
   components: { addQuotesDialog, editQuotesDialog },
   data() {
     return {
+      delVisit: false,
       currentSubNavIndex: 1,
       subSecondNavs: [
         {
@@ -292,25 +304,23 @@ export default {
      * @param {id}  名言id
      */
     deleteClick(id) {
-      this.$confirm("您确定要删除选中的数据吗?删除后，数据将不可恢复", {
-        confirmButtonText: "扔要删除",
-        cancelButtonText: "我再想想",
-        title: "温馨提示",
-        center: true
-      }).then(() => {
-        this.$api
-          .post({
-            url: `/attendance/famouseWork/deleteById?id=${id}`
-          })
-          .then(e => {
-            this.$message({
-              message: e.data.message
-            });
-            if (e.data.code == 200) {
-              this.query();
-            }
+      this.delVisit = true;
+      this.delId = id;
+    },
+    delSubmit() {
+      this.$api
+        .post({
+          url: `/attendance/famouseWork/deleteById?id=${this.delId}`
+        })
+        .then(e => {
+          this.$message({
+            message: e.data.message
           });
-      });
+          if (e.data.code == 200) {
+            this.query();
+          }
+          this.delVisit = false;
+        });
     }
   }
 };
@@ -751,5 +761,12 @@ export default {
       }
     }
   }
+}
+.pop-content {
+  height: 62px;
+  padding-top: 32px;
+  line-height: 30px;
+  font-size: @font18;
+  color: #606266;
 }
 </style>
