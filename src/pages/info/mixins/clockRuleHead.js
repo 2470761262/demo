@@ -5,7 +5,7 @@ export default {
       currentSubNavIndex: 0,
       navs: [
         {
-          name: "考勤汇总",
+          name: "考勤日志",
           path: "/clockList"
         },
         {
@@ -45,33 +45,6 @@ export default {
     };
   },
   created() {
-    // let functionRuleList = [
-    //   {
-    //     name: "我的日志",
-    //     path: "/clockList/myInfo",
-    //     rUrl: "workSummary"
-    //   },
-    //   {
-    //     name: "考勤统计",
-    //     path: "/clockList/statistic",
-    //     rUrl: "statistics"
-    //   },
-    //   {
-    //     name: "考勤审批",
-    //     path: "/clockList/examine",
-    //     rUrl: "audit"
-    //   },
-    //   {
-    //     name: "考勤规则管理",
-    //     path: "/clockRule/list",
-    //     rUrl: "rule"
-    //   },
-    //   {
-    //     name: "名言警句配置",
-    //     path: "/clockRule/quotes",
-    //     rUrl: "famous"
-    //   }
-    // ];
     this.$api
       .get({
         url: "/attendance/record/functions",
@@ -132,7 +105,6 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-    console.log(to, "fullPath--------");
     next(vm => {
       vm.currentSubNavIndex = vm.subNavs.findIndex(item => {
         return item.path == to.path;

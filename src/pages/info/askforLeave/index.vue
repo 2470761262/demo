@@ -30,6 +30,7 @@
                 v-validate="'required'"
                 data-vv-as="请假类型"
                 data-vv-name="applySubType"
+                @change="applySubTypeChange"
               >
                 <el-option
                   v-for="item in leaveSubTypeList"
@@ -223,7 +224,7 @@
             <div class="detail">
               <div class="author-box">
                 <div class="author">{{ userInfo.userName | emptyRead }}</div>
-                <div class="tag">{{ userInfo.postName | emptyRead }}</div>
+                <div class="tag">{{ userInfo.roleName | emptyRead }}</div>
               </div>
               <div class="business-box">
                 <div class="business">
@@ -544,7 +545,16 @@ export default {
       }
       return false;
     },
-
+    /**
+     * @example:请假类型改变事件
+     */
+    applySubTypeChange() {
+      if (this.formData.applyStartTime && this.formData.applyEndTime) {
+        this.formData.applyDuration = "";
+        this.formData.auditorList = [];
+        this.getApplyDuration();
+      }
+    },
     /**
      *@example:时间选择事件
      */
@@ -926,14 +936,14 @@ export default {
           top: 40px;
           right: 24px;
           width: 390px;
-          padding: 24px;
+          padding: 20px;
           background: #fef4ea;
           box-sizing: border-box;
           border-radius: 4px;
           .tip-title {
             margin-bottom: 15px;
             font-weight: bold;
-            font-size: @font20;
+            font-size: @font16;
           }
           .tip-detail li {
             position: relative;
