@@ -497,7 +497,7 @@ export default {
       const isFirst = this.refresh[active.cacheList].list.length == 0;
       if (
         (!active.loadDisabled &&
-          activePage.currentPage < activePage.totalPage) ||
+          activePage.currentPage <= activePage.totalPage) ||
         isFirst
       ) {
         this.getList(activePage.currentPage, isFirst);
@@ -662,6 +662,7 @@ export default {
           }
           this.loading = false;
           activePage.totalPage = data.data.brokerRankList.totalPage;
+          activePage.currentPage++;
         })
         .catch(() => {
           this.loading = false;
