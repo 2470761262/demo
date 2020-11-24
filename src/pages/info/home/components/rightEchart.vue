@@ -597,6 +597,10 @@ export default {
                   sumCommission = util.regexNum(
                     v.sumCommission ? v.sumCommission.toFixed(2) : 0
                   );
+                } else {
+                  if (v.sumCommission && typeof v.sumCommission == "string") {
+                    sumCommission = v.sumCommission;
+                  }
                 }
                 break;
             }
