@@ -322,7 +322,7 @@
                     </template>
                   </el-table-column>
                 </el-table>
-                <!-------------------------- 考勤数据 ---------------------------->
+                <!-------------------------- 考勤扣分 ---------------------------->
                 <el-table
                   v-else
                   :data="tableData"
@@ -381,7 +381,7 @@
                   </el-table-column>
                   <el-table-column
                     min-width="110"
-                    label="考勤"
+                    label="考勤扣分"
                     align="left"
                     show-overflow-tooltip
                   >
@@ -389,22 +389,22 @@
                       <div
                         class="attendance-beLate"
                         v-if="
-                          scope.row.beLateNum == 0 &&
-                            scope.row.absenceNum == 0 &&
-                            scope.row.leaveEarlyNum == 0
+                          scope.row.beLatePoint == 0 &&
+                            scope.row.absencePoint == 0 &&
+                            scope.row.leaveEarlyPoint == 0
                         "
                       >
                         无异常
                       </div>
-                      <div class="attendance-beLate" v-else>
-                        <div class="item" v-if="scope.row.beLateNum != 0">
-                          迟到：{{ scope.row.beLateNum }}次
+                      <div class="attendance-beLate">
+                        <div class="item" v-if="scope.row.beLatePoint != 0">
+                          迟到：{{ scope.row.beLatePoint }}分
                         </div>
-                        <div class="item" v-if="scope.row.absenceNum != 0">
-                          旷工：{{ scope.row.absenceNum }}天
+                        <div class="item" v-if="scope.row.absencePoint != 0">
+                          旷工：{{ scope.row.absencePoint }}分
                         </div>
-                        <div class="item" v-if="scope.row.leaveEarlyNum != 0">
-                          早退：{{ scope.row.leaveEarlyNum }}次
+                        <div class="item" v-if="scope.row.leaveEarlyPoint != 0">
+                          早退：{{ scope.row.leaveEarlyPoint }}分
                         </div>
                       </div>
                     </template>

@@ -926,14 +926,14 @@ export default {
           top: 40px;
           right: 24px;
           width: 390px;
-          padding: 24px;
+          padding: 20px;
           background: #fef4ea;
           box-sizing: border-box;
           border-radius: 4px;
           .tip-title {
             margin-bottom: 15px;
             font-weight: bold;
-            font-size: @font20;
+            font-size: @font16;
           }
           .tip-detail li {
             position: relative;
