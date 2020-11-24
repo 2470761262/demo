@@ -756,7 +756,7 @@
               :page-size="refresh.page.pagesize"
               layout="total,prev, pager, next, jumper"
               :total="refresh.page.total"
-              @current-change="getList"
+              @current-change="paginationChange"
             >
             </el-pagination>
           </div>
@@ -1029,6 +1029,10 @@ export default {
     }
   },
   methods: {
+    paginationChange() {
+      document.querySelector(".scroll").scrollTop = 0;
+      this.getList();
+    },
     /**
      * @example: 前往日志详情
      */
