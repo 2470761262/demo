@@ -488,6 +488,7 @@ export default {
     document
       .querySelector("#broker .el-scrollbar__wrap")
       .addEventListener("scroll", this.scroll);
+    //11
   },
   beforeDestroy() {
     document
