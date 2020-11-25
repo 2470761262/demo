@@ -30,7 +30,7 @@ export default {
     };
   },
   created() {
-    //12423424
+    //1242342423232
     this.getTime();
   },
   methods: {
