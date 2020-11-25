@@ -372,8 +372,8 @@ export default {
           sortable: true
         },
         {
-          prop: "normalOnlyNum",
-          label: "普通委托量",
+          prop: "realNum",
+          label: "实勘房源量",
           minWidth: "150",
           align: "right",
           sortable: true

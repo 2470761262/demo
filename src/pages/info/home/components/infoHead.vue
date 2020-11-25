@@ -30,6 +30,7 @@ export default {
     };
   },
   created() {
+    //1242342423232
     this.getTime();
   },
   methods: {

@@ -252,9 +252,9 @@
       </div>
     </div>
 
-    <!-- 录入时间 -->
+    <!-- 提交时间 -->
     <div class="search-item">
-      <div class="search-item-title ">录入时间</div>
+      <div class="search-item-title ">提交时间</div>
       <div class="search-item-body">
         <el-date-picker
           v-model="form.time"
@@ -264,7 +264,7 @@
           end-placeholder="结束日期"
           :default-time="['00:00:00', '23:59:59']"
           class="anchor-point"
-          :data-anchor="'我的验真 录入时间:' + form.time"
+          :data-anchor="'我的验真 提交时间:' + form.time"
         >
         </el-date-picker>
       </div>
