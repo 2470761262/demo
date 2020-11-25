@@ -401,7 +401,7 @@ export default {
         renderlist: [], //激活
         shopListPage: {
           //门店分页
-          limit: 10,
+          limit: 999,
           currentPage: 1,
           totalPage: 1
         },
@@ -582,7 +582,7 @@ export default {
           data: {
             rankType: active.type,
             date: util.format(this.realTime, "yyyy-MM") + "-01",
-            limit: 10,
+            limit: activePage.limit,
             id: this.checkId,
             page
           }
