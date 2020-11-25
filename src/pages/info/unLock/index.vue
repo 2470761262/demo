@@ -369,10 +369,10 @@
           >
           </el-input>
         </div>
-        <div class="title">
+        <div class="title" :v-if="this.infoData.haveParent">
           审批人员
         </div>
-        <div class="examine-per">
+        <div class="examine-per" :v-if="this.infoData.haveParent">
           <img :src="this.infoData.upHeadImg | defaultImg" alt="" />
           <div class="examine-middle">
             <div class="examine-title">{{ this.infoData.upName }}</div>
@@ -409,10 +409,10 @@
         >
           {{ this.applyData.reason }}
         </div>
-        <div class="title">
+        <div class="title" :v-if="this.applyData.haveParent">
           审批人员
         </div>
-        <div class="examine-per">
+        <div class="examine-per" :v-if="this.applyData.haveParent">
           <img :src="this.applyData.upUserImg | defaultImg" alt="" />
           <div class="examine-middle">
             <div class="examine-title">{{ this.applyData.upUserName }}</div>
