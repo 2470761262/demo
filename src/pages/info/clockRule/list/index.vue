@@ -459,8 +459,7 @@ export default {
       border-radius: 8px;
       .wrapper {
         min-height: 189px;
-        padding: 0 24px;
-        margin: 24px 0 27px;
+        padding: 24px 24px 27px;
         display: grid;
         justify-content: space-between;
         grid-template-columns: repeat(auto-fill, 268px);
