@@ -131,7 +131,7 @@
         #fff;
       height: 58px;
       box-shadow: 0px 3px 13px 0px rgba(147, 147, 147, 0.1);
-      .scrollbar> .data-item;
+      .scrollbar > .data-item;
       margin-bottom: 0;
     }
     .scrollbar {
@@ -317,8 +317,6 @@
           <!-- 如果需要显示is-fixed 则需要加上这个样式is-emplt-split -->
           <div
             class="scroll-pad"
-            v-infinite-scroll="loadPage"
-            infinite-scroll-immediate
             :class="{ 'is-emplt-split': isDefaultBroker }"
           >
             <div
@@ -478,7 +476,22 @@ export default {
   created() {
     this.loadPage();
   },
+  mounted() {
+    document
+      .querySelector("#store .el-scrollbar__wrap")
+      .addEventListener("scroll", this.scroll);
+  },
+  beforeDestroy() {
+    document
+      .querySelector("#store .el-scrollbar__wrap")
+      .removeEventListener("scroll", this.scroll);
+  },
   methods: {
+    scroll({ target }) {
+      if (target.scrollTop + target.clientHeight == target.scrollHeight) {
+        this.loadPage();
+      }
+    },
     /**
      * @example: 分页加载
      */
