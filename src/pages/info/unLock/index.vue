@@ -369,6 +369,18 @@
           >
           </el-input>
         </div>
+        <div class="title">
+          审批人员
+        </div>
+        <div class="examine-per">
+          <img :src="this.infoData.upHeadImg | defaultImg" alt="" />
+          <div class="examine-middle">
+            <div class="examine-title">{{ this.infoData.upName }}</div>
+            <div class="examine-dept">
+              {{ this.infoData.upDeptName }}（{{ this.infoData.upPostName }}）
+            </div>
+          </div>
+        </div>
       </div>
       <div class="foot">
         <button class="reset" @click="reset">重置</button>
