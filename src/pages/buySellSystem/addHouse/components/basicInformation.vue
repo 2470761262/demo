@@ -350,6 +350,7 @@
           v-validate="'required|phoneLen|phone'"
           data-anchor="添加房源业主手机号 => input"
           :disabled="validatePhoneInputEnable"
+          @input="verifyTel(formData.tel)"
           clearable
         >
           <div slot="prepend" class="item-before" data-before="*">
@@ -822,6 +823,7 @@ let updateFileMap = new Map([
 import util from "@/util/util";
 import but from "@/evenBus/but.js";
 import releaseHouse from "@/pages/buySellSystem/houseDetails/common/releaseHouse.js";
+import { verify } from "crypto";
 /**
  * 手机号码脱敏
  * @param number
@@ -1019,6 +1021,7 @@ export default {
         this.$message.error("您输入的手机号码有误");
         return;
       }
+
       this.validateCancelBtnFlag = false;
       this.validatePhoneInputEnable = true;
       this.validatePhoneLoading = true;
@@ -1394,6 +1397,29 @@ export default {
     removeTelToList(index, item) {
       this.addTel.splice(index, 1);
       this.formData["tel" + item] = "";
+    },
+    // 验证号码是否有效
+    verifyTel(tel) {
+      // 满足11位检查号码是否有效
+      if (tel.length == 11) {
+        this.$api
+          .post({
+            isShowErrMsg: false,
+            url: `/verifyHouse/check/tel/?tel=${tel}`
+          })
+          .then(e => {
+            let data = e.data.data;
+          })
+          .catch(e => {
+            if (e.data.code == -30000) {
+              this.formData.tel = "";
+              this.$message.error(e.data.message);
+            } else if (e.data.code == -40000) {
+              this.$message.warning(e.data.message);
+            }
+          })
+          .finally(e => {});
+      }
     },
     //添加电话号码123
     addTelToList() {

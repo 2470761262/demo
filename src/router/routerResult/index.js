@@ -557,6 +557,19 @@ export default [
           import(
             /* webpackChunkName: "vrShooting" */ "@/pages/buySellSystem/myHouse/vrShooting/vrShooting.vue"
           )
+      },
+      {
+        path: "/myHouse/saleStatusRecord",
+        name: "saleStatusRecord",
+        meta: {
+          title: "转换状态记录",
+          keepAlive: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "saleStatusRecord" */ "@/pages/buySellSystem/myHouse/saleStatusRecord/saleStatusRecord.vue"
+          )
       }
     ]
   },
@@ -813,6 +826,18 @@ export default [
         component: () =>
           import(
             /* webpackChunkName: "spotCheckRecord" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/spotCheckRecord.vue"
+          )
+      },
+      {
+        path: "/buySellSystem/callRecord",
+        meta: {
+          title: "电话沟通列表",
+          isMapNav: false,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "midTelCallList" */ "@/pages/buySellSystem/callRecord/callRecord.vue"
           )
       },
       {

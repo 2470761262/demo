@@ -325,8 +325,10 @@ export default {
       this.form[toFileld] = this[formField];
     },
     resetLoad() {
+      let tempWorkType = this.form.workType;
       Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
       Object.assign(this.$data, this.$options.data());
+      this.form.workType = tempWorkType;
     },
     setWorkType(item) {
       this.form.workType = item.value;

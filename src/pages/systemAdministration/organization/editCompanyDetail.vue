@@ -234,7 +234,7 @@ export default {
     return {
       treeExpanded: [],
       props: {
-        label: "Name",
+        label: "name",
         children: "children",
         isLeaf: "leaf"
       },
@@ -330,7 +330,7 @@ export default {
       });
       this.companyEntity.regionName = arr
         .map(item => {
-          return item.Name;
+          return item.name;
         })
         .join(",");
       this.companyEntity.region = arr
@@ -445,10 +445,10 @@ export default {
         for (let index in this.checkedCities) {
           console.log(this.checkedCities[index]);
           if (index == this.checkedCities.length - 1) {
-            this.companyEntity.RegionName += this.checkedCities[index].Name;
+            this.companyEntity.RegionName += this.checkedCities[index].name;
           } else {
             this.companyEntity.RegionName +=
-              this.checkedCities[index].Name + ",";
+              this.checkedCities[index].name + ",";
           }
         }
       }

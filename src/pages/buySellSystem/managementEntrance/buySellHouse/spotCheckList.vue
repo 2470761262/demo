@@ -26,6 +26,54 @@
       }
     }
   }
+  .tab-filter-radio {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 46px;
+    padding-bottom: 10px;
+    margin-top: -30px;
+    position: sticky;
+    z-index: 10;
+    .filter-radio-item {
+      display: flex;
+      cursor: pointer;
+      // prettier-ignore
+      margin-left: 30PX;
+      align-items: center;
+      input {
+        display: none;
+      }
+      input[type="checkbox"]:checked + span {
+        &::before {
+          content: "\2713";
+          color: black;
+          font-size: @font16;
+        }
+      }
+      &:first-child {
+        margin-left: 0;
+      }
+      span {
+        font-size: @font16;
+        color: black;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        &::before {
+          content: "";
+          // prettier-ignore
+          width: 16PX;
+          // prettier-ignore
+          height: 16PX;
+          // prettier-ignore
+          line-height: 16PX;
+          margin-right: 8px;
+          text-align: center;
+          border: 1px solid black;
+        }
+      }
+    }
+  }
   .main {
     flex: 1;
     display: flex;
@@ -255,21 +303,39 @@
         @moreConditionChange="moreConditionChange"
       ></spot-check-head>
     </div>
-    <div class="change-content">
-      <span
-        @click="panelChangeBtn"
-        class="anchor-point"
-        data-anchor="首页展开选项/收起"
-        >展开选项/收起<i
-          class="iconfont iconxingzhuangjiehe1"
-          :class="{ rotate: panelChange }"
-        ></i
-      ></span>
-    </div>
+
     <div class="main">
       <div class="right"></div>
       <div class="content">
         <button class="batch-button" @click="batchSpotCheck">批量抽检</button>
+        <div class="tab-filter-radio">
+          <label
+            class="filter-radio-item anchor-point"
+            data-anchor="管理者通道-买卖房源-抽检列表 30天无带看"
+          >
+            <input
+              type="checkbox"
+              true-value="1"
+              false-value=""
+              @change="conditionChange"
+              v-model="condition.seenNumRecent0"
+            />
+            <span>30天无带看</span>
+          </label>
+          <label
+            class="filter-radio-item anchor-point"
+            data-anchor="管理者通道-买卖房源-抽检列表 30天无回访"
+          >
+            <input
+              type="checkbox"
+              true-value="1"
+              false-value=""
+              @change="conditionChange"
+              v-model="condition.callNum0"
+            />
+            <span>30天无回访</span>
+          </label>
+        </div>
         <div class="table">
           <el-table
             :data="tableData"
@@ -285,14 +351,13 @@
               :prop="item.prop"
               :fixed="item.fixed"
               :label="item.label"
-              :width="item.width"
-              :min-width="item.minWidth"
+              :width="item.minWidth"
               :align="item.align"
               :sortable="item.sortable"
               :sort-orders="['ascending', 'descending']"
               :formatter="item.formart"
             ></el-table-column>
-            <el-table-column label="操作" fixed="right">
+            <el-table-column label="操作"  width="140" fixed="right">
               <template v-slot="scope">
                 <el-button
                   type="text"
@@ -350,6 +415,8 @@ export default {
       condition: {
         page: 1,
         limit: 100,
+        seenNumRecent0: "",
+        callNum0: "",
         sortColumn: "id",
         sortType: "DESC"
       }, //基础查询条件
@@ -359,7 +426,8 @@ export default {
           prop: "houseNo",
           fixed: "left",
           label: "房屋信息",
-          minWidth: "180",
+          width: "220",
+          minWidth: "220",
           align: "left",
           formart: item => {
             return (
@@ -373,7 +441,7 @@ export default {
         {
           prop: "price",
           label: "售价",
-          minWidth: "60",
+          minWidth: "120",
           align: "right",
           formart: item => {
             return `${item.price}万`;
@@ -382,7 +450,7 @@ export default {
         {
           prop: "inArea",
           label: "面积",
-          minWidth: "60",
+          minWidth: "120",
           align: "right",
           formart: item => {
             return `${item.inArea}m²`;
@@ -391,7 +459,7 @@ export default {
         {
           prop: "rooms",
           label: "户型",
-          minWidth: "60",
+          minWidth: "140",
           align: "right",
           formart: item => {
             return `${item.rooms || 0}-${item.hall || 0}-${item.toilet ||
@@ -401,7 +469,7 @@ export default {
         {
           prop: "agentName",
           label: "跟单人",
-          minWidth: "70",
+          minWidth: "140",
           align: "right",
           sortable: true,
           formart: item => {
@@ -416,7 +484,7 @@ export default {
         {
           prop: "addTime",
           label: "挂牌时间",
-          minWidth: "100",
+          minWidth: "180",
           align: "right",
           sortable: true,
           formart: item => {
@@ -426,21 +494,21 @@ export default {
         {
           prop: "seenNumRecent",
           label: "30天带看",
-          minWidth: "80",
+          minWidth: "140",
           align: "right",
           sortable: true
         },
         {
           prop: "callNum",
           label: "30天电话回访",
-          minWidth: "110",
+          minWidth: "180",
           align: "right",
           sortable: true
         },
         {
           prop: "spotCheckNum",
           label: "抽检次数",
-          minWidth: "100",
+          minWidth: "130",
           align: "right",
           sortable: true
         }
@@ -451,19 +519,19 @@ export default {
     };
   },
   beforeDestroy() {
-    if (document.querySelector(".entrance-container")) {
-      document
-        .querySelector(".entrance-container")
-        .removeEventListener("scroll", this.elMainScroll);
-    }
+    // if (document.querySelector(".entrance-container")) {
+    //   document
+    //     .querySelector(".entrance-container")
+    //     .removeEventListener("scroll", this.elMainScroll);
+    // }
   },
   created() {
     this.getSpotChekList();
-    this.$nextTick(() => {
-      document
-        .querySelector(".entrance-container")
-        .addEventListener("scroll", this.elMainScroll);
-    });
+    // this.$nextTick(() => {
+    //   document
+    //     .querySelector(".entrance-container")
+    //     .addEventListener("scroll", this.elMainScroll);
+    // });
   },
   methods: {
     elMainScroll() {
@@ -520,6 +588,14 @@ export default {
         item.prop == "agentName" ? "agentName.keyword" : item.prop;
       this.condition.sortType = item.order == "ascending" ? 0 : 1;
       this.clearList();
+      this.getSpotChekList();
+    },
+    /**
+     * @example:查询条件改变
+     */
+    conditionChange(value) {
+      // this.moreCondition = value;
+      // this.clearList();
       this.getSpotChekList();
     },
     /**

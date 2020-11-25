@@ -116,6 +116,36 @@
                 </el-row>
               </el-col>
               <el-col :span="colChunks[2]">
+                <el-form-item label="所属区域">
+                  <el-select
+                    class="width100 anchor-point"
+                    popper-class="anchor-point"
+                    data-anchor="抽检记录所属区域 => select"
+                    @click.native="log_socket.sendUserActionData"
+                    v-model="area.value"
+                    placeholder="请输入区域名称"
+                    clearable
+                    filterable
+                    @focus="areaFocus"
+                    @change="areaChange"
+                    :loading="area.loading"
+                    value-key="value"
+                  >
+                    <el-option
+                      class="anchor-point"
+                      :data-anchor="
+                        '抽检记录所属区域 => select => option:' + item.depName
+                      "
+                      @click.native="log_socket.sendUserActionData"
+                      v-for="item in area.list"
+                      :key="item.depId"
+                      :label="item.depName"
+                      :value="item.depId"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="colChunks[2]">
                 <el-form-item label="所属门店">
                   <el-select
                     class="width100 anchor-point"
@@ -178,7 +208,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="colChunks[4]">
+              <el-col :span="colChunks[3]">
                 <el-form-item label="当前状态">
                   <el-select
                     class="width100 anchor-point"
@@ -205,7 +235,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="colChunks[5]">
+              <el-col :span="colChunks[3]">
                 <el-form-item label="抽检结果">
                   <el-select
                     class="width100 anchor-point"
@@ -232,19 +262,37 @@
                   </el-select>
                 </el-form-item>
               </el-col>
+              <el-col :span="colChunks[4]">
+                <el-form-item label="抽检时间">
+                  <el-date-picker
+                    prefix-icon="prefix-icon"
+                    v-model="addTimeSelect"
+                    type="daterange"
+                    range-separator="至"
+                    start-placeholder="起始时间"
+                    end-placeholder="结束时间"
+                    value-format="yyyy-MM-dd"
+                    @change="query(1)"
+                    :default-time="['00:00:00', '23:59:59']"
+                    class="anchor-point"
+                    :data-anchor="'抽检记录 获得抽检时间:' + addTimeSelect"
+                  >
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
               <el-col :span="colChunks[6]" class="fr">
                 <div class="conditions-btn">
                   <div
                     class="btn anchor-pointn"
                     @click="reset"
-                    data-anchor="审核列表重置"
+                    data-anchor="抽检记录列表重置"
                   >
                     重置
                   </div>
                   <div
                     class="btn active anchor-pointn"
                     @click="query(1)"
-                    data-anchor="审核列表搜索"
+                    data-anchor="抽检记录列表搜索"
                   >
                     搜索
                   </div>
@@ -254,17 +302,6 @@
           </el-row>
         </div>
       </div>
-    </div>
-    <div class="change-content">
-      <span
-        @click="panelChangeBtn"
-        class="anchor-point"
-        data-anchor="首页展开选项/收起"
-        >展开选项/收起<i
-          class="iconfont iconxingzhuangjiehe1"
-          :class="{ rotate: panelChange }"
-        ></i
-      ></span>
     </div>
     <div class="main">
       <div class="content">
@@ -475,6 +512,7 @@ export default {
       isInitLoadroomList: false, // 选择楼栋是否加载房间列表
       loading: false,
       currentStatus: "",
+      addTimeSelect: [],
       currentStatusList: [
         {
           value: 0,
@@ -518,6 +556,11 @@ export default {
         bhId: "",
         houseNo: ""
       },
+      area: {
+        loading: false,
+        list: [],
+        value: ""
+      }, // 所属区域
       department: {
         loading: false,
         list: [],
@@ -667,18 +710,18 @@ export default {
     this.query();
     this.setConditionCol();
     window.addEventListener("resize", this.setConditionCol);
-    this.$nextTick(() => {
-      document
-        .querySelector(".entrance-container")
-        .addEventListener("scroll", this.elMainScroll);
-    });
+    // this.$nextTick(() => {
+    //   document
+    //     .querySelector(".entrance-container")
+    //     .addEventListener("scroll", this.elMainScroll);
+    // });
   },
   beforeDestroy() {
-    if (document.querySelector(".entrance-container")) {
-      document
-        .querySelector(".entrance-container")
-        .removeEventListener("scroll", this.elMainScroll);
-    }
+    // if (document.querySelector(".entrance-container")) {
+    //   document
+    //     .querySelector(".entrance-container")
+    //     .removeEventListener("scroll", this.elMainScroll);
+    // }
     window.removeEventListener("resize", this.setConditionCol);
   },
   methods: {
@@ -716,7 +759,8 @@ export default {
           url: "/spotCheck/spotCheckRecordList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
-            selectType: "MORE_SELECT_SHOP"
+            selectType: "MORE_SELECT_SHOP",
+            selectDepartment: this.area.value
           }
         })
         .then(e => {
@@ -727,6 +771,47 @@ export default {
         .finally(() => {
           this.department.loading = false;
         });
+    },
+    /**
+     * @example: 请求所属区域数据
+     */
+    getAreaList() {
+      this.department.loading = true;
+      this.$api
+        .post({
+          url: "/spotCheck/spotCheckRecordList",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            selectType: "MORE_SELECT_AREA"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.area.list = e.data.data;
+          }
+        })
+        .finally(() => {
+          this.area.loading = false;
+        });
+    },
+    /**
+     * @example: 所属门店获取焦点事件
+     */
+    areaFocus() {
+      this.getAreaList();
+    },
+    /**
+     * @example: 所属门店选择事件
+     */
+    areaChange(value) {
+      this.department.list = [];
+      this.department.value = "";
+      this.agent.list = [];
+      this.agent.value = "";
+      this.query();
+      if (value != "") {
+        this.getDepartmentList();
+      }
     },
     /**
      * @example: 所属门店获取焦点事件
@@ -961,9 +1046,11 @@ export default {
       params.cbId = this.conditions.cbId;
       params.bhId = this.conditions.bhId;
       params.houseNo = this.conditions.houseNo;
+      params.areaId = this.area.value;
       params.store = this.department.value;
       params.personnel = this.agent.value;
       params.currentStatus = this.currentStatus;
+      params.addTimeSelect = this.addTimeSelect;
       params.currentResult = this.spotCheckResult;
       params.sortColumn = this.sortColumn;
       params.sortType = this.sortType;
@@ -996,8 +1083,10 @@ export default {
       this.currentStatus = "";
       this.spotCheckResult = "";
       Object.assign(this.$data.conditions, this.$options.data().conditions);
+      Object.assign(this.$data.area, this.$options.data().area);
       Object.assign(this.$data.department, this.$options.data().department);
       Object.assign(this.$data.agent, this.$options.data().agent);
+      this.addTimeSelect = [];
       this.buildOptData = {};
       this.towerOptData = {};
       this.roomOptData = {};
@@ -1024,27 +1113,6 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1;
-  .change-content {
-    text-align: center;
-    margin-bottom: 4px;
-    margin-top: 10px;
-    color: @backgroud;
-    font-size: @font16;
-    span {
-      cursor: pointer;
-      .iconfont {
-        margin-left: 8px;
-        font-size: @font14;
-        transition: transform 0.3s;
-        transform: rotateZ(180deg);
-        display: inline-block;
-
-        &.rotate {
-          transform: rotateZ(0deg) !important;
-        }
-      }
-    }
-  }
   .conditions {
     // prettier-ignore
     padding: 0 24PX 20PX 24PX;

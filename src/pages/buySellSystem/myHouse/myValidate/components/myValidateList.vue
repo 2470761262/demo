@@ -497,11 +497,11 @@ export default {
           prop: "addPerName",
           label: "录入人"
         },
-        // {
-        //   prop: "addTime",
-        //   label: "录入时间",
-        //   order: "custom"
-        // },
+        {
+          prop: "addTime",
+          label: "提交时间",
+          order: "custom"
+        },
         {
           label: "操作",
           formart: row => this.operation(row),
@@ -662,14 +662,18 @@ export default {
       switch (row.checkStatusStr) {
         case "待验真":
           that.stepNow = 1;
-          //that.stepsListNow[0].description = "待业主验真";
+          that.stepsListNow[1].title = "待业主验真";
+          that.stepStatus = "";
           break;
         case "验真失败":
           that.stepNow = 2;
+          that.stepsListNow[1].title =
+            "验真失败，" + (row.failedResonStr || "过期未验真");
           that.stepStatus = "error";
           break;
         case "验真成功":
           that.stepNow = 2;
+          that.stepsListNow[1].title = "业主验真成功";
           that.stepStatus = "success";
           break;
       }
