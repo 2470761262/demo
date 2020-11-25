@@ -75,6 +75,7 @@ Validator.extend("isGreater", {
   compare: ["compare", "title"],
   messages: {
     zh_CN: (field, args) => {
+      console.log(args);
       if (args[1]) {
         return `${field}不能大于${args[1]}:${args[0] == "" ? 0 : args[0]}`;
       } else {
@@ -88,6 +89,26 @@ Validator.extend("isGreater", {
       return true;
     }
     return Number(value) <= Number(compare[0] == "" ? 0 : compare[0]);
+  }
+});
+//时间比较大小
+Validator.extend("isGreaterDate", {
+  compare: ["compare", "title"],
+  messages: {
+    zh_CN: (field, args) => {
+      if (args[1]) {
+        return `${field}不能大于${args[1]}:${args[0] == "" ? 0 : args[0]}`;
+      } else {
+        return `${field}不能大于${args[0]}`;
+      }
+    }
+  },
+  validate: (value, compare) => {
+    if (compare[2] && compare[0] == "") {
+      //传递第3个参数true则会第一次不匹配
+      return true;
+    }
+    return value <= compare[0] == "" ? 0 : compare[0];
   }
 });
 Validator.extend("isLess", {
@@ -148,7 +169,11 @@ Validator.extend("arrGTLength", {
     }
   },
   validate: (value, compare) => {
-    return value > parseInt(compare[0]);
+    if (typeof value == "string") {
+      return value.length > parseInt(compare[0]);
+    } else {
+      return value > parseInt(compare[0]);
+    }
   }
 });
 

@@ -1,9 +1,5 @@
 import * as constMap from "./constMap";
 
-function go(a, b) {
-  return a + b;
-}
-
 export default {
   localStorageSet(key, value) {
     if (typeof value == "object") {
@@ -268,5 +264,16 @@ export default {
     getParentNode(element, className);
 
     return returnParentElement;
+  },
+  regexNum(num) {
+    if (!/^([+-])?(\d+)(\.\d+)?$/.test(num)) {
+      return num;
+    }
+    let a = RegExp.$1;
+    let b = RegExp.$2;
+    let c = RegExp.$3;
+    let re = new RegExp().compile("(\\d)(\\d{3})(,|$)");
+    while (re.test(b)) b = b.replace(re, "$1,$2$3");
+    return a + "" + b + "" + c;
   }
 };

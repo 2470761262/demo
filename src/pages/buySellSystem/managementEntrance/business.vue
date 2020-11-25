@@ -1,6 +1,6 @@
 <template>
   <!-- 房源系统-业务管理 -->
-  <div class="container">
+  <div class="container" v-loading="pageLoading">
     <breadcrumb></breadcrumb>
     <nav-menu :navMenuIndex="0"></nav-menu>
     <div class="conditions-box">
@@ -43,20 +43,23 @@
           资源统计
           <p class="tip">注：数据取值截止到昨天24点整</p>
         </div>
-        <el-tooltip placement="right">
-          <div slot="content">
-            1、房源跟单量：名下作为房源跟单人的在售房源总数量；<br />
-            2、独家委托量：名下作为独家委托人的在售房源总数量；<br />
-            3、普通委托量：名下作为普通委托人的在售房源总数量；<br />
-            4、钥匙委托量：名下作为钥匙委托人的在售房源总数量；<br />
-            5、房源录入量：名下作为房源录入人的在售房源总数量；<br />
-            6、客户量：名下录入客户需求类型为买二手的私客数量。
-          </div>
-          <div class="tip-box">
-            <div class="text">数据说明</div>
-            <i class="el-icon-question"></i>
-          </div>
-        </el-tooltip>
+        <div class="right">
+          <button class="export" @click="excelFirstExport">导出</button>
+          <el-tooltip placement="right">
+            <div slot="content">
+              1、房源跟单量：名下作为房源跟单人的在售房源总数量；<br />
+              2、独家委托量：名下作为独家委托人的在售房源总数量；<br />
+              3、普通委托量：名下作为普通委托人的在售房源总数量；<br />
+              4、钥匙委托量：名下作为钥匙委托人的在售房源总数量；<br />
+              5、房源录入量：名下作为房源录入人的在售房源总数量；<br />
+              6、客户量：名下录入客户需求类型为买二手的私客数量。
+            </div>
+            <div class="tip-box">
+              <div class="text">数据说明</div>
+              <i class="el-icon-question"></i>
+            </div>
+          </el-tooltip>
+        </div>
       </div>
       <div class="content">
         <el-table
@@ -129,32 +132,35 @@
             注：数据从2020-05-01日开始统计，数据取值截止到昨天24点整
           </p>
         </div>
-        <el-tooltip placement="right">
-          <div slot="content">
-            1、房源开发<br />
-            电开次数：在“开发线索”列表累计回访房源的次数；<br />
-            新增验真：新增录入房源累计验真通过的房源数量；<br />
-            公盘获取：店公共盘、公司公盘申请跟单人成功的房源数量；<br />
-            2、房源维护<br />
-            被看次数：名下跟单房源累计被带看的次数<br />
-            电话回访：跟单人回访名下跟单房源累计回访的次数<br />
-            写面访：跟单房源在选定时间区间内添加面访的数量<br />
-            3、客源开发<br />
-            电开次数：在“公客池”列表累计回访客源的次数<br />
-            新增客户：累计新增录入私客的数量<br />
-            认领客户：公客池累计认领客户的数量<br />
-            4、客源维护<br />
-            带看客户数：累计带看的客户数量（去重）<br />
-            1带多看：添加带看记录，添加两套房源以上的客户数量<br />
-            3日内首看：客户自录入时间起, 3日内有过首次带看的客户数量<br />
-            7日内首看：客户自录入时间起, 7日内有过首次带看的客户数量<br />
-            复看：首看后，有产生第二次带看的客户数量<br />
-          </div>
-          <div class="tip-box">
-            <div class="text">数据说明</div>
-            <i class="el-icon-question"></i>
-          </div>
-        </el-tooltip>
+        <div class="right">
+          <button class="export" @click="excelSecondExport">导出</button>
+          <el-tooltip placement="right">
+            <div slot="content">
+              1、房源开发<br />
+              电开次数：在“开发线索”列表累计回访房源的次数；<br />
+              新增验真：新增录入房源累计验真通过的房源数量；<br />
+              公盘获取：店公共盘、公司公盘申请跟单人成功的房源数量；<br />
+              2、房源维护<br />
+              被看次数：名下跟单房源累计被带看的次数<br />
+              电话回访：跟单人回访名下跟单房源累计回访的次数<br />
+              写面访：跟单房源在选定时间区间内添加面访的数量<br />
+              3、客源开发<br />
+              电开次数：在“公客池”列表累计回访客源的次数<br />
+              新增客户：累计新增录入私客的数量<br />
+              认领客户：公客池累计认领客户的数量<br />
+              4、客源维护<br />
+              带看客户数：累计带看的客户数量（去重）<br />
+              1带多看：添加带看记录，添加两套房源以上的客户数量<br />
+              3日内首看：客户自录入时间起, 3日内有过首次带看的客户数量<br />
+              7日内首看：客户自录入时间起, 7日内有过首次带看的客户数量<br />
+              复看：首看后，有产生第二次带看的客户数量<br />
+            </div>
+            <div class="tip-box">
+              <div class="text">数据说明</div>
+              <i class="el-icon-question"></i>
+            </div>
+          </el-tooltip>
+        </div>
       </div>
       <div class="content">
         <el-table
@@ -235,18 +241,21 @@
             搜索
           </button>
         </div>
-        <el-tooltip placement="right">
-          <div slot="content">
-            1、新增鑫币：昨日新增的鑫币值；<br />
-            2、兑换（品牌分）：本月兑换成品牌分的鑫币值；<br />
-            3、兑换（物品）：本月兑换成物品的鑫币值；<br />
-            4、剩余鑫币：当前剩余的鑫币值。
-          </div>
-          <div class="tip-box">
-            <div class="text">数据说明</div>
-            <i class="el-icon-question"></i>
-          </div>
-        </el-tooltip>
+        <div class="right">
+          <button class="export" @click="excelThirdExport">导出</button>
+          <el-tooltip placement="right">
+            <div slot="content">
+              1、新增鑫币：昨日新增的鑫币值；<br />
+              2、兑换（品牌分）：本月兑换成品牌分的鑫币值；<br />
+              3、兑换（物品）：本月兑换成物品的鑫币值；<br />
+              4、剩余鑫币：当前剩余的鑫币值。
+            </div>
+            <div class="tip-box">
+              <div class="text">数据说明</div>
+              <i class="el-icon-question"></i>
+            </div>
+          </el-tooltip>
+        </div>
       </div>
       <div class="nav-box">
         <div
@@ -308,6 +317,7 @@ export default {
   },
   data() {
     return {
+      pageLoading: false,
       workLoading: false,
       developLoading: false,
       currencyLoading: false,
@@ -903,6 +913,118 @@ export default {
         this.$options.data().currencyPaginate
       );
       this.getCurrencyData();
+    },
+    excelFirstExport() {
+      this.pageLoading = true;
+      let params = {
+        staLev: this.searchType, //0经纪人,1门店,2区域
+        dateFlag: "", //日
+        perName: this.perName,
+        page: this.workPaginate.page,
+        limit: this.workPaginate.limit,
+        sortColumn: this.workSortColumn,
+        sortType: this.workSortType
+      };
+      this.$api
+        .post({
+          url: "/static/exportStaticResource",
+          data: params,
+          responseType: "blob",
+          headers: { "Content-Type": "application/json" },
+          isShowErrMsg: false
+        })
+        .then(res => {})
+        .catch(e => {
+          let url = window.URL.createObjectURL(new Blob([e.data]));
+          let link = document.createElement("a");
+          link.style.display = "none";
+          link.href = url;
+          link.setAttribute("download", "资源统计1.xlsx");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+        .finally(e => {
+          this.pageLoading = false;
+        });
+    },
+    excelSecondExport() {
+      this.pageLoading = true;
+      let params = {
+        staLev: this.searchType, //0经纪人,1门店,2区域
+        beginDateFlag: this.developDateSelectFlag
+          ? this.developDateSelectFlag[0]
+          : "",
+        endDateFlag: this.developDateSelectFlag
+          ? this.developDateSelectFlag[1]
+          : "",
+        perName: this.perName,
+        page: this.developPaginate.page,
+        limit: this.developPaginate.limit,
+        sortColumn: this.developSortColumn,
+        sortType: this.developSortType
+      };
+      this.$api
+        .post({
+          url: "/static/exportStaticResource2",
+          data: params,
+          responseType: "blob",
+          headers: { "Content-Type": "application/json" },
+          isShowErrMsg: false
+        })
+        .then(res => {})
+        .catch(e => {
+          let url = window.URL.createObjectURL(new Blob([e.data]));
+          let link = document.createElement("a");
+          link.style.display = "none";
+          link.href = url;
+          link.setAttribute("download", "资源统计2.xlsx");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+        .finally(e => {
+          this.pageLoading = false;
+        });
+    },
+    excelThirdExport() {
+      this.pageLoading = true;
+      let params = {
+        staLev: this.searchType, //0经纪人,1门店,2区域
+        beginDateFlag: this.currencyDateSelectFlag
+          ? this.currencyDateSelectFlag[0]
+          : "",
+        endDateFlag: this.currencyDateSelectFlag
+          ? this.currencyDateSelectFlag[1]
+          : "",
+        perName: this.perName,
+        page: this.currencyPaginate.page,
+        limit: this.currencyPaginate.limit,
+        sortColumn: this.currencySortColumn,
+        sortType: this.currencySortType
+      };
+      this.$api
+        .post({
+          url: "/static/exportStaticXinScore",
+          data: params,
+          responseType: "blob",
+          headers: { "Content-Type": "application/json" },
+          isShowErrMsg: false
+        })
+        .then(res => {})
+        .catch(e => {
+          let url = window.URL.createObjectURL(new Blob([e.data]));
+          let link = document.createElement("a");
+          link.style.display = "none";
+          link.href = url;
+          link.setAttribute("download", "鑫币统计.xlsx");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+        .finally(e => {
+          this.pageLoading = false;
+        });
     }
   }
 };
@@ -1020,20 +1142,38 @@ export default {
           font-weight: normal;
         }
       }
-      .tip-box {
+      .right {
         display: flex;
-        align-items: center;
-        cursor: pointer;
-        .text {
+        .export {
           // prettier-ignore
-          margin-right: 8PX;
-          line-height: 1;
-          font-size: @font16;
-          color: #247257;
+          width: 78PX;
+          // prettier-ignore
+          height: 34PX;
+          // prettier-ignore
+          margin-right: 20PX;
+          background: #fff;
+          border: 1px solid @backgroud;
+          // prettier-ignore
+          border-radius: 4PX;
+          color: @backgroud;
+          outline: none;
+          cursor: pointer;
         }
-        i {
-          font-size: @font16;
-          color: #247257;
+        .tip-box {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          .text {
+            // prettier-ignore
+            margin-right: 8PX;
+            line-height: 1;
+            font-size: @font16;
+            color: #247257;
+          }
+          i {
+            font-size: @font16;
+            color: #247257;
+          }
         }
       }
       .search-box {

@@ -1,6 +1,278 @@
 export default [
   {
     //买卖系统房源列表
+    path: "/info",
+    meta: {
+      keepAlive: true,
+      title: "新首页",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(/* webpackChunkName: "info" */ "@/pages/info/home/index.vue")
+  },
+  {
+    //考勤系统免考勤
+    path: "/noClock",
+    meta: {
+      keepAlive: true,
+      title: "免考勤",
+      // isScrollTop: true, //是否需要记录坐标
+      //  isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(/* webpackChunkName: "noClock" */ "@/pages/info/noClock/index.vue")
+  },
+  {
+    //考勤系统免解锁
+    path: "/unLock",
+    meta: {
+      keepAlive: true,
+      title: "解锁",
+      // isScrollTop: true, //是否需要记录坐标
+      // isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(/* webpackChunkName: "unLock" */ "@/pages/info/unLock/index.vue")
+  },
+  {
+    //考勤系统免考勤审核
+    path: "/examineClock",
+    meta: {
+      keepAlive: true,
+      title: "免考勤审核",
+      // isScrollTop: true, //是否需要记录坐标
+      // isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "examineClock" */ "@/pages/info/examineClock/index.vue"
+      )
+  },
+  {
+    //考勤系统解锁审核
+    path: "/applyUnLock",
+    meta: {
+      keepAlive: true,
+      title: "解锁审核",
+      // isScrollTop: true, //是否需要记录坐标
+      // isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "applyUnLock" */ "@/pages/info/applyUnLock/index.vue"
+      )
+  },
+  {
+    //考勤系统打卡
+    path: "/clockIn",
+    meta: {
+      keepAlive: true,
+      title: "打卡",
+      // isScrollTop: true, //是否需要记录坐标
+      // isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(/* webpackChunkName: "clockIn" */ "@/pages/info/clockIn/index.vue")
+  },
+  {
+    //考勤系统日志详情
+    path: "/logDetail",
+    meta: {
+      keepAlive: true,
+      title: "日志详情",
+      // isScrollTop: true, //是否需要记录坐标
+      //isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "logDetail" */ "@/pages/info/logDetail/index.vue"
+      )
+  },
+  {
+    //勤系统2级
+    path: "/clockList",
+    meta: {
+      keepAlive: true,
+      title: "考勤",
+      // isScrollTop: true, //是否需要记录坐标
+      //  isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    // component: () =>
+    //   import(
+    //     /* webpackChunkName: "clockList" */ "@/pages/info/clockList/index.vue"
+    //   ),
+    component: { render: e => e("router-view") },
+    //考勤系统我的日志
+    redirect: "/clockList/myInfo",
+    children: [
+      {
+        //考勤系统我的日志
+        path: "/clockList/myInfo",
+        meta: {
+          keepAlive: true,
+          title: "我的日志",
+          // isScrollTop: true, //是否需要记录坐标
+          //isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "myInfo" */ "@/pages/info/clockList/myInfo/index.vue"
+          )
+      },
+      {
+        path: "/clockList/statistic",
+        meta: {
+          keepAlive: true,
+          title: "考勤统计",
+          // isScrollTop: true, //是否需要记录坐标
+          //  isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockStatistic" */ "@/pages/info/clockList/statistic/index.vue"
+          )
+      },
+      {
+        path: "/clockList/examine",
+        meta: {
+          keepAlive: true,
+          title: "考勤审批",
+          // isScrollTop: true, //是否需要记录坐标
+          //  isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockExamine" */ "@/pages/info/clockList/examine/index.vue"
+          )
+      }
+    ]
+  },
+  {
+    path: "/clockRule",
+    meta: {
+      keepAlive: true,
+      title: "考勤规则",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: { render: e => e("router-view") },
+    redirect: "/clockRule/list",
+    children: [
+      {
+        path: "/clockRule/list",
+        meta: {
+          keepAlive: true,
+          title: "考勤规则管理",
+          // isScrollTop: true, //是否需要记录坐标
+          // isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockRuleList" */ "@/pages/info/clockRule/list/index.vue"
+          )
+      },
+      {
+        path: "/clockRule/add",
+        meta: {
+          keepAlive: false,
+          title: "添加考勤规则",
+          // isScrollTop: true, //是否需要记录坐标
+          // isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockRuleAdd" */ "@/pages/info/clockRule/addorEditClockRule/index.vue"
+          )
+      },
+      {
+        path: "/clockRule/edit",
+        meta: {
+          keepAlive: false,
+          title: "编辑考勤规则",
+          // isScrollTop: true, //是否需要记录坐标
+          // isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockRuleEdit" */ "@/pages/info/clockRule/addorEditClockRule/index.vue"
+          )
+      },
+      {
+        path: "/clockRule/quotes",
+        meta: {
+          keepAlive: true,
+          title: "名言警句管理",
+          // isScrollTop: true, //是否需要记录坐标
+          // isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockRuleQuotes" */ "@/pages/info/clockRule/quotes/index.vue"
+          )
+      }
+    ]
+  },
+  {
+    path: "/askforLeave",
+    meta: {
+      keepAlive: false,
+      title: "请假申请",
+      // isScrollTop: true, //是否需要记录坐标
+      // isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "askforLeave" */ "@/pages/info/askforLeave/index.vue"
+      )
+  },
+  {
+    path: "/leaveDetail",
+    meta: {
+      keepAlive: false,
+      title: "请假申请详情页",
+      // isScrollTop: true, //是否需要记录坐标
+      //  isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "leaveDetail" */ "@/pages/info/leaveDetail/index.vue"
+      )
+  },
+  {
+    path: "/repairDetail",
+    meta: {
+      keepAlive: false,
+      title: "补卡申请详情页",
+      // isScrollTop: true, //是否需要记录坐标
+      // isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "repairDetail" */ "@/pages/info/repairDetail/index.vue"
+      )
+  },
+  {
+    //买卖系统房源列表
     path: "/buySellSystem/houseList",
     meta: {
       keepAlive: true,

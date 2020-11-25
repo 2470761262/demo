@@ -7,7 +7,7 @@ import {
 } from "@/util/constMap";
 //const version = require('element-ui/package.json').version // element-ui version from node_modules
 const defaultColor = "#409EFF"; // 不可修改
-const tint = 0.76;
+const tint = 0.8;
 let themeData = {
   dom: document.documentElement,
   chalk: "",

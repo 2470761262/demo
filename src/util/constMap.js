@@ -21,6 +21,17 @@ export const HOUSEBELONGLIST = [
   }
 ];
 
+export const APPLYTYPE = [
+  {
+    key: "请假",
+    value: 1
+  },
+  {
+    key: "补卡",
+    value: 2
+  }
+];
+
 export const TREMEPACKERS = "tremePackers"; //默认皮肤缓存
 export const TREMEDEFTULTCOLOR = "#0d824b"; //默认皮肤颜色
 export const FONTSIZEBASE = 12; //基础字体大小
@@ -59,7 +70,61 @@ export const DECORATION = [
     value: 4
   }
 ];
+export const WEEK = [
+  {
+    //星期
+    key: "星期日",
+    value: 0
+  },
+  {
+    key: "星期一",
+    value: 1
+  },
+  {
+    key: "星期二",
+    value: 2
+  },
+  {
+    key: "星期三",
+    value: 3
+  },
+  {
+    key: "星期四",
+    value: 4
+  },
+  {
+    key: "星期五",
+    value: 5
+  },
+  {
+    key: "星期六",
+    value: 6
+  }
+];
 
+export const REPAIRABNORMALTYPE = [
+  //补卡类型
+  {
+    key: "迟到",
+    value: 1
+  },
+  {
+    key: "早退",
+    value: 2
+  },
+  {
+    key: "旷工",
+    value: 3
+  },
+  {
+    key: "请假",
+    value: 4
+  },
+  {
+    key: "迟到早退",
+    value: 5
+  }
+];
 export const HOUSESTRUCT = [
   // 房屋结构 houseStruct
   {
@@ -542,5 +607,36 @@ export const PURCHASEPURPOSE = [
   {
     key: "其他",
     value: "其他"
+  }
+];
+export const LEAVESUBTYPE = [
+  //请假子类型
+  {
+    key: "事假",
+    value: 11
+  },
+  {
+    key: "病假",
+    value: 12
+  },
+  {
+    key: "婚假",
+    value: 13
+  },
+  {
+    key: "产假",
+    value: 14
+  },
+  {
+    key: "丧假",
+    value: 15
+  },
+  {
+    key: "公休",
+    value: 16
+  },
+  {
+    key: "年休假",
+    value: 17
   }
 ];
