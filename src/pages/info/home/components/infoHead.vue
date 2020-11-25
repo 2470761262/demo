@@ -14,7 +14,7 @@
 </style>
 <template>
   <div class="main-head">
-    <h3 class="head-title">
+    <h3 class="head-title" v-if="loginDataRemoteMixin.data">
       {{ loginDataRemoteMixin.data.userName }},{{ time }}
     </h3>
     <div class="head-titps">Welcome to XinJia</div>
@@ -30,7 +30,6 @@ export default {
     };
   },
   created() {
-    //1242342423232
     this.getTime();
   },
   methods: {

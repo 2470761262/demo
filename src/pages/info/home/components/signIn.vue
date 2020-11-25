@@ -232,7 +232,7 @@
           <img src="https://img.0be.cn/pc/attence_bz_03.svg" alt="" />
         </div>
       </div>
-      <div class="per-data">
+      <div class="per-data" v-if="loginDataRemoteMixin.data">
         <img :src="loginDataRemoteMixin.data.headImgUrl" alt="" />
         <h3>{{ loginDataRemoteMixin.data.userName }}</h3>
         <h4>{{ loginDataRemoteMixin.data.deptName }}</h4>
