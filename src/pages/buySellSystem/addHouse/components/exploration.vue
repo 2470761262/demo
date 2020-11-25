@@ -797,7 +797,7 @@ export default {
         this.$api.baseUrl().replace("http", ""),
         guid,
         () => {
-          ["picture", "video"].forEach(key => {
+          ["picture", "vedio"].forEach(key => {
             this.getQrCode2(key);
           });
         }
