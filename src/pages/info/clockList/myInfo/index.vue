@@ -778,6 +778,7 @@
                         <div
                           class="scrollbar-warp"
                           v-infinite-scroll="getMySlaveList"
+                          infinite-scroll-immediate
                         >
                           <div
                             class="scrollbar-item"
@@ -824,6 +825,7 @@
                         <div
                           class="scrollbar-warp"
                           v-infinite-scroll="getMyInterestList"
+                          infinite-scroll-immediate
                         >
                           <div
                             class="scrollbar-item"
