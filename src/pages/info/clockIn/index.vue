@@ -121,6 +121,7 @@
       }
       .clock-righ {
         margin-left: 24px;
+        width: 292px;
       }
     }
   }
@@ -265,6 +266,8 @@
         </div>
         <div class="clock-righ">
           <clock-time />
+          <broker-template v-if="config.brokerTemplate" />
+          <store-template v-if="config.storeTemplate" />
         </div>
       </div>
     </div>
@@ -273,12 +276,16 @@
 
 <script>
 import clockTime from "../components/clockTime";
+import brokerTemplate from "./components/brokerTemplate";
+import storeTemplate from "./components/storeTemplate";
 export default {
   $_veeValidate: {
     validator: "new"
   },
   components: {
-    clockTime
+    clockTime,
+    brokerTemplate,
+    storeTemplate
   },
   data() {
     return {
@@ -297,7 +304,9 @@ export default {
         growth: false,
         excavate: false,
         clientDemand: false,
-        share: false
+        share: false,
+        brokerTemplate: false,
+        storeTemplate: false
       }
     };
   },
@@ -327,7 +336,8 @@ export default {
                 growth: true,
                 plan: true,
                 excavate: true,
-                clientDemand: true
+                clientDemand: true,
+                brokerTemplate: true
               });
               break;
             case 3: //店长
@@ -336,7 +346,8 @@ export default {
                 plan: true,
                 excavate: true,
                 clientDemand: true,
-                share: true
+                share: true,
+                storeTemplate: true
               });
               break;
             default:

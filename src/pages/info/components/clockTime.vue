@@ -36,7 +36,7 @@
     }
   }
   .clock-foot {
-    height: 115px;
+    min-height: 115px;
     background: #fff;
     overflow: hidden;
     padding: 0 15px;
@@ -44,7 +44,7 @@
       margin-top: 28px;
       font-size: @font14;
       color: #606266;
-      height: 43px;
+      min-height: 43px;
     }
     .affiliation {
       text-align: right;

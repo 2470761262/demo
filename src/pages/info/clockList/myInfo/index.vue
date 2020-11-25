@@ -937,6 +937,7 @@ function getSummaryCheckStatusType(text) {
 }
 export default {
   mixins: [clockRuleHead],
+  inject: ["loginDataRemoteMixin"],
   components: {
     lsCalendar,
     lsCollapse,
@@ -1017,6 +1018,7 @@ export default {
     };
   },
   created() {
+    this.getLoginPer();
     this.getList();
     this.getMySlaveList();
     this.getMyInterestList();
@@ -1029,6 +1031,19 @@ export default {
     }
   },
   methods: {
+    /**
+     * @example: 获取当前登录人的名称
+     */
+
+    getLoginPer() {
+      this.refresh.personName = this.loginDataRemoteMixin.data.userName;
+      this.refresh.perList = [
+        {
+          accountId: this.loginDataRemoteMixin.data.accountId,
+          perName: this.loginDataRemoteMixin.data.userName
+        }
+      ];
+    },
     paginationChange() {
       document.querySelector(".scroll").scrollTop = 0;
       this.getList();
@@ -1114,6 +1129,7 @@ export default {
 
     refreshData() {
       Object.assign(this.$data.refresh, this.$options.data.call(this).refresh);
+      this.getLoginPer();
       this.getList();
     },
     /**
@@ -1157,8 +1173,8 @@ export default {
         limit: refresh.page.pagesize,
         attendanceDates: this.refresh.calendarTiem,
         page: refresh.page.currentPage,
-        summaryAddStatus: refresh.summaryAddStatus,
-        summaryCheckStatus: refresh.summaryCheckStatus,
+        addStatus: refresh.summaryAddStatus,
+        checkStatus: refresh.summaryCheckStatus,
         attendanceStatus: refresh.attendanceStatus
       };
       if (this.refresh.personName.trim() != "") {
