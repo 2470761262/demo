@@ -298,7 +298,7 @@
 <script>
 import clockRuleHead from "@/pages/info/mixins/clockRuleHead.js";
 import util from "@/util/util.js";
-import { APPLYTYPE } from "@/util/constMap.js";
+import { APPLYTYPE, LEAVESUBTYPE } from "@/util/constMap.js";
 let statusMap = new Map([
   [0, "未审核"],
   [1, "通过"],
@@ -365,32 +365,7 @@ export default {
       },
       applyTypeList: APPLYTYPE, //审核类型
       applySubTypeList: [], //审核子类型
-      leaveSubTypeList: [
-        {
-          key: "事假",
-          value: 11
-        },
-        {
-          key: "病假",
-          value: 12
-        },
-        {
-          key: "婚嫁",
-          value: 13
-        },
-        {
-          key: "产假",
-          value: 14
-        },
-        {
-          key: "丧假",
-          value: 15
-        },
-        {
-          key: "公休",
-          value: 16
-        }
-      ], //请假子类型
+      leaveSubTypeList: LEAVESUBTYPE, //请假子类型
       cardSubTypeList: [
         {
           key: "补卡",
