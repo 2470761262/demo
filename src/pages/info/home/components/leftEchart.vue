@@ -496,7 +496,7 @@ export default {
   },
   methods: {
     scroll({ target }) {
-      if (target.scrollTop + target.clientHeight == target.scrollHeight) {
+      if (target.scrollTop + target.clientHeight >= target.scrollHeight) {
         this.loadPage();
       }
     },
