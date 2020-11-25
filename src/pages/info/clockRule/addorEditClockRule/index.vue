@@ -117,10 +117,7 @@
         <h2 class="topic">特殊日期设置</h2>
         <div class="panel set">
           <div class="tip">要到特殊日期，可在此处配置特殊考勤日期</div>
-          <div
-            class="info"
-            v-if="workCalendarDays.length != 0 || workCalendarDays.length != 0"
-          >
+          <div class="info">
             <p class="red" v-if="workCalendarDays.length != 0">
               已将{{
                 typeof workCalendarDays == "string"
@@ -649,7 +646,6 @@ export default {
       }
       .set {
         .info {
-          margin-top: 24px;
           p {
             position: relative;
             padding-left: 16px;
@@ -658,7 +654,7 @@ export default {
             color: #606266;
             line-height: 21px;
             &:nth-child(1) {
-              margin-top: 0;
+              margin-top: 24px;
             }
             &::before {
               content: "";
