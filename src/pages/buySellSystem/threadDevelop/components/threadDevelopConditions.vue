@@ -693,7 +693,7 @@ export default {
       this.buildLoading = true;
       this.$api
         .get({
-          url: "/community/saleAll",
+          url: "/community/houseList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false,
           data: {
