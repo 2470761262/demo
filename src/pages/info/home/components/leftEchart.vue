@@ -545,7 +545,7 @@ export default {
       this.getList();
     },
     /**
-     * @example: 切换当前选择类型
+     * @example: 切换当前选择类型234244
      */
 
     setActiveType(index) {
