@@ -41,7 +41,7 @@
             >
               <div class="row-leave-duration">
                 {{ item.repairAbnormalTime | repairAbnormalDateFilter }}&nbsp;
-                {{ item.repairAbnormalDate | emptyRead(")", "(") }}&nbsp;{{
+                {{ item | repairAbnormalTimeFilter }}&nbsp;{{
                   item.repairAbnormalType | repairAbnormalTypeFilter
                 }}
               </div>
@@ -251,6 +251,17 @@ export default {
       console.log(value, date.getHours());
       let hours = date.getHours();
       return hours ? (hours >= 6 && hours <= 12 ? "上午" : "下午") : "暂无";
+    },
+    /**
+     * @example:补卡异常时间解析
+     */
+    repairAbnormalTimeFilter(value) {
+      if (value && value.repairAbnormalType == 3) {
+        return "";
+      }
+      return value.repairAbnormalDate
+        ? "(" + value.repairAbnormalDate + ")"
+        : "暂无";
     }
   },
   computed: {
