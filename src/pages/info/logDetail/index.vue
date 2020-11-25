@@ -445,7 +445,11 @@ export default {
     //是否显示提醒按钮
     isShowRemindBtn() {
       if (!this.loading) {
-        if (this.detailt.isMyAddSummary && this.detailt.checkStatus == 0) {
+        if (
+          this.detailt.isMyAddSummary &&
+          this.detailt.checkStatus == 0 &&
+          this.detailt.addStatus == -1
+        ) {
           return true;
         }
       }
