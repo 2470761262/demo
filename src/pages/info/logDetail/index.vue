@@ -448,7 +448,7 @@ export default {
         if (
           this.detailt.isMyAddSummary &&
           this.detailt.checkStatus == 0 &&
-          this.detailt.addStatus == -1
+          this.detailt.addStatus != -1
         ) {
           return true;
         }
