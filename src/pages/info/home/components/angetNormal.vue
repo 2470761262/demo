@@ -220,7 +220,7 @@ export default {
           }
         })
         .then(({ data }) => {
-          this.list = data.data.brokerRankList.map((v, i) => {
+          this.list = data.data.brokerRankList.list.map((v, i) => {
             return {
               ...v,
               isTopThree: i <= 2 ? true : false,
