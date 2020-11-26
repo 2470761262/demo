@@ -1,7 +1,7 @@
 <style lang="less" scoped>
 .notice-content {
   margin-top: 24px;
-  padding: 24px;
+  padding: 24px 0;
   background: #ffffff;
   line-height: 1;
   box-shadow: 0px 8px 13px 0px rgba(68, 163, 163, 0.1);
@@ -9,6 +9,7 @@
   .notice-head {
     display: flex;
     align-items: center;
+    padding: 0 24px;
     .head-item {
       .head-item-f(#303133, @font14);
       &.active {
@@ -32,6 +33,15 @@
   .notice-list {
     margin-top: 28px;
     height: 166px;
+    .scrollbar {
+      height: 100%;
+      /deep/.el-scrollbar__wrap {
+        overflow-x: hidden;
+      }
+      .notice-list-pad {
+        padding: 0 24px;
+      }
+    }
     .notice-list-item {
       display: flex;
       margin-top: 24px;
@@ -106,7 +116,7 @@
 </style>
 
 <template>
-  <div class="notice-content">
+  <div class="notice-content" :key="root.sxsx">
     <div class="notice-head">
       <div
         class="head-item"
@@ -122,27 +132,33 @@
       >
         规则文档
       </div>
-      <div class="head-more" @click="navToMoer">
+      <!-- <div class="head-more" @click="navToMoer">
         <span>更多</span>
-      </div>
+      </div> -->
     </div>
     <div class="notice-list" v-loading="root.loading">
-      <div
-        class="notice-list-item"
-        v-for="item in root.activeList"
-        :key="item.id"
-        @click="navTouch(item)"
-      >
-        <div class="notice-item-text" :title="item.title">{{ item.title }}</div>
-        <div class="notice-item-time">{{ item.date }}</div>
-      </div>
-      <div v-if="cd.isEmpty" class="is-empty">
-        <img
-          src="https://sysimgs.oss-cn-shenzhen.aliyuncs.com/Background/kong.png"
-          alt=""
-        />
-        <div>暂无数据</div>
-      </div>
+      <el-scrollbar class="scrollbar" id="notice">
+        <div class="notice-list-pad">
+          <div
+            class="notice-list-item"
+            v-for="item in root.activeList"
+            :key="item.id"
+            @click="navTouch(item)"
+          >
+            <div class="notice-item-text" :title="item.title">
+              {{ item.title }}
+            </div>
+            <div class="notice-item-time">{{ item.date }}</div>
+          </div>
+        </div>
+        <div v-if="cd.isEmpty" class="is-empty">
+          <img
+            src="https://sysimgs.oss-cn-shenzhen.aliyuncs.com/Background/kong.png"
+            alt=""
+          />
+          <div>暂无数据</div>
+        </div>
+      </el-scrollbar>
     </div>
   </div>
 </template>
