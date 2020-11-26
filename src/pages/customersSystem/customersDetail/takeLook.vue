@@ -567,7 +567,7 @@ export default {
       if (query !== "") {
         this.$api
           .get({
-            url: "/community/myConcern",
+            url: "/community/takeLookCommunity",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             token: false,
             data: {
