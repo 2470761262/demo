@@ -1191,7 +1191,7 @@ export default {
         checkStatus: refresh.summaryCheckStatus,
         attendanceStatus: refresh.attendanceStatus
       };
-      if (this.refresh.personAccountPer.accountId != "") {
+      if (this.refresh.personAccountPer != "") {
         data.personIds = [this.refresh.personAccountPer.accountId];
       }
 
