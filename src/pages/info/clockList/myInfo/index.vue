@@ -563,16 +563,17 @@
               <div class="serch-item-text">员工信息</div>
               <el-select
                 class="serch-item-select"
-                v-model="refresh.personName"
+                v-model="refresh.personAccountPer"
                 placeholder="请选择"
                 filterable
                 remote
+                value-key="accountId"
                 :remote-method="getPerList"
                 popper-class="options-item"
                 clearable
               >
                 <el-option
-                  :value="item.perName"
+                  :value="item"
                   :label="item.perName"
                   v-for="item in refresh.perList"
                   :key="item.accountId"
@@ -666,7 +667,7 @@
                       />
                       <div class="clock-per-data">
                         <div class="per-data-head">
-                          <div class="per-name">{{ item.personName }}</div>
+                          <div class="per-name">{{ item.personAccount }}</div>
                           <div
                             class="per-type"
                             :class="'per-type' + item.attendanceType"
@@ -785,7 +786,9 @@
                             v-for="item in mySlave.list"
                             :key="item.accountId"
                             :class="{
-                              active: refresh.personName == item.perName
+                              active:
+                                refresh.personAccountPer.accountId ==
+                                item.accountId
                             }"
                             @click="setSlaveName(item)"
                           >
@@ -832,7 +835,9 @@
                             v-for="item in myInterest.list"
                             :key="item.accountId"
                             :class="{
-                              active: refresh.personName == item.perName
+                              active:
+                                refresh.personAccountPer.accountId ==
+                                item.accountId
                             }"
                             @click="setInterestName(item)"
                           >
@@ -992,8 +997,10 @@ export default {
           pagesize: 20
         },
         perList: [], //人员列表
-        personName: "", //员工姓名
-        personIds: null, //员工ID
+        personAccountPer: {
+          perName: "",
+          accountId: ""
+        }, //员工姓名personAccount
         summaryAddStatus: "", //日志提交
         summaryCheckStatus: "", //日志批阅
         attendanceStatus: "", //考勤状态
@@ -1038,7 +1045,10 @@ export default {
      */
 
     getLoginPer() {
-      this.refresh.personName = this.loginDataRemoteMixin.data.userName;
+      this.refresh.personAccountPer = {
+        perName: this.loginDataRemoteMixin.data.userName,
+        accountId: this.loginDataRemoteMixin.data.accountId
+      };
       this.refresh.perList = [
         {
           accountId: this.loginDataRemoteMixin.data.accountId,
@@ -1062,7 +1072,8 @@ export default {
      */
 
     setInterestName(item) {
-      this.refresh.personName = item.perName;
+      this.refresh.personAccountPer = item;
+      this.refresh.perList = [item];
       this.setChangeList();
     },
     /**
@@ -1096,7 +1107,8 @@ export default {
      */
 
     setSlaveName(item) {
-      this.refresh.personName = item.perName;
+      this.refresh.personAccountPer = item;
+      this.refresh.perList = [item];
       this.setChangeList();
     },
     /**
@@ -1179,8 +1191,8 @@ export default {
         checkStatus: refresh.summaryCheckStatus,
         attendanceStatus: refresh.attendanceStatus
       };
-      if (this.refresh.personName.trim() != "") {
-        data.personName = this.refresh.personName;
+      if (this.refresh.personAccountPer.accountId != "") {
+        data.personIds = [this.refresh.personAccountPer.accountId];
       }
 
       this.$api
