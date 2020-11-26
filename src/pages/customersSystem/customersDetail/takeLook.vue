@@ -306,7 +306,7 @@
     <fixedPopup
       :visible.sync="alertflag"
       styleType="0"
-      customFlag="true"
+      :customFlag="true"
       @confirmEmit="confirmEmit"
       @customBtn="customBtn"
     >
