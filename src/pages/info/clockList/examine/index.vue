@@ -319,8 +319,8 @@ export default {
       subNavs: [
         {
           name: "我的日志",
-          path: "/clockList/myInfo",
-          rUrl: "workSummary"
+          path: "/clockList/log",
+          rUrl: "myWorkSummary"
         },
         {
           name: "考勤统计",
@@ -331,6 +331,11 @@ export default {
           name: "考勤审批",
           path: "/clockList/examine",
           rUrl: "audit"
+        },
+        {
+          name: "日志管理",
+          path: "/clockList/myInfo",
+          rUrl: "workSummary"
         }
       ],
       subSecondNavs: [
