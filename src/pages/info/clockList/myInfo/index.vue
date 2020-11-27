@@ -669,7 +669,7 @@
                       />
                       <div class="clock-per-data">
                         <div class="per-data-head">
-                          <div class="per-name">{{ item.personAccount }}</div>
+                          <div class="per-name">{{ item.personName }}</div>
                           <div
                             class="per-type"
                             :class="'per-type' + item.attendanceType"
