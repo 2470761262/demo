@@ -115,8 +115,23 @@ export default [
     redirect: "/clockList/myInfo",
     children: [
       {
-        //考勤系统我的日志
+        //考勤系统日志管理
         path: "/clockList/myInfo",
+        meta: {
+          keepAlive: true,
+          title: "日志管理",
+          // isScrollTop: true, //是否需要记录坐标
+          //isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "myInfo" */ "@/pages/info/clockList/myInfo/index.vue"
+          )
+      },
+      {
+        //考勤系统我的日志
+        path: "/clockList/log",
         meta: {
           keepAlive: true,
           title: "我的日志",
@@ -126,7 +141,7 @@ export default [
         },
         component: () =>
           import(
-            /* webpackChunkName: "myInfo" */ "@/pages/info/clockList/myInfo/index.vue"
+            /* webpackChunkName: "clockListLog" */ "@/pages/info/clockList/log/index.vue"
           )
       },
       {

@@ -114,6 +114,7 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
+            margin-bottom: 16px;
             button {
               outline: 0;
               border: 0;
@@ -560,7 +561,7 @@
       <div class="list-content">
         <div class="list-left">
           <div class="list-serch">
-            <div class="serch-item">
+            <!-- <div class="serch-item">
               <div class="serch-item-text">员工信息</div>
               <el-select
                 class="serch-item-select"
@@ -580,10 +581,9 @@
                   :key="item.accountId"
                 ></el-option>
               </el-select>
-            </div>
+            </div> -->
             <div class="serch-item">
               <div class="serch-item-text">考勤状态</div>
-              <!--   @change="setChangeList" -->
               <el-select
                 class="serch-item-select"
                 popper-class="options-item"
@@ -694,6 +694,10 @@
                         {{ item.morningOnDutyResult | getText }}
                       </div>
                       <div
+                        v-if="
+                          item.morningOnDutyResult != 0 ||
+                            item.morningOffDutyResult != 0
+                        "
                         class="clock-result-type"
                         :data-type="item.morningCheckInTypeOff"
                       >
@@ -714,6 +718,10 @@
                         {{ item.afternoonOnDutyResult | getText }}
                       </div>
                       <div
+                        v-if="
+                          item.afternoonOnDutyResult != 0 ||
+                            item.afternoonOffDutyResult != 0
+                        "
                         class="clock-result-type"
                         :data-type="item.afternoonCheckInTypeOff"
                       >
@@ -767,107 +775,6 @@
         <div class="list-right">
           <div class="posi-sticky">
             <ls-collapse v-model="activeCollapse">
-              <ls-collapse-item
-                sign="calendar1"
-                :title="`我的管理(${mySlave.count})`"
-              >
-                <template>
-                  <div class="collapse-box">
-                    <div class="collapse-box-head">
-                      <div>我的管理({{ mySlave.count }})</div>
-                    </div>
-                    <div class="collapse-box-scroll">
-                      <el-scrollbar class="scrollbar">
-                        <div
-                          class="scrollbar-warp"
-                          v-infinite-scroll="getMySlaveList"
-                          infinite-scroll-immediate
-                        >
-                          <div
-                            class="scrollbar-item"
-                            v-for="item in mySlave.list"
-                            :key="item.accountId"
-                            :class="{
-                              active:
-                                refresh.personAccountPer.accountId ==
-                                item.accountId
-                            }"
-                            @click="setSlaveName(item)"
-                          >
-                            <div class="posi-tips" v-if="item.freeInfo">
-                              {{ item.freeInfo }}
-                            </div>
-                            <img :src="item.headImgUrl" alt="" />
-                            <div class="item-right">
-                              <div class="item-title">{{ item.perName }}</div>
-                              <div class="item-dept">{{ item.deptName }}</div>
-                            </div>
-                          </div>
-                          <div class="is-empty" v-if="mySlave.list.length == 0">
-                            <img
-                              src="https://sysimgs.oss-cn-shenzhen.aliyuncs.com/Background/kong.png"
-                              alt=""
-                            />
-                            <div>暂无数据</div>
-                          </div>
-                        </div>
-                      </el-scrollbar>
-                    </div>
-                  </div>
-                </template>
-              </ls-collapse-item>
-              <ls-collapse-item
-                sign="calendar2"
-                :title="`我的关注(${myInterest.count})`"
-              >
-                <template>
-                  <div class="collapse-box">
-                    <div class="collapse-box-head">
-                      <div>我的关注({{ myInterest.count }})</div>
-                    </div>
-                    <div class="collapse-box-scroll">
-                      <el-scrollbar class="scrollbar">
-                        <div
-                          class="scrollbar-warp"
-                          v-infinite-scroll="getMyInterestList"
-                          infinite-scroll-immediate
-                        >
-                          <div
-                            class="scrollbar-item"
-                            v-for="item in myInterest.list"
-                            :key="item.accountId"
-                            :class="{
-                              active:
-                                refresh.personAccountPer.accountId ==
-                                item.accountId
-                            }"
-                            @click="setInterestName(item)"
-                          >
-                            <div class="posi-tips" v-if="item.freeInfo">
-                              {{ item.freeInfo }}
-                            </div>
-                            <img :src="item.headImgUrl" alt="" />
-                            <div class="item-right">
-                              <div class="item-title">{{ item.perName }}</div>
-                              <div class="item-dept">{{ item.deptName }}</div>
-                            </div>
-                          </div>
-                          <div
-                            class="is-empty"
-                            v-if="myInterest.list.length == 0"
-                          >
-                            <img
-                              src="https://sysimgs.oss-cn-shenzhen.aliyuncs.com/Background/kong.png"
-                              alt=""
-                            />
-                            <div>暂无数据</div>
-                          </div>
-                        </div>
-                      </el-scrollbar>
-                    </div>
-                  </div>
-                </template>
-              </ls-collapse-item>
               <ls-collapse-item sign="calendar" :title="collapseTile">
                 <!-- 
                       :is-empty="false"
@@ -959,10 +866,10 @@ export default {
   },
   data() {
     return {
-      activeCollapse: "calendar1",
+      activeCollapse: "calendar",
       color: ["#0DA88B", "#F6A420", "#EF5656"],
       currentNavIndex: 0,
-      currentSubNavIndex: 3,
+      currentSubNavIndex: 0,
       subNavs: [
         {
           name: "我的日志",
@@ -1014,30 +921,12 @@ export default {
         calendarTiem: [], //util.format(new Date(), "yyyy-MM-dd"), //日历时间
         renderList: [] //渲染结果数组
       },
-      mySlave: {
-        //我的管理
-        list: [],
-        limit: 10,
-        totalPage: 1,
-        count: 0,
-        currentPage: 1
-      },
-      myInterest: {
-        //我的关注
-        list: [],
-        limit: 10,
-        totalPage: 1,
-        count: 0,
-        currentPage: 1
-      },
       loading: true
     };
   },
   created() {
     this.getLoginPer();
     this.getList();
-    this.getMySlaveList();
-    this.getMyInterestList();
   },
   filters: {
     getText(value) {
@@ -1082,67 +971,6 @@ export default {
       this.refresh.personAccountPer = item;
       this.refresh.perList = [item];
       this.setChangeList();
-    },
-    /**
-     * @example: 获取我的管理列表
-     */
-
-    getMyInterestList() {
-      if (
-        this.myInterest.list.length == 0 ||
-        this.myInterest.currentPage <= this.myInterest.totalPage
-      ) {
-        this.$api
-          .post({
-            url: "/attendance/attendanceWorkSummary/listMyInterest",
-            data: {
-              limit: this.myInterest.limit,
-              pageNum: this.myInterest.currentPage
-            },
-            qs: true
-          })
-          .then(({ data }) => {
-            this.myInterest.list = [...this.myInterest.list, ...data.data.list];
-            this.myInterest.count = data.data.totalCount;
-            this.myInterest.totalPage = data.data.totalPage;
-            this.myInterest.currentPage++;
-          });
-      }
-    },
-    /**
-     * @example:我的管理点击查询
-     */
-
-    setSlaveName(item) {
-      this.refresh.personAccountPer = item;
-      this.refresh.perList = [item];
-      this.setChangeList();
-    },
-    /**
-     * @example: 获取我的管理列表
-     */
-
-    getMySlaveList() {
-      if (
-        this.mySlave.list.length == 0 ||
-        this.mySlave.currentPage <= this.mySlave.totalPage
-      ) {
-        this.$api
-          .post({
-            url: "/attendance/attendanceWorkSummary/mySlaveList",
-            data: {
-              limit: this.mySlave.limit,
-              pageNum: this.mySlave.currentPage
-            },
-            qs: true
-          })
-          .then(({ data }) => {
-            this.mySlave.list = [...this.mySlave.list, ...data.data.list];
-            this.mySlave.count = data.data.totalCount;
-            this.mySlave.totalPage = data.data.totalPage;
-            this.mySlave.currentPage++;
-          });
-      }
     },
     /**
      * @example: 重置
