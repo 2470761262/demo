@@ -166,6 +166,12 @@
               &[data-type="warning"] {
                 color: #f6a420;
               }
+              & + .item-type {
+                margin-left: 16px;
+              }
+            }
+            .item-type-box {
+              display: flex;
             }
           }
           .line {
@@ -367,11 +373,32 @@
               <div class="item-time">
                 {{ detailt.morningCheckInTime || "暂无" }}
               </div>
-              <div class="item-type" :data-type="detailt.morningCheckInTypeOn">
-                {{ detailt.morningOnDutyResult | getText }}
+              <div
+                class="item-type-box"
+                v-if="
+                  detailt.morningOnDutyResult == detailt.morningOffDutyResult
+                "
+              >
+                <div
+                  class="item-type"
+                  :data-type="detailt.morningCheckInTypeOn"
+                >
+                  {{ detailt.morningOnDutyResult | getText }}
+                </div>
               </div>
-              <div class="item-type" :data-type="detailt.morningCheckInTypeOff">
-                {{ detailt.morningOffDutyResult | getText }}
+              <div v-else>
+                <div
+                  class="item-type"
+                  :data-type="detailt.morningCheckInTypeOn"
+                >
+                  {{ detailt.morningOnDutyResult | getText }}
+                </div>
+                <div
+                  class="item-type"
+                  :data-type="detailt.morningCheckInTypeOff"
+                >
+                  {{ detailt.morningOffDutyResult | getText }}
+                </div>
               </div>
             </div>
             <div class="line">/</div>
@@ -381,16 +408,32 @@
                 {{ detailt.afternoonCheckInTime || "暂无" }}
               </div>
               <div
-                class="item-type"
-                :data-type="detailt.afternoonCheckInTypeOn"
+                class="item-type-box"
+                v-if="
+                  detailt.afternoonOnDutyResult ==
+                    detailt.afternoonOffDutyResult
+                "
               >
-                {{ detailt.afternoonOnDutyResult | getText }}
+                <div
+                  class="item-type"
+                  :data-type="detailt.afternoonCheckInTypeOn"
+                >
+                  {{ detailt.afternoonOnDutyResult | getText }}
+                </div>
               </div>
-              <div
-                class="item-type"
-                :data-type="detailt.afternoonCheckInTypeOff"
-              >
-                {{ detailt.afternoonOffDutyResult | getText }}
+              <div class="item-type-box" v-else>
+                <div
+                  class="item-type"
+                  :data-type="detailt.afternoonCheckInTypeOn"
+                >
+                  {{ detailt.afternoonOnDutyResult | getText }}
+                </div>
+                <div
+                  class="item-type"
+                  :data-type="detailt.afternoonCheckInTypeOff"
+                >
+                  {{ detailt.afternoonOffDutyResult | getText }}
+                </div>
               </div>
             </div>
           </div>
