@@ -1032,7 +1032,7 @@ export default {
 
       this.$api
         .post({
-          url: "/attendance/attendanceWorkSummary/listMySummary",
+          url: "/attendance/attendanceWorkSummary/real/my/work/summary",
           data,
           headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
