@@ -138,6 +138,9 @@
             align-items: center;
             margin-right: 16px;
             margin-bottom: 16px;
+            &.gap-left {
+              margin-left: 16px;
+            }
             @media screen and(max-width: 1470px) {
               &:nth-child(4n -1) {
                 margin-right: 0 !important;
@@ -276,6 +279,7 @@
                     .clock-result-head {
                       font-size: @font16;
                       color: #606266;
+                      margin-bottom: 10px;
                     }
                     .clock-result-type {
                       font-size: @font12;
@@ -627,6 +631,69 @@
                 <el-option value="-2" label="无需批阅"></el-option>
               </el-select>
             </div>
+            <div class="serch-item gap-left">
+              <div class="serch-item-text">公司名称</div>
+              <!--   @change="setChangeList" -->
+              <el-select
+                class="serch-item-select"
+                v-model="refresh.companyId"
+                placeholder="公司名称"
+                clearable
+                filterable
+                remote
+                @focus="companyFocus"
+                @change="companyChange"
+                :loading="refresh.company.loading"
+                value-key="value"
+                popper-class="options-item"
+              >
+                <el-option
+                  v-for="item in refresh.company.list"
+                  :key="item.id"
+                  :label="item.companyName"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </div>
+            <div class="serch-item">
+              <div class="serch-item-text">所在部门</div>
+              <!--   @change="setChangeList" -->
+              <el-select
+                class="serch-item-select"
+                popper-class="options-item"
+                v-model="refresh.departmentId"
+                placeholder="部门"
+                clearable
+                filterable
+                remote
+                :remote-method="getDepartmentData"
+                :loading="refresh.department.loading"
+                value-key="value"
+              >
+                <el-option
+                  v-for="item in refresh.department.list"
+                  :key="item.id"
+                  :label="item.deptName"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </div>
+            <div class="serch-item">
+              <div class="serch-item-text">打卡情况</div>
+              <!--   @change="setChangeList" -->
+              <el-select
+                class="serch-item-select"
+                v-model="refresh.condition"
+                placeholder="请选择"
+                popper-class="options-item"
+              >
+                <el-option value="" label="全部"></el-option>
+                <el-option value="1" label="有打卡记录"></el-option>
+                <el-option value="0" label="无打卡记录"></el-option>
+              </el-select>
+            </div>
             <div class="serch-item-btn">
               <button class="serch-reset" @click="refreshData">重置</button>
               <button class="serch-submit" @click="setChangeList">搜索</button>
@@ -671,6 +738,7 @@
                           <div
                             class="per-type"
                             :class="'per-type' + item.attendanceType"
+                            v-if="item.attendanceText != '正常考勤'"
                           >
                             {{ item.attendanceText }}
                           </div>
@@ -685,18 +753,19 @@
                       <div class="clock-result-head">
                         {{ item.morningAttendanceInfo || "暂无记录" }}
                       </div>
-                      <div
+                      <span
                         class="clock-result-type"
                         :data-type="item.morningCheckInTypeOn"
                       >
                         {{ item.morningOnDutyResult | getText }}
-                      </div>
-                      <div
+                      </span>
+                      <span v-if="item.morningOffDutyResult"> / </span>
+                      <span
                         class="clock-result-type"
                         :data-type="item.morningCheckInTypeOff"
                       >
                         {{ item.morningOffDutyResult | getText }}
-                      </div>
+                      </span>
                     </div>
                   </div>
                   <!-- 下午考勤 -->
@@ -705,18 +774,19 @@
                       <div class="clock-result-head">
                         {{ item.afternoonAttendanceInfo || "暂无记录" }}
                       </div>
-                      <div
+                      <span
                         class="clock-result-type"
                         :data-type="item.afternoonCheckInTypeOn"
                       >
                         {{ item.afternoonOnDutyResult | getText }}
-                      </div>
-                      <div
+                      </span>
+                      <span v-if="item.afternoonOffDutyResult"> / </span>
+                      <span
                         class="clock-result-type"
                         :data-type="item.afternoonCheckInTypeOff"
                       >
                         {{ item.afternoonOffDutyResult | getText }}
-                      </div>
+                      </span>
                     </div>
                   </div>
                   <div class="tab-body-cell">
@@ -957,6 +1027,11 @@ export default {
   },
   data() {
     return {
+      functionRuleObj: {
+        company: false, // 公司
+        department: false, // 部门
+        employee: false // 人员
+      },
       activeCollapse: "calendar1",
       color: ["#0DA88B", "#F6A420", "#EF5656"],
       currentNavIndex: 0,
@@ -991,6 +1066,17 @@ export default {
         }
       ],
       refresh: {
+        condition: "",
+        companyId: "",
+        company: {
+          loading: false,
+          list: []
+        },
+        departmentId: "",
+        department: {
+          loading: false,
+          list: []
+        },
         page: {
           currentPage: 1,
           total: 1,
@@ -1007,6 +1093,7 @@ export default {
         calendarTiem: [], //util.format(new Date(), "yyyy-MM-dd"), //日历时间
         renderList: [] //渲染结果数组
       },
+
       mySlave: {
         //我的管理
         list: [],
@@ -1027,19 +1114,96 @@ export default {
     };
   },
   created() {
-    this.getLoginPer();
+    // this.getLoginPer();
     this.getList();
     this.getMySlaveList();
     this.getMyInterestList();
   },
   filters: {
     getText(value) {
-      if (value == null || value === "") return "暂无";
+      if (value === "") return "暂无";
+      else if (value === undefined) return "";
       const text = ["正常", "迟到", "早退", "旷工", "请假", "迟到早退"];
       return text[value];
     }
   },
   methods: {
+    /**
+     * @description: 公司列表搜索
+     * @param {*} keyWork
+     * @return {*}
+     */
+    queryCompanyList(keyWork = "") {
+      this.$set(this.refresh.company, "loading", true);
+      this.$api
+        .post({
+          url: "/attendance/attendanceWorkSummary/company",
+          data: {
+            limit: 50,
+            page: 1,
+            keyWord: keyWork
+          },
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let data = e.data;
+          if (data.code == 200) {
+            this.refresh.company.list = data.data;
+          }
+        })
+        .finally(e => {
+          this.$set(this.refresh.company, "loading", false);
+        });
+    },
+    /**
+     * @example:公司获取焦点事件
+     */
+    companyFocus() {
+      if (this.refresh.company.list.length == 0) {
+        this.queryCompanyList();
+      }
+    },
+    /**
+     * @example:公司改变事件
+     */
+    companyChange() {
+      this.refresh.departmentId = "";
+      this.refresh.department = {
+        loading: false,
+        list: []
+      };
+      this.getDepartmentData();
+    },
+    /**
+     * @example:部门搜索事件
+     */
+    getDepartmentData(keyWord = "") {
+      this.refresh.department.list = [];
+      console.log(this.refresh.companyId, "this.refresh.companyId");
+      if (this.refresh.companyId) {
+        this.$set(this.refresh.department, "loading", true);
+        this.$api
+          .post({
+            url: "/attendance/attendanceWorkSummary/department",
+            data: {
+              limit: 50,
+              page: 1,
+              keyWord: keyWord,
+              companyId: this.refresh.companyId
+            },
+            headers: { "Content-Type": "application/json" }
+          })
+          .then(e => {
+            let data = e.data;
+            if (data.code == 200) {
+              this.refresh.department.list = data.data.list;
+            }
+          })
+          .finally(e => {
+            this.$set(this.refresh.department, "loading", false);
+          });
+      }
+    },
     /**
      * @example: 获取当前登录人的名称
      */
@@ -1189,9 +1353,15 @@ export default {
         page: refresh.page.currentPage,
         addStatus: refresh.summaryAddStatus,
         checkStatus: refresh.summaryCheckStatus,
-        attendanceStatus: refresh.attendanceStatus
+        attendanceStatus: refresh.attendanceStatus,
+        companyId: this.refresh.companyId,
+        departmentId: this.refresh.departmentId,
+        isAttendance: this.refresh.condition
       };
-      if (this.refresh.personAccountPer != "") {
+      if (
+        this.refresh.personAccountPer != "" &&
+        this.refresh.personAccountPer.accountId != ""
+      ) {
         data.personIds = [this.refresh.personAccountPer.accountId];
       }
 
@@ -1212,6 +1382,13 @@ export default {
             let summaryCheckStatusType = getSummaryCheckStatusType(
               v.summaryCheckStatus
             );
+            if (v.morningOnDutyResult === v.morningOffDutyResult) {
+              delete v.morningOffDutyResult;
+            }
+            if (v.afternoonOnDutyResult === v.afternoonOffDutyResult) {
+              delete v.afternoonOffDutyResult;
+            }
+
             return {
               ...v,
               ...{
