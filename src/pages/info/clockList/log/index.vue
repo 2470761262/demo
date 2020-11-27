@@ -278,6 +278,14 @@
                       font-size: @font16;
                       color: #606266;
                     }
+                    .clock-result-type-box {
+                      display: flex;
+                      .clock-result-type {
+                        &:nth-child(1) {
+                          margin-right: 10px;
+                        }
+                      }
+                    }
                     .clock-result-type {
                       font-size: @font12;
                       margin-top: 8px;
@@ -687,20 +695,23 @@
                       <div class="clock-result-head">
                         {{ item.morningAttendanceInfo || "暂无记录" }}
                       </div>
-                      <div
-                        class="clock-result-type"
-                        :data-type="item.morningCheckInTypeOn"
-                      >
-                        {{ item.morningOnDutyResult | getText }}
-                      </div>
-                      <div
-                        v-if="
-                          item.morningOnDutyResult != item.morningOffDutyResult
-                        "
-                        class="clock-result-type"
-                        :data-type="item.morningCheckInTypeOff"
-                      >
-                        {{ item.morningOffDutyResult | getText }}
+                      <div class="clock-result-type-box">
+                        <div
+                          class="clock-result-type"
+                          :data-type="item.morningCheckInTypeOn"
+                        >
+                          {{ item.morningOnDutyResult | getText }}
+                        </div>
+                        <div
+                          v-if="
+                            item.morningOnDutyResult !=
+                              item.morningOffDutyResult
+                          "
+                          class="clock-result-type"
+                          :data-type="item.morningCheckInTypeOff"
+                        >
+                          {{ item.morningOffDutyResult | getText }}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -710,21 +721,23 @@
                       <div class="clock-result-head">
                         {{ item.afternoonAttendanceInfo || "暂无记录" }}
                       </div>
-                      <div
-                        class="clock-result-type"
-                        :data-type="item.afternoonCheckInTypeOn"
-                      >
-                        {{ item.afternoonOnDutyResult | getText }}
-                      </div>
-                      <div
-                        v-if="
-                          item.afternoonOnDutyResult !=
-                            item.afternoonOffDutyResult
-                        "
-                        class="clock-result-type"
-                        :data-type="item.afternoonCheckInTypeOff"
-                      >
-                        {{ item.afternoonOffDutyResult | getText }}
+                      <div class="clock-result-type-box">
+                        <div
+                          class="clock-result-type"
+                          :data-type="item.afternoonCheckInTypeOn"
+                        >
+                          {{ item.afternoonOnDutyResult | getText }}
+                        </div>
+                        <div
+                          v-if="
+                            item.afternoonOnDutyResult !=
+                              item.afternoonOffDutyResult
+                          "
+                          class="clock-result-type"
+                          :data-type="item.afternoonCheckInTypeOff"
+                        >
+                          {{ item.afternoonOffDutyResult | getText }}
+                        </div>
                       </div>
                     </div>
                   </div>
