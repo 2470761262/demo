@@ -386,7 +386,7 @@
                   {{ detailt.morningOnDutyResult | getText }}
                 </div>
               </div>
-              <div v-else>
+              <div class="item-type-box" v-else>
                 <div
                   class="item-type"
                   :data-type="detailt.morningCheckInTypeOn"
