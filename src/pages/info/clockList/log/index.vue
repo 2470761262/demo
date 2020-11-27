@@ -695,8 +695,7 @@
                       </div>
                       <div
                         v-if="
-                          item.morningOnDutyResult != 0 ||
-                            item.morningOffDutyResult != 0
+                          item.morningOnDutyResult != item.morningOffDutyResult
                         "
                         class="clock-result-type"
                         :data-type="item.morningCheckInTypeOff"
@@ -719,8 +718,8 @@
                       </div>
                       <div
                         v-if="
-                          item.afternoonOnDutyResult != 0 ||
-                            item.afternoonOffDutyResult != 0
+                          item.afternoonOnDutyResult !=
+                            item.afternoonOffDutyResult
                         "
                         class="clock-result-type"
                         :data-type="item.afternoonCheckInTypeOff"
