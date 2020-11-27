@@ -1314,7 +1314,7 @@ export default {
 
     refreshData() {
       Object.assign(this.$data.refresh, this.$options.data.call(this).refresh);
-      this.getLoginPer();
+      // this.getLoginPer();
       this.getList();
     },
     /**
