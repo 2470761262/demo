@@ -116,13 +116,17 @@
                 placeholder="请选择楼盘"
                 remote
                 clearable
-                @focus="remoteInput(hous.comId)"
+                @focus="remoteInput(hous.comId, hous)"
                 @change="queryCBId(hous)"
-                :remote-method="remoteMethod"
+                :remote-method="
+                  query => {
+                    remoteMethod(query, hous);
+                  }
+                "
                 filterable
               >
                 <el-option
-                  v-for="item in comList"
+                  v-for="item in hous.comList"
                   :key="item.index"
                   :label="item.name"
                   :value="item.value"
@@ -302,7 +306,7 @@
     <fixedPopup
       :visible.sync="alertflag"
       styleType="0"
-      customFlag="true"
+      :customFlag="true"
       @confirmEmit="confirmEmit"
       @customBtn="customBtn"
     >
@@ -355,6 +359,7 @@ export default {
           agentPer: "",
           houseEid: "",
           cusfeedback: "",
+          comList: [], //楼盘
           cbIdList: [], //楼栋
           roomNoList: [] //房间号
         }
@@ -505,6 +510,7 @@ export default {
         agentPer: "",
         houseEid: "",
         cusfeedback: "",
+        comList: [], //楼盘
         cbIdList: [], //楼栋
         roomNoList: [] //房间号
       };
@@ -557,12 +563,12 @@ export default {
     /**
      * @example: 楼盘、楼栋、房号三级联动
      */
-    remoteInput(comId) {
+    remoteInput(comId, hous) {
       if (comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod(query) {
+    remoteMethod(query, hous) {
       var that = this;
       if (query !== "") {
         this.$api
@@ -578,7 +584,7 @@ export default {
           })
           .then(e => {
             if (e.data.code == 200) {
-              that.comList = e.data.data.list;
+              hous.comList = e.data.data.list;
             }
           });
       }
@@ -771,6 +777,7 @@ export default {
           agentPer: "",
           houseEid: "",
           cusfeedback: "",
+          comList: [], //楼盘
           cbIdList: [], //楼栋
           roomNoList: [] //房间号
         }
