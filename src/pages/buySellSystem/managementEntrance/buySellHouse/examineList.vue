@@ -1506,6 +1506,9 @@ export default {
         }
       }
     }
+    /deep/.el-table__body-wrapper::-webkit-scrollbar {
+      display: none;
+    }
     /deep/.content {
       flex: 1;
       display: flex;
