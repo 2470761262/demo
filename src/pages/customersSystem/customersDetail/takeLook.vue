@@ -565,7 +565,7 @@ export default {
      */
     remoteInput(comId, hous) {
       if (comId.length == 0) {
-        this.remoteMethod();
+        this.remoteMethod(undefined, hous);
       }
     },
     remoteMethod(query, hous) {

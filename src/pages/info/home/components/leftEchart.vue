@@ -314,7 +314,7 @@
       </div>
       <div class="rank-list-data" v-loading="loading">
         <el-scrollbar class="scrollbar" id="broker">
-          <!-- 如果需要显示is-fixed 则需要加上这个样式is-emplt-split -->
+          <!-- 如果需要显示is-fixed 则需要加上这个样式is-emplt-split  -->
           <div
             class="scroll-pad"
             :class="{ 'is-emplt-split': isDefaultBroker }"

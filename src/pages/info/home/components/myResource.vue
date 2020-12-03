@@ -15,6 +15,13 @@
       color: #303133;
       font-weight: bold;
       font-size: @font18;
+      .remark {
+        display: inline-block;
+        margin-left: 26px;
+        font-size: var(--font--14);
+        color: #f56c6c;
+        font-weight: normal;
+      }
     }
     .head-more {
       color: @backgroud;
@@ -64,7 +71,9 @@
 <template>
   <div class="resource">
     <div class="head">
-      <span class="head-title">我的资源</span>
+      <span class="head-title"
+        >我的资源<span class="remark">注：数据每隔5分钟更新</span></span
+      >
       <span class="head-more" @click="navToPage">查看更多</span>
     </div>
     <div class="layout-content">
