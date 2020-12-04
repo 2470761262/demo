@@ -692,7 +692,13 @@
                   <!-- 上午考勤 -->
                   <div class="tab-body-cell">
                     <div class="clock-result">
-                      <div class="clock-result-head">
+                      <div
+                        class="clock-result-head"
+                        v-if="
+                          item.morningOnDutyResult != 3 &&
+                            item.morningOffDutyResult != 3
+                        "
+                      >
                         {{ item.morningAttendanceInfo || "暂无记录" }}
                       </div>
                       <div class="clock-result-type-box">
@@ -718,7 +724,13 @@
                   <!-- 下午考勤 -->
                   <div class="tab-body-cell">
                     <div class="clock-result">
-                      <div class="clock-result-head">
+                      <div
+                        class="clock-result-head"
+                        v-if="
+                          item.afternoonOnDutyResult != 3 &&
+                            item.afternoonOffDutyResult != 3
+                        "
+                      >
                         {{ item.afternoonAttendanceInfo || "暂无记录" }}
                       </div>
                       <div class="clock-result-type-box">
