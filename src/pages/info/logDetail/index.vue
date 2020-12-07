@@ -309,31 +309,31 @@
         </div>
       </div>
       <div class="layout-contnet">
-        <div class="cell-item" v-if="config.excavate">
+        <div class="cell-item" v-if="detailt.attendanceSummaryType==3 ||detailt.attendanceSummaryType==2"><!--config.excavate-->
           <h3>今日挖掘优质房源</h3>
           <p>
             {{ detailt.excavateHouseToday }}
           </p>
         </div>
-        <div class="cell-item" v-if="config.clientDemand">
+        <div class="cell-item" v-if="detailt.attendanceSummaryType==3 ||detailt.attendanceSummaryType==2"><!--config.clientDemand-->
           <h3>急购客户需求</h3>
           <p>
             {{ detailt.urgentCustomerRequire || "暂无" }}
           </p>
         </div>
-        <div class="cell-item" v-if="config.growth">
+        <div class="cell-item"><!--config.growth-->
           <h3>今日总结</h3>
           <p>
             {{ detailt.summaryToday || "暂无" }}
           </p>
         </div>
-        <div class="cell-item" v-if="config.plan">
+        <div class="cell-item"><!--config.plan-->
           <h3>明日计划</h3>
           <p>
             {{ detailt.planTomorrow || "暂无" }}
           </p>
         </div>
-        <div class="cell-item" v-if="config.share">
+        <div class="cell-item" v-if="detailt.attendanceSummaryType==3"><!--config.share-->
           <h3>今日案例分享</h3>
           <p>
             {{ detailt.caseShareToday || "暂无" }}
@@ -536,6 +536,8 @@ export default {
      * @example: 获取人员显示权限
      */
     getPerType() {
+      //wlh 注释，暂不需要判断，日志详情有返回身份类型
+      return;
       this.$api
         .post({
           url: "/attendance/attendanceWorkSummary/judgeSummaryType"
