@@ -171,13 +171,13 @@
               <div class="col-textarea">
                 <el-input
                   type="textarea"
-                  placeholder="请输入今日总结"
+                  placeholder="请输入今日成长与问题"
                   v-model="form.growth"
                   maxlength="200"
                   data-vv-validate-on="change"
                   v-validate="'required|arrGTLength:1'"
                   data-vv-name="growth"
-                  data-vv-as="今日总结"
+                  data-vv-as="今日成长与问题"
                   show-word-limit
                   resize="none"
                 >
