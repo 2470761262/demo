@@ -614,7 +614,8 @@ export default {
   .main {
     flex: 1;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    // min-height: 700px;
     // prettier-ignore
     margin-top: 16PX;
     // prettier-ignore
