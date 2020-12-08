@@ -768,6 +768,12 @@
                       >
                         {{ item.morningOffDutyResult | getText }}
                       </span>
+                      <span
+                        class="clock-result-type"
+                        :data-type="item.morningCheckInTypeOff"
+                      >
+                        {{ item.morningLeaveType }}
+                      </span>
                     </div>
                   </div>
                   <!-- 下午考勤 -->
@@ -788,6 +794,12 @@
                         :data-type="item.afternoonCheckInTypeOff"
                       >
                         {{ item.afternoonOffDutyResult | getText }}
+                      </span>
+                       <span
+                        class="clock-result-type"
+                        :data-type="item.afternoonCheckInTypeOff"
+                      >
+                        {{ item.afternoonLeaveType }}
                       </span>
                     </div>
                   </div>
