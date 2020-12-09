@@ -244,7 +244,7 @@
                   >
                   </el-table-column>
                   <el-table-column
-                    min-width="177"
+                    min-width="100"
                     prop="applyType"
                     label="类型"
                     align="left"
@@ -252,6 +252,41 @@
                   >
                     <template v-slot="scope">
                       <span>{{ scope.row.applyType | applyTypeFilter }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    min-width="100"
+                    prop="applySubType"
+                    label="子类型"
+                    align="left"
+                  >
+                    <template v-slot="scope">
+                      <!-- 请假 -->
+                      <span v-if="scope.row.applyType == 1">{{
+                        scope.row.applySubType | leaveSubTypeFilter
+                      }}</span>
+                      <el-tooltip
+                        placement="top"
+                        popper-class="tip-bg"
+                        offset="-150"
+                        v-if="scope.row.applyType == 2"
+                      >
+                        <span
+                          >1.{{
+                            scope.row.reissueSubType.split(",")[0]
+                          }}...</span
+                        >
+                        <div slot="content">
+                          <div
+                            class="tip"
+                            v-for="(item,
+                            idx) in scope.row.reissueSubType.split(',')"
+                            :key="idx"
+                          >
+                            {{ idx + 1 }}.{{ item }}
+                          </div>
+                        </div>
+                      </el-tooltip>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -441,6 +476,9 @@ export default {
   filters: {
     applyTypeFilter(value) {
       return util.countMapFilter(value, "APPLYTYPE", "暂无");
+    },
+    leaveSubTypeFilter(value) {
+      return util.countMapFilter(value, "LEAVESUBTYPE", "-");
     },
     statusFilter(value) {
       return statusMap.get(value) ? statusMap.get(value) : "暂无";
@@ -688,9 +726,9 @@ export default {
 };
 </script>
 <style lang="less">
-// .children-page {
-//   height: 100%;
-// }
+.tip-bg {
+  background: rgba(0, 0, 0, 0.6) !important;
+}
 </style>
 <style lang="less" scoped>
 /*** element下拉选择面板 ***/
@@ -1121,6 +1159,12 @@ export default {
         }
       }
     }
+  }
+}
+.tip {
+  font-size: @font16;
+  & + .tip {
+    margin-top: 12px;
   }
 }
 </style>
