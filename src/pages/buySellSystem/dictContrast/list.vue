@@ -223,6 +223,20 @@
           >
             批量关系同步
           </button>
+          <button
+            class="batch-button anchor-pointn"
+            @click="batchBenchmarkingXfl"
+            data-anchor="幸福里小区对标列表批量对标"
+          >
+            幸福里批量对标
+          </button>
+          <button
+            class="batch-button anchor-pointn"
+            @click="batchRelationXfl"
+            data-anchor="幸福里小区对标列表批量关系同步"
+          >
+            幸福里批量关系同步
+          </button>
         </div>
         <div class="table">
           <el-table
@@ -305,30 +319,50 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="磐石小区地址"
+              label="幸福里对标情况"
               align="right"
-              min-width="140"
+              min-width="130"
               show-overflow-tooltip
             >
               <template v-slot="scope">
-                <span>{{ scope.row.communityAddress }}</span>
+                <span>{{ scope.row.contrastXflStr }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="磐石小区所属区域"
+              label="幸福里小区ID"
               align="right"
-              min-width="150"
+              min-width="130"
               show-overflow-tooltip
             >
               <template v-slot="scope">
-                <span>{{ scope.row.shangquanDistrictName }}</span>
+                <span>{{ scope.row.xflCommunityId }}</span>
               </template>
             </el-table-column>
+            <!--            <el-table-column-->
+            <!--              label="磐石小区地址"-->
+            <!--              align="right"-->
+            <!--              min-width="140"-->
+            <!--              show-overflow-tooltip-->
+            <!--            >-->
+            <!--              <template v-slot="scope">-->
+            <!--                <span>{{ scope.row.communityAddress58 }}</span>-->
+            <!--              </template>-->
+            <!--            </el-table-column>-->
+            <!--            <el-table-column-->
+            <!--              label="磐石小区所属区域"-->
+            <!--              align="right"-->
+            <!--              min-width="150"-->
+            <!--              show-overflow-tooltip-->
+            <!--            >-->
+            <!--              <template v-slot="scope">-->
+            <!--                <span>{{ scope.row.shangquanDistrictName }}</span>-->
+            <!--              </template>-->
+            <!--            </el-table-column>-->
             <el-table-column
               fixed="right"
               label="操作"
               align="right"
-              width="250"
+              width="320"
             >
               <template v-slot="scope">
                 <el-button
@@ -345,13 +379,37 @@
                     scope.row.panshiCommunityId != null ? 'info' : 'primary'
                   "
                   :disabled="scope.row.panshiCommunityId != null"
-                  >关系同步</el-button
+                  >同步58</el-button
                 >
                 <el-button
                   class="operate-btn"
                   @click="handleBenchmark(scope.row)"
                   type="primary"
-                  >手工对标</el-button
+                  >58手工对标</el-button
+                >
+                <el-button
+                  class="operate-btn"
+                  @click="handleXflCallClick(scope.row)"
+                  :type="
+                    scope.row.contrastXfl == 0 ||
+                    scope.row.contrastXfl == 1 ||
+                    scope.row.contrastXfl == -3
+                      ? 'info'
+                      : 'primary'
+                  "
+                  :disabled="
+                    scope.row.contrastXfl == 0 ||
+                      scope.row.contrastXfl == 1 ||
+                      scope.row.contrastXfl == -3
+                  "
+                  >幸福里对标</el-button
+                >
+                <el-button
+                  class="operate-btn"
+                  @click="handleSynchroXfl(scope.row)"
+                  type="primary"
+                  :disabled="scope.row.contrastXfl == -2"
+                  >同步幸福里</el-button
                 >
               </template>
             </el-table-column>
@@ -598,6 +656,79 @@ export default {
       this.$api
         .post({
           url: "/community/contrast/batch/synchro",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            ids: this.batchList
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$message({
+              message: e.data.message,
+              type: "success"
+            });
+            this.query(this.pageJson.page);
+          } else {
+            this.$message.error(e.data.message);
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    /**
+     * @example: 幸福里批量对标
+     */
+    batchBenchmarkingXfl() {
+      console.log(this.batchList);
+      // if (this.batchList.length == 0) {
+      //   this.$message({
+      //     message: "请选择楼盘",
+      //     type: "error"
+      //   });
+      //   return;
+      // }
+      this.$message({
+        message: "对标中，请稍后...",
+        type: "info"
+      });
+      this.loading = true;
+      this.$api
+        .post({
+          url: "/community/contrast/xfl/batch/handle",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            ids: this.batchList
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$message({
+              message: e.data.message,
+              type: "success"
+            });
+            this.query(this.pageJson.page);
+          } else {
+            this.$message.error(e.data.message);
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    /**
+     * @example: 幸福里批量关系同步
+     */
+    batchRelationXfl() {
+      console.log(this.batchList);
+      this.$message({
+        message: "同步中，请稍后...",
+        type: "info"
+      });
+      this.loading = true;
+      this.$api
+        .post({
+          url: "/community/contrast/xfl/batch/synchro",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             ids: this.batchList
@@ -873,10 +1004,62 @@ export default {
         })
         .finally(() => {});
     },
+    handleXflCallClick(row) {
+      this.$api
+        .post({
+          url: "/community/contrast/xfl/handle",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            id: row.id,
+            name: row.name,
+            cityName: row.cityName,
+            communityAddress: row.communityAddress,
+            communityAddress58: row.communityAddress58,
+            countyName: row.countyName,
+            idFor58: row.idFor58
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$message({
+              message: e.data.message,
+              type: "success"
+            });
+            this.query(this.pageJson.page);
+          } else {
+            this.$message.error(e.data.message);
+          }
+        })
+        .finally(() => {});
+    },
     handleSynchro(row) {
       this.$api
         .post({
           url: "/community/contrast/synchro",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            id: row.id,
+            idFor58: row.idFor58
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$message({
+              message: e.data.message,
+              type: "success"
+            });
+            this.query(this.pageJson.page);
+          } else {
+            this.$message.error(e.data.message);
+          }
+        })
+        .finally(() => {});
+    },
+    handleSynchroXfl(row) {
+      this.$api;
+      this.$api
+        .post({
+          url: "/community/contrast/xfl/synchro",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             id: row.id,
