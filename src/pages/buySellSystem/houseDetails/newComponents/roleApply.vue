@@ -340,6 +340,7 @@
         class="role-item role-btn-cotnent"
         v-else-if="reloData.applyRealOwner && !realOwnerDisabled"
         @click="openPop('houseUploadflag', 12, 'houseUploadType', 0)"
+        :disabled="addperSaveDisabled"
       >
         <button class="role-btn" :disabled="addperSaveDisabled">
           {{ addperSaveDisabled ? "录入人优先保护中" : "申请实勘人" }}
