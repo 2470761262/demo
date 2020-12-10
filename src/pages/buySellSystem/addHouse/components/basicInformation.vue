@@ -824,6 +824,7 @@ import util from "@/util/util";
 import but from "@/evenBus/but.js";
 import releaseHouse from "@/pages/buySellSystem/houseDetails/common/releaseHouse.js";
 import { verify } from "crypto";
+import { mapState } from "vuex";
 /**
  * 手机号码脱敏
  * @param number
@@ -882,6 +883,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      isEditHouse: state => state.houseDateil.isEditHouse
+    }),
     getErrorFlag() {
       let ErroeField = ["room", "hall", "toilet", "balcony"];
       return ErroeField.some(item => this.errorBags.has(item));
@@ -926,6 +930,7 @@ export default {
     }
   },
   mounted() {
+    console.log("$$$$$$$$$$", this.isEditHouse);
     //true 则去获取数据
     if (this.getData) {
       this.getLoadData();
@@ -1622,10 +1627,12 @@ export default {
             this.$store.commit("updateHouseNo", e.data.data.houseNo); //更新房源编号
             // 返回手机号脱敏处理
             let step1 = e.data.data;
-            step1.tel = phoneNuberConvert(step1.tel);
-            step1.tel1 = phoneNuberConvert(step1.tel1);
-            step1.tel2 = phoneNuberConvert(step1.tel2);
-            step1.tel3 = phoneNuberConvert(step1.tel3);
+            if(!this.isEditHouse){  //跟单房源(有编辑权限的人)编辑房源时，页面验真手机号及备用手机号显示真实号码
+              step1.tel = phoneNuberConvert(step1.tel);
+              step1.tel1 = phoneNuberConvert(step1.tel1);
+              step1.tel2 = phoneNuberConvert(step1.tel2);
+              step1.tel3 = phoneNuberConvert(step1.tel3);
+            }
             // 保存原手机号
             this.originTelObj = {
               tel1: step1.tel1,

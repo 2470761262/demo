@@ -345,8 +345,16 @@ export default {
           this.houseData
         )
       ) {
+        this.setParam({
+          paramName: "isEditHouse",
+          value: true
+        });
         return true;
       }
+      this.setParam({
+          paramName: "isEditHouse",
+          value: false
+        });
       return false;
     },
     //是否显示编辑图片
