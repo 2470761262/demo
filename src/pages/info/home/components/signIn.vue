@@ -366,9 +366,7 @@ export default {
     refreshQr() {
       this.showQr = false;
       this.clearTimeout();
-      setTimeout(() => {
-        this.getWorkEndTime(true);
-      }, 200);
+      this.getWorkEndTime(true);
     },
     jumpToNoClock() {
       this.$router.push({ path: "/noClock" });
