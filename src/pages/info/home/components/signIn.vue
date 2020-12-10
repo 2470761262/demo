@@ -228,7 +228,11 @@
           <div class="qr-img">
             <img
               :src="
-                url + '/attendance/apply/checking/image?isShow=true&tk=' + tk
+                url +
+                  '/attendance/apply/checking/image?isShow=true&tk=' +
+                  tk +
+                  '&time=' +
+                  new Date().getTime()
               "
             />
           </div>
