@@ -84,6 +84,14 @@
           background: rgba(255, 255, 255, 0.8);
           backdrop-filter: blur(2px);
         }
+        .qr-img {
+          width: 184px;
+          height: 184px;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
       }
     }
     .change-clock {
@@ -217,11 +225,18 @@
         <div class="close-qr el-icon-close" @click="changeQr(false)"></div>
         <div class="posi-center">
           <div id="qr"></div>
+          <div class="qr-img">
+            <img
+              :src="
+                url + '/attendance/apply/checking/image?isShow=true&tk=' + tk
+              "
+            />
+          </div>
           <div class="tips-refresh" v-if="tipsRefresh">二维码过期,请刷新</div>
         </div>
         <div class="clock-qr-tips">手机微信扫码签到</div>
         <div class="refresh-qr">
-          <div @click="getWorkEndTime(true)">
+          <div @click="refreshQr(true)">
             <span class="el-icon-refresh"></span>刷新二维码
           </div>
         </div>
@@ -287,12 +302,15 @@ export default {
       qrInstance: null,
       visitFreedom: false,
       tipsRefresh: false,
-      tipsRefreshID: null
+      tipsRefreshID: null,
+      url: process.env.VUE_APP_BASE_API,
+      tk: window.localStorage.getItem("tk")
     };
   },
   created() {
     this.getWorkEndTime();
     this.getIsManager();
+    this.getWorkSummary();
   },
   beforeDestroy() {
     this.clearTimeout();
@@ -304,53 +322,25 @@ export default {
         type: "success"
       });
     },
-    getWorkEndTime(isShow = false) {
-      // if (isShow) {
-      //   this.$message({
-      //     message: "二维码加载中.",
-      //     type: "success"
-      //   });
-      // }
+    getWorkSummary() {
       this.$api
         .post({
-          url: "/attendance/apply/checking/qrcode",
-          data: {
-            isShow
-          },
+          url: "/attendance/apply/needWrite/workSummary",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
           qs: true
         })
-        .then(({ data }) => {
-          const result = data.data;
-          this.clearTimeout();
-          if (result.qrcode) {
-            this.showQr = true;
-            this.qrUrl = result.qrcode;
-            this.$nextTick(() => {
-              if (!this.qrInstance) {
-                this.qrInstance = new qrjs2("qr", {
-                  text: this.qrUrl,
-                  width: this.isShowWordBtn ? 168 : 112, //二维码的宽度
-                  height: this.isShowWordBtn ? 168 : 112, //二维码的高度
-                  colorDark: "#008778",
-                  correctLevel: qrjs2.CorrectLevel.H
-                });
-                this.qrInstance._el.title = "";
-              } else {
-                this.qrInstance.clear(); // 清除代码
-                this.qrInstance.makeCode(this.qrUrl);
-                this.qrInstance._el.title = "";
-              }
-              this.tipsRefreshID = setTimeout(() => {
-                this.tipsRefresh = true;
-              }, 20000);
-            });
-            this.$message({
-              message: "二维码加载完成.",
-              type: "success"
-            });
+        .then(res => {
+          if (res.code == 200) {
+            this.isShowWordBtn = res.data.isShowWorkSummary;
           }
-          this.isShowWordBtn = result.isShowWorkSummary;
         });
+    },
+    getWorkEndTime(isShow = false) {
+      this.showQr = isShow;
+      this.clearTimeout();
+      this.tipsRefreshID = setTimeout(() => {
+        this.tipsRefresh = true;
+      }, 20000);
     },
     clearTimeout() {
       clearTimeout(this.tipsRefreshID);
@@ -368,6 +358,13 @@ export default {
         this.qrInstance = null;
         this.clearTimeout();
       }
+    },
+    refreshQr() {
+      this.showQr = false;
+      this.clearTimeout();
+      setTimeout(() => {
+        this.getWorkEndTime(true);
+      }, 200);
     },
     jumpToNoClock() {
       this.$router.push({ path: "/noClock" });
