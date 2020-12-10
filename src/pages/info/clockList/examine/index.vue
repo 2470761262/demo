@@ -181,6 +181,30 @@
                       </el-date-picker>
                     </el-form-item>
                   </el-col>
+                  <el-col :span="9">
+                    <el-form-item label="岗位">
+                      <el-select
+                        class="width100"
+                        popper-class="options-item"
+                        v-model="formData.positionId"
+                        placeholder="请选择"
+                        filterable
+                        @focus="positionFocus"
+                        remote
+                        :remote-method="queryPosition"
+                        :loading="position.loading"
+                        clearable
+                        @blur="query()"
+                      >
+                        <el-option
+                          v-for="(item, index) in position.list"
+                          :key="index"
+                          :label="item.RoleName"
+                          :value="item.id"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
                   <el-col :span="6" class="fr">
                     <div class="conditions-btn">
                       <div class="btn" @click="reset">
@@ -220,7 +244,7 @@
                   >
                   </el-table-column>
                   <el-table-column
-                    min-width="177"
+                    min-width="100"
                     prop="applyType"
                     label="类型"
                     align="left"
@@ -228,6 +252,41 @@
                   >
                     <template v-slot="scope">
                       <span>{{ scope.row.applyType | applyTypeFilter }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    min-width="100"
+                    prop="applySubType"
+                    label="子类型"
+                    align="left"
+                  >
+                    <template v-slot="scope">
+                      <!-- 请假 -->
+                      <span v-if="scope.row.applyType == 1">{{
+                        scope.row.applySubType | leaveSubTypeFilter
+                      }}</span>
+                      <el-tooltip
+                        placement="top"
+                        popper-class="tip-bg"
+                        offset="-150"
+                        v-if="scope.row.applyType == 2"
+                      >
+                        <span
+                          >1.{{
+                            scope.row.reissueSubType.split(",")[0]
+                          }}...</span
+                        >
+                        <div slot="content">
+                          <div
+                            class="tip"
+                            v-for="(item,
+                            idx) in scope.row.reissueSubType.split(',')"
+                            :key="idx"
+                          >
+                            {{ idx + 1 }}.{{ item }}
+                          </div>
+                        </div>
+                      </el-tooltip>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -366,7 +425,8 @@ export default {
         applySubType: "",
         status: "",
         applyStartTime: "",
-        applyEndTime: ""
+        applyEndTime: "",
+        positionId: ""
       },
       applyTypeList: APPLYTYPE, //审核类型
       applySubTypeList: [], //审核子类型
@@ -402,6 +462,10 @@ export default {
       personnel: {
         loading: false,
         list: []
+      },
+      position: {
+        list: [],
+        loadding: false
       }
     };
   },
@@ -412,6 +476,9 @@ export default {
   filters: {
     applyTypeFilter(value) {
       return util.countMapFilter(value, "APPLYTYPE", "暂无");
+    },
+    leaveSubTypeFilter(value) {
+      return util.countMapFilter(value, "LEAVESUBTYPE", "-");
     },
     statusFilter(value) {
       return statusMap.get(value) ? statusMap.get(value) : "暂无";
@@ -616,14 +683,52 @@ export default {
         path: detailsMap.get(row.applyType),
         query: { id: row.id }
       });
+    },
+    /**
+     * @description: 选择岗位获取焦点事件
+     * @param {*}
+     * @return {*}
+     */
+    positionFocus() {
+      if (this.position.list.length == 0) {
+        this.queryPosition();
+      }
+    },
+    /**
+     * @description: 岗位模糊搜索
+     * @param {*} keyWord
+     * @return {*}
+     */
+    queryPosition(keyWord = "") {
+      this.$set(this.position, "loading", true);
+      this.$api
+        .post({
+          url: "/attendance/apply/positionList",
+          data: {
+            limit: 50,
+            page: 1,
+            keyWord: keyWord
+          },
+          qs: true,
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        })
+        .then(e => {
+          let data = e.data;
+          if (data.code == 200) {
+            this.position.list = data.data.list;
+          }
+        })
+        .finally(e => {
+          this.$set(this.position, "loading", false);
+        });
     }
   }
 };
 </script>
 <style lang="less">
-// .children-page {
-//   height: 100%;
-// }
+.tip-bg {
+  background: rgba(0, 0, 0, 0.6) !important;
+}
 </style>
 <style lang="less" scoped>
 /*** element下拉选择面板 ***/
@@ -1054,6 +1159,12 @@ export default {
         }
       }
     }
+  }
+}
+.tip {
+  font-size: @font16;
+  & + .tip {
+    margin-top: 12px;
   }
 }
 </style>

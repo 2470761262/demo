@@ -322,7 +322,7 @@
           </p>
         </div>
         <div class="cell-item"><!--config.growth-->
-          <h3>今日总结</h3>
+          <h3>今日成长与问题</h3>
           <p>
             {{ detailt.summaryToday || "暂无" }}
           </p>

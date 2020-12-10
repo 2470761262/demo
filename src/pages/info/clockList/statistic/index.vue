@@ -232,7 +232,9 @@
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      <span>{{ scope.row.del }}/{{ scope.row.position }}</span>
+                      <span
+                        >{{ scope.row.del }} - {{ scope.row.position }}</span
+                      >
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -357,7 +359,9 @@
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      <span>{{ scope.row.del }}/{{ scope.row.position }}</span>
+                      <span
+                        >{{ scope.row.del }} - {{ scope.row.position }}</span
+                      >
                     </template>
                   </el-table-column>
                   <el-table-column

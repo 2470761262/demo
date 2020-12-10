@@ -49,7 +49,8 @@ function getData() {
       lower: 0
     }, //权限开关设置
     followUpdate: null,
-    interviewUpdate: null
+    interviewUpdate: null,
+    isEditHouse: false,
   };
 }
 
