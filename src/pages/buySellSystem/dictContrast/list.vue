@@ -365,6 +365,7 @@
               width="320"
             >
               <template v-slot="scope">
+                <div>
                 <el-button
                   class="operate-btn"
                   @click="handleCallClick(scope.row)"
@@ -386,6 +387,8 @@
                   @click="handleBenchmark(scope.row)"
                   type="primary"
                   >58手工对标</el-button>
+                </div>
+                <div>
                 <el-button
                   class="operate-btn"
                   @click="handleXflCallClick(scope.row)"
@@ -400,6 +403,7 @@
                   :disabled="scope.row.contrastXfl == -2"
                   >同步幸福里</el-button
                 >
+                </div>
               </template>
             </el-table-column>
           </el-table>
@@ -1346,7 +1350,7 @@ export default {
         .el-table {
           td {
             .cell {
-              line-height: 1;
+              line-height: 2;
               font-size: @font16;
               color: #606266;
             }
