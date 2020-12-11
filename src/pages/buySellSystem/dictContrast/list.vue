@@ -184,7 +184,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="colChunks[2]">
-              <el-form-item label="幸福里对标情况">
+              <el-form-item label-width="128px" label="幸福里对标情况">
                 <el-select
                   class="width100 anchor-point"
                   popper-class="anchor-point"
