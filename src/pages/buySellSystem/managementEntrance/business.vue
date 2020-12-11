@@ -472,7 +472,7 @@ export default {
             },
             {
               prop: "realNum",
-              label: "新增实勘”",
+              label: "新增实勘",
               minWidth: "100",
               align: "center",
               sortable: true
