@@ -159,6 +159,48 @@ export default [
           )
       },
       {
+        path: "/clockList/statisticMonth",
+        meta: {
+          keepAlive: true,
+          title: "考勤月统计",
+          // isScrollTop: true, //是否需要记录坐标
+          //  isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockStatisticMonth" */ "@/pages/info/clockList/statisticMonth/index.vue"
+          )
+      },
+      {
+        path: "/clockList/statisticDay",
+        meta: {
+          keepAlive: true,
+          title: "考勤日统计",
+          // isScrollTop: true, //是否需要记录坐标
+          //  isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockStatisticDay" */ "@/pages/info/clockList/statisticDay/index.vue"
+          )
+      },
+      {
+        path: "/clockList/statisticDetail",
+        meta: {
+          keepAlive: true,
+          title: "考勤统计详情",
+          // isScrollTop: true, //是否需要记录坐标
+          //  isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "clockStatisticDetail" */ "@/pages/info/clockList/statisticDetail/index.vue"
+          )
+      },
+      {
         path: "/clockList/examine",
         meta: {
           keepAlive: true,
