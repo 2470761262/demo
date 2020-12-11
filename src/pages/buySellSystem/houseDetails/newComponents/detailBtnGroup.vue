@@ -301,9 +301,10 @@ export default {
     }),
     //发布外网按钮是否禁用
     outBtnDisabled() {
-      return (
-        !this.reloData.releaseOutsideHouse || this.houseData.isLocking == 1
-      );
+      // return (
+      //   !this.reloData.releaseOutsideHouse || this.houseData.isLocking == 1
+      // );
+      return this.houseData.isLocking == 1;
     },
     //发布外网按钮是否显示
     isOutBtn() {
