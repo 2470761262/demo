@@ -183,6 +183,35 @@
                 </el-select>
               </el-form-item>
             </el-col>
+            <el-col :span="colChunks[2]">
+              <el-form-item label="幸福里对标情况">
+                <el-select
+                  class="width100 anchor-point"
+                  popper-class="anchor-point"
+                  data-anchor="小区对标列表幸福里对标情况 => select"
+                  @click.native="log_socket.sendUserActionData"
+                  filterable
+                  v-model="xflStatus"
+                  clearable
+                  @change="query(1)"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    class="anchor-point"
+                    :data-anchor="
+                      '小区对标列表幸福里对标情况 => select => option:' + item.label
+                    "
+                    @click.native="log_socket.sendUserActionData"
+                    v-for="item in xflStatusList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+
             <el-col :span="colChunks[4]" class="fr">
               <div class="conditions-btn">
                 <div
@@ -319,45 +348,45 @@
               </template>
             </el-table-column>
             <el-table-column
-                    label="幸福里对标情况"
-                    align="right"
-                    min-width="130"
-                    show-overflow-tooltip
+              label="幸福里对标情况"
+              align="right"
+              min-width="130"
+              show-overflow-tooltip
             >
               <template v-slot="scope">
                 <span>{{ scope.row.contrastXflStr }}</span>
               </template>
             </el-table-column>
             <el-table-column
-                    label="幸福里小区ID"
-                    align="right"
-                    min-width="130"
-                    show-overflow-tooltip
+              label="幸福里小区ID"
+              align="right"
+              min-width="130"
+              show-overflow-tooltip
             >
               <template v-slot="scope">
                 <span>{{ scope.row.xflCommunityId }}</span>
               </template>
             </el-table-column>
             <!--            <el-table-column-->
-<!--              label="磐石小区地址"-->
-<!--              align="right"-->
-<!--              min-width="140"-->
-<!--              show-overflow-tooltip-->
-<!--            >-->
-<!--              <template v-slot="scope">-->
-<!--                <span>{{ scope.row.communityAddress58 }}</span>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
-<!--            <el-table-column-->
-<!--              label="磐石小区所属区域"-->
-<!--              align="right"-->
-<!--              min-width="150"-->
-<!--              show-overflow-tooltip-->
-<!--            >-->
-<!--              <template v-slot="scope">-->
-<!--                <span>{{ scope.row.shangquanDistrictName }}</span>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
+            <!--              label="磐石小区地址"-->
+            <!--              align="right"-->
+            <!--              min-width="140"-->
+            <!--              show-overflow-tooltip-->
+            <!--            >-->
+            <!--              <template v-slot="scope">-->
+            <!--                <span>{{ scope.row.communityAddress58 }}</span>-->
+            <!--              </template>-->
+            <!--            </el-table-column>-->
+            <!--            <el-table-column-->
+            <!--              label="磐石小区所属区域"-->
+            <!--              align="right"-->
+            <!--              min-width="150"-->
+            <!--              show-overflow-tooltip-->
+            <!--            >-->
+            <!--              <template v-slot="scope">-->
+            <!--                <span>{{ scope.row.shangquanDistrictName }}</span>-->
+            <!--              </template>-->
+            <!--            </el-table-column>-->
             <el-table-column
               fixed="right"
               label="操作"
@@ -385,12 +414,23 @@
                   class="operate-btn"
                   @click="handleBenchmark(scope.row)"
                   type="primary"
-                  >58手工对标</el-button>
+                  >58手工对标</el-button
+                >
                 <el-button
                   class="operate-btn"
                   @click="handleXflCallClick(scope.row)"
-                  :type="scope.row.contrastXfl == 0||scope.row.contrastXfl == 1||scope.row.contrastXfl == -3 ? 'info' : 'primary'"
-                  :disabled="scope.row.contrastXfl == 0||scope.row.contrastXfl == 1||scope.row.contrastXfl == -3"
+                  :type="
+                    scope.row.contrastXfl == 0 ||
+                    scope.row.contrastXfl == 1 ||
+                    scope.row.contrastXfl == -3
+                      ? 'info'
+                      : 'primary'
+                  "
+                  :disabled="
+                    scope.row.contrastXfl == 0 ||
+                      scope.row.contrastXfl == 1 ||
+                      scope.row.contrastXfl == -3
+                  "
                   >幸福里对标</el-button
                 >
                 <el-button
@@ -501,6 +541,36 @@ const BENCHMARKINGSTATUSLIST = [
     value: 6
   }
 ];
+const XFL_STATUS_LIST = [
+  {
+    label: "全部",
+    value: null
+  },
+  {
+    label: "未申请对标",
+    value: -2
+  },
+  {
+    label: "未找到该小区",
+    value: -1
+  },
+  {
+    label: "小区匹配成功",
+    value: 0
+  },
+  {
+    label: "小区人工匹配中",
+    value: 1
+  },
+  {
+    label: "小区匹配失败",
+    value: 2
+  },
+  {
+    label: "已申请未对标",
+    value: -3
+  }
+];
 const RELATIONSTATUSLIST = [
   {
     label: "全部",
@@ -524,7 +594,9 @@ export default {
       dialogTableVisible: false,
       gridData: [],
       benchmarkingStatus: null,
+      xflStatus: null,
       benchmarkingStatusList: BENCHMARKINGSTATUSLIST,
+      xflStatusList: XFL_STATUS_LIST,
       relationStatus: null,
       relationStatusList: RELATIONSTATUSLIST,
       batchList: [], //批量勾选的数组
@@ -946,6 +1018,9 @@ export default {
       if (this.benchmarkingStatus != null) {
         params.contrast = this.benchmarkingStatus;
       }
+      if (this.xflStatus != null) {
+        params.contrastXfl = this.xflStatus;
+      }
       this.$api
         .post({
           headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -1045,7 +1120,7 @@ export default {
         .finally(() => {});
     },
     handleSynchroXfl(row) {
-      this.$api
+      this.$api;
       this.$api
         .post({
           url: "/community/contrast/xfl/synchro",
