@@ -308,7 +308,7 @@ export default {
     },
     //发布外网按钮是否显示
     isOutBtn() {
-      return this.houseData.isReleaseOutside != 1 && this.houseData.plate == 0;
+      return this.houseData.isReleaseOutside != 1 && this.houseData.plate == 0 && this.houseData.AgentPer == this.perId;
     },
     //取消发布外网
     cancelBtnDisabled() {
