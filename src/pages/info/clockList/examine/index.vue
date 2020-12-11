@@ -374,7 +374,7 @@ export default {
     return {
       currentNavIndex: 0,
       loading: false,
-      currentSubNavIndex: 2,
+      currentSubNavIndex: 3,
       subNavs: [
         {
           name: "我的日志",
@@ -382,8 +382,13 @@ export default {
           rUrl: "myWorkSummary"
         },
         {
-          name: "考勤统计",
-          path: "/clockList/statistic",
+          name: "考勤月统计",
+          path: "/clockList/statisticMonth",
+          rUrl: "statistics"
+        },
+        {
+          name: "考勤日统计",
+          path: "/clockList/statisticDay",
           rUrl: "statistics"
         },
         {

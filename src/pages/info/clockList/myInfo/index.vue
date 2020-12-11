@@ -795,7 +795,7 @@
                       >
                         {{ item.afternoonOffDutyResult | getText }}
                       </span>
-                       <span
+                      <span
                         class="clock-result-type"
                         :data-type="item.afternoonCheckInTypeOff"
                       >
@@ -1049,7 +1049,7 @@ export default {
       activeCollapse: "calendar1",
       color: ["#0DA88B", "#F6A420", "#EF5656"],
       currentNavIndex: 0,
-      currentSubNavIndex: 3,
+      currentSubNavIndex: 4,
       subNavs: [
         {
           name: "我的日志",
@@ -1057,8 +1057,13 @@ export default {
           rUrl: "myWorkSummary"
         },
         {
-          name: "考勤统计",
-          path: "/clockList/statistic",
+          name: "考勤月统计",
+          path: "/clockList/statisticMonth",
+          rUrl: "statistics"
+        },
+        {
+          name: "考勤日统计",
+          path: "/clockList/statisticDay",
           rUrl: "statistics"
         },
         {
