@@ -199,7 +199,8 @@
                   <el-option
                     class="anchor-point"
                     :data-anchor="
-                      '小区对标列表幸福里对标情况 => select => option:' + item.label
+                      '小区对标列表幸福里对标情况 => select => option:' +
+                        item.label
                     "
                     @click.native="log_socket.sendUserActionData"
                     v-for="item in xflStatusList"
@@ -395,53 +396,54 @@
             >
               <template v-slot="scope">
                 <div>
-                <el-button
-                  class="operate-btn"
-                  @click="handleCallClick(scope.row)"
-                  :type="scope.row.contrast != -1 ? 'info' : 'primary'"
-                  :disabled="scope.row.contrast != -1"
-                  >58对标</el-button
-                >
-                <el-button
-                  class="operate-btn"
-                  @click="handleSynchro(scope.row)"
-                  :type="
-                    scope.row.panshiCommunityId != null ? 'info' : 'primary'
-                  "
-                  :disabled="scope.row.panshiCommunityId != null"
-                  >同步58</el-button
-                >
-                <el-button
-                  class="operate-btn"
-                  @click="handleBenchmark(scope.row)"
-                  type="primary"
-                  >58手工对标</el-button>
+                  <el-button
+                    class="operate-btn"
+                    @click="handleCallClick(scope.row)"
+                    :type="scope.row.contrast != -1 ? 'info' : 'primary'"
+                    :disabled="scope.row.contrast != -1"
+                    >58对标</el-button
+                  >
+                  <el-button
+                    class="operate-btn"
+                    @click="handleSynchro(scope.row)"
+                    :type="
+                      scope.row.panshiCommunityId != null ? 'info' : 'primary'
+                    "
+                    :disabled="scope.row.panshiCommunityId != null"
+                    >同步58</el-button
+                  >
+                  <el-button
+                    class="operate-btn"
+                    @click="handleBenchmark(scope.row)"
+                    type="primary"
+                    >58手工对标</el-button
+                  >
                 </div>
                 <div>
-                <el-button
-                  class="operate-btn"
-                  @click="handleXflCallClick(scope.row)"
-                  :type="
-                    scope.row.contrastXfl == 0 ||
-                    scope.row.contrastXfl == 1 ||
-                    scope.row.contrastXfl == -3
-                      ? 'info'
-                      : 'primary'
-                  "
-                  :disabled="
-                    scope.row.contrastXfl == 0 ||
+                  <el-button
+                    class="operate-btn"
+                    @click="handleXflCallClick(scope.row)"
+                    :type="
+                      scope.row.contrastXfl == 0 ||
                       scope.row.contrastXfl == 1 ||
                       scope.row.contrastXfl == -3
-                  "
-                  >幸福里对标</el-button
-                >
-                <el-button
-                  class="operate-btn"
-                  @click="handleSynchroXfl(scope.row)"
-                  type="primary"
-                  :disabled="scope.row.contrastXfl == -2"
-                  >同步幸福里</el-button
-                >
+                        ? 'info'
+                        : 'primary'
+                    "
+                    :disabled="
+                      scope.row.contrastXfl == 0 ||
+                        scope.row.contrastXfl == 1 ||
+                        scope.row.contrastXfl == -3
+                    "
+                    >幸福里对标</el-button
+                  >
+                  <el-button
+                    class="operate-btn"
+                    @click="handleSynchroXfl(scope.row)"
+                    type="primary"
+                    :disabled="scope.row.contrastXfl == -2"
+                    >同步幸福里</el-button
+                  >
                 </div>
               </template>
             </el-table-column>
@@ -1001,6 +1003,9 @@ export default {
       this.roomOptData = {};
       this.xflStatus = null;
       this.benchmarkingStatus = null;
+      this.province = 350000;
+      this.city = null;
+      this.county = null;
       this.query();
     },
     /**
