@@ -301,13 +301,14 @@ export default {
     }),
     //发布外网按钮是否禁用
     outBtnDisabled() {
-      return (
-        !this.reloData.releaseOutsideHouse || this.houseData.isLocking == 1
-      );
+      // return (
+      //   !this.reloData.releaseOutsideHouse || this.houseData.isLocking == 1
+      // );
+      return this.houseData.isLocking == 1;
     },
     //发布外网按钮是否显示
     isOutBtn() {
-      return this.houseData.isReleaseOutside != 1 && this.houseData.plate == 0;
+      return this.houseData.isReleaseOutside != 1 && this.houseData.plate == 0 && this.houseData.AgentPer == this.perId;
     },
     //取消发布外网
     cancelBtnDisabled() {
