@@ -429,7 +429,7 @@ export default {
       visitFreedom: false,
       tipsRefresh: false,
       tipsRefreshID: null,
-      helpFlag: true,
+      helpFlag: false,
       btnJson: {
         cancelBtnShow: false,
         confirmBtnShow: false
