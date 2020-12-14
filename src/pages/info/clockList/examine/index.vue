@@ -389,7 +389,7 @@ export default {
         {
           name: "考勤日统计",
           path: "/clockList/statisticDay",
-          rUrl: "statistics"
+          rUrl: "attendanceStatisticsDaily"
         },
         {
           name: "考勤审批",

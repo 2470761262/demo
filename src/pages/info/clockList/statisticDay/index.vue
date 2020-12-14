@@ -635,7 +635,7 @@ export default {
         {
           name: "考勤日统计",
           path: "/clockList/statisticDay",
-          rUrl: "statistics"
+          rUrl: "attendanceStatisticsDaily"
         },
         {
           name: "考勤审批",
@@ -1121,22 +1121,26 @@ export default {
     },
     excelExport() {
       this.pageLoading = true;
-      let date = this.year + "-" + this.currentMonth + "-01";
       let params = {
-        date: date,
+        attendanceDates: [this.checkedDate],
         page: this.pageJson.page,
-        limit: this.pageJson.limit,
+        limit: 2000,
         companyId: this.companyId,
         departmentId: this.departmentId,
-        accountId: this.employeeId,
+        personIds: [],
         positionId: this.positionId,
         status: this.status,
         sortType: this.sortType,
-        sortColumn: this.sortColumn
+        sortColumn: this.sortColumn,
+        attendanceStatus: this.clockStatus,
+        attendanceType: this.clockRequire
       };
+      if (this.employeeId) {
+        params.personIds = [this.employeeId];
+      }
       this.$api
         .post({
-          url: "/attendance/statistics/export",
+          url: "attendance/record/excelAttendanceAllPersonStaticsInfo",
           data: params,
           responseType: "blob",
           headers: { "Content-Type": "application/json" },

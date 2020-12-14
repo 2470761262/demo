@@ -306,7 +306,7 @@
                     </template>
                   </el-table-column>
                   <el-table-column
-                    min-width="133"
+                    min-width="111"
                     prop="absenceNum"
                     label="旷工天数"
                     align="left"
@@ -403,7 +403,7 @@
                   </el-table-column>
                   <el-table-column
                     min-width="131"
-                    label="在职状态/岗位"
+                    label="岗位信息"
                     align="left"
                     show-overflow-tooltip
                   >
@@ -546,7 +546,7 @@ export default {
         {
           name: "考勤日统计",
           path: "/clockList/statisticDay",
-          rUrl: "statistics"
+          rUrl: "attendanceStatisticsDaily"
         },
         {
           name: "考勤审批",
