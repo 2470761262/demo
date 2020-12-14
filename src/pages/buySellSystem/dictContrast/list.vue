@@ -999,6 +999,8 @@ export default {
       this.buildOptData = {};
       this.towerOptData = {};
       this.roomOptData = {};
+      this.xflStatus = null;
+      this.benchmarkingStatus = null;
       this.query();
     },
     /**
