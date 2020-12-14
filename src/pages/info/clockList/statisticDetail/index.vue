@@ -138,20 +138,15 @@
                 >
                   <el-table-column
                     min-width="140"
-                    label="考勤人/要求"
+                    label="日期"
                     align="left"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
                       <div class="person-info">
-                        <el-image
-                          style="width: 40px; height: 40px"
-                          :src="scope.row.personImageUrl"
-                          fit="cover"
-                        ></el-image>
                         <div class="info">
                           <div class="name">
-                            {{ scope.row.personName
+                            {{ scope.row.attendanceDate
                             }}<span
                               v-if="scope.row.attendanceType == 0"
                               class="span_success"
@@ -164,7 +159,7 @@
                             >
                           </div>
                           <div class="deptname">
-                            {{ scope.row.departmentName }}
+                            {{ scope.row.week }}
                           </div>
                         </div>
                       </div>
