@@ -144,6 +144,11 @@
         color: #303133;
         font-size: 28px;
         margin-top: 18px;
+        .iconbianzu15 {
+          font-weight: normal;
+          color: @backgroud;
+          cursor: pointer;
+        }
       }
       h4 {
         color: #606266;
@@ -208,6 +213,56 @@
     }
   }
 }
+.help-box {
+  margin-top: 42px;
+  .help-ask {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    .ask-icon {
+      font-size: @font14;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+      background: #0a6458;
+      border-radius: 50%;
+      color: #fff;
+      text-align: center;
+    }
+    .ask-title {
+      font-size: @font16;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+  }
+  .help-answer {
+    display: flex;
+    margin-bottom: 24px;
+    .answer-icon {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: @font14;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+      background: #f69e28;
+      border-radius: 50%;
+      color: #fff;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .answer-text {
+      display: inline-block;
+      padding: 10px;
+      margin-left: 8px;
+      font-size: @font14;
+      color: #606266;
+      line-height: 24px;
+      background: #f7f7f9;
+      border-radius: 4px;
+    }
+  }
+}
 </style>
 
 <template>
@@ -234,7 +289,10 @@
       </div>
       <div class="per-data" v-if="loginDataRemoteMixin.data">
         <img :src="loginDataRemoteMixin.data.headImgUrl" alt="" />
-        <h3>{{ loginDataRemoteMixin.data.userName }}</h3>
+        <h3>
+          {{ loginDataRemoteMixin.data.userName }}
+          <i class="iconfont iconbianzu15" @click="helpFlag = true"></i>
+        </h3>
         <h4>{{ loginDataRemoteMixin.data.deptName }}</h4>
       </div>
       <div class="clock-pad" v-if="isShowWordBtn">
@@ -270,6 +328,88 @@
         </div>
       </div>
     </div>
+    <fixedPopup
+      :visible.sync="helpFlag"
+      title="帮助中心"
+      v-if="helpFlag"
+      styleType="0"
+      width="608px"
+      :butJson="btnJson"
+    >
+      <div class="help-box">
+        <div class="help-ask">
+          <div class="ask-icon">问</div>
+          <div class="ask-title">正常考勤时间是什么时候？</div>
+        </div>
+        <div class="help-answer">
+          <div class="answer-icon">答</div>
+          <div class="answer-text">
+            一个考勤日需要打三次卡，分别为上班打卡（06:00-08:30），中午打卡（12:01-14:30），下班打卡（18:00-次日5:59），在上述三个区间内打卡，则每个打卡区间皆为正常考勤（上述时间为案例时间，具体考勤时间以部门设置的考勤组为准）。
+          </div>
+        </div>
+
+        <div class="help-ask">
+          <div class="ask-icon">问</div>
+          <div class="ask-title">9:35分打卡，为什么会被提示旷工了？</div>
+        </div>
+        <div class="help-answer">
+          <div class="answer-icon">答</div>
+          <div class="answer-text">
+            案例的正常考勤时间为（06:00-08:30），在此区间，视为“正常考勤”；但若超过此区间，在08:31-09:30区间打卡的，则视为为“迟到”，在09:31后打卡的，则视为“旷工”。
+          </div>
+        </div>
+
+        <div class="help-ask">
+          <div class="ask-icon">问</div>
+          <div class="ask-title">
+            考勤提示异常，存在“迟到、早退、旷工”的记录，要怎么处理？
+          </div>
+        </div>
+        <div class="help-answer">
+          <div class="answer-icon">答</div>
+          <div class="answer-text">
+            如果是因为工作原因导致考勤异常的，可通过小程序“补卡”入口提交补卡申请，待上级领导核实，审批通过后，即可豁免扣分处罚。
+          </div>
+        </div>
+
+        <div class="help-ask">
+          <div class="ask-icon">问</div>
+          <div class="ask-title">
+            在非下班的时间点打卡了，被显示“早退”，要怎么办？
+          </div>
+        </div>
+        <div class="help-answer">
+          <div class="answer-icon">答</div>
+          <div class="answer-text">
+            只需在正常下班时间点，重新进行打卡，“早退”记录会被更换为正常下班打卡时间。
+          </div>
+        </div>
+
+        <div class="help-ask">
+          <div class="ask-icon">问</div>
+          <div class="ask-title">
+            为什么我的账号会被提示“锁定”，要怎么处理呢？
+          </div>
+        </div>
+        <div class="help-answer">
+          <div class="answer-icon">答</div>
+          <div class="answer-text">
+            在正常考勤日连续3天未有一次考勤记录的，系统会将账号自动锁定；需解锁账号的，由门店负责人进行申请解锁，上级审核通过后即可解锁。
+          </div>
+        </div>
+
+        <div class="help-ask">
+          <div class="ask-icon">问</div>
+          <div class="ask-title">我是免考勤人员，还需要提交工作总结吗？</div>
+        </div>
+        <div class="help-answer">
+          <div class="answer-icon">答</div>
+          <div class="answer-text">
+            要，免考勤人员在正常考勤日同样需要提交当日工作总结，未提交会被扣分；免考勤人员在正常考勤日需请假的，也同样要提交假条，否则，未提交日志也会被扣分。
+          </div>
+        </div>
+      </div>
+    </fixedPopup>
   </div>
 </template>
 
@@ -277,6 +417,7 @@
 import util from "@/util/util";
 import { LOGINDATA } from "@/util/constMap";
 import qrjs2 from "qrcodejs2";
+import fixedPopup from "../";
 export default {
   inject: ["loginDataRemoteMixin"],
   data() {
@@ -287,7 +428,12 @@ export default {
       qrInstance: null,
       visitFreedom: false,
       tipsRefresh: false,
-      tipsRefreshID: null
+      tipsRefreshID: null,
+      helpFlag: true,
+      btnJson: {
+        cancelBtnShow: false,
+        confirmBtnShow: false
+      }
     };
   },
   created() {
