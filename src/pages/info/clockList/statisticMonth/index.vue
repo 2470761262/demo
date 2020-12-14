@@ -54,7 +54,7 @@
                         :remote-method="queryEmployee"
                         :loading="employee.loading"
                         clearable
-                        @blur="query()"
+                        @change="query()"
                       >
                         <el-option
                           v-for="(item, index) in employee.list"
@@ -83,7 +83,6 @@
                             @change="companyChange"
                             :loading="company.loading"
                             value-key="value"
-                            @blur="query()"
                           >
                             <el-option
                               v-for="item in company.list"
@@ -106,7 +105,6 @@
                             value-key="value"
                             @change="query(1)"
                             class="width100"
-                            @blur="query()"
                           >
                             <el-option
                               v-for="item in department.list"
@@ -133,7 +131,7 @@
                         :remote-method="queryPosition"
                         :loading="position.loading"
                         clearable
-                        @blur="query()"
+                        @change="query()"
                       >
                         <el-option
                           v-for="(item, index) in position.list"
@@ -151,7 +149,7 @@
                         popper-class="options-item"
                         v-model="status"
                         placeholder="请选择"
-                        @blur="query()"
+                        @change="query()"
                       >
                         <el-option
                           v-for="(item, index) in statusList"
@@ -170,29 +168,10 @@
                         v-model="clockRequire"
                         placeholder="请选择"
                         clearable
-                        @blur="query()"
+                        @change="query()"
                       >
                         <el-option
                           v-for="(item, index) in requireList"
-                          :key="index"
-                          :value="item.value"
-                          :label="item.label"
-                        ></el-option>
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="6" v-if="functionRuleObj.status">
-                    <el-form-item label="考勤状态">
-                      <el-select
-                        class="width100"
-                        popper-class="options-item"
-                        v-model="clockStatus"
-                        placeholder="请选择"
-                        clearable
-                        @blur="query()"
-                      >
-                        <el-option
-                          v-for="(item, index) in clockStatusList"
                           :key="index"
                           :value="item.value"
                           :label="item.label"
@@ -208,8 +187,7 @@
                         range-separator="至"
                         start-placeholder="请选择"
                         end-placeholder="请选择"
-                        :default-time="['00:00:00', '23:59:59']"
-                        value-format="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd"
                         class="anchor-point"
                         @change="applyTimeChange"
                       >
@@ -310,38 +288,21 @@
                     align="left"
                     show-overflow-tooltip
                   >
-                    <template v-slot="scope"> </template>
+                    <template v-slot="scope">
+                      <span>{{ scope.row.attendanceDays }}天</span>
+                    </template>
                   </el-table-column>
                   <!-- 实际出勤 -->
                   <el-table-column
                     min-width="110"
+                    prop="workDays"
                     label="实际出勤"
                     align="left"
                     sortable="custom"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      <div
-                        class="attendance-beLate"
-                        v-if="
-                          scope.row.beLateNum == 0 &&
-                            scope.row.absenceNum == 0 &&
-                            scope.row.leaveEarlyNum == 0
-                        "
-                      >
-                        无异常
-                      </div>
-                      <div class="attendance-beLate" v-else>
-                        <div class="item" v-if="scope.row.beLateNum != 0">
-                          迟到：{{ scope.row.beLateNum }}次
-                        </div>
-                        <div class="item" v-if="scope.row.absenceNum != 0">
-                          旷工：{{ scope.row.absenceNum }}天
-                        </div>
-                        <div class="item" v-if="scope.row.leaveEarlyNum != 0">
-                          早退：{{ scope.row.leaveEarlyNum }}次
-                        </div>
-                      </div>
+                      <span>{{ scope.row.workDays }}天</span>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -392,9 +353,11 @@
                       <span>{{ scope.row.casualLeaveNum }}天</span>
                     </template>
                   </el-table-column>
-                  <el-table-column min-width="80" label="操作" align="left">
+                  <el-table-column width="100" label="操作" align="left">
                     <template v-slot="scope">
-                      <div class="check">查看</div>
+                      <div class="check" @click="toDetail(scope.row.accountId)">
+                        查看
+                      </div>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -423,12 +386,12 @@
                           <div class="name">
                             {{ scope.row.perName
                             }}<span
-                              v-if="scope.row.isFreedom == '正常考勤'"
+                              v-if="scope.row.isFreedom == '需要考勤'"
                               class="span_success"
                               >{{ scope.row.isFreedom }}</span
                             >
                             <span
-                              v-if="scope.row.isFreedom == '免考勤'"
+                              v-if="scope.row.isFreedom == '无需考勤'"
                               class="span_warning"
                               >{{ scope.row.isFreedom }}</span
                             >
@@ -457,7 +420,9 @@
                     sortable="custom"
                     show-overflow-tooltip
                   >
-                    <template v-slot="scope"> </template>
+                    <template v-slot="scope">
+                      <span>{{ scope.row.allPoint }}分</span>
+                    </template>
                   </el-table-column>
                   <el-table-column
                     min-width="110"
@@ -508,7 +473,7 @@
                     </template>
                   </el-table-column>
                   <el-table-column min-width="80" label="操作" align="left">
-                    <template v-slot="scope">
+                    <template>
                       <div class="check">查看</div>
                     </template>
                   </el-table-column>
@@ -665,20 +630,6 @@ export default {
       sortType: 1, //排序类型
       year: new Date().getFullYear(),
       currentMonth: new Date().getMonth() + 1,
-      months: [
-        "一",
-        "二",
-        "三",
-        "四",
-        "五",
-        "六",
-        "七",
-        "八",
-        "九",
-        "十",
-        "十一",
-        "十二"
-      ],
       // 考勤需求
       clockRequire: "",
       requireList: [
@@ -689,30 +640,6 @@ export default {
         {
           label: "无需考勤",
           value: 1
-        }
-      ],
-      // 考勤状态
-      clockStatus: "",
-      clockStatusList: [
-        {
-          label: "正常考勤",
-          value: 0
-        },
-        {
-          label: "迟到",
-          value: 1
-        },
-        {
-          label: "早退",
-          value: 2
-        },
-        {
-          label: "旷工",
-          value: 3
-        },
-        {
-          label: "请假",
-          value: 4
         }
       ],
       // 日期
@@ -807,9 +734,7 @@ export default {
     query(page = 1) {
       this.pageJson.page = page;
       this.loading = true;
-      let date = this.year + "-" + this.currentMonth + "-01";
       let params = {
-        date: date,
         page: this.pageJson.page,
         limit: this.pageJson.limit,
         companyId: this.companyId,
@@ -818,8 +743,18 @@ export default {
         positionId: this.positionId,
         status: this.status,
         sortType: this.sortType,
-        sortColumn: this.sortColumn
+        sortColumn: this.sortColumn,
+        isFreedom: this.clockRequire,
+        startDate: "",
+        endDate: ""
       };
+      if (this.starTime) {
+        params.startDate = this.starTime;
+        params.endDate = this.endTime;
+      } else {
+        params.startDate = this.year + "-" + this.currentMonth + "-" + "01";
+        params.endDate = this.year + "-" + this.currentMonth + "-" + "31";
+      }
       this.$api
         .post({
           url: "/attendance/statistics/data",
@@ -1014,9 +949,7 @@ export default {
     },
     excelExport() {
       this.pageLoading = true;
-      let date = this.year + "-" + this.currentMonth + "-01";
       let params = {
-        date: date,
         page: this.pageJson.page,
         limit: this.pageJson.limit,
         companyId: this.companyId,
@@ -1025,8 +958,18 @@ export default {
         positionId: this.positionId,
         status: this.status,
         sortType: this.sortType,
-        sortColumn: this.sortColumn
+        sortColumn: this.sortColumn,
+        isFreedom: this.clockRequire,
+        startDate: "",
+        endDate: ""
       };
+      if (this.starTime) {
+        params.startDate = this.starTime;
+        params.endDate = this.endTime;
+      } else {
+        params.startDate = this.year + "-" + this.currentMonth + "-" + "01";
+        params.endDate = this.year + "-" + this.currentMonth + "-" + "31";
+      }
       this.$api
         .post({
           url: "/attendance/statistics/export",
@@ -1062,6 +1005,14 @@ export default {
         this.endTime = "";
       }
       this.query();
+    },
+    toDetail(id) {
+      this.$router.push({
+        path: "/clockList/statisticDetail",
+        query: {
+          id: id
+        }
+      });
     }
   }
 };

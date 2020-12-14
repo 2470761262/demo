@@ -54,7 +54,7 @@
                         :remote-method="queryEmployee"
                         :loading="employee.loading"
                         clearable
-                        @blur="query()"
+                        @change="query()"
                       >
                         <el-option
                           v-for="(item, index) in employee.list"
@@ -83,13 +83,12 @@
                             @change="companyChange"
                             :loading="company.loading"
                             value-key="value"
-                            @blur="query()"
                           >
                             <el-option
                               v-for="item in company.list"
-                              :key="item.coId"
+                              :key="item.id"
                               :label="item.companyName"
-                              :value="item.coId"
+                              :value="item.id"
                             >
                             </el-option>
                           </el-select>
@@ -106,7 +105,6 @@
                             value-key="value"
                             @change="query(1)"
                             class="width100"
-                            @blur="query()"
                           >
                             <el-option
                               v-for="item in department.list"
@@ -133,7 +131,7 @@
                         :remote-method="queryPosition"
                         :loading="position.loading"
                         clearable
-                        @blur="query()"
+                        @change="query()"
                       >
                         <el-option
                           v-for="(item, index) in position.list"
@@ -151,7 +149,7 @@
                         popper-class="options-item"
                         v-model="status"
                         placeholder="请选择"
-                        @blur="query()"
+                        @change="query()"
                       >
                         <el-option
                           v-for="(item, index) in statusList"
@@ -170,7 +168,7 @@
                         v-model="clockRequire"
                         placeholder="请选择"
                         clearable
-                        @blur="query()"
+                        @change="query()"
                       >
                         <el-option
                           v-for="(item, index) in requireList"
@@ -189,7 +187,7 @@
                         v-model="clockStatus"
                         placeholder="请选择"
                         clearable
-                        @blur="query()"
+                        @change="query()"
                       >
                         <el-option
                           v-for="(item, index) in clockStatusList"
@@ -256,7 +254,6 @@
               </div>
               <div class="table">
                 <el-table
-                  v-if="currentPanelIndex == 0"
                   :data="tableData"
                   v-loading="loading"
                   ref="tableList"
@@ -272,24 +269,26 @@
                       <div class="person-info">
                         <el-image
                           style="width: 40px; height: 40px"
-                          :src="scope.row.userImage"
+                          :src="scope.row.personImageUrl"
                           fit="cover"
                         ></el-image>
                         <div class="info">
                           <div class="name">
-                            {{ scope.row.perName
+                            {{ scope.row.personName
                             }}<span
-                              v-if="scope.row.isFreedom == '需要考勤'"
+                              v-if="scope.row.attendanceType == 0"
                               class="span_success"
-                              >{{ scope.row.isFreedom }}</span
+                              >需要考勤</span
                             >
                             <span
-                              v-if="scope.row.isFreedom == '无需考勤'"
+                              v-if="scope.row.attendanceType == 1"
                               class="span_warning"
-                              >{{ scope.row.isFreedom }}</span
+                              >无需考勤</span
                             >
                           </div>
-                          <div class="deptname">{{ scope.row.deptName }}</div>
+                          <div class="deptname">
+                            {{ scope.row.departmentName }}
+                          </div>
                         </div>
                       </div>
                     </template>
@@ -300,14 +299,105 @@
                     align="left"
                     show-overflow-tooltip
                   >
-                    <template>
+                    <template v-slot="scope">
                       <div class="clock-box">
                         <div class="clock-box-left">
-                          <div>上班：08:25:09</div>
-                          <div>下班：11:25:09</div>
+                          <div>
+                            上班：{{
+                              scope.row.morningOnDutyTime | formateTime
+                            }}
+                          </div>
+                          <div>
+                            下班：{{
+                              scope.row.morningOffDutyTime | formateTime
+                            }}
+                          </div>
                         </div>
                         <div class="clock-box-right">
-                          <div class="green">正常</div>
+                          <div
+                            v-if="
+                              scope.row.morningOnDutyResult ==
+                                scope.row.morningOffDutyResult
+                            "
+                          >
+                            <div
+                              :class="[
+                                { green: scope.row.morningOffDutyResult == 0 },
+                                {
+                                  yellow:
+                                    scope.row.morningOffDutyResult == 1 ||
+                                    scope.row.morningOffDutyResult == 4
+                                },
+                                {
+                                  red:
+                                    scope.row.morningOffDutyResult == 2 ||
+                                    scope.row.morningOffDutyResult == 3 ||
+                                    scope.row.morningOffDutyResult == 5
+                                }
+                              ]"
+                            >
+                              {{
+                                scope.row.morningOffDutyResult | formateResult
+                              }}
+                              <span v-if="scope.row.morningOffDutyResult == 4">
+                                {{
+                                  scope.row.morningLeaveType || " - 暂无"
+                                }}</span
+                              >
+                            </div>
+                          </div>
+                          <div v-else>
+                            <div
+                              :class="[
+                                { green: scope.row.morningOnDutyResult == 0 },
+                                {
+                                  yellow:
+                                    scope.row.morningOnDutyResult == 1 ||
+                                    scope.row.morningOnDutyResult == 4
+                                },
+                                {
+                                  red:
+                                    scope.row.morningOnDutyResult == 2 ||
+                                    scope.row.morningOnDutyResult == 3 ||
+                                    scope.row.morningOnDutyResult == 5
+                                }
+                              ]"
+                            >
+                              {{
+                                scope.row.morningOnDutyResult | formateResult
+                              }}
+                              <span v-if="scope.row.morningOnDutyResult == 4">
+                                {{
+                                  scope.row.morningLeaveType || " - 暂无"
+                                }}</span
+                              >
+                            </div>
+                            <div
+                              :class="[
+                                { green: scope.row.morningOffDutyResult == 0 },
+                                {
+                                  yellow:
+                                    scope.row.morningOffDutyResult == 1 ||
+                                    scope.row.morningOffDutyResult == 4
+                                },
+                                {
+                                  red:
+                                    scope.row.morningOffDutyResult == 2 ||
+                                    scope.row.morningOffDutyResult == 3 ||
+                                    scope.row.morningOffDutyResult == 5
+                                }
+                              ]"
+                            >
+                              {{
+                                scope.row.morningOffDutyResult | formateResult
+                              }}
+                              <span v-if="scope.row.morningOffDutyResult == 4">
+                                {{
+                                  scope.row.morningLeaveType || " - 暂无"
+                                }}</span
+                              >
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </template>
@@ -318,15 +408,113 @@
                     align="left"
                     show-overflow-tooltip
                   >
-                    <template>
+                    <template v-slot="scope">
                       <div class="clock-box">
                         <div class="clock-box-left">
-                          <div>上班：08:25:09</div>
-                          <div>下班：11:25:09</div>
+                          <div>
+                            上班：{{
+                              scope.row.afternoonOnDutyTime | formateTime
+                            }}
+                          </div>
+                          <div>
+                            下班：{{
+                              scope.row.afternoonOffDutyTime | formateTime
+                            }}
+                          </div>
                         </div>
                         <div class="clock-box-right">
-                          <div class="green">正常</div>
-                          <div class="yellow">请假 - 事假</div>
+                          <div
+                            v-if="
+                              scope.row.afternoonOnDutyResult ==
+                                scope.row.afternoonOffDutyResult
+                            "
+                          >
+                            <div
+                              :class="[
+                                {
+                                  green: scope.row.afternoonOffDutyResult == 0
+                                },
+                                {
+                                  yellow:
+                                    scope.row.afternoonOffDutyResult == 1 ||
+                                    scope.row.afternoonOffDutyResult == 4
+                                },
+                                {
+                                  red:
+                                    scope.row.afternoonOffDutyResult == 2 ||
+                                    scope.row.afternoonOffDutyResult == 3 ||
+                                    scope.row.afternoonOffDutyResult == 5
+                                }
+                              ]"
+                            >
+                              {{
+                                scope.row.afternoonOffDutyResult | formateResult
+                              }}
+                              <span
+                                v-if="scope.row.afternoonOffDutyResult == 4"
+                              >
+                                {{
+                                  scope.row.afternoonLeaveType || " - 暂无"
+                                }}</span
+                              >
+                            </div>
+                          </div>
+                          <div v-else>
+                            <div
+                              :class="[
+                                { green: scope.row.afternoonOnDutyResult == 0 },
+                                {
+                                  yellow:
+                                    scope.row.afternoonOnDutyResult == 1 ||
+                                    scope.row.afternoonOnDutyResult == 4
+                                },
+                                {
+                                  red:
+                                    scope.row.afternoonOnDutyResult == 2 ||
+                                    scope.row.afternoonOnDutyResult == 3 ||
+                                    scope.row.afternoonOnDutyResult == 5
+                                }
+                              ]"
+                            >
+                              {{
+                                scope.row.afternoonOnDutyResult | formateResult
+                              }}
+                              <span v-if="scope.row.afternoonOnDutyResult == 4">
+                                {{
+                                  scope.row.afternoonLeaveType || " - 暂无"
+                                }}</span
+                              >
+                            </div>
+                            <div
+                              :class="[
+                                {
+                                  green: scope.row.afternoonOffDutyResult == 0
+                                },
+                                {
+                                  yellow:
+                                    scope.row.afternoonOffDutyResult == 1 ||
+                                    scope.row.afternoonOffDutyResult == 4
+                                },
+                                {
+                                  red:
+                                    scope.row.afternoonOffDutyResult == 2 ||
+                                    scope.row.afternoonOffDutyResult == 3 ||
+                                    scope.row.afternoonOffDutyResult == 5
+                                }
+                              ]"
+                            >
+                              {{
+                                scope.row.afternoonOffDutyResult | formateResult
+                              }}
+                              <span
+                                v-if="scope.row.afternoonOffDutyResult == 4"
+                              >
+                                {{
+                                  scope.row.afternoonLeaveType || " - 暂无"
+                                }}</span
+                              >
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </template>
@@ -337,35 +525,45 @@
                     align="left"
                     show-overflow-tooltip
                   >
-                    <template>
-                      <div class="make-up">暂无</div>
+                    <template v-slot="scope">
+                      <div
+                        class="make-up"
+                        :class="[
+                          { 'make-green': scope.row.repairInfo == '补卡通过' },
+                          { 'make-red': scope.row.repairInfo == '不通过' }
+                        ]"
+                      >
+                        {{ scope.row.repairInfo || "暂无" }}
+                      </div>
                     </template>
                   </el-table-column>
                   <el-table-column
                     width="100"
-                    prop="absenceNum"
+                    prop="leaveInfo"
                     label="请假"
                     align="left"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      {{ scope.row.absenceNum || 0 }}天</template
+                      {{ scope.row.leaveInfo || "暂无" }}</template
                     >
                   </el-table-column>
                   <el-table-column
                     width="100"
-                    prop="beLateNum"
+                    prop="awayInfo"
                     label="旷工"
                     align="left"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      {{ scope.row.beLateNum || 0 }}次</template
+                      {{ scope.row.awayInfo || "暂无" }}</template
                     >
                   </el-table-column>
                   <el-table-column width="100" label="操作" align="left">
-                    <template>
-                      <div class="check">查看</div>
+                    <template v-slot="scope">
+                      <div class="check" @click="toDetail(scope.row.accountId)">
+                        查看
+                      </div>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -570,9 +768,21 @@ export default {
       checkedDate: ""
     };
   },
+  filters: {
+    formateResult(val) {
+      let list = ["正常", "迟到", "早退", "旷工", "请假", "迟到早退"];
+      return list[val];
+    },
+    formateTime(val) {
+      if (val) {
+        return val.split(" ")[1];
+      } else {
+        return "-";
+      }
+    }
+  },
   created() {
     this.getFunction();
-    this.query();
     let date = this.getWeekDay();
     this.weekList.forEach((item, idx) => {
       item.date = date[idx].date;
@@ -583,6 +793,7 @@ export default {
     this.checkedDate = this.weekList[week - 1].date;
     this.nowDate = new Date(this.checkedDate).getTime();
     console.log(this.nowDate);
+    this.query();
   },
   methods: {
     getWeekDay(dateString) {
@@ -667,6 +878,15 @@ export default {
       Object.assign(this.$data, this.$options.data(), {
         functionRuleObj: this.$data.functionRuleObj
       });
+      let date = this.getWeekDay();
+      this.weekList.forEach((item, idx) => {
+        item.date = date[idx].date;
+        item.time = date[idx].time;
+      });
+      let week = new Date().getDay();
+      week = week == 0 ? 7 : week;
+      this.checkedDate = this.weekList[week - 1].date;
+      this.nowDate = new Date(this.checkedDate).getTime();
       this.query();
     },
     /**
@@ -690,22 +910,26 @@ export default {
     query(page = 1) {
       this.pageJson.page = page;
       this.loading = true;
-      let date = this.year + "-" + this.currentMonth + "-01";
       let params = {
-        date: date,
+        attendanceDates: [this.checkedDate],
         page: this.pageJson.page,
         limit: this.pageJson.limit,
         companyId: this.companyId,
         departmentId: this.departmentId,
-        accountId: this.employeeId,
+        personIds: [],
         positionId: this.positionId,
         status: this.status,
         sortType: this.sortType,
-        sortColumn: this.sortColumn
+        sortColumn: this.sortColumn,
+        attendanceStatus: this.clockStatus,
+        attendanceType: this.clockRequire
       };
+      if (this.employeeId) {
+        params.personIds = [this.employeeId];
+      }
       this.$api
         .post({
-          url: "/attendance/statistics/data",
+          url: "attendance/record/attendanceStaticsDayInfo",
           data: params,
           headers: { "Content-Type": "application/json" }
         })
@@ -759,8 +983,8 @@ export default {
     queryCompanyList(keyWork = "") {
       this.$set(this.company, "loading", true);
       this.$api
-        .get({
-          url: "/attendance/statistics/company",
+        .post({
+          url: "attendance/record/companyListForStaticsDayInfo",
           data: {
             limit: 50,
             page: 1,
@@ -771,7 +995,7 @@ export default {
         .then(e => {
           let data = e.data;
           if (data.code == 200) {
-            this.company.list = data.data.list;
+            this.company.list = data.data;
           }
         })
         .finally(e => {
@@ -798,8 +1022,8 @@ export default {
       if (this.companyId) {
         this.$set(this.department, "loading", true);
         this.$api
-          .get({
-            url: "/attendance/statistics/department-under",
+          .post({
+            url: "attendance/record/deptListForStaticsDayInfo",
             data: {
               limit: 50,
               page: 1,
@@ -837,8 +1061,8 @@ export default {
     queryEmployee(keyWord = "") {
       this.$set(this.employee, "loading", true);
       this.$api
-        .get({
-          url: "/attendance/statistics/employee-under",
+        .post({
+          url: "attendance/record/personListForStaticsDayInfo",
           data: {
             limit: 50,
             page: 1,
@@ -876,7 +1100,7 @@ export default {
       this.$set(this.position, "loading", true);
       this.$api
         .get({
-          url: "/attendance/statistics/role-company",
+          url: "attendance/record/statics/positionListByCompany",
           data: {
             limit: 50,
             page: 1,
@@ -939,8 +1163,8 @@ export default {
     changeDate(item) {
       if (this.nowDate >= item.time) {
         this.checkedDate = item.date;
+        this.query();
       }
-      // this.query();
     },
     cutWeek(key) {
       let day = this.weekList[0].date;
@@ -960,6 +1184,14 @@ export default {
       this.weekList.forEach((item, idx) => {
         item.date = week[idx].date;
         item.time = week[idx].time;
+      });
+    },
+    toDetail(id) {
+      this.$router.push({
+        path: "/clockList/statisticDetail",
+        query: {
+          id: id
+        }
       });
     }
   }
@@ -1480,6 +1712,14 @@ export default {
               color: #909399;
               text-align: center;
               border-radius: 2px;
+            }
+            .make-green {
+              color: #0da88b;
+              background: rgba(13, 168, 139, 0.1);
+            }
+            .make-red {
+              color: #ef5656;
+              background: rgba(239, 86, 86, 0.1);
             }
           }
           .el-pagination {
