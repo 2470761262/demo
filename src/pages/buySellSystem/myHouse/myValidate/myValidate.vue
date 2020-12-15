@@ -45,6 +45,7 @@ export default {
         checkStatus: "", // 验真状态
         source: "", // 验真类型
         mode: "", // 验真方式
+        areaId: "", // 所属门店
         storeId: "", // 所属门店
         comId: "",
         customerName: "",

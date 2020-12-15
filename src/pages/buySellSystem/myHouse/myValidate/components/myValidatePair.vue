@@ -154,6 +154,37 @@
         ></el-input>
       </div>
     </div>
+    <!-- 所属区域 -->
+    <div class="search-item">
+      <div class="search-item-title ">所属区域</div>
+      <div class="search-item-body">
+        <el-select
+          class="anchor-point"
+          popper-class="anchor-point"
+          data-anchor="我的验真所属区域 => select"
+          @click.native="log_socket.sendUserActionData"
+          v-model="form.areaId"
+          placeholder="请输入区域名称"
+          clearable
+          filterable
+          @focus="areaFocus"
+          :loading="area.loading"
+          value-key="value"
+        >
+          <el-option
+            class="anchor-point"
+            :data-anchor="
+              '我的验真所属区域 => select => option:' + item.depName
+            "
+            @click.native="log_socket.sendUserActionData"
+            v-for="item in area.list"
+            :key="item.depId"
+            :label="item.depName"
+            :value="item.depId"
+          ></el-option>
+        </el-select>
+      </div>
+    </div>
     <!-- 所属门店 -->
     <div class="search-item">
       <div class="search-item-title ">所属门店</div>
@@ -332,10 +363,16 @@ export default {
       checkStatusValue: this.form.checkStatusValue, //验真状态
       cusName: "", //业主姓名
       cusPhone: "", //业主号码
-      department: {
+      area: {
+        // 所属区域
         loading: false,
         list: []
-      } // 所属门店
+      },
+      department: {
+        // 所属门店
+        loading: false,
+        list: []
+      }
     };
   },
   methods: {
@@ -367,6 +404,28 @@ export default {
     /**
      * @example: 请求所属门店数据
      */
+    getAreaList() {
+      this.area.loading = true;
+      this.$api
+        .post({
+          url: "/myHouse/myVerifyList",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            selectType: "MORE_SELECT_AREA"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.area.list = e.data.data;
+          }
+        })
+        .finally(() => {
+          this.area.loading = false;
+        });
+    },
+    /**
+     * @example: 请求所属门店数据
+     */
     getDepartmentList() {
       this.department.loading = true;
       this.$api
@@ -374,7 +433,8 @@ export default {
           url: "/myHouse/myVerifyList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
-            selectType: "MORE_SELECT_SHOP"
+            selectType: "MORE_SELECT_SHOP",
+            areaId: this.form.areaId
           }
         })
         .then(e => {
@@ -385,6 +445,14 @@ export default {
         .finally(() => {
           this.department.loading = false;
         });
+    },
+    /**
+     * @example: 所属门店获取焦点事件
+     */
+    areaFocus() {
+      if (this.department.list.length == 0) {
+        this.getAreaList();
+      }
     },
     /**
      * @example: 所属门店获取焦点事件
