@@ -80,7 +80,7 @@
     <button
       class="btn-item"
       style="order:0"
-      :disabled="isLockBtn"
+      :disabled="houseData.isReleaseOutside != 1  || isLockBtn"
       @click="
         openPop(
           'shareFlag',
