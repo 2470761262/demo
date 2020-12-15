@@ -110,6 +110,65 @@
                     </el-row>
                   </el-col>
                   <el-col :span="9">
+                    <el-form-item label="岗位">
+                      <el-select
+                        class="width100"
+                        popper-class="options-item"
+                        v-model="formData.positionId"
+                        placeholder="请选择"
+                        filterable
+                        @focus="positionFocus"
+                        remote
+                        :remote-method="queryPosition"
+                        :loading="position.loading"
+                        clearable
+                        @blur="query()"
+                      >
+                        <el-option
+                          v-for="(item, index) in position.list"
+                          :key="index"
+                          :label="item.RoleName"
+                          :value="item.id"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+
+                  <el-col :span="6">
+                    <el-form-item label="审批状态">
+                      <el-select
+                        class="width100"
+                        popper-class="options-item"
+                        v-model="formData.status"
+                        placeholder="请选择审批状态"
+                        @change="query(1)"
+                      >
+                        <el-option
+                          v-for="(item, index) in statusList"
+                          :key="index"
+                          :label="item.key"
+                          :value="item.value"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="9">
+                    <el-form-item label="申请时间">
+                      <el-date-picker
+                        v-model="applyTime"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :default-time="['00:00:00', '23:59:59']"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        class="anchor-point"
+                        @change="applyTimeChange"
+                      >
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="9">
                     <el-row :gutter="8">
                       <el-form-item label="申请类型">
                         <el-col :span="12">
@@ -146,64 +205,6 @@
                         </el-col>
                       </el-form-item>
                     </el-row>
-                  </el-col>
-                  <el-col :span="6">
-                    <el-form-item label="审批状态">
-                      <el-select
-                        class="width100"
-                        popper-class="options-item"
-                        v-model="formData.status"
-                        placeholder="请选择审批状态"
-                        @change="query(1)"
-                      >
-                        <el-option
-                          v-for="(item, index) in statusList"
-                          :key="index"
-                          :label="item.key"
-                          :value="item.value"
-                        ></el-option>
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="9">
-                    <el-form-item label="申请时间">
-                      <el-date-picker
-                        v-model="applyTime"
-                        type="daterange"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        :default-time="['00:00:00', '23:59:59']"
-                        value-format="yyyy-MM-dd HH:mm:ss"
-                        class="anchor-point"
-                        @change="applyTimeChange"
-                      >
-                      </el-date-picker>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="9">
-                    <el-form-item label="岗位">
-                      <el-select
-                        class="width100"
-                        popper-class="options-item"
-                        v-model="formData.positionId"
-                        placeholder="请选择"
-                        filterable
-                        @focus="positionFocus"
-                        remote
-                        :remote-method="queryPosition"
-                        :loading="position.loading"
-                        clearable
-                        @blur="query()"
-                      >
-                        <el-option
-                          v-for="(item, index) in position.list"
-                          :key="index"
-                          :label="item.RoleName"
-                          :value="item.id"
-                        ></el-option>
-                      </el-select>
-                    </el-form-item>
                   </el-col>
                   <el-col :span="6" class="fr">
                     <div class="conditions-btn">
