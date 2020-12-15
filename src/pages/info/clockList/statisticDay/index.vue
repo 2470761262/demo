@@ -103,7 +103,7 @@
                             :remote-method="getDepartmentData"
                             :loading="department.loading"
                             value-key="value"
-                            @change="query(1)"
+                            @change="departmentChange"
                             class="width100"
                           >
                             <el-option
@@ -561,7 +561,17 @@
                   </el-table-column>
                   <el-table-column width="100" label="操作" align="left">
                     <template v-slot="scope">
-                      <div class="check" @click="toDetail(scope.row.accountId,scope.row.personName,scope.row.personImageUrl,scope.row.departmentName)">
+                      <div
+                        class="check"
+                        @click="
+                          toDetail(
+                            scope.row.accountId,
+                            scope.row.personName,
+                            scope.row.personImageUrl,
+                            scope.row.departmentName
+                          )
+                        "
+                      >
                         查看
                       </div>
                     </template>
@@ -1044,6 +1054,16 @@ export default {
       }
     },
     /**
+     * @example:部门搜索事件
+     */
+    departmentChange() {
+      this.employeeId = "";
+      this.employee.list = [];
+      this.positionId = "";
+      this.position.list = [];
+      this.query(1);
+    },
+    /**
      * @description: 员工姓名获取焦点事件
      * @param {*}
      * @return {*}
@@ -1190,14 +1210,14 @@ export default {
         item.time = week[idx].time;
       });
     },
-    toDetail(id,personName,personImageUrl,departmentName) {
+    toDetail(id, personName, personImageUrl, departmentName) {
       this.$router.push({
         path: "/clockList/statisticDetail",
         query: {
           id: id,
-          personName:personName,
-          personImageUrl:personImageUrl,
-          departmentName:departmentName
+          personName: personName,
+          personImageUrl: personImageUrl,
+          departmentName: departmentName
         }
       });
     }

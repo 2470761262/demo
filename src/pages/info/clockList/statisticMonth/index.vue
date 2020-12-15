@@ -103,7 +103,7 @@
                             :remote-method="getDepartmentData"
                             :loading="department.loading"
                             value-key="value"
-                            @change="query(1)"
+                            @change="departmentChange"
                             class="width100"
                           >
                             <el-option
@@ -870,6 +870,16 @@ export default {
             this.$set(this.department, "loading", false);
           });
       }
+    },
+    /**
+     * @example:部门搜索事件
+     */
+    departmentChange() {
+      this.employeeId = "";
+      this.employee.list = [];
+      this.positionId = "";
+      this.position.list = [];
+      this.query(1);
     },
     /**
      * @description: 员工姓名获取焦点事件
