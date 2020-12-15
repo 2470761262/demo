@@ -168,6 +168,7 @@
           clearable
           filterable
           @focus="areaFocus"
+          @change="areaChange"
           :loading="area.loading"
           value-key="value"
         >
@@ -452,6 +453,16 @@ export default {
     areaFocus() {
       if (this.department.list.length == 0) {
         this.getAreaList();
+      }
+    },
+    /**
+     * @example: 所属门店选择事件
+     */
+    areaChange(value) {
+      this.department.list = [];
+      this.form.storeId = "";
+      if (value != "") {
+        this.getDepartmentList();
       }
     },
     /**
