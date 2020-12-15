@@ -473,8 +473,10 @@
                     </template>
                   </el-table-column>
                   <el-table-column min-width="80" label="操作" align="left">
-                    <template>
-                      <div class="check">查看</div>
+                    <template v-slot="scope">
+                      <div class="check" @click="toDetail(scope.row.accountId)">
+                        查看
+                      </div>
                     </template>
                   </el-table-column>
                 </el-table>
