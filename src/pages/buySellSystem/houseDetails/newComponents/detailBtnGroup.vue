@@ -81,6 +81,7 @@
       class="btn-item"
       style="order:0"
       :disabled="houseData.isReleaseOutside != 1  || isLockBtn"
+      v-if="houseData.isReleaseOutside == 1"
       @click="
         openPop(
           'shareFlag',
