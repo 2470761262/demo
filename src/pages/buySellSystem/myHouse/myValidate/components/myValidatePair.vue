@@ -159,29 +159,30 @@
       <div class="search-item-title ">所属区域</div>
       <div class="search-item-body">
         <el-select
-            class="width100 anchor-point"
-            popper-class="anchor-point"
-            data-anchor="我的验真所属区域 => select"
+          class="width100 anchor-point"
+          popper-class="anchor-point"
+          data-anchor="我的验真所属区域 => select"
+          @click.native="log_socket.sendUserActionData"
+          v-model="form.areaId"
+          placeholder="请输入区域名称"
+          clearable
+          filterable
+          @focus="areaFocus"
+          @change="areaChange"
+          :loading="area.loading"
+          value-key="value"
+        >
+          <el-option
+            class="anchor-point"
+            :data-anchor="
+              '我的验真所属区域 => select => option:' + item.depName
+            "
             @click.native="log_socket.sendUserActionData"
-            v-model="area.value"
-            placeholder="请输入区域名称"
-            clearable
-            filterable
-            @focus="areaFocus"
-            :loading="area.loading"
-            value-key="value"
-          >
-            <el-option
-              class="anchor-point"
-              :data-anchor="
-                '我的验真所属区域 => select => option:' + item.depName
-              "
-              @click.native="log_socket.sendUserActionData"
-              v-for="item in area.list"
-              :key="item.depId"
-              :label="item.depName"
-              :value="item.depId"
-            ></el-option>
+            v-for="item in area.list"
+            :key="item.depId"
+            :label="item.depName"
+            :value="item.depId"
+          ></el-option>
         </el-select>
       </div>
     </div>
@@ -363,10 +364,9 @@ export default {
       checkStatusValue: this.form.checkStatusValue, //验真状态
       cusName: "", //业主姓名
       cusPhone: "", //业主号码
-       area: {
+      area: {
         loading: false,
-        list: [],
-        value: ""
+        list: []
       }, // 所属区域
       department: {
         // 所属门店
@@ -376,28 +376,6 @@ export default {
     };
   },
   methods: {
-    /**
-     * @example: 请求所属区域数据
-     */
-    getAreaList() {
-      this.department.loading = true;
-      this.$api
-        .post({
-          url: "/myHouse/myVerifyList",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: {
-            selectType: "MORE_SELECT_AREA"
-          }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            this.area.list = e.data.data;
-          }
-        })
-        .finally(() => {
-          this.area.loading = false;
-        });
-    },
     /**
      * @example: 所属门店获取焦点事件
      */
@@ -409,10 +387,7 @@ export default {
      */
     areaChange(value) {
       this.department.list = [];
-      this.department.value = "";
-      // this.agent.list = [];
-      // this.agent.value = "";
-      // this.query();
+      this.form.storeId = "";
       if (value != "") {
         this.getDepartmentList();
       }
@@ -475,7 +450,7 @@ export default {
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             selectType: "MORE_SELECT_SHOP",
-            selectDepartment: this.area.value
+            areaId: this.form.areaId
           }
         })
         .then(e => {
@@ -486,24 +461,6 @@ export default {
         .finally(() => {
           this.department.loading = false;
         });
-    },
-    /**
-     * @example: 所属门店获取焦点事件
-     */
-    areaFocus() {
-      if (this.department.list.length == 0) {
-        this.getAreaList();
-      }
-    },
-    /**
-     * @example: 所属门店选择事件
-     */
-    areaChange(value) {
-      this.department.list = [];
-      this.form.storeId = "";
-      if (value != "") {
-        this.getDepartmentList();
-      }
     },
     /**
      * @example: 所属门店获取焦点事件
