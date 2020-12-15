@@ -561,7 +561,7 @@
                   </el-table-column>
                   <el-table-column width="100" label="操作" align="left">
                     <template v-slot="scope">
-                      <div class="check" @click="toDetail(scope.row.accountId)">
+                      <div class="check" @click="toDetail(scope.row.accountId,scope.row.personName,scope.row.personImageUrl,scope.row.departmentName)">
                         查看
                       </div>
                     </template>
@@ -1190,11 +1190,14 @@ export default {
         item.time = week[idx].time;
       });
     },
-    toDetail(id) {
+    toDetail(id,personName,personImageUrl,departmentName) {
       this.$router.push({
         path: "/clockList/statisticDetail",
         query: {
-          id: id
+          id: id,
+          personName:personName,
+          personImageUrl:personImageUrl,
+          departmentName:departmentName
         }
       });
     }
