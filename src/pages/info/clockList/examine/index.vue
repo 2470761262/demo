@@ -255,7 +255,7 @@
                     </template>
                   </el-table-column>
                   <el-table-column
-                    min-width="100"
+                    min-width="130"
                     prop="applySubType"
                     label="子类型"
                     align="left"
@@ -265,11 +265,12 @@
                       <span v-if="scope.row.applyType == 1">{{
                         scope.row.applySubType | leaveSubTypeFilter
                       }}</span>
+
                       <el-tooltip
                         placement="top"
                         popper-class="tip-bg"
                         offset="-150"
-                        v-if="scope.row.applyType == 2"
+                        v-else-if="isLength(scope.row.reissueSubType)"
                       >
                         <span
                           >1.{{
@@ -287,6 +288,7 @@
                           </div>
                         </div>
                       </el-tooltip>
+                      <span v-else>{{ scope.row.reissueSubType }} </span>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -490,6 +492,14 @@ export default {
     }
   },
   methods: {
+    isLength(val) {
+      console.log(val, "vavavaavvqa");
+      if (val.indexOf(",") != -1) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     /**
      * @example:重置
      */
