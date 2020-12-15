@@ -42,7 +42,7 @@
               <el-row :gutter="16">
                 <el-form label-position="right" label-width="64px">
                   <el-col :span="6" v-if="functionRuleObj.employee">
-                    <el-form-item label="员工姓名">
+                    <el-form-item label-width="72px" label="员工姓名">
                       <el-select
                         class="width100"
                         popper-class="options-item"
@@ -70,7 +70,7 @@
                     v-if="functionRuleObj.company && functionRuleObj.department"
                   >
                     <el-row :gutter="8">
-                      <el-form-item label="所在部门">
+                      <el-form-item label-width="72px" label="所在部门">
                         <el-col :span="12" v-if="functionRuleObj.company">
                           <el-select
                             class="width100"
@@ -143,7 +143,7 @@
                     </el-form-item>
                   </el-col>
                   <el-col :span="6" v-if="functionRuleObj.status">
-                    <el-form-item label="在职状态">
+                    <el-form-item label-width="72px" label="在职状态">
                       <el-select
                         class="width100"
                         popper-class="options-item"
@@ -161,7 +161,7 @@
                     </el-form-item>
                   </el-col>
                   <el-col :span="6" v-if="functionRuleObj.status">
-                    <el-form-item label="考勤要求">
+                    <el-form-item label-width="72px" label="考勤要求">
                       <el-select
                         class="width100"
                         popper-class="options-item"

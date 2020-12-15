@@ -59,9 +59,9 @@
                       </el-select>
                     </el-form-item>
                   </el-col>
-                  <el-col :span="9">
+                  <el-col :span="6">
                     <el-row :gutter="8">
-                      <el-form-item label="所在部门">
+                      <el-form-item label-width="72px" label="所在部门">
                         <el-col :span="12">
                           <el-select
                             class="width100"
@@ -92,9 +92,9 @@
                             filterable
                             remote
                             :remote-method="getDepartmentData"
+                            @change="departmentChange"
                             :loading="department.loading"
                             value-key="value"
-                            @change="query(1)"
                             class="width100"
                           >
                             <el-option
@@ -109,7 +109,7 @@
                       </el-form-item>
                     </el-row>
                   </el-col>
-                  <el-col :span="9">
+                  <el-col :span="6">
                     <el-form-item label="岗位">
                       <el-select
                         class="width100"
@@ -135,7 +135,7 @@
                   </el-col>
 
                   <el-col :span="6">
-                    <el-form-item label="审批状态">
+                    <el-form-item label-width="72px" label="审批状态">
                       <el-select
                         class="width100"
                         popper-class="options-item"
@@ -153,7 +153,7 @@
                     </el-form-item>
                   </el-col>
                   <el-col :span="9">
-                    <el-form-item label="申请时间">
+                    <el-form-item label-width="72px" label="申请时间">
                       <el-date-picker
                         v-model="applyTime"
                         type="daterange"
@@ -170,7 +170,7 @@
                   </el-col>
                   <el-col :span="9">
                     <el-row :gutter="8">
-                      <el-form-item label="申请类型">
+                      <el-form-item label-width="72px" label="申请类型">
                         <el-col :span="12">
                           <el-select
                             class="width100"
@@ -653,6 +653,13 @@ export default {
           });
       }
     },
+    departmentChange() {
+      this.formData.applyId = "";
+      this.personnel.list = [];
+      this.formData.positionId = "";
+      this.position.list = [];
+      this.query(1);
+    },
     /**
      * @example:人员获取焦点事件
      */
@@ -673,6 +680,7 @@ export default {
           data: {
             limit: 50,
             page: 1,
+            departmentId: this.formData.departmentId,
             keyWord: keyWord
           },
           headers: { "Content-Type": "application/json" }
