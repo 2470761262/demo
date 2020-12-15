@@ -578,7 +578,10 @@ export default {
       isAgent: false,
       agentList: [],
       currentAgent: {
-        id: this.$route.query.id
+        id: this.$route.query.id,
+        name:this.$route.query.personName,
+        headImg:this.$route.query.personImageUrl,
+        dept:this.$route.query.departmentName
       }
     };
   },
@@ -595,10 +598,10 @@ export default {
       }
     }
   },
-  created() {
+  created() {    
     this.getFunction();
     this.query();
-    console.log("this.$route.id", this.$route.query.id);
+    console.log("this.$route", this.$route.query);
   },
   methods: {
     doHandleMonth(month) {
@@ -711,7 +714,6 @@ export default {
               this.currentAgent.name = item.personName;
               this.currentAgent.dept = item.departmentName;
             }
-
             this.pageJson.total = data.data.totalCount;
             this.pageJson.pageSum = data.data.totalPage;
           }
