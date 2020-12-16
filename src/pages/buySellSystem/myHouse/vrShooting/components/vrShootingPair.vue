@@ -393,7 +393,7 @@ export default {
       this.agent.loading = true;
       this.$api
         .post({
-          url: "/spotCheck/spotCheckRecordList",
+          url: "/myHouse/vrApplyStoreList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             selectType: "MORE_SELECT_PER",

@@ -80,7 +80,8 @@
     <button
       class="btn-item"
       style="order:0"
-      :disabled="isLockBtn"
+      :disabled="houseData.isReleaseOutside != 1  || isLockBtn"
+      v-if="houseData.isReleaseOutside == 1"
       @click="
         openPop(
           'shareFlag',
@@ -301,17 +302,19 @@ export default {
     }),
     //发布外网按钮是否禁用
     outBtnDisabled() {
-      return (
-        !this.reloData.releaseOutsideHouse || this.houseData.isLocking == 1
-      );
+      // return (
+      //   !this.reloData.releaseOutsideHouse || this.houseData.isLocking == 1
+      // );
+      return this.houseData.isLocking == 1;
     },
     //发布外网按钮是否显示
     isOutBtn() {
-      return this.houseData.isReleaseOutside != 1 && this.houseData.plate == 0;
+      return this.houseData.isReleaseOutside != 1 && this.houseData.plate == 0 && this.houseData.AgentPer == this.perId;
     },
     //取消发布外网
     cancelBtnDisabled() {
-      return !this.reloData.cancelOutsideHouse || this.houseData.isLocking == 1;
+      //return !this.reloData.cancelOutsideHouse || this.houseData.isLocking == 1;
+      return  this.houseData.isLocking == 1;
     },
     //取消发布外网按钮是否显示
     isCancelBtn() {
@@ -345,8 +348,16 @@ export default {
           this.houseData
         )
       ) {
+        this.setParam({
+          paramName: "isEditHouse",
+          value: true
+        });
         return true;
       }
+      this.setParam({
+          paramName: "isEditHouse",
+          value: false
+        });
       return false;
     },
     //是否显示编辑图片

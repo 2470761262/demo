@@ -564,6 +564,30 @@ export default {
       }
     },
     /**
+     * @example: 请求所属区域数据
+     */
+    remoteArea(query) {
+      var that = this;
+      if (query !== "") {
+        this.$api
+          .post({
+            url: `${that.$attrs.deptUrl}`,
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            data: {
+              selectType: "MORE_SELECT_AREA"
+            }
+          })
+          .then(e => {
+            console.log(e.data);
+            if (e.data.code == 200) {
+              that.deptParentList = e.data.data;
+            }
+          });
+      } else {
+        this.deptParentList = [];
+      }
+    },
+    /**
      * @example: 请求所属门店数据
      */
     getDepartmentList() {

@@ -166,6 +166,12 @@
               &[data-type="warning"] {
                 color: #f6a420;
               }
+              & + .item-type {
+                margin-left: 16px;
+              }
+            }
+            .item-type-box {
+              display: flex;
             }
           }
           .line {
@@ -303,31 +309,31 @@
         </div>
       </div>
       <div class="layout-contnet">
-        <div class="cell-item" v-if="config.excavate">
+        <div class="cell-item" v-if="detailt.attendanceSummaryType==3 ||detailt.attendanceSummaryType==2"><!--config.excavate-->
           <h3>今日挖掘优质房源</h3>
           <p>
             {{ detailt.excavateHouseToday }}
           </p>
         </div>
-        <div class="cell-item" v-if="config.clientDemand">
+        <div class="cell-item" v-if="detailt.attendanceSummaryType==3 ||detailt.attendanceSummaryType==2"><!--config.clientDemand-->
           <h3>急购客户需求</h3>
           <p>
             {{ detailt.urgentCustomerRequire || "暂无" }}
           </p>
         </div>
-        <div class="cell-item" v-if="config.growth">
-          <h3>今日总结</h3>
+        <div class="cell-item"><!--config.growth-->
+          <h3>今日成长与问题</h3>
           <p>
             {{ detailt.summaryToday || "暂无" }}
           </p>
         </div>
-        <div class="cell-item" v-if="config.plan">
+        <div class="cell-item"><!--config.plan-->
           <h3>明日计划</h3>
           <p>
             {{ detailt.planTomorrow || "暂无" }}
           </p>
         </div>
-        <div class="cell-item" v-if="config.share">
+        <div class="cell-item" v-if="detailt.attendanceSummaryType==3"><!--config.share-->
           <h3>今日案例分享</h3>
           <p>
             {{ detailt.caseShareToday || "暂无" }}
@@ -367,11 +373,32 @@
               <div class="item-time">
                 {{ detailt.morningCheckInTime || "暂无" }}
               </div>
-              <div class="item-type" :data-type="detailt.morningCheckInTypeOn">
-                {{ detailt.morningOnDutyResult | getText }}
+              <div
+                class="item-type-box"
+                v-if="
+                  detailt.morningOnDutyResult == detailt.morningOffDutyResult
+                "
+              >
+                <div
+                  class="item-type"
+                  :data-type="detailt.morningCheckInTypeOn"
+                >
+                  {{ detailt.morningOnDutyResult | getText }}
+                </div>
               </div>
-              <div class="item-type" :data-type="detailt.morningCheckInTypeOff">
-                {{ detailt.morningOffDutyResult | getText }}
+              <div class="item-type-box" v-else>
+                <div
+                  class="item-type"
+                  :data-type="detailt.morningCheckInTypeOn"
+                >
+                  {{ detailt.morningOnDutyResult | getText }}
+                </div>
+                <div
+                  class="item-type"
+                  :data-type="detailt.morningCheckInTypeOff"
+                >
+                  {{ detailt.morningOffDutyResult | getText }}
+                </div>
               </div>
             </div>
             <div class="line">/</div>
@@ -381,16 +408,32 @@
                 {{ detailt.afternoonCheckInTime || "暂无" }}
               </div>
               <div
-                class="item-type"
-                :data-type="detailt.afternoonCheckInTypeOn"
+                class="item-type-box"
+                v-if="
+                  detailt.afternoonOnDutyResult ==
+                    detailt.afternoonOffDutyResult
+                "
               >
-                {{ detailt.afternoonOnDutyResult | getText }}
+                <div
+                  class="item-type"
+                  :data-type="detailt.afternoonCheckInTypeOn"
+                >
+                  {{ detailt.afternoonOnDutyResult | getText }}
+                </div>
               </div>
-              <div
-                class="item-type"
-                :data-type="detailt.afternoonCheckInTypeOff"
-              >
-                {{ detailt.afternoonOffDutyResult | getText }}
+              <div class="item-type-box" v-else>
+                <div
+                  class="item-type"
+                  :data-type="detailt.afternoonCheckInTypeOn"
+                >
+                  {{ detailt.afternoonOnDutyResult | getText }}
+                </div>
+                <div
+                  class="item-type"
+                  :data-type="detailt.afternoonCheckInTypeOff"
+                >
+                  {{ detailt.afternoonOffDutyResult | getText }}
+                </div>
               </div>
             </div>
           </div>
@@ -493,6 +536,8 @@ export default {
      * @example: 获取人员显示权限
      */
     getPerType() {
+      //wlh 注释，暂不需要判断，日志详情有返回身份类型
+      return;
       this.$api
         .post({
           url: "/attendance/attendanceWorkSummary/judgeSummaryType"

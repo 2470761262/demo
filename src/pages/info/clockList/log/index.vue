@@ -114,6 +114,7 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
+            margin-bottom: 16px;
             button {
               outline: 0;
               border: 0;
@@ -138,9 +139,6 @@
             align-items: center;
             margin-right: 16px;
             margin-bottom: 16px;
-            &.gap-left {
-              margin-left: 16px;
-            }
             @media screen and(max-width: 1470px) {
               &:nth-child(4n -1) {
                 margin-right: 0 !important;
@@ -279,7 +277,14 @@
                     .clock-result-head {
                       font-size: @font16;
                       color: #606266;
-                      margin-bottom: 10px;
+                    }
+                    .clock-result-type-box {
+                      display: flex;
+                      .clock-result-type {
+                        &:nth-child(1) {
+                          margin-right: 10px;
+                        }
+                      }
                     }
                     .clock-result-type {
                       font-size: @font12;
@@ -564,7 +569,7 @@
       <div class="list-content">
         <div class="list-left">
           <div class="list-serch">
-            <div class="serch-item">
+            <!-- <div class="serch-item">
               <div class="serch-item-text">员工信息</div>
               <el-select
                 class="serch-item-select"
@@ -584,10 +589,9 @@
                   :key="item.accountId"
                 ></el-option>
               </el-select>
-            </div>
+            </div> -->
             <div class="serch-item">
               <div class="serch-item-text">考勤状态</div>
-              <!--   @change="setChangeList" -->
               <el-select
                 class="serch-item-select"
                 popper-class="options-item"
@@ -631,69 +635,6 @@
                 <el-option value="1" label="已批阅"></el-option>
                 <el-option value="-1" label="未批阅"></el-option>
                 <el-option value="-2" label="无需批阅"></el-option>
-              </el-select>
-            </div>
-            <div class="serch-item gap-left">
-              <div class="serch-item-text">公司名称</div>
-              <!--   @change="setChangeList" -->
-              <el-select
-                class="serch-item-select"
-                v-model="refresh.companyId"
-                placeholder="公司名称"
-                clearable
-                filterable
-                remote
-                @focus="companyFocus"
-                @change="companyChange"
-                :loading="refresh.company.loading"
-                value-key="value"
-                popper-class="options-item"
-              >
-                <el-option
-                  v-for="item in refresh.company.list"
-                  :key="item.id"
-                  :label="item.companyName"
-                  :value="item.id"
-                >
-                </el-option>
-              </el-select>
-            </div>
-            <div class="serch-item">
-              <div class="serch-item-text">所在部门</div>
-              <!--   @change="setChangeList" -->
-              <el-select
-                class="serch-item-select"
-                popper-class="options-item"
-                v-model="refresh.departmentId"
-                placeholder="部门"
-                clearable
-                filterable
-                remote
-                :remote-method="getDepartmentData"
-                :loading="refresh.department.loading"
-                value-key="value"
-              >
-                <el-option
-                  v-for="item in refresh.department.list"
-                  :key="item.id"
-                  :label="item.deptName"
-                  :value="item.id"
-                >
-                </el-option>
-              </el-select>
-            </div>
-            <div class="serch-item">
-              <div class="serch-item-text">打卡情况</div>
-              <!--   @change="setChangeList" -->
-              <el-select
-                class="serch-item-select"
-                v-model="refresh.condition"
-                placeholder="请选择"
-                popper-class="options-item"
-              >
-                <el-option value="" label="全部"></el-option>
-                <el-option value="1" label="有打卡记录"></el-option>
-                <el-option value="0" label="无打卡记录"></el-option>
               </el-select>
             </div>
             <div class="serch-item-btn">
@@ -740,7 +681,6 @@
                           <div
                             class="per-type"
                             :class="'per-type' + item.attendanceType"
-                            v-if="item.attendanceText != '正常考勤'"
                           >
                             {{ item.attendanceText }}
                           </div>
@@ -752,55 +692,65 @@
                   <!-- 上午考勤 -->
                   <div class="tab-body-cell">
                     <div class="clock-result">
-                      <div class="clock-result-head">
+                      <div
+                        class="clock-result-head"
+                        v-if="
+                          item.morningOnDutyResult != 3 &&
+                            item.morningOffDutyResult != 3
+                        "
+                      >
                         {{ item.morningAttendanceInfo || "暂无记录" }}
                       </div>
-                      <span
-                        class="clock-result-type"
-                        :data-type="item.morningCheckInTypeOn"
-                      >
-                        {{ item.morningOnDutyResult | getText }}
-                      </span>
-                      <span v-if="item.morningOffDutyResult"> / </span>
-                      <span
-                        class="clock-result-type"
-                        :data-type="item.morningCheckInTypeOff"
-                      >
-                        {{ item.morningOffDutyResult | getText }}
-                      </span>
-                      <span
-                        class="clock-result-type"
-                        :data-type="item.morningCheckInTypeOff"
-                      >
-                        {{ item.morningLeaveType }}
-                      </span>
+                      <div class="clock-result-type-box">
+                        <div
+                          class="clock-result-type"
+                          :data-type="item.morningCheckInTypeOn"
+                        >
+                          {{ item.morningOnDutyResult | getText }}
+                        </div>
+                        <div
+                          v-if="
+                            item.morningOnDutyResult !=
+                              item.morningOffDutyResult
+                          "
+                          class="clock-result-type"
+                          :data-type="item.morningCheckInTypeOff"
+                        >
+                          {{ item.morningOffDutyResult | getText }}
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <!-- 下午考勤 -->
                   <div class="tab-body-cell">
                     <div class="clock-result">
-                      <div class="clock-result-head">
+                      <div
+                        class="clock-result-head"
+                        v-if="
+                          item.afternoonOnDutyResult != 3 &&
+                            item.afternoonOffDutyResult != 3
+                        "
+                      >
                         {{ item.afternoonAttendanceInfo || "暂无记录" }}
                       </div>
-                      <span
-                        class="clock-result-type"
-                        :data-type="item.afternoonCheckInTypeOn"
-                      >
-                        {{ item.afternoonOnDutyResult | getText }}
-                      </span>
-                      <span v-if="item.afternoonOffDutyResult"> / </span>
-                      <span
-                        class="clock-result-type"
-                        :data-type="item.afternoonCheckInTypeOff"
-                      >
-                        {{ item.afternoonOffDutyResult | getText }}
-                      </span>
-                      <span
-                        class="clock-result-type"
-                        :data-type="item.afternoonCheckInTypeOff"
-                      >
-                        {{ item.afternoonLeaveType }}
-                      </span>
+                      <div class="clock-result-type-box">
+                        <div
+                          class="clock-result-type"
+                          :data-type="item.afternoonCheckInTypeOn"
+                        >
+                          {{ item.afternoonOnDutyResult | getText }}
+                        </div>
+                        <div
+                          v-if="
+                            item.afternoonOnDutyResult !=
+                              item.afternoonOffDutyResult
+                          "
+                          class="clock-result-type"
+                          :data-type="item.afternoonCheckInTypeOff"
+                        >
+                          {{ item.afternoonOffDutyResult | getText }}
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="tab-body-cell">
@@ -849,107 +799,6 @@
         <div class="list-right">
           <div class="posi-sticky">
             <ls-collapse v-model="activeCollapse">
-              <ls-collapse-item
-                sign="calendar1"
-                :title="`我的管理(${mySlave.count})`"
-              >
-                <template>
-                  <div class="collapse-box">
-                    <div class="collapse-box-head">
-                      <div>我的管理({{ mySlave.count }})</div>
-                    </div>
-                    <div class="collapse-box-scroll">
-                      <el-scrollbar class="scrollbar">
-                        <div
-                          class="scrollbar-warp"
-                          v-infinite-scroll="getMySlaveList"
-                          infinite-scroll-immediate
-                        >
-                          <div
-                            class="scrollbar-item"
-                            v-for="item in mySlave.list"
-                            :key="item.accountId"
-                            :class="{
-                              active:
-                                refresh.personAccountPer.accountId ==
-                                item.accountId
-                            }"
-                            @click="setSlaveName(item)"
-                          >
-                            <div class="posi-tips" v-if="item.freeInfo">
-                              {{ item.freeInfo }}
-                            </div>
-                            <img :src="item.headImgUrl" alt="" />
-                            <div class="item-right">
-                              <div class="item-title">{{ item.perName }}</div>
-                              <div class="item-dept">{{ item.deptName }}</div>
-                            </div>
-                          </div>
-                          <div class="is-empty" v-if="mySlave.list.length == 0">
-                            <img
-                              src="https://sysimgs.oss-cn-shenzhen.aliyuncs.com/Background/kong.png"
-                              alt=""
-                            />
-                            <div>暂无数据</div>
-                          </div>
-                        </div>
-                      </el-scrollbar>
-                    </div>
-                  </div>
-                </template>
-              </ls-collapse-item>
-              <ls-collapse-item
-                sign="calendar2"
-                :title="`我的关注(${myInterest.count})`"
-              >
-                <template>
-                  <div class="collapse-box">
-                    <div class="collapse-box-head">
-                      <div>我的关注({{ myInterest.count }})</div>
-                    </div>
-                    <div class="collapse-box-scroll">
-                      <el-scrollbar class="scrollbar">
-                        <div
-                          class="scrollbar-warp"
-                          v-infinite-scroll="getMyInterestList"
-                          infinite-scroll-immediate
-                        >
-                          <div
-                            class="scrollbar-item"
-                            v-for="item in myInterest.list"
-                            :key="item.accountId"
-                            :class="{
-                              active:
-                                refresh.personAccountPer.accountId ==
-                                item.accountId
-                            }"
-                            @click="setInterestName(item)"
-                          >
-                            <div class="posi-tips" v-if="item.freeInfo">
-                              {{ item.freeInfo }}
-                            </div>
-                            <img :src="item.headImgUrl" alt="" />
-                            <div class="item-right">
-                              <div class="item-title">{{ item.perName }}</div>
-                              <div class="item-dept">{{ item.deptName }}</div>
-                            </div>
-                          </div>
-                          <div
-                            class="is-empty"
-                            v-if="myInterest.list.length == 0"
-                          >
-                            <img
-                              src="https://sysimgs.oss-cn-shenzhen.aliyuncs.com/Background/kong.png"
-                              alt=""
-                            />
-                            <div>暂无数据</div>
-                          </div>
-                        </div>
-                      </el-scrollbar>
-                    </div>
-                  </div>
-                </template>
-              </ls-collapse-item>
               <ls-collapse-item sign="calendar" :title="collapseTile">
                 <!-- 
                       :is-empty="false"
@@ -1041,15 +890,10 @@ export default {
   },
   data() {
     return {
-      functionRuleObj: {
-        company: false, // 公司
-        department: false, // 部门
-        employee: false // 人员
-      },
-      activeCollapse: "calendar1",
+      activeCollapse: "calendar",
       color: ["#0DA88B", "#F6A420", "#EF5656"],
       currentNavIndex: 0,
-      currentSubNavIndex: 4,
+      currentSubNavIndex: 0,
       subNavs: [
         {
           name: "我的日志",
@@ -1090,17 +934,6 @@ export default {
         }
       ],
       refresh: {
-        condition: "",
-        companyId: "",
-        company: {
-          loading: false,
-          list: []
-        },
-        departmentId: "",
-        department: {
-          loading: false,
-          list: []
-        },
         page: {
           currentPage: 1,
           total: 1,
@@ -1117,117 +950,21 @@ export default {
         calendarTiem: [], //util.format(new Date(), "yyyy-MM-dd"), //日历时间
         renderList: [] //渲染结果数组
       },
-
-      mySlave: {
-        //我的管理
-        list: [],
-        limit: 10,
-        totalPage: 1,
-        count: 0,
-        currentPage: 1
-      },
-      myInterest: {
-        //我的关注
-        list: [],
-        limit: 10,
-        totalPage: 1,
-        count: 0,
-        currentPage: 1
-      },
       loading: true
     };
   },
   created() {
-    // this.getLoginPer();
+    this.getLoginPer();
     this.getList();
-    this.getMySlaveList();
-    this.getMyInterestList();
   },
   filters: {
     getText(value) {
-      if (value === "") return "暂无";
-      else if (value === undefined) return "";
+      if (value == null || value === "") return "暂无";
       const text = ["正常", "迟到", "早退", "旷工", "请假", "迟到早退"];
       return text[value];
     }
   },
   methods: {
-    /**
-     * @description: 公司列表搜索
-     * @param {*} keyWork
-     * @return {*}
-     */
-    queryCompanyList(keyWork = "") {
-      this.$set(this.refresh.company, "loading", true);
-      this.$api
-        .post({
-          url: "/attendance/attendanceWorkSummary/company",
-          data: {
-            limit: 50,
-            page: 1,
-            keyWord: keyWork
-          },
-          headers: { "Content-Type": "application/json" }
-        })
-        .then(e => {
-          let data = e.data;
-          if (data.code == 200) {
-            this.refresh.company.list = data.data;
-          }
-        })
-        .finally(e => {
-          this.$set(this.refresh.company, "loading", false);
-        });
-    },
-    /**
-     * @example:公司获取焦点事件
-     */
-    companyFocus() {
-      if (this.refresh.company.list.length == 0) {
-        this.queryCompanyList();
-      }
-    },
-    /**
-     * @example:公司改变事件
-     */
-    companyChange() {
-      this.refresh.departmentId = "";
-      this.refresh.department = {
-        loading: false,
-        list: []
-      };
-      this.getDepartmentData();
-    },
-    /**
-     * @example:部门搜索事件
-     */
-    getDepartmentData(keyWord = "") {
-      this.refresh.department.list = [];
-      console.log(this.refresh.companyId, "this.refresh.companyId");
-      if (this.refresh.companyId) {
-        this.$set(this.refresh.department, "loading", true);
-        this.$api
-          .post({
-            url: "/attendance/attendanceWorkSummary/department",
-            data: {
-              limit: 50,
-              page: 1,
-              keyWord: keyWord,
-              companyId: this.refresh.companyId
-            },
-            headers: { "Content-Type": "application/json" }
-          })
-          .then(e => {
-            let data = e.data;
-            if (data.code == 200) {
-              this.refresh.department.list = data.data.list;
-            }
-          })
-          .finally(e => {
-            this.$set(this.refresh.department, "loading", false);
-          });
-      }
-    },
     /**
      * @example: 获取当前登录人的名称
      */
@@ -1265,73 +1002,12 @@ export default {
       this.setChangeList();
     },
     /**
-     * @example: 获取我的管理列表
-     */
-
-    getMyInterestList() {
-      if (
-        this.myInterest.list.length == 0 ||
-        this.myInterest.currentPage <= this.myInterest.totalPage
-      ) {
-        this.$api
-          .post({
-            url: "/attendance/attendanceWorkSummary/listMyInterest",
-            data: {
-              limit: this.myInterest.limit,
-              pageNum: this.myInterest.currentPage
-            },
-            qs: true
-          })
-          .then(({ data }) => {
-            this.myInterest.list = [...this.myInterest.list, ...data.data.list];
-            this.myInterest.count = data.data.totalCount;
-            this.myInterest.totalPage = data.data.totalPage;
-            this.myInterest.currentPage++;
-          });
-      }
-    },
-    /**
-     * @example:我的管理点击查询
-     */
-
-    setSlaveName(item) {
-      this.refresh.personAccountPer = item;
-      this.refresh.perList = [item];
-      this.setChangeList();
-    },
-    /**
-     * @example: 获取我的管理列表
-     */
-
-    getMySlaveList() {
-      if (
-        this.mySlave.list.length == 0 ||
-        this.mySlave.currentPage <= this.mySlave.totalPage
-      ) {
-        this.$api
-          .post({
-            url: "/attendance/attendanceWorkSummary/mySlaveList",
-            data: {
-              limit: this.mySlave.limit,
-              pageNum: this.mySlave.currentPage
-            },
-            qs: true
-          })
-          .then(({ data }) => {
-            this.mySlave.list = [...this.mySlave.list, ...data.data.list];
-            this.mySlave.count = data.data.totalCount;
-            this.mySlave.totalPage = data.data.totalPage;
-            this.mySlave.currentPage++;
-          });
-      }
-    },
-    /**
      * @example: 重置
      */
 
     refreshData() {
       Object.assign(this.$data.refresh, this.$options.data.call(this).refresh);
-      // this.getLoginPer();
+      this.getLoginPer();
       this.getList();
     },
     /**
@@ -1377,21 +1053,15 @@ export default {
         page: refresh.page.currentPage,
         addStatus: refresh.summaryAddStatus,
         checkStatus: refresh.summaryCheckStatus,
-        attendanceStatus: refresh.attendanceStatus,
-        companyId: this.refresh.companyId,
-        departmentId: this.refresh.departmentId,
-        isAttendance: this.refresh.condition
+        attendanceStatus: refresh.attendanceStatus
       };
-      if (
-        this.refresh.personAccountPer != "" &&
-        this.refresh.personAccountPer.accountId != ""
-      ) {
+      if (this.refresh.personAccountPer != "") {
         data.personIds = [this.refresh.personAccountPer.accountId];
       }
 
       this.$api
         .post({
-          url: "/attendance/attendanceWorkSummary/listMySummary",
+          url: "/attendance/attendanceWorkSummary/real/my/work/summary",
           data,
           headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
@@ -1406,13 +1076,6 @@ export default {
             let summaryCheckStatusType = getSummaryCheckStatusType(
               v.summaryCheckStatus
             );
-            if (v.morningOnDutyResult === v.morningOffDutyResult) {
-              delete v.morningOffDutyResult;
-            }
-            if (v.afternoonOnDutyResult === v.afternoonOffDutyResult) {
-              delete v.afternoonOffDutyResult;
-            }
-
             return {
               ...v,
               ...{

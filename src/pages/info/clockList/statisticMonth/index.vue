@@ -41,12 +41,36 @@
             <div class="conditions-box">
               <el-row :gutter="16">
                 <el-form label-position="right" label-width="64px">
+                  <el-col :span="6" v-if="functionRuleObj.employee">
+                    <el-form-item label-width="72px" label="员工姓名">
+                      <el-select
+                        class="width100"
+                        popper-class="options-item"
+                        v-model="employeeId"
+                        placeholder="请选择"
+                        filterable
+                        @focus="employeeFocus"
+                        remote
+                        :remote-method="queryEmployee"
+                        :loading="employee.loading"
+                        clearable
+                        @change="query()"
+                      >
+                        <el-option
+                          v-for="(item, index) in employee.list"
+                          :key="index"
+                          :value="item.accountId"
+                          :label="item.perName"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
                   <el-col
-                    :span="10"
+                    :span="6"
                     v-if="functionRuleObj.company && functionRuleObj.department"
                   >
                     <el-row :gutter="8">
-                      <el-form-item label="所在部门">
+                      <el-form-item label-width="72px" label="所在部门">
                         <el-col :span="12" v-if="functionRuleObj.company">
                           <el-select
                             class="width100"
@@ -59,7 +83,6 @@
                             @change="companyChange"
                             :loading="company.loading"
                             value-key="value"
-                            @blur="query()"
                           >
                             <el-option
                               v-for="item in company.list"
@@ -80,9 +103,8 @@
                             :remote-method="getDepartmentData"
                             :loading="department.loading"
                             value-key="value"
-                            @change="query(1)"
+                            @change="departmentChange"
                             class="width100"
-                            @blur="query()"
                           >
                             <el-option
                               v-for="item in department.list"
@@ -96,49 +118,7 @@
                       </el-form-item>
                     </el-row>
                   </el-col>
-                  <el-col :span="7" v-if="functionRuleObj.employee">
-                    <el-form-item label="员工姓名">
-                      <el-select
-                        class="width100"
-                        popper-class="options-item"
-                        v-model="employeeId"
-                        placeholder="请选择"
-                        filterable
-                        @focus="employeeFocus"
-                        remote
-                        :remote-method="queryEmployee"
-                        :loading="employee.loading"
-                        clearable
-                        @blur="query()"
-                      >
-                        <el-option
-                          v-for="(item, index) in employee.list"
-                          :key="index"
-                          :value="item.accountId"
-                          :label="item.perName"
-                        ></el-option>
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="7" v-if="functionRuleObj.status">
-                    <el-form-item label="在职状态">
-                      <el-select
-                        class="width100"
-                        popper-class="options-item"
-                        v-model="status"
-                        placeholder="请选择"
-                        @blur="query()"
-                      >
-                        <el-option
-                          v-for="(item, index) in statusList"
-                          :key="index"
-                          :value="item.value"
-                          :label="item.label"
-                        ></el-option>
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="8" v-if="functionRuleObj.position">
+                  <el-col :span="6" v-if="functionRuleObj.position">
                     <el-form-item label="岗位">
                       <el-select
                         class="width100"
@@ -151,7 +131,7 @@
                         :remote-method="queryPosition"
                         :loading="position.loading"
                         clearable
-                        @blur="query()"
+                        @change="query()"
                       >
                         <el-option
                           v-for="(item, index) in position.list"
@@ -162,7 +142,59 @@
                       </el-select>
                     </el-form-item>
                   </el-col>
-                  <el-col :span="8" class="fr">
+                  <el-col :span="6" v-if="functionRuleObj.status">
+                    <el-form-item label-width="72px" label="在职状态">
+                      <el-select
+                        class="width100"
+                        popper-class="options-item"
+                        v-model="status"
+                        placeholder="请选择"
+                        @change="query()"
+                      >
+                        <el-option
+                          v-for="(item, index) in statusList"
+                          :key="index"
+                          :value="item.value"
+                          :label="item.label"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6" v-if="functionRuleObj.status">
+                    <el-form-item label-width="72px" label="考勤要求">
+                      <el-select
+                        class="width100"
+                        popper-class="options-item"
+                        v-model="clockRequire"
+                        placeholder="请选择"
+                        clearable
+                        @change="query()"
+                      >
+                        <el-option
+                          v-for="(item, index) in requireList"
+                          :key="index"
+                          :value="item.value"
+                          :label="item.label"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6" v-if="functionRuleObj.status">
+                    <el-form-item label="日期">
+                      <el-date-picker
+                        v-model="applyTime"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="请选择"
+                        end-placeholder="请选择"
+                        value-format="yyyy-MM-dd"
+                        class="anchor-point"
+                        @change="applyTimeChange"
+                      >
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6" class="fr">
                     <div class="conditions-btn">
                       <div
                         class="btn"
@@ -207,7 +239,7 @@
                 >
                   <el-table-column
                     min-width="140"
-                    label="员工信息"
+                    label="考勤人/要求"
                     align="left"
                     show-overflow-tooltip
                   >
@@ -219,7 +251,19 @@
                           fit="cover"
                         ></el-image>
                         <div class="info">
-                          <div class="name">{{ scope.row.perName }}</div>
+                          <div class="name">
+                            {{ scope.row.perName
+                            }}<span
+                              v-if="scope.row.isFreedom == '需要考勤'"
+                              class="span_success"
+                              >{{ scope.row.isFreedom }}</span
+                            >
+                            <span
+                              v-if="scope.row.isFreedom == '无需考勤'"
+                              class="span_warning"
+                              >{{ scope.row.isFreedom }}</span
+                            >
+                          </div>
                           <div class="deptname">{{ scope.row.deptName }}</div>
                         </div>
                       </div>
@@ -227,7 +271,7 @@
                   </el-table-column>
                   <el-table-column
                     min-width="131"
-                    label="在职状态/岗位"
+                    label="岗位信息"
                     align="left"
                     show-overflow-tooltip
                   >
@@ -237,90 +281,83 @@
                       >
                     </template>
                   </el-table-column>
+                  <!-- 应出勤天数 -->
                   <el-table-column
                     min-width="92"
-                    label="考勤要求"
+                    label="应出勤天数"
                     align="left"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      <span
-                        v-if="scope.row.isFreedom == '正常考勤'"
-                        class="span_success"
-                        >{{ scope.row.isFreedom }}</span
-                      >
-                      <span
-                        v-if="scope.row.isFreedom == '免考勤'"
-                        class="span_warning"
-                        >{{ scope.row.isFreedom }}</span
-                      >
+                      <span>{{ scope.row.attendanceDays }}天</span>
                     </template>
                   </el-table-column>
+                  <!-- 实际出勤 -->
                   <el-table-column
                     min-width="110"
-                    label="考勤"
-                    align="left"
-                    show-overflow-tooltip
-                  >
-                    <template v-slot="scope">
-                      <div
-                        class="attendance-beLate"
-                        v-if="
-                          scope.row.beLateNum == 0 &&
-                            scope.row.absenceNum == 0 &&
-                            scope.row.leaveEarlyNum == 0
-                        "
-                      >
-                        无异常
-                      </div>
-                      <div class="attendance-beLate" v-else>
-                        <div class="item" v-if="scope.row.beLateNum != 0">
-                          迟到：{{ scope.row.beLateNum }}次
-                        </div>
-                        <div class="item" v-if="scope.row.absenceNum != 0">
-                          旷工：{{ scope.row.absenceNum }}天
-                        </div>
-                        <div class="item" v-if="scope.row.leaveEarlyNum != 0">
-                          早退：{{ scope.row.leaveEarlyNum }}次
-                        </div>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    min-width="133"
-                    prop="unCommitReportNum"
-                    label="未提交日志"
+                    prop="workDays"
+                    label="实际出勤"
                     align="left"
                     sortable="custom"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      {{ scope.row.unCommitReportNum }}次</template
+                      <span>{{ scope.row.workDays }}天</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    min-width="111"
+                    prop="absenceNum"
+                    label="旷工天数"
+                    align="left"
+                    sortable="custom"
+                    show-overflow-tooltip
+                  >
+                    <template v-slot="scope">
+                      {{ scope.row.absenceNum || 0 }}天</template
                     >
                   </el-table-column>
                   <el-table-column
                     min-width="111"
-                    prop="unAuditNum"
-                    label="未批阅"
+                    prop="beLateNum"
+                    label="迟到次数"
                     align="left"
                     sortable="custom"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      {{ scope.row.unAuditNum }}次</template
+                      {{ scope.row.beLateNum || 0 }}次</template
+                    >
+                  </el-table-column>
+                  <el-table-column
+                    min-width="111"
+                    prop="leaveEarlyNum"
+                    label="早退次数"
+                    align="left"
+                    sortable="custom"
+                    show-overflow-tooltip
+                  >
+                    <template v-slot="scope">
+                      {{ scope.row.leaveEarlyNum || 0 }}次</template
                     >
                   </el-table-column>
                   <el-table-column
                     min-width="80"
                     prop="casualLeaveNum"
-                    label="事假"
+                    label="请假天数"
                     align="left"
                     sortable="custom"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      <span v-if="scope.row.casualLeaveNum == 0">满勤</span>
-                      <span v-else>{{ scope.row.casualLeaveNum }}天</span>
+                      <span>{{ scope.row.casualLeaveNum }}天</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column width="100" label="操作" align="left">
+                    <template v-slot="scope">
+                      <div class="check" @click="toDetail(scope.row.accountId)">
+                        查看
+                      </div>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -334,7 +371,7 @@
                 >
                   <el-table-column
                     min-width="140"
-                    label="员工信息"
+                    label="考勤人/要求"
                     align="left"
                     show-overflow-tooltip
                   >
@@ -346,7 +383,19 @@
                           fit="cover"
                         ></el-image>
                         <div class="info">
-                          <div class="name">{{ scope.row.perName }}</div>
+                          <div class="name">
+                            {{ scope.row.perName
+                            }}<span
+                              v-if="scope.row.isFreedom == '需要考勤'"
+                              class="span_success"
+                              >{{ scope.row.isFreedom }}</span
+                            >
+                            <span
+                              v-if="scope.row.isFreedom == '无需考勤'"
+                              class="span_warning"
+                              >{{ scope.row.isFreedom }}</span
+                            >
+                          </div>
                           <div class="deptname">{{ scope.row.deptName }}</div>
                         </div>
                       </div>
@@ -354,7 +403,7 @@
                   </el-table-column>
                   <el-table-column
                     min-width="131"
-                    label="在职状态/岗位"
+                    label="岗位信息"
                     align="left"
                     show-overflow-tooltip
                   >
@@ -366,87 +415,68 @@
                   </el-table-column>
                   <el-table-column
                     min-width="92"
-                    label="考勤要求"
+                    label="扣分总数"
                     align="left"
+                    sortable="custom"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      <span
-                        v-if="scope.row.isFreedom == '正常考勤'"
-                        class="span_success"
-                        >{{ scope.row.isFreedom }}</span
-                      >
-                      <span
-                        v-if="scope.row.isFreedom == '免考勤'"
-                        class="span_warning"
-                        >{{ scope.row.isFreedom }}</span
-                      >
+                      <span>{{ scope.row.allPoint }}分</span>
                     </template>
                   </el-table-column>
                   <el-table-column
                     min-width="110"
-                    label="考勤扣分"
+                    prop="absencePoint"
+                    label="旷工扣分"
+                    sortable="custom"
                     align="left"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      <div
-                        class="attendance-beLate"
-                        v-if="
-                          scope.row.beLatePoint == 0 &&
-                            scope.row.absencePoint == 0 &&
-                            scope.row.leaveEarlyPoint == 0
-                        "
-                      >
-                        无异常
-                      </div>
-                      <div class="attendance-beLate">
-                        <div class="item" v-if="scope.row.beLatePoint != 0">
-                          迟到：{{ scope.row.beLatePoint }}分
-                        </div>
-                        <div class="item" v-if="scope.row.absencePoint != 0">
-                          旷工：{{ scope.row.absencePoint }}分
-                        </div>
-                        <div class="item" v-if="scope.row.leaveEarlyPoint != 0">
-                          早退：{{ scope.row.leaveEarlyPoint }}分
-                        </div>
-                      </div>
-                    </template>
+                      {{ scope.row.absencePoint }}分</template
+                    >
                   </el-table-column>
                   <el-table-column
                     min-width="95"
-                    prop="unCommitReportPoint"
-                    label="日志扣分"
+                    prop="beLatePoint"
+                    label="迟到扣分"
                     align="left"
                     sortable="custom"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      {{ scope.row.unCommitReportPoint }}分</template
+                      {{ scope.row.beLatePoint }}分</template
                     >
                   </el-table-column>
                   <el-table-column
                     min-width="120"
-                    prop="unAuditPoint"
-                    label="未批阅扣分"
+                    prop="leaveEarlyPoint"
+                    label="早退扣分"
                     align="left"
                     sortable="custom"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      {{ scope.row.unAuditPoint }}分</template
+                      {{ scope.row.leaveEarlyPoint }}分</template
                     >
                   </el-table-column>
                   <el-table-column
                     min-width="105"
                     prop="casualLeavePoint"
-                    label="事假扣分"
+                    label="请假扣分"
                     align="left"
                     sortable="custom"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
                       <span>{{ scope.row.casualLeavePoint }}分</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column min-width="80" label="操作" align="left">
+                    <template v-slot="scope">
+                      <div class="check" @click="toDetail(scope.row.accountId)">
+                        查看
+                      </div>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -464,7 +494,7 @@
             </div>
           </div>
         </div>
-        <div class="sidebar">
+        <!-- <div class="sidebar">
           <div class="sidebar-container">
             <div class="calendar-head">
               <button class="change-item" @click="prevYear">
@@ -489,7 +519,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -511,14 +541,14 @@ export default {
           rUrl: "myWorkSummary"
         },
         {
-          name: "考勤统计",
-          path: "/clockList/statistic",
-          rUrl: "statistics"
-        },
-        {
           name: "考勤月统计",
           path: "/clockList/statisticMonth",
           rUrl: "statistics"
+        },
+        {
+          name: "考勤日统计",
+          path: "/clockList/statisticDay",
+          rUrl: "attendanceStatisticsDaily"
         },
         {
           name: "考勤审批",
@@ -602,20 +632,23 @@ export default {
       sortType: 1, //排序类型
       year: new Date().getFullYear(),
       currentMonth: new Date().getMonth() + 1,
-      months: [
-        "一",
-        "二",
-        "三",
-        "四",
-        "五",
-        "六",
-        "七",
-        "八",
-        "九",
-        "十",
-        "十一",
-        "十二"
-      ]
+      // 考勤需求
+      clockRequire: "",
+      requireList: [
+        {
+          label: "需要考勤",
+          value: 0
+        },
+        {
+          label: "无需考勤",
+          value: 1
+        }
+      ],
+      // 日期
+      applyTime: [],
+      starTime: "",
+      endTime: "",
+      week: []
     };
   },
   created() {
@@ -623,6 +656,13 @@ export default {
     this.query();
   },
   methods: {
+    doHandleMonth(month) {
+      var m = month;
+      if (month.toString().length == 1) {
+        m = "0" + month;
+      }
+      return m;
+    },
     getFunction() {
       this.$api
         .get({
@@ -696,9 +736,7 @@ export default {
     query(page = 1) {
       this.pageJson.page = page;
       this.loading = true;
-      let date = this.year + "-" + this.currentMonth + "-01";
       let params = {
-        date: date,
         page: this.pageJson.page,
         limit: this.pageJson.limit,
         companyId: this.companyId,
@@ -707,8 +745,18 @@ export default {
         positionId: this.positionId,
         status: this.status,
         sortType: this.sortType,
-        sortColumn: this.sortColumn
+        sortColumn: this.sortColumn,
+        isFreedom: this.clockRequire,
+        startDate: "",
+        endDate: ""
       };
+      if (this.starTime) {
+        params.startDate = this.starTime;
+        params.endDate = this.endTime;
+      } else {
+        params.startDate = this.year + "-" + this.currentMonth + "-" + "01";
+        params.endDate = this.year + "-" + this.currentMonth + "-" + "31";
+      }
       this.$api
         .post({
           url: "/attendance/statistics/data",
@@ -748,33 +796,6 @@ export default {
     },
     switchDataPanel() {
       this.currentPanelIndex = this.currentPanelIndex == 0 ? 1 : 0;
-    },
-    /**
-     * @description: 上一年
-     * @param {*}
-     * @return {*}
-     */
-    prevYear() {
-      this.year--;
-      this.query();
-    },
-    /**
-     * @description: 下一年
-     * @param {*}
-     * @return {*}
-     */
-    afterYear() {
-      this.year++;
-      this.query();
-    },
-    /**
-     * @description: 设置月份
-     * @param {*} index
-     * @return {*}
-     */
-    switchMonth(index) {
-      this.currentMonth = index + 1;
-      this.query();
     },
     /**
      * @example:公司获取焦点事件
@@ -851,6 +872,16 @@ export default {
             this.$set(this.department, "loading", false);
           });
       }
+    },
+    /**
+     * @example:部门搜索事件
+     */
+    departmentChange() {
+      this.employeeId = "";
+      this.employee.list = [];
+      this.positionId = "";
+      this.position.list = [];
+      this.query(1);
     },
     /**
      * @description: 员工姓名获取焦点事件
@@ -930,9 +961,7 @@ export default {
     },
     excelExport() {
       this.pageLoading = true;
-      let date = this.year + "-" + this.currentMonth + "-01";
       let params = {
-        date: date,
         page: this.pageJson.page,
         limit: this.pageJson.limit,
         companyId: this.companyId,
@@ -941,8 +970,18 @@ export default {
         positionId: this.positionId,
         status: this.status,
         sortType: this.sortType,
-        sortColumn: this.sortColumn
+        sortColumn: this.sortColumn,
+        isFreedom: this.clockRequire,
+        startDate: "",
+        endDate: ""
       };
+      if (this.starTime) {
+        params.startDate = this.starTime;
+        params.endDate = this.endTime;
+      } else {
+        params.startDate = this.year + "-" + this.currentMonth + "-" + "01";
+        params.endDate = this.year + "-" + this.currentMonth + "-" + "31";
+      }
       this.$api
         .post({
           url: "/attendance/statistics/export",
@@ -965,6 +1004,27 @@ export default {
         .finally(e => {
           this.pageLoading = false;
         });
+    },
+    /**
+     * @example: 日期改变事件
+     */
+    applyTimeChange() {
+      if (this.applyTime) {
+        this.starTime = this.applyTime[0];
+        this.endTime = this.applyTime[1];
+      } else {
+        this.starTime = "";
+        this.endTime = "";
+      }
+      this.query();
+    },
+    toDetail(id) {
+      this.$router.push({
+        path: "/clockList/statisticDetail",
+        query: {
+          id: id
+        }
+      });
     }
   }
 };
@@ -1356,6 +1416,7 @@ export default {
               display: inline-block;
               height: 16px;
               padding: 0px 4px;
+              margin-left: 8px;
               border-radius: 2px;
               line-height: 1;
               text-align: center;
@@ -1538,5 +1599,9 @@ export default {
       }
     }
   }
+}
+.check {
+  color: @backgroud;
+  cursor: pointer;
 }
 </style>

@@ -220,7 +220,11 @@ export default {
           }
         })
         .then(({ data }) => {
-          this.list = data.data.brokerRankList.map((v, i) => {
+          this.list = data.data.brokerRankList.list.map((v, i) => {
+            let sumCommission = "****";
+            if (i <= 2) {
+              sumCommission = util.regexNum(v.sumCommission);
+            }
             return {
               ...v,
               isTopThree: i <= 2 ? true : false,
@@ -228,7 +232,7 @@ export default {
                 i <= 2
                   ? `https://img.0be.cn/pc/attence_bz_0${i}.svg`
                   : comNum(i + 1),
-              sumCommission: util.regexNum(v.sumCommission)
+              sumCommission
             };
           });
         })

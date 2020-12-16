@@ -28,18 +28,28 @@ export default {
       subSecondNavs: [
         {
           name: "我的日志",
-          path: "/clockList/myInfo",
-          rUrl: "workSummary"
+          path: "/clockList/log",
+          rUrl: "myWorkSummary"
         },
         {
-          name: "考勤统计",
-          path: "/clockList/statistic",
+          name: "考勤月统计",
+          path: "/clockList/statisticMonth",
+          rUrl: "statistics"
+        },
+        {
+          name: "考勤日统计",
+          path: "/clockList/statisticDay",
           rUrl: "statistics"
         },
         {
           name: "考勤审批",
           path: "/clockList/examine",
           rUrl: "audit"
+        },
+        {
+          name: "日志管理",
+          path: "/clockList/myInfo",
+          rUrl: "workSummary"
         }
       ]
     };

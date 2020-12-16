@@ -2,29 +2,8 @@
   <!-- 考勤统计 -->
   <div class="content" v-loading="pageLoading">
     <div class="head">
-      <div class="head-type">
-        <div
-          class="head-type-item"
-          v-for="(item, index) in navs"
-          :key="index"
-          :class="{ active: currentNavIndex == index }"
-          @click="navigateToOhter(item.path)"
-        >
-          {{ item.name }}
-        </div>
-      </div>
       <div class="head-underling-nva">
-        <div class="head-nav-box">
-          <div
-            class="head-nav-item"
-            v-for="(item, index) in subNavs"
-            :key="index"
-            :class="{ active: currentSubNavIndex == index }"
-            @click="navigateToOhter(item.path, index)"
-          >
-            {{ item.name }}
-          </div>
-        </div>
+        <div class="title">每日考勤统计</div>
         <button
           class="btn-add"
           @click="excelExport"
@@ -41,96 +20,18 @@
             <div class="conditions-box">
               <el-row :gutter="16">
                 <el-form label-position="right" label-width="64px">
-                  <el-col
-                    :span="10"
-                    v-if="functionRuleObj.company && functionRuleObj.department"
-                  >
-                    <el-row :gutter="8">
-                      <el-form-item label="所在部门">
-                        <el-col :span="12" v-if="functionRuleObj.company">
-                          <el-select
-                            class="width100"
-                            v-model="companyId"
-                            placeholder="公司名称"
-                            clearable
-                            filterable
-                            remote
-                            @focus="companyFocus"
-                            @change="companyChange"
-                            :loading="company.loading"
-                            value-key="value"
-                            @blur="query()"
-                          >
-                            <el-option
-                              v-for="item in company.list"
-                              :key="item.coId"
-                              :label="item.companyName"
-                              :value="item.coId"
-                            >
-                            </el-option>
-                          </el-select>
-                        </el-col>
-                        <el-col :span="12" v-if="functionRuleObj.department">
-                          <el-select
-                            v-model="departmentId"
-                            placeholder="部门"
-                            clearable
-                            filterable
-                            remote
-                            :remote-method="getDepartmentData"
-                            :loading="department.loading"
-                            value-key="value"
-                            @change="query(1)"
-                            class="width100"
-                            @blur="query()"
-                          >
-                            <el-option
-                              v-for="item in department.list"
-                              :key="item.deptId"
-                              :label="item.deptName"
-                              :value="item.deptId"
-                            >
-                            </el-option>
-                          </el-select>
-                        </el-col>
-                      </el-form-item>
-                    </el-row>
-                  </el-col>
-                  <el-col :span="7" v-if="functionRuleObj.employee">
-                    <el-form-item label="员工姓名">
+                  <el-col :span="6" v-if="functionRuleObj.status">
+                    <el-form-item label="考勤状态">
                       <el-select
                         class="width100"
                         popper-class="options-item"
-                        v-model="employeeId"
+                        v-model="clockStatus"
                         placeholder="请选择"
-                        filterable
-                        @focus="employeeFocus"
-                        remote
-                        :remote-method="queryEmployee"
-                        :loading="employee.loading"
                         clearable
-                        @blur="query()"
+                        @change="query()"
                       >
                         <el-option
-                          v-for="(item, index) in employee.list"
-                          :key="index"
-                          :value="item.accountId"
-                          :label="item.perName"
-                        ></el-option>
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="7" v-if="functionRuleObj.status">
-                    <el-form-item label="在职状态">
-                      <el-select
-                        class="width100"
-                        popper-class="options-item"
-                        v-model="status"
-                        placeholder="请选择"
-                        @blur="query()"
-                      >
-                        <el-option
-                          v-for="(item, index) in statusList"
+                          v-for="(item, index) in clockStatusList"
                           :key="index"
                           :value="item.value"
                           :label="item.label"
@@ -138,31 +39,23 @@
                       </el-select>
                     </el-form-item>
                   </el-col>
-                  <el-col :span="8" v-if="functionRuleObj.position">
-                    <el-form-item label="岗位">
-                      <el-select
-                        class="width100"
-                        popper-class="options-item"
-                        v-model="positionId"
-                        placeholder="请选择"
-                        filterable
-                        @focus="positionFocus"
-                        remote
-                        :remote-method="queryPosition"
-                        :loading="position.loading"
-                        clearable
-                        @blur="query()"
+                  <el-col :span="6" v-if="functionRuleObj.status">
+                    <el-form-item label="日期">
+                      <el-date-picker
+                        v-model="applyTime"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="请选择"
+                        end-placeholder="请选择"
+                        :default-time="['00:00:00', '23:59:59']"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        class="anchor-point"
+                        @change="applyTimeChange"
                       >
-                        <el-option
-                          v-for="(item, index) in position.list"
-                          :key="index"
-                          :label="item.positionName"
-                          :value="item.id"
-                        ></el-option>
-                      </el-select>
+                      </el-date-picker>
                     </el-form-item>
                   </el-col>
-                  <el-col :span="8" class="fr">
+                  <el-col :span="6" class="fr">
                     <div class="conditions-btn">
                       <div
                         class="btn"
@@ -189,17 +82,55 @@
           <div class="wrapper">
             <div class="right"></div>
             <div class="center">
-              <div class="switch-btn-box">
-                <div class="switch-btn" @click="switchDataPanel">
-                  <i class="el-icon-money"></i>
-                  <span>{{
-                    currentPanelIndex == 0 ? "看考勤扣分" : "看考勤数据"
-                  }}</span>
+              <div class="agent-content">
+                <div class="agent-box">
+                  <div class="head-img">
+                    <img :src="currentAgent.headImg" alt="" />
+                  </div>
+                  <div class="agent-msg">
+                    <div class="agent-name">{{ currentAgent.name }}</div>
+                    <div class="agent-dept">{{ currentAgent.dept }}</div>
+                  </div>
+                  <div class="agent-change" @click="showAgentList">更换</div>
+                </div>
+                <div class="agent-list-content" v-show="isAgent">
+                  <div class="input-content">
+                    <el-input
+                      v-model="agentKeyword"
+                      class="input-style"
+                      placeholder="输入名称查询"
+                      @input="queryEmployee(agentKeyword)"
+                    ></el-input>
+                    <i class="el-icon-search"></i>
+                  </div>
+                  <div class="agent-list">
+                    <el-scrollbar class="scrollbar">
+                      <div
+                        class="agent-item"
+                        :class="{ active: item.accountId == currentAgent.id }"
+                        v-for="(item, idx) in agentList"
+                        :key="idx"
+                        @click="changeAgent(item)"
+                      >
+                        <div class="item-img">
+                          <img :src="item.userImage" alt="" />
+                        </div>
+                        <div class="item-msg">
+                          <div class="item-name">{{ item.perName }}</div>
+                          <div class="item-dept">{{ item.deptName }}</div>
+                        </div>
+                        <i
+                          class="iconfont iconbianzu4"
+                          v-if="item.accountId == currentAgent.id"
+                        ></i>
+                      </div>
+                      <!--  -->
+                    </el-scrollbar>
+                  </div>
                 </div>
               </div>
               <div class="table">
                 <el-table
-                  v-if="currentPanelIndex == 0"
                   :data="tableData"
                   v-loading="loading"
                   ref="tableList"
@@ -207,247 +138,298 @@
                 >
                   <el-table-column
                     min-width="140"
-                    label="员工信息"
+                    label="日期"
                     align="left"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
                       <div class="person-info">
-                        <el-image
-                          style="width: 40px; height: 40px"
-                          :src="scope.row.userImage"
-                          fit="cover"
-                        ></el-image>
                         <div class="info">
-                          <div class="name">{{ scope.row.perName }}</div>
-                          <div class="deptname">{{ scope.row.deptName }}</div>
+                          <div class="name">
+                            {{ scope.row.attendanceDate
+                            }}<span
+                              v-if="scope.row.attendanceType == 0"
+                              class="span_success"
+                              >需要考勤</span
+                            >
+                            <span
+                              v-if="scope.row.attendanceType == 1"
+                              class="span_warning"
+                              >无需考勤</span
+                            >
+                          </div>
+                          <div class="deptname">
+                            {{ scope.row.week }}
+                          </div>
                         </div>
                       </div>
                     </template>
                   </el-table-column>
                   <el-table-column
                     min-width="131"
-                    label="在职状态/岗位"
+                    label="上午考勤/状态"
                     align="left"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      <span
-                        >{{ scope.row.del }} - {{ scope.row.position }}</span
-                      >
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    min-width="92"
-                    label="考勤要求"
-                    align="left"
-                    show-overflow-tooltip
-                  >
-                    <template v-slot="scope">
-                      <span
-                        v-if="scope.row.isFreedom == '正常考勤'"
-                        class="span_success"
-                        >{{ scope.row.isFreedom }}</span
-                      >
-                      <span
-                        v-if="scope.row.isFreedom == '免考勤'"
-                        class="span_warning"
-                        >{{ scope.row.isFreedom }}</span
-                      >
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    min-width="110"
-                    label="考勤"
-                    align="left"
-                    show-overflow-tooltip
-                  >
-                    <template v-slot="scope">
-                      <div
-                        class="attendance-beLate"
-                        v-if="
-                          scope.row.beLateNum == 0 &&
-                            scope.row.absenceNum == 0 &&
-                            scope.row.leaveEarlyNum == 0
-                        "
-                      >
-                        无异常
-                      </div>
-                      <div class="attendance-beLate" v-else>
-                        <div class="item" v-if="scope.row.beLateNum != 0">
-                          迟到：{{ scope.row.beLateNum }}次
+                      <div class="clock-box">
+                        <div class="clock-box-left">
+                          <div>
+                            上班：{{
+                              scope.row.morningOnDutyTime | formateTime
+                            }}
+                          </div>
+                          <div>
+                            下班：{{
+                              scope.row.morningOffDutyTime | formateTime
+                            }}
+                          </div>
                         </div>
-                        <div class="item" v-if="scope.row.absenceNum != 0">
-                          旷工：{{ scope.row.absenceNum }}天
-                        </div>
-                        <div class="item" v-if="scope.row.leaveEarlyNum != 0">
-                          早退：{{ scope.row.leaveEarlyNum }}次
-                        </div>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    min-width="133"
-                    prop="unCommitReportNum"
-                    label="未提交日志"
-                    align="left"
-                    sortable="custom"
-                    show-overflow-tooltip
-                  >
-                    <template v-slot="scope">
-                      {{ scope.row.unCommitReportNum }}次</template
-                    >
-                  </el-table-column>
-                  <el-table-column
-                    min-width="111"
-                    prop="unAuditNum"
-                    label="未批阅"
-                    align="left"
-                    sortable="custom"
-                    show-overflow-tooltip
-                  >
-                    <template v-slot="scope">
-                      {{ scope.row.unAuditNum }}次</template
-                    >
-                  </el-table-column>
-                  <el-table-column
-                    min-width="80"
-                    prop="casualLeaveNum"
-                    label="事假"
-                    align="left"
-                    sortable="custom"
-                    show-overflow-tooltip
-                  >
-                    <template v-slot="scope">
-                      <span v-if="scope.row.casualLeaveNum == 0">满勤</span>
-                      <span v-else>{{ scope.row.casualLeaveNum }}天</span>
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <!-------------------------- 考勤扣分 ---------------------------->
-                <el-table
-                  v-else
-                  :data="tableData"
-                  v-loading="loading"
-                  ref="tableList"
-                  @sort-change="sortChange"
-                >
-                  <el-table-column
-                    min-width="140"
-                    label="员工信息"
-                    align="left"
-                    show-overflow-tooltip
-                  >
-                    <template v-slot="scope">
-                      <div class="person-info">
-                        <el-image
-                          style="width: 40px; height: 40px"
-                          :src="scope.row.userImage"
-                          fit="cover"
-                        ></el-image>
-                        <div class="info">
-                          <div class="name">{{ scope.row.perName }}</div>
-                          <div class="deptname">{{ scope.row.deptName }}</div>
+                        <div class="clock-box-right">
+                          <div
+                            v-if="
+                              scope.row.morningOnDutyResult ==
+                                scope.row.morningOffDutyResult
+                            "
+                          >
+                            <div
+                              :class="[
+                                { green: scope.row.morningOffDutyResult == 0 },
+                                {
+                                  yellow:
+                                    scope.row.morningOffDutyResult == 1 ||
+                                    scope.row.morningOffDutyResult == 4
+                                },
+                                {
+                                  red:
+                                    scope.row.morningOffDutyResult == 2 ||
+                                    scope.row.morningOffDutyResult == 3 ||
+                                    scope.row.morningOffDutyResult == 5
+                                }
+                              ]"
+                            >
+                              {{
+                                scope.row.morningOffDutyResult | formateResult
+                              }}
+                              <span v-if="scope.row.morningOffDutyResult == 4">
+                                {{
+                                  scope.row.morningLeaveType || " - 暂无"
+                                }}</span
+                              >
+                            </div>
+                          </div>
+                          <div v-else>
+                            <div
+                              :class="[
+                                { green: scope.row.morningOnDutyResult == 0 },
+                                {
+                                  yellow:
+                                    scope.row.morningOnDutyResult == 1 ||
+                                    scope.row.morningOnDutyResult == 4
+                                },
+                                {
+                                  red:
+                                    scope.row.morningOnDutyResult == 2 ||
+                                    scope.row.morningOnDutyResult == 3 ||
+                                    scope.row.morningOnDutyResult == 5
+                                }
+                              ]"
+                            >
+                              {{
+                                scope.row.morningOnDutyResult | formateResult
+                              }}
+                              <span v-if="scope.row.morningOnDutyResult == 4">
+                                {{
+                                  scope.row.morningLeaveType || " - 暂无"
+                                }}</span
+                              >
+                            </div>
+                            <div
+                              :class="[
+                                { green: scope.row.morningOffDutyResult == 0 },
+                                {
+                                  yellow:
+                                    scope.row.morningOffDutyResult == 1 ||
+                                    scope.row.morningOffDutyResult == 4
+                                },
+                                {
+                                  red:
+                                    scope.row.morningOffDutyResult == 2 ||
+                                    scope.row.morningOffDutyResult == 3 ||
+                                    scope.row.morningOffDutyResult == 5
+                                }
+                              ]"
+                            >
+                              {{
+                                scope.row.morningOffDutyResult | formateResult
+                              }}
+                              <span v-if="scope.row.morningOffDutyResult == 4">
+                                {{
+                                  scope.row.morningLeaveType || " - 暂无"
+                                }}</span
+                              >
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </template>
                   </el-table-column>
                   <el-table-column
                     min-width="131"
-                    label="在职状态/岗位"
+                    label="下午考勤/状态"
                     align="left"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      <span
-                        >{{ scope.row.del }} - {{ scope.row.position }}</span
-                      >
+                      <div class="clock-box">
+                        <div class="clock-box-left">
+                          <div>
+                            上班：{{
+                              scope.row.afternoonOnDutyTime | formateTime
+                            }}
+                          </div>
+                          <div>
+                            下班：{{
+                              scope.row.afternoonOffDutyTime | formateTime
+                            }}
+                          </div>
+                        </div>
+                        <div class="clock-box-right">
+                          <div
+                            v-if="
+                              scope.row.afternoonOnDutyResult ==
+                                scope.row.afternoonOffDutyResult
+                            "
+                          >
+                            <div
+                              :class="[
+                                {
+                                  green: scope.row.afternoonOffDutyResult == 0
+                                },
+                                {
+                                  yellow:
+                                    scope.row.afternoonOffDutyResult == 1 ||
+                                    scope.row.afternoonOffDutyResult == 4
+                                },
+                                {
+                                  red:
+                                    scope.row.afternoonOffDutyResult == 2 ||
+                                    scope.row.afternoonOffDutyResult == 3 ||
+                                    scope.row.afternoonOffDutyResult == 5
+                                }
+                              ]"
+                            >
+                              {{
+                                scope.row.afternoonOffDutyResult | formateResult
+                              }}
+                              <span
+                                v-if="scope.row.afternoonOffDutyResult == 4"
+                              >
+                                {{
+                                  scope.row.afternoonLeaveType || " - 暂无"
+                                }}</span
+                              >
+                            </div>
+                          </div>
+                          <div v-else>
+                            <div
+                              :class="[
+                                { green: scope.row.afternoonOnDutyResult == 0 },
+                                {
+                                  yellow:
+                                    scope.row.afternoonOnDutyResult == 1 ||
+                                    scope.row.afternoonOnDutyResult == 4
+                                },
+                                {
+                                  red:
+                                    scope.row.afternoonOnDutyResult == 2 ||
+                                    scope.row.afternoonOnDutyResult == 3 ||
+                                    scope.row.afternoonOnDutyResult == 5
+                                }
+                              ]"
+                            >
+                              {{
+                                scope.row.afternoonOnDutyResult | formateResult
+                              }}
+                              <span v-if="scope.row.afternoonOnDutyResult == 4">
+                                {{
+                                  scope.row.afternoonLeaveType || " - 暂无"
+                                }}</span
+                              >
+                            </div>
+                            <div
+                              :class="[
+                                {
+                                  green: scope.row.afternoonOffDutyResult == 0
+                                },
+                                {
+                                  yellow:
+                                    scope.row.afternoonOffDutyResult == 1 ||
+                                    scope.row.afternoonOffDutyResult == 4
+                                },
+                                {
+                                  red:
+                                    scope.row.afternoonOffDutyResult == 2 ||
+                                    scope.row.afternoonOffDutyResult == 3 ||
+                                    scope.row.afternoonOffDutyResult == 5
+                                }
+                              ]"
+                            >
+                              {{
+                                scope.row.afternoonOffDutyResult | formateResult
+                              }}
+                              <span
+                                v-if="scope.row.afternoonOffDutyResult == 4"
+                              >
+                                {{
+                                  scope.row.afternoonLeaveType || " - 暂无"
+                                }}</span
+                              >
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </template>
                   </el-table-column>
                   <el-table-column
-                    min-width="92"
-                    label="考勤要求"
-                    align="left"
-                    show-overflow-tooltip
-                  >
-                    <template v-slot="scope">
-                      <span
-                        v-if="scope.row.isFreedom == '正常考勤'"
-                        class="span_success"
-                        >{{ scope.row.isFreedom }}</span
-                      >
-                      <span
-                        v-if="scope.row.isFreedom == '免考勤'"
-                        class="span_warning"
-                        >{{ scope.row.isFreedom }}</span
-                      >
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    min-width="110"
-                    label="考勤扣分"
+                    width="120"
+                    label="补卡"
                     align="left"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
                       <div
-                        class="attendance-beLate"
-                        v-if="
-                          scope.row.beLatePoint == 0 &&
-                            scope.row.absencePoint == 0 &&
-                            scope.row.leaveEarlyPoint == 0
-                        "
+                        class="make-up"
+                        :class="[
+                          { 'make-green': scope.row.repairInfo == '补卡通过' },
+                          { 'make-red': scope.row.repairInfo == '不通过' }
+                        ]"
                       >
-                        无异常
-                      </div>
-                      <div class="attendance-beLate">
-                        <div class="item" v-if="scope.row.beLatePoint != 0">
-                          迟到：{{ scope.row.beLatePoint }}分
-                        </div>
-                        <div class="item" v-if="scope.row.absencePoint != 0">
-                          旷工：{{ scope.row.absencePoint }}分
-                        </div>
-                        <div class="item" v-if="scope.row.leaveEarlyPoint != 0">
-                          早退：{{ scope.row.leaveEarlyPoint }}分
-                        </div>
+                        {{ scope.row.repairInfo || "暂无" }}
                       </div>
                     </template>
                   </el-table-column>
                   <el-table-column
-                    min-width="95"
-                    prop="unCommitReportPoint"
-                    label="日志扣分"
+                    width="100"
+                    prop="leaveInfo"
+                    label="请假"
                     align="left"
-                    sortable="custom"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      {{ scope.row.unCommitReportPoint }}分</template
+                      {{ scope.row.leaveInfo || "暂无" }}</template
                     >
                   </el-table-column>
                   <el-table-column
-                    min-width="120"
-                    prop="unAuditPoint"
-                    label="未批阅扣分"
+                    width="100"
+                    prop="awayInfo"
+                    label="旷工"
                     align="left"
-                    sortable="custom"
                     show-overflow-tooltip
                   >
                     <template v-slot="scope">
-                      {{ scope.row.unAuditPoint }}分</template
+                      {{ scope.row.awayInfo || "暂无" }}</template
                     >
-                  </el-table-column>
-                  <el-table-column
-                    min-width="105"
-                    prop="casualLeavePoint"
-                    label="事假扣分"
-                    align="left"
-                    sortable="custom"
-                    show-overflow-tooltip
-                  >
-                    <template v-slot="scope">
-                      <span>{{ scope.row.casualLeavePoint }}分</span>
-                    </template>
                   </el-table-column>
                 </el-table>
               </div>
@@ -464,7 +446,7 @@
             </div>
           </div>
         </div>
-        <div class="sidebar">
+        <!-- <div class="sidebar">
           <div class="sidebar-container">
             <div class="calendar-head">
               <button class="change-item" @click="prevYear">
@@ -489,7 +471,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -502,7 +484,7 @@ export default {
     return {
       pageLoading: false,
       currentNavIndex: 0,
-      currentSubNavIndex: 1,
+      currentSubNavIndex: 2,
       loading: false,
       subNavs: [
         {
@@ -511,14 +493,14 @@ export default {
           rUrl: "myWorkSummary"
         },
         {
-          name: "考勤统计",
-          path: "/clockList/statistic",
-          rUrl: "statistics"
-        },
-        {
           name: "考勤月统计",
           path: "/clockList/statisticMonth",
           rUrl: "statistics"
+        },
+        {
+          name: "考勤日统计",
+          path: "/clockList/statisticDay",
+          rUrl: "attendanceStatisticsDaily"
         },
         {
           name: "考勤审批",
@@ -531,18 +513,6 @@ export default {
           rUrl: "workSummary"
         }
       ],
-      subSecondNavs: [
-        {
-          name: "考勤规则管理",
-          path: "/clockRule/list",
-          rUrl: "rule"
-        },
-        {
-          name: "名言警句配置",
-          path: "/clockRule/quotes",
-          rUrl: "famous"
-        }
-      ],
       functionRuleObj: {
         company: false, // 公司
         department: false, // 部门
@@ -551,24 +521,6 @@ export default {
         export: false, // 导出
         status: false // 在职状态
       }, // 权限
-      statusList: [
-        {
-          label: "全部",
-          value: ""
-        },
-        {
-          label: "在职",
-          value: 0
-        },
-        {
-          label: "离职",
-          value: 1
-        },
-        {
-          label: "离职未审核",
-          value: 2
-        }
-      ],
       employeeId: "",
       employee: {
         list: [],
@@ -580,16 +532,6 @@ export default {
         list: [],
         loadding: false
       },
-      companyId: "",
-      departmentId: "",
-      company: {
-        loading: false,
-        list: []
-      }, //公司json
-      department: {
-        loading: false,
-        list: []
-      }, //部门json
       currentPanelIndex: 0,
       tableData: [],
       pageJson: {
@@ -598,31 +540,77 @@ export default {
         total: 0,
         pageSum: 0
       },
-      sortColumn: "", //排序字段
-      sortType: 1, //排序类型
       year: new Date().getFullYear(),
       currentMonth: new Date().getMonth() + 1,
-      months: [
-        "一",
-        "二",
-        "三",
-        "四",
-        "五",
-        "六",
-        "七",
-        "八",
-        "九",
-        "十",
-        "十一",
-        "十二"
-      ]
+      sortColumn: "", //排序字段
+      sortType: 1, //排序类型
+      // 考勤需求
+      clockRequire: "",
+      // 考勤状态
+      clockStatus: "",
+      clockStatusList: [
+        {
+          label: "正常考勤",
+          value: 0
+        },
+        {
+          label: "迟到",
+          value: 1
+        },
+        {
+          label: "早退",
+          value: 2
+        },
+        {
+          label: "旷工",
+          value: 3
+        },
+        {
+          label: "请假",
+          value: 4
+        }
+      ],
+      // 日期
+      applyTime: [],
+      starTime: "",
+      endTime: "",
+      agentKeyword: "",
+      isAgent: false,
+      agentList: [],
+      currentAgent: {
+        id: this.$route.query.id,
+        name:this.$route.query.personName,
+        headImg:this.$route.query.personImageUrl,
+        dept:this.$route.query.departmentName
+      }
     };
   },
-  created() {
+  filters: {
+    formateResult(val) {
+      let list = ["正常", "迟到", "早退", "旷工", "请假", "迟到早退"];
+      return list[val];
+    },
+    formateTime(val) {
+      if (val) {
+        return val.split(" ")[1];
+      } else {
+        return "-";
+      }
+    }
+  },
+  created() {    
     this.getFunction();
     this.query();
+    console.log("this.$route", this.$route.query);
   },
   methods: {
+    doHandleMonth(month) {
+      var m = month;
+      if (month.toString().length == 1) {
+        m = "0" + month;
+      }
+      return m;
+    },
     getFunction() {
       this.$api
         .get({
@@ -670,9 +658,11 @@ export default {
      * @return {*}
      */
     reset() {
-      Object.assign(this.$data, this.$options.data(), {
-        functionRuleObj: this.$data.functionRuleObj
-      });
+      Object.assign({ functionRuleObj: this.$data.functionRuleObj });
+      this.clockStatus = "";
+      this.applyTime = [];
+      this.starTime = "";
+      this.endTime = "";
       this.query();
     },
     /**
@@ -696,22 +686,19 @@ export default {
     query(page = 1) {
       this.pageJson.page = page;
       this.loading = true;
-      let date = this.year + "-" + this.currentMonth + "-01";
       let params = {
-        date: date,
         page: this.pageJson.page,
         limit: this.pageJson.limit,
-        companyId: this.companyId,
-        departmentId: this.departmentId,
-        accountId: this.employeeId,
+        personIds: [this.currentAgent.id],
         positionId: this.positionId,
         status: this.status,
-        sortType: this.sortType,
-        sortColumn: this.sortColumn
+        attendanceStatus: this.clockStatus,
+        startDate: this.starTime,
+        endDate: this.endTime
       };
       this.$api
         .post({
-          url: "/attendance/statistics/data",
+          url: "/attendance/record/attendanceStaticsPersonInfo",
           data: params,
           headers: { "Content-Type": "application/json" }
         })
@@ -720,6 +707,13 @@ export default {
           if (data.code == 200) {
             // this.$refs.scrollRef.scrollTop = 0;
             this.tableData = data.data.list;
+            if (this.tableData.length > 0) {
+              let item = this.tableData[0];
+              this.currentAgent.id = item.accountId;
+              this.currentAgent.headImg = item.personImageUrl;
+              this.currentAgent.name = item.personName;
+              this.currentAgent.dept = item.departmentName;
+            }
             this.pageJson.total = data.data.totalCount;
             this.pageJson.pageSum = data.data.totalPage;
           }
@@ -749,203 +743,21 @@ export default {
     switchDataPanel() {
       this.currentPanelIndex = this.currentPanelIndex == 0 ? 1 : 0;
     },
-    /**
-     * @description: 上一年
-     * @param {*}
-     * @return {*}
-     */
-    prevYear() {
-      this.year--;
-      this.query();
-    },
-    /**
-     * @description: 下一年
-     * @param {*}
-     * @return {*}
-     */
-    afterYear() {
-      this.year++;
-      this.query();
-    },
-    /**
-     * @description: 设置月份
-     * @param {*} index
-     * @return {*}
-     */
-    switchMonth(index) {
-      this.currentMonth = index + 1;
-      this.query();
-    },
-    /**
-     * @example:公司获取焦点事件
-     */
-    companyFocus() {
-      if (this.company.list.length == 0) {
-        this.queryCompanyList();
-      }
-    },
-    /**
-     * @description: 公司列表搜索
-     * @param {*} keyWork
-     * @return {*}
-     */
-    queryCompanyList(keyWork = "") {
-      this.$set(this.company, "loading", true);
-      this.$api
-        .get({
-          url: "/attendance/statistics/company",
-          data: {
-            limit: 50,
-            page: 1,
-            keyWord: keyWork
-          },
-          headers: { "Content-Type": "application/json" }
-        })
-        .then(e => {
-          let data = e.data;
-          if (data.code == 200) {
-            this.company.list = data.data.list;
-          }
-        })
-        .finally(e => {
-          this.$set(this.company, "loading", false);
-        });
-    },
-    /**
-     * @example:公司改变事件
-     */
-    companyChange() {
-      this.departmentId = "";
-      this.employeeId = "";
-      this.employee.list = [];
-      this.positionId = "";
-      this.position.list = [];
-      this.getDepartmentData();
-      this.query();
-    },
-    /**
-     * @example:部门搜索事件
-     */
-    getDepartmentData(keyWord = "") {
-      this.department.list = [];
-      if (this.companyId) {
-        this.$set(this.department, "loading", true);
-        this.$api
-          .get({
-            url: "/attendance/statistics/department-under",
-            data: {
-              limit: 50,
-              page: 1,
-              keyWord: keyWord,
-              companyId: this.companyId
-            },
-            headers: { "Content-Type": "application/json" }
-          })
-          .then(e => {
-            let data = e.data;
-            if (data.code == 200) {
-              this.department.list = data.data.list;
-            }
-          })
-          .finally(e => {
-            this.$set(this.department, "loading", false);
-          });
-      }
-    },
-    /**
-     * @description: 员工姓名获取焦点事件
-     * @param {*}
-     * @return {*}
-     */
-    employeeFocus() {
-      if (this.employee.list.length == 0) {
-        this.queryEmployee();
-      }
-    },
-    /**
-     * @description: 人员模糊搜索
-     * @param {*} keyWord
-     * @return {*}
-     */
-    queryEmployee(keyWord = "") {
-      this.$set(this.employee, "loading", true);
-      this.$api
-        .get({
-          url: "/attendance/statistics/employee-under",
-          data: {
-            limit: 50,
-            page: 1,
-            departmentId: this.departmentId,
-            keyWord: keyWord
-          },
-          headers: { "Content-Type": "application/json" }
-        })
-        .then(e => {
-          let data = e.data;
-          if (data.code == 200) {
-            this.employee.list = data.data.list;
-          }
-        })
-        .finally(e => {
-          this.$set(this.employee, "loading", false);
-        });
-    },
-    /**
-     * @description: 选择岗位获取焦点事件
-     * @param {*}
-     * @return {*}
-     */
-    positionFocus() {
-      if (this.position.list.length == 0) {
-        this.queryPosition();
-      }
-    },
-    /**
-     * @description: 岗位模糊搜索
-     * @param {*} keyWord
-     * @return {*}
-     */
-    queryPosition(keyWord = "") {
-      this.$set(this.position, "loading", true);
-      this.$api
-        .get({
-          url: "/attendance/statistics/role-company",
-          data: {
-            limit: 50,
-            page: 1,
-            companyId: this.companyId,
-            keyWord: keyWord
-          },
-          headers: { "Content-Type": "application/json" }
-        })
-        .then(e => {
-          let data = e.data;
-          if (data.code == 200) {
-            this.position.list = data.data.list;
-          }
-        })
-        .finally(e => {
-          this.$set(this.position, "loading", false);
-        });
-    },
     excelExport() {
       this.pageLoading = true;
-      let date = this.year + "-" + this.currentMonth + "-01";
       let params = {
-        date: date,
         page: this.pageJson.page,
-        limit: this.pageJson.limit,
-        companyId: this.companyId,
-        departmentId: this.departmentId,
-        accountId: this.employeeId,
+        limit: 2000,
+        personIds: [this.currentAgent.id],
         positionId: this.positionId,
         status: this.status,
-        sortType: this.sortType,
-        sortColumn: this.sortColumn
+        attendanceStatus: this.clockStatus,
+        startDate: this.starTime,
+        endDate: this.endTime
       };
       this.$api
         .post({
-          url: "/attendance/statistics/export",
+          url: "attendance/record/excelAttendanceOnePersonStaticsInfo",
           data: params,
           responseType: "blob",
           headers: { "Content-Type": "application/json" },
@@ -965,6 +777,63 @@ export default {
         .finally(e => {
           this.pageLoading = false;
         });
+    },
+    /**
+     * @example: 日期改变事件
+     */
+    applyTimeChange() {
+      if (this.applyTime) {
+        this.starTime = this.applyTime[0];
+        this.endTime = this.applyTime[1];
+      } else {
+        this.starTime = "";
+        this.endTime = "";
+      }
+      this.query();
+    },
+    /**
+     * @example: 显示员工列表
+     */
+    showAgentList() {
+      this.isAgent = !this.isAgent;
+      if (this.agentList.length == 0) {
+        this.queryEmployee();
+      }
+    },
+    /**
+     * @description: 人员模糊搜索
+     * @param {*} keyWord
+     * @return {*}
+     */
+    queryEmployee(keyWord = "") {
+      this.$api
+        .post({
+          url: "attendance/record/personListForStaticsDayInfo",
+          data: {
+            limit: 50,
+            page: 1,
+            keyWord: keyWord
+          },
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let data = e.data;
+          if (data.code == 200) {
+            this.agentList = data.data.list;
+          }
+        });
+    },
+    /**
+     * @example: 改变员工
+     */
+    changeAgent(item) {
+      console.log("item", item);
+      this.currentAgent.id = item.accountId;
+      this.currentAgent.headImg = item.userImage;
+      this.currentAgent.name = item.perName;
+      this.currentAgent.dept = item.deptName;
+      this.isAgent = false;
+      this.query();
     }
   }
 };
@@ -1076,60 +945,15 @@ export default {
     // position: sticky;
     // top: 0;
     // z-index: 10;
-    .head-type {
-      height: 67px;
-      display: flex;
-      padding: 0 24px;
-      border-bottom: 1px solid #f0f2f5;
-      .head-type-item {
-        position: relative;
-        line-height: 67px;
-        margin-right: 46px;
-        color: #303133;
-        font-size: @font18;
-        cursor: pointer;
-        &.active {
-          color: @backgroud;
-          font-weight: bold;
-          &::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: @backgroud;
-            border-radius: 2px 2px 0px 0px;
-          }
-        }
-      }
-    }
     .head-underling-nva {
       display: flex;
       height: 58px;
       justify-content: space-between;
       align-items: center;
       padding: 0 24px;
-      .head-nav-box {
-        display: flex;
-        .head-nav-item {
-          height: 26px;
-          padding: 0 8px;
-          border-radius: 4px;
-          border: 1px solid transparent;
-          box-sizing: border-box;
-          font-size: @font14;
-          text-align: center;
-          line-height: 24px;
-          color: #606266;
-          margin-right: 16px;
-          cursor: pointer;
-          &.active {
-            color: @backgroud;
-            background: @opacityBackground;
-            border: 1px solid @backgroud;
-          }
-        }
+      .title {
+        font-size: @font24;
+        font-weight: bold;
       }
       .btn-add {
         height: 40px;
@@ -1173,7 +997,6 @@ export default {
         background: #fff;
         border-radius: 8px;
         box-sizing: border-box;
-        overflow: auto;
         &::-webkit-scrollbar {
           width: 6px;
           height: 6px;
@@ -1207,6 +1030,135 @@ export default {
           *::-webkit-scrollbar-track {
             // box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
             background: #fff;
+          }
+          .agent-content {
+            position: relative;
+            width: 257px;
+          }
+          .agent-box {
+            display: flex;
+            margin-bottom: 24px;
+            padding: 20px 16px 25px 20px;
+            background: #f0f2f5;
+            border-radius: 4px;
+            .head-img {
+              width: 40px;
+              height: 40px;
+              margin-right: 16px;
+              border-radius: 50%;
+              overflow: hidden;
+              img {
+                width: 100%;
+                height: 100%;
+              }
+            }
+            .agent-msg {
+              .agent-name {
+                margin-bottom: 10px;
+                font-size: @font16;
+                // prettier-ignore
+                line-height: 16PX;
+                color: #606266;
+              }
+              .agent-dept {
+                font-size: @font14;
+                // prettier-ignore
+                line-height: 14PX;
+                color: #909399;
+              }
+            }
+            .agent-change {
+              margin-left: auto;
+              margin-top: 13px;
+              font-size: @font14;
+              color: @backgroud;
+              cursor: pointer;
+            }
+          }
+          .agent-list-content {
+            position: absolute;
+            top: 90px;
+            padding: 24px;
+            background: #fff;
+            box-shadow: 0px 8px 13px 0px rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+            z-index: 10;
+            .input-content {
+              display: flex;
+              align-items: center;
+              border-bottom: 1px solid #cecece;
+              /deep/ .el-input__inner {
+                border: none;
+                padding: 0;
+              }
+              .input-style {
+                flex: 1;
+                font-size: @font16;
+                &:focus {
+                  outline: none;
+                  border: none !important;
+                }
+              }
+              .el-icon-search {
+                font-size: @font16;
+              }
+            }
+            .agent-list {
+              margin-top: 24px;
+              height: 300px;
+              .scrollbar {
+                height: 100%;
+                /deep/.el-scrollbar__wrap {
+                  overflow-x: hidden;
+                }
+                .agent-item {
+                  display: flex;
+                  margin-bottom: 33px;
+                  padding-right: 15px;
+                  border-radius: 4px;
+                  align-items: center;
+                  cursor: pointer;
+                  .item-img {
+                    width: 40px;
+                    height: 40px;
+                    margin-right: 16px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                    img {
+                      width: 100%;
+                      height: 100%;
+                    }
+                  }
+                  .item-msg {
+                    .item-name {
+                      margin-bottom: 10px;
+                      font-size: @font16;
+                      // prettier-ignore
+                      line-height: 16PX;
+                      color: #606266;
+                    }
+                    .item-dept {
+                      font-size: @font14;
+                      // prettier-ignore
+                      line-height: 14PX;
+                      color: #909399;
+                    }
+                  }
+                  .iconbianzu4 {
+                    flex: 1;
+                    text-align: right;
+                    font-size: @font12;
+                    color: @backgroud;
+                  }
+                }
+                .active {
+                  .item-name {
+                    font-weight: bold;
+                    color: @backgroud !important;
+                  }
+                }
+              }
+            }
           }
           .switch-btn-box {
             display: flex;
@@ -1356,6 +1308,7 @@ export default {
               display: inline-block;
               height: 16px;
               padding: 0px 4px;
+              margin-left: 8px;
               border-radius: 2px;
               line-height: 1;
               text-align: center;
@@ -1394,6 +1347,45 @@ export default {
                   margin-bottom: 0;
                 }
               }
+            }
+            .clock-box {
+              display: flex;
+              align-items: center;
+              .clock-box-left {
+                padding-right: 17px;
+                border-right: 1px solid #f0f2f5;
+                div {
+                  & + div {
+                    margin-top: 8px;
+                  }
+                }
+              }
+              .clock-box-right {
+                margin-left: 16px;
+                div {
+                  & + div {
+                    margin-top: 8px;
+                  }
+                }
+                .green {
+                  color: #0da88b;
+                }
+                .red {
+                  color: #ef5656;
+                }
+                .yellow {
+                  color: #f6a420;
+                }
+              }
+            }
+            .make-up {
+              width: 80px;
+              height: 26px;
+              line-height: 26px;
+              background: rgba(144, 147, 153, 0.1);
+              color: #909399;
+              text-align: center;
+              border-radius: 2px;
             }
           }
           .el-pagination {
@@ -1538,5 +1530,9 @@ export default {
       }
     }
   }
+}
+.check {
+  color: @backgroud;
+  cursor: pointer;
 }
 </style>

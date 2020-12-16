@@ -1426,7 +1426,6 @@ export default {
       flex-direction: column;
       // prettier-ignore
       width: 224PX;
-      height: 100%;
       // prettier-ignore
       margin-right: 16PX;
       background: #f0f7f7;
@@ -1506,6 +1505,9 @@ export default {
           }
         }
       }
+    }
+    /deep/.el-table__body-wrapper::-webkit-scrollbar {
+      display: none;
     }
     /deep/.content {
       flex: 1;

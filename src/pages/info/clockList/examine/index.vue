@@ -59,9 +59,9 @@
                       </el-select>
                     </el-form-item>
                   </el-col>
-                  <el-col :span="9">
+                  <el-col :span="6">
                     <el-row :gutter="8">
-                      <el-form-item label="所在部门">
+                      <el-form-item label-width="72px" label="所在部门">
                         <el-col :span="12">
                           <el-select
                             class="width100"
@@ -92,9 +92,9 @@
                             filterable
                             remote
                             :remote-method="getDepartmentData"
+                            @change="departmentChange"
                             :loading="department.loading"
                             value-key="value"
-                            @change="query(1)"
                             class="width100"
                           >
                             <el-option
@@ -109,9 +109,68 @@
                       </el-form-item>
                     </el-row>
                   </el-col>
+                  <el-col :span="6">
+                    <el-form-item label="岗位">
+                      <el-select
+                        class="width100"
+                        popper-class="options-item"
+                        v-model="formData.positionId"
+                        placeholder="请选择"
+                        filterable
+                        @focus="positionFocus"
+                        remote
+                        :remote-method="queryPosition"
+                        :loading="position.loading"
+                        clearable
+                        @blur="query()"
+                      >
+                        <el-option
+                          v-for="(item, index) in position.list"
+                          :key="index"
+                          :label="item.RoleName"
+                          :value="item.id"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+
+                  <el-col :span="6">
+                    <el-form-item label-width="72px" label="审批状态">
+                      <el-select
+                        class="width100"
+                        popper-class="options-item"
+                        v-model="formData.status"
+                        placeholder="请选择审批状态"
+                        @change="query(1)"
+                      >
+                        <el-option
+                          v-for="(item, index) in statusList"
+                          :key="index"
+                          :label="item.key"
+                          :value="item.value"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="9">
+                    <el-form-item label-width="72px" label="申请时间">
+                      <el-date-picker
+                        v-model="applyTime"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :default-time="['00:00:00', '23:59:59']"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        class="anchor-point"
+                        @change="applyTimeChange"
+                      >
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-col>
                   <el-col :span="9">
                     <el-row :gutter="8">
-                      <el-form-item label="申请类型">
+                      <el-form-item label-width="72px" label="申请类型">
                         <el-col :span="12">
                           <el-select
                             class="width100"
@@ -146,40 +205,6 @@
                         </el-col>
                       </el-form-item>
                     </el-row>
-                  </el-col>
-                  <el-col :span="6">
-                    <el-form-item label="审批状态">
-                      <el-select
-                        class="width100"
-                        popper-class="options-item"
-                        v-model="formData.status"
-                        placeholder="请选择审批状态"
-                        @change="query(1)"
-                      >
-                        <el-option
-                          v-for="(item, index) in statusList"
-                          :key="index"
-                          :label="item.key"
-                          :value="item.value"
-                        ></el-option>
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="9">
-                    <el-form-item label="申请时间">
-                      <el-date-picker
-                        v-model="applyTime"
-                        type="daterange"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        :default-time="['00:00:00', '23:59:59']"
-                        value-format="yyyy-MM-dd HH:mm:ss"
-                        class="anchor-point"
-                        @change="applyTimeChange"
-                      >
-                      </el-date-picker>
-                    </el-form-item>
                   </el-col>
                   <el-col :span="6" class="fr">
                     <div class="conditions-btn">
@@ -220,7 +245,7 @@
                   >
                   </el-table-column>
                   <el-table-column
-                    min-width="177"
+                    min-width="100"
                     prop="applyType"
                     label="类型"
                     align="left"
@@ -228,6 +253,43 @@
                   >
                     <template v-slot="scope">
                       <span>{{ scope.row.applyType | applyTypeFilter }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    min-width="130"
+                    prop="applySubType"
+                    label="子类型"
+                    align="left"
+                  >
+                    <template v-slot="scope">
+                      <!-- 请假 -->
+                      <span v-if="scope.row.applyType == 1">{{
+                        scope.row.applySubType | leaveSubTypeFilter
+                      }}</span>
+
+                      <el-tooltip
+                        placement="top"
+                        popper-class="tip-bg"
+                        offset="-150"
+                        v-else-if="isLength(scope.row.reissueSubType)"
+                      >
+                        <span
+                          >1.{{
+                            scope.row.reissueSubType.split(",")[0]
+                          }}...</span
+                        >
+                        <div slot="content">
+                          <div
+                            class="tip"
+                            v-for="(item,
+                            idx) in scope.row.reissueSubType.split(',')"
+                            :key="idx"
+                          >
+                            {{ idx + 1 }}.{{ item }}
+                          </div>
+                        </div>
+                      </el-tooltip>
+                      <span v-else>{{ scope.row.reissueSubType }} </span>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -315,22 +377,32 @@ export default {
     return {
       currentNavIndex: 0,
       loading: false,
-      currentSubNavIndex: 2,
+      currentSubNavIndex: 3,
       subNavs: [
         {
           name: "我的日志",
-          path: "/clockList/myInfo",
-          rUrl: "workSummary"
+          path: "/clockList/log",
+          rUrl: "myWorkSummary"
         },
         {
-          name: "考勤统计",
-          path: "/clockList/statistic",
+          name: "考勤月统计",
+          path: "/clockList/statisticMonth",
           rUrl: "statistics"
+        },
+        {
+          name: "考勤日统计",
+          path: "/clockList/statisticDay",
+          rUrl: "attendanceStatisticsDaily"
         },
         {
           name: "考勤审批",
           path: "/clockList/examine",
           rUrl: "audit"
+        },
+        {
+          name: "日志管理",
+          path: "/clockList/myInfo",
+          rUrl: "workSummary"
         }
       ],
       subSecondNavs: [
@@ -361,7 +433,8 @@ export default {
         applySubType: "",
         status: "",
         applyStartTime: "",
-        applyEndTime: ""
+        applyEndTime: "",
+        positionId: ""
       },
       applyTypeList: APPLYTYPE, //审核类型
       applySubTypeList: [], //审核子类型
@@ -397,6 +470,10 @@ export default {
       personnel: {
         loading: false,
         list: []
+      },
+      position: {
+        list: [],
+        loadding: false
       }
     };
   },
@@ -408,11 +485,22 @@ export default {
     applyTypeFilter(value) {
       return util.countMapFilter(value, "APPLYTYPE", "暂无");
     },
+    leaveSubTypeFilter(value) {
+      return util.countMapFilter(value, "LEAVESUBTYPE", "-");
+    },
     statusFilter(value) {
       return statusMap.get(value) ? statusMap.get(value) : "暂无";
     }
   },
   methods: {
+    isLength(val) {
+      console.log(val, "vavavaavvqa");
+      if (val.indexOf(",") != -1) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     /**
      * @example:重置
      */
@@ -565,6 +653,13 @@ export default {
           });
       }
     },
+    departmentChange() {
+      this.formData.applyId = "";
+      this.personnel.list = [];
+      this.formData.positionId = "";
+      this.position.list = [];
+      this.query(1);
+    },
     /**
      * @example:人员获取焦点事件
      */
@@ -585,6 +680,7 @@ export default {
           data: {
             limit: 50,
             page: 1,
+            departmentId: this.formData.departmentId,
             keyWord: keyWord
           },
           headers: { "Content-Type": "application/json" }
@@ -611,14 +707,52 @@ export default {
         path: detailsMap.get(row.applyType),
         query: { id: row.id }
       });
+    },
+    /**
+     * @description: 选择岗位获取焦点事件
+     * @param {*}
+     * @return {*}
+     */
+    positionFocus() {
+      if (this.position.list.length == 0) {
+        this.queryPosition();
+      }
+    },
+    /**
+     * @description: 岗位模糊搜索
+     * @param {*} keyWord
+     * @return {*}
+     */
+    queryPosition(keyWord = "") {
+      this.$set(this.position, "loading", true);
+      this.$api
+        .post({
+          url: "/attendance/apply/positionList",
+          data: {
+            limit: 50,
+            page: 1,
+            keyWord: keyWord
+          },
+          qs: true,
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        })
+        .then(e => {
+          let data = e.data;
+          if (data.code == 200) {
+            this.position.list = data.data.list;
+          }
+        })
+        .finally(e => {
+          this.$set(this.position, "loading", false);
+        });
     }
   }
 };
 </script>
 <style lang="less">
-// .children-page {
-//   height: 100%;
-// }
+.tip-bg {
+  background: rgba(0, 0, 0, 0.6) !important;
+}
 </style>
 <style lang="less" scoped>
 /*** element下拉选择面板 ***/
@@ -1049,6 +1183,12 @@ export default {
         }
       }
     }
+  }
+}
+.tip {
+  font-size: @font16;
+  & + .tip {
+    margin-top: 12px;
   }
 }
 </style>

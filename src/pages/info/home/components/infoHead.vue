@@ -38,7 +38,7 @@ export default {
       const hour = nowTime.getHours();
       if (hour > 4 && hour < 12) {
         this.time = "早上好";
-      } else if (hour > 12 && hour < 14) {
+      } else if (hour >= 12 && hour < 14) {
         this.time = "中午好";
       } else if (hour >= 14 && hour < 18) {
         this.time = "下午好";

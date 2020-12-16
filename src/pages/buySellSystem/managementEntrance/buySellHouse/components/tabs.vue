@@ -23,8 +23,7 @@ const IMPLANTLIST = [
   { title: "锁定房源", url: "/managementEntrance/houseLockingList" },
   { title: "审核列表", url: "/managementEntrance/houseExamineHouse" },
   { title: "抽检列表", url: "/managementEntrance/spotCheckList" },
-  { title: "抽检记录", url: "/managementEntrance/spotCheckRecord" },
-  { title: "房源转换状态记录", url: "/managementEntrance/saleStatusRecord" }
+  { title: "抽检记录", url: "/managementEntrance/spotCheckRecord" }
 ];
 export default {
   props: {
